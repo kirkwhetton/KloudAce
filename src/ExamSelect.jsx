@@ -67,6 +67,43 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
   const [customDecks, setCustomDecks] = useState([]);
   const [topicSearch, setTopicSearch] = useState("");
 
+  const [typedGreeting, setTypedGreeting] = useState("");
+  const [typedSub, setTypedSub] = useState("");
+  const [typingPhase, setTypingPhase] = useState("greeting");
+
+  useEffect(() => {
+    if (view !== "chooser") return;
+    const firstName = user?.name?.split(" ")[0] || "";
+    const greeting = `Welcome back, ${firstName}`;
+    const sub = "How would you like to study today?";
+    setTypedGreeting("");
+    setTypedSub("");
+    setTypingPhase("greeting");
+    let cancelled = false;
+    const typeText = (text, setter, speed, onDone) => {
+      let i = 0;
+      const tick = () => {
+        if (cancelled) return;
+        i++;
+        setter(text.slice(0, i));
+        if (i < text.length) setTimeout(tick, speed);
+        else onDone?.();
+      };
+      setTimeout(tick, speed);
+    };
+    typeText(greeting, setTypedGreeting, 56, () => {
+      if (cancelled) return;
+      setTimeout(() => {
+        if (cancelled) return;
+        setTypingPhase("sub");
+        typeText(sub, setTypedSub, 38, () => {
+          if (!cancelled) setTypingPhase("done");
+        });
+      }, 180);
+    });
+    return () => { cancelled = true; };
+  }, [view]);
+
   useEffect(() => {
     const load = () => setCustomDecks(JSON.parse(localStorage.getItem("customDecks") || "[]"));
     load();
@@ -128,8 +165,14 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
         <div className={`splash-card ${animClass}`}>
           <Logo />
           <div className="splash-greeting-block">
-            <h2 className="splash-greeting">Welcome back, <span>{user?.name?.split(" ")[0] || ""}</span></h2>
-            <p className="splash-sub">How would you like to study today?</p>
+            <h2 className="splash-greeting">
+              {typedGreeting}
+              {typingPhase === "greeting" && <span className="typing-cursor" aria-hidden="true">|</span>}
+            </h2>
+            <p className="splash-sub">
+              {typedSub}
+              {typingPhase === "sub" && <span className="typing-cursor" aria-hidden="true">|</span>}
+            </p>
           </div>          <div className="splash-chooser-grid">
             <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #0ea5e9, #0369a1)" }} onClick={() => navigateTo("exams")}>
               <span className="splash-choice-icon" style={{ color: "#7dd3fc", background: "rgba(255,255,255,0.15)", borderColor: "rgba(125,211,252,0.4)" }}>
