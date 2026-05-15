@@ -1,0 +1,91 @@
+import { useState, useMemo } from "react";
+import "./multichoice.css";
+import "./imagemcq.css";
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+export default function ImageMCQ({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer }) {
+  const [selected, setSelected] = useState(null);
+
+  const shuffledChoices = useMemo(() => shuffle(card.choices), [card.id]);
+  const correctText = card.choices[card.correctAnswer];
+  const hasAnswered = selected !== null;
+  const isCorrect = hasAnswered && shuffledChoices[selected] === correctText;
+
+  const handleSelect = (i) => {
+    if (!hasAnswered) {
+      setSelected(i);
+      if (examMode) {
+        const correct = shuffledChoices[i] === correctText;
+        onExamAnswer({ card, correct, given: shuffledChoices[i], expected: correctText });
+      }
+    }
+  };
+  const handleReview = () => setSelected(null);  const getButtonClass = (i) => {
+    if (!hasAnswered) return "choice-btn";
+    if (examMode || hideAnswers) return i === selected ? "choice-btn ms-selected" : "choice-btn dimmed";
+    if (shuffledChoices[i] === correctText) return "choice-btn correct";
+    if (i === selected) return "choice-btn wrong";
+    return "choice-btn dimmed";
+  };
+
+  return (    <div className="mcq-card image-mcq-card">
+      <div className="image-mcq-top"><span className="mcq-category">{card.category}</span>
+      </div>
+
+      <p className="mcq-question-header">{card.question_header}</p>
+
+      {/* SVG diagram — rendered inline from card data */}
+      <div className="image-mcq-diagram" aria-label={card.imageAlt}>
+        {card.diagram}
+      </div>
+
+      <p className="imcq-question-footer">{card.question_footer}</p>
+
+      <div className="mcq-choices">
+        {shuffledChoices.map((choice, i) => (
+          <button key={i} className={getButtonClass(i)} onClick={() => handleSelect(i)}>
+            <span className="choice-letter">{String.fromCharCode(65 + i)}</span>
+            {choice}
+          </button>
+        ))}
+      </div>      {hasAnswered && !examMode && (
+        <div className={`mcq-feedback ${isCorrect ? "feedback-correct" : "feedback-wrong"}`}>
+          <p className="feedback-text">
+            {isCorrect ? <><span className="known-check">✓</span> Correct!</> : "❌ Not quite"}
+            {!hideAnswers && <> — {card.answer}</>}
+          </p>          {!hideAnswers && card.explanation && (
+            <div className="mcq-explanation">
+              <span className="explanation-label">💡 Explanation</span>
+              <p>{card.explanation}</p>
+            </div>
+          )}
+          {!hideAnswers && card.learnUrl && (
+            <a className="learn-more-link" href={card.learnUrl} target="_blank" rel="noopener noreferrer">
+              📖 Learn more on Microsoft Learn
+            </a>
+          )}
+          {hideAnswers && (
+            <p className="hide-answers-notice">🙈 Answer hidden — toggle off in ⚙️ Settings to see explanations</p>
+          )}          <div className="mcq-actions">
+            <button className="btn btn-review" onClick={handleReview}>🔁 Review Again</button>
+            {onSrsRate ? (
+              <button className="btn btn-know" onClick={() => onSrsRate(isCorrect ? 3 : 1)}>
+                Continue →
+              </button>
+            ) : (
+              <button className="btn btn-know" onClick={onKnow}><span className="known-check">✓</span> Next Card</button>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

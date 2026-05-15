@@ -1,0 +1,327 @@
+/* ─── AzureAce Theme System ──────────────────────────────────────
+   All colour tokens live here. Every component should consume
+   var(--...) rather than hard-coded hex values.
+   Body classes:  (none) = light   |  data-theme="dark"
+   Colourblind:   data-theme="protanopia" | "deuteranopia" | "tritanopia"
+──────────────────────────────────────────────────────────────── */
+
+/* ── Light (default) ─────────────────────────────────────────── */
+:root {
+  /* Page background & surfaces */
+  --bg-page:        #f0f4f8;
+  --bg-card:        #ffffff;
+  --bg-card-hover:  #f8faff;
+  --bg-input:       #ffffff;
+  --border-subtle:  #e5e7eb;
+  --border-card:    #d1d5db;
+
+  /* Text */
+  --text-primary:   #1a1a2e;
+  --text-secondary: #374151;
+  --text-muted:     #6b7280;
+  --text-on-brand:  #ffffff;
+
+  /* Brand blue (Azure) */
+  --brand:          #0072c6;
+  --brand-dark:     #003f8a;
+  --brand-light:    #e8f4fd;
+  --brand-border:   #dbeafe;
+
+  /* Correct / green */
+  --correct:        #16a34a;
+  --correct-bg:     #f0fdf4;
+  --correct-border: #16a34a;
+  /* Wrong / red */
+  --wrong:          #dc2626;
+  --wrong-dark:     #b91c1c;
+  --wrong-bg:       #fef2f2;
+  --wrong-border:   #dc2626;
+
+  /* Warning / amber */
+  --warn:           #f0ad4e;
+  --warn-bg:        #fcf8e3;
+  --warn-border:    #c87d00;
+  --warn-text:      #8a6d3b;
+
+  /* SRS quality buttons */
+  --srs-1:          #991b1b;
+  --srs-1-border:   #7f1d1d;
+  --srs-2:          #c2410c;
+  --srs-2-border:   #9a3412;
+  --srs-3:          #1d4ed8;
+  --srs-3-border:   #1e3a8a;
+  --srs-4:          #15803d;
+  --srs-4-border:   #14532d;
+
+  /* Sidebar */
+  --sidebar-bg:     #ffffff;
+  --sidebar-border: #e5e7eb;
+  --sidebar-header-bg: #f8faff;
+
+  /* Toggle */
+  --toggle-off:     #d1d5db;
+  --toggle-on:      #0072c6;
+  --toggle-thumb:   #ffffff;
+
+  /* Flashcard faces */
+  --card-front-from: #0072c6;
+  --card-front-to:   #003f8a;
+  --card-back-from:  #ffffff;
+  --card-back-to:    #e8f4fd;
+  --card-back-text:  #1a1a2e;
+
+  /* Explanation box */
+  --explain-bg:     #f8faff;
+  --explain-border: #dbeafe;  --explain-label:  #0072c6;
+
+  /* Difficulty badges */
+  --diff-easy-bg:     #dcfce7;
+  --diff-easy-text:   #166534;
+  --diff-easy-border: #86efac;
+  --diff-med-bg:      #fef9c3;
+  --diff-med-text:    #854d0e;
+  --diff-med-border:  #fde047;
+  --diff-hard-bg:     #ffedd5;
+  --diff-hard-text:   #9a3412;
+  --diff-hard-border: #fdba74;
+  --diff-ext-bg:      #fee2e2;
+  --diff-ext-text:    #991b1b;
+  --diff-ext-border:  #fca5a5;
+
+  /* SRS progress dots */
+  --srs-dot-new:      #e53e3e;
+  --srs-dot-learning: #d69e2e;
+  --srs-dot-mature:   #38a169;
+
+  /* Flag / amber accent */
+  --flag-color:  #d97706;
+  --flag-bg:     #fffbeb;
+  --flag-border: #f59e0b;
+
+  /* Mastered / purple accent */
+  --mastered-color:  #6d28d9;
+  --mastered-bg:     #f5f3ff;
+  --mastered-border: #7c3aed;
+}
+
+/* ── Dark ────────────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --bg-page:        #0f1117;
+  --bg-card:        #1e2130;
+  --bg-card-hover:  #252a3a;
+  --bg-input:       #1e2130;
+  --border-subtle:  #2d3348;
+  --border-card:    #3a4060;
+
+  --text-primary:   #e8eaf0;
+  --text-secondary: #b0b8cc;
+  --text-muted:     #6b7591;
+  --text-on-brand:  #ffffff;
+
+  --brand:          #3b9edd;
+  --brand-dark:     #1a6db5;
+  --brand-light:    #0d1f35;
+  --brand-border:   #1a3a5c;
+
+  --correct:        #22c55e;
+  --correct-bg:     #052e16;
+  --correct-border: #22c55e;
+  --wrong:          #f87171;
+  --wrong-dark:     #ef4444;
+  --wrong-bg:       #2d0a0a;
+  --wrong-border:   #f87171;
+
+  --warn:           #fbbf24;
+  --warn-bg:        #2d1f05;
+  --warn-border:    #d97706;
+  --warn-text:      #fbbf24;
+
+  --srs-1:          #b91c1c;
+  --srs-1-border:   #991b1b;
+  --srs-2:          #ea580c;
+  --srs-2-border:   #c2410c;
+  --srs-3:          #2563eb;
+  --srs-3-border:   #1d4ed8;
+  --srs-4:          #16a34a;
+  --srs-4-border:   #15803d;
+
+  --sidebar-bg:     #161a27;
+  --sidebar-border: #2d3348;
+  --sidebar-header-bg: #1e2130;
+
+  --toggle-off:     #3a4060;
+  --toggle-on:      #3b9edd;
+  --toggle-thumb:   #e8eaf0;
+
+  --card-front-from: #1a3a6e;
+  --card-front-to:   #0d1f3c;
+  --card-back-from:  #1e2130;
+  --card-back-to:    #0d1f35;
+  --card-back-text:  #e8eaf0;  --explain-bg:     #0d1f35;
+  --explain-border: #1a3a5c;
+  --explain-label:  #3b9edd;
+
+  /* Difficulty badges — muted for dark */
+  --diff-easy-bg:     #052e16;
+  --diff-easy-text:   #4ade80;
+  --diff-easy-border: #166534;
+  --diff-med-bg:      #2d2500;
+  --diff-med-text:    #fde047;
+  --diff-med-border:  #854d0e;
+  --diff-hard-bg:     #2d1500;
+  --diff-hard-text:   #fb923c;
+  --diff-hard-border: #9a3412;
+  --diff-ext-bg:      #2d0a0a;
+  --diff-ext-text:    #f87171;
+  --diff-ext-border:  #991b1b;
+
+  /* SRS progress dots */
+  --srs-dot-new:      #f87171;
+  --srs-dot-learning: #fbbf24;
+  --srs-dot-mature:   #22c55e;
+
+  /* Flag / amber accent */
+  --flag-color:  #fbbf24;
+  --flag-bg:     #2d2500;
+  --flag-border: #d97706;
+
+  /* Mastered / purple accent */
+  --mastered-color:  #a78bfa;
+  --mastered-bg:     #1e0a3c;
+  --mastered-border: #7c3aed;
+}
+
+/* Dark-mode overrides for coloured stat pills */
+[data-theme="dark"] .rd-stat-mastered { background: #2d2500; border-color: #78600a; }
+[data-theme="dark"] .rd-stat-mature   { background: #002d1a; border-color: #166534; }
+[data-theme="dark"] .rd-stat-learning { background: #2d2900; border-color: #7a6c00; }
+[data-theme="dark"] .rd-stat-due      { background: #2d0a0a; border-color: #991b1b; }
+
+/* ── Protanopia (red–blind) ──────────────────────────────────── */
+/* Red channel is absent — replace all reds with amber/gold,
+   greens shifted to teal so they read as distinct from blues */
+[data-theme="protanopia"] {
+  --correct:        #0e7490;   /* teal — distinguishable from amber */
+  --correct-bg:     #ecfeff;
+  --correct-border: #0e7490;
+  --wrong:          #b45309;   /* amber-gold — replaces red */
+  --wrong-dark:     #92400e;
+  --wrong-bg:       #fffbeb;
+  --wrong-border:   #b45309;
+
+  --warn:           #7c3aed;   /* purple — distinguishable from amber */
+  --warn-bg:        #f5f3ff;
+  --warn-border:    #6d28d9;
+  --warn-text:      #4c1d95;
+
+  --srs-1:          #b45309;
+  --srs-1-border:   #92400e;
+  --srs-2:          #d97706;
+  --srs-2-border:   #b45309;
+  --srs-3:          #1d4ed8;
+  --srs-3-border:   #1e3a8a;
+  --srs-4:          #0e7490;
+  --srs-4-border:   #0c5f72;
+
+  /* Difficulty badges — green→teal, red→amber */
+  --diff-easy-bg:     #ecfeff;
+  --diff-easy-text:   #164e63;
+  --diff-easy-border: #0e7490;
+  /* medium (yellow) is fine as-is */
+  /* hard: orange is mostly visible but shift to gold for clarity */
+  --diff-hard-bg:     #fefce8;
+  --diff-hard-text:   #713f12;
+  --diff-hard-border: #ca8a04;
+  /* extreme: red → amber-brown */
+  --diff-ext-bg:      #fef3c7;
+  --diff-ext-text:    #78350f;
+  --diff-ext-border:  #b45309;
+
+  /* SRS dots */
+  --srs-dot-new:      #b45309;
+  --srs-dot-learning: #d97706;
+  --srs-dot-mature:   #0e7490;
+}
+
+/* ── Deuteranopia (green–blind) ──────────────────────────────── */
+/* Green channel is absent — replace all greens with blue,
+   reds stay as orange-red (more visible on this axis) */
+[data-theme="deuteranopia"] {
+  --correct:        #2563eb;   /* blue instead of green */
+  --correct-bg:     #eff6ff;
+  --correct-border: #2563eb;
+  --wrong:          #c2410c;   /* orange-red */
+  --wrong-dark:     #9a3412;
+  --wrong-bg:       #fff7ed;
+  --wrong-border:   #c2410c;
+
+  --warn:           #7c3aed;
+  --warn-bg:        #f5f3ff;
+  --warn-border:    #6d28d9;
+  --warn-text:      #4c1d95;
+
+  --srs-1:          #c2410c;
+  --srs-1-border:   #9a3412;
+  --srs-2:          #ea580c;
+  --srs-2-border:   #c2410c;
+  --srs-3:          #1d4ed8;
+  --srs-3-border:   #1e3a8a;
+  --srs-4:          #2563eb;
+  --srs-4-border:   #1d4ed8;
+
+  /* Difficulty badges — green→blue, hard/extreme stay warm (orange/red still visible) */
+  --diff-easy-bg:     #eff6ff;
+  --diff-easy-text:   #1e3a8a;
+  --diff-easy-border: #2563eb;
+  /* medium (yellow) fine */
+  /* hard (orange) fine — orange distinguishable from blue */
+  /* extreme: red fine for deuteranopia */
+
+  /* SRS dots */
+  --srs-dot-new:      #c2410c;
+  --srs-dot-learning: #d97706;
+  --srs-dot-mature:   #2563eb;
+}
+
+/* ── Tritanopia (blue–yellow blind) ─────────────────────────── */
+/* Tritanopia users confuse blue↔green and yellow↔white/pink.   */
+/* Fix: keep Azure brand blue intact. Shift greens → teal/cyan  */
+/* (clearly distinct from blue for tritanopia). Shift yellows    */
+/* → orange (avoids yellow/white confusion).                     */
+[data-theme="tritanopia"] {
+  /* Brand stays Azure blue — blue is visible, just confused with green */
+
+  /* Correct: shift green → teal (#0d9488) — distinct from blue & red */
+  --correct:        #0d9488;
+  --correct-bg:     #f0fdfa;
+  --correct-border: #0d9488;
+
+  /* Wrong: red is safe for tritanopia — no change needed */
+
+  /* Warn: shift amber/yellow → orange to avoid yellow↔white confusion */
+  --warn:           #ea580c;
+  --warn-bg:        #fff7ed;
+  --warn-border:    #c2410c;
+  --warn-text:      #7c2d12;
+
+  /* SRS dots: mature green → teal, learning yellow → orange */
+  --srs-dot-mature:   #0d9488;
+  --srs-dot-learning: #ea580c;
+
+  /* SRS flashcard rating buttons: shift the green one to teal */
+  --srs-3:          #0d9488;
+  --srs-3-border:   #0f766e;
+
+  /* Difficulty easy (green) → teal; medium (yellow) → orange */
+  --diff-easy-bg:     #f0fdfa;
+  --diff-easy-text:   #0f766e;
+  --diff-easy-border: #5eead4;
+  --diff-med-bg:      #fff7ed;
+  --diff-med-text:    #c2410c;
+  --diff-med-border:  #fdba74;
+
+  /* Flag stays amber — shift slightly to orange for visibility */
+  --flag-color:  #ea580c;
+  --flag-bg:     #fff7ed;
+  --flag-border: #c2410c;
+}

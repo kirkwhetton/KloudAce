@@ -1,0 +1,337 @@
+.flashcard-scene {
+  width: 100%;
+  max-width: 713px;
+  min-height: 320px;
+  perspective: 1200px;
+  cursor: pointer;
+  margin: 0 auto;
+}
+
+.card-body-wrapper:hover .flashcard-scene,
+.flashcard-scene:hover {
+  filter: drop-shadow(0 12px 24px rgba(0, 63, 138, 0.22));
+}
+
+.flashcard {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 16px;
+}
+
+.flashcard.flipped {
+  transform: rotateY(180deg);
+}
+
+.flashcard-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 114, 198, 0.18);
+  min-height: inherit;
+  height: 100%;
+}
+
+/* Invisible sizer — card grows to the height of whichever face is taller */
+.flashcard-sizer {
+  visibility: hidden;
+  pointer-events: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 320px;
+  width: 100%;
+}
+
+.flashcard-sizer-front,
+.flashcard-sizer-back {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  gap: 1rem;
+  position: relative;
+}
+
+.flashcard-front {
+  background: linear-gradient(135deg, var(--card-front-from) 0%, var(--card-front-to) 100%);
+  color: var(--text-on-brand);
+  transform: translateZ(0.01px);
+}
+
+.flashcard-back {
+  background: linear-gradient(135deg, var(--card-back-from) 0%, var(--card-back-to) 100%);
+  color: var(--card-back-text);
+  transform: rotateY(180deg);
+}
+
+.category-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  align-self: flex-start;
+}
+
+.flashcard-back .category-badge {
+  background: var(--brand);
+}
+
+.card-text {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  text-align: center;
+  margin: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.question {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.flip-hint {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  font-style: italic;
+}
+
+/* ── Edit bar — sits below the card in normal document flow ─ */
+.flashcard-edit-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 8px 4px 0;
+  max-width: 713px;
+  margin: 0 auto;
+}
+
+.flashcard-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 7px 16px;
+  border-radius: 8px;
+  border: 1.5px solid var(--brand);
+  background: transparent;
+  color: var(--brand);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.12s;
+  letter-spacing: 0.02em;
+}
+.flashcard-edit-btn:hover {
+  background: rgba(0, 120, 212, 0.1);
+  transform: translateY(-1px);
+}
+.flashcard-edit-btn:active {
+  transform: translateY(0);
+}
+
+/* ── Tag badge ─────────────────────────────────────────────── */
+.card-tag-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.18rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.04em;
+  align-self: center;
+}
+.flashcard-back .card-tag-badge {
+  background: var(--brand-light);
+  color: var(--brand);
+}
+
+/* ── Inline edit panel ─────────────────────────────────────── */
+.fie-panel {
+  max-width: 713px;
+  margin: 0.75rem auto 0;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-card);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.fie-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.fie-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.fie-select,
+.fie-input,
+.fie-textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--border-card);
+  background: var(--bg-main);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+.fie-select:focus,
+.fie-input:focus,
+.fie-textarea:focus {
+  outline: none;
+  border-color: var(--brand);
+}
+
+.fie-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding-top: 0.25rem;
+}
+
+.fie-btn {
+  padding: 0.45rem 1.1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  border: 1.5px solid transparent;
+}
+.fie-btn--cancel {
+  background: transparent;
+  border-color: var(--border-card);
+  color: var(--text-muted);
+}
+.fie-btn--cancel:hover { background: var(--bg-main); }
+.fie-btn--save {
+  background: var(--brand);
+  color: #fff;
+}
+.fie-btn--save:hover:not(:disabled) { background: var(--brand-dark); transform: translateY(-1px); }
+.fie-btn--save:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.btn {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, opacity 0.15s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.btn-review {
+  background: var(--bg-card);
+  color: var(--brand);
+  border: 2px solid var(--brand);
+}
+
+.btn-review:hover {
+  background: var(--brand-light);
+}
+
+.btn-know {
+  background: var(--brand);
+  color: var(--text-on-brand);
+}
+
+/* ── SRS Quality Rating buttons ──────────────────────────────── */
+.srs-rating {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 100%;
+}
+
+.srs-rating-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.75);
+  margin: 0;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.srs-rating-btns {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.4rem;
+}
+
+.srs-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.5rem 0.25rem;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-weight: 700;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.srs-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+.srs-emoji { font-size: 1.3rem; line-height: 1; }
+.srs-label { font-size: 0.68rem; letter-spacing: 0.02em; }
+
+.srs-1 { background: var(--srs-1); color: #fff; border-color: var(--srs-1-border); }
+.srs-2 { background: var(--srs-2); color: #fff; border-color: var(--srs-2-border); }
+.srs-3 { background: var(--srs-3); color: #fff; border-color: var(--srs-3-border); }
+.srs-4 { background: var(--srs-4); color: #fff; border-color: var(--srs-4-border); }
+
+[data-theme="dark"] .flashcard-face {
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.375), 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .card-body-wrapper:hover .flashcard-scene,
+[data-theme="dark"] .flashcard-scene:hover {
+  filter: drop-shadow(0 9px 18px rgba(255, 255, 255, 0.15));
+}
+

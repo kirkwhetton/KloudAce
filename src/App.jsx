@@ -1,0 +1,1230 @@
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
+import react from "react";
+import CustomDecks from "./CustomDecks";
+import Flashcard from "./Flashcard";
+import MultipleChoice from "./multichoice";
+import MultiSelect from "./MultiSelect";
+import TrueFalse from "./TrueFalse";
+import ImageMCQ from "./ImageMCQ";
+import TaskSimulator from "./TaskSimulator";
+import flashcards, { EXAM_META } from "./flashcards";
+import { useAuthContext } from "./auth/AuthProvider";
+import Login from "./auth/Login";
+import ExamSelect from "./ExamSelect";
+import UserProfile from "./auth/UserProfile";
+import {
+  loadSrsData, saveSrsData, updateSrsRecord, createSrsRecord,
+  sortBySrs, isDue, getSrsStats,
+} from "./spacedRepetition";
+import ConfirmDialog from "./ConfirmDialog";
+import ReadinessDashboard from "./ReadinessDashboard";
+import GuidedTour from "./GuidedTour";
+import { useStreak } from "./useStreak";
+import { useTheme, THEMES } from "./useTheme";
+import "./App.css";
+
+// Fisher-Yates shuffle — returns a new shuffled array, never mutates original
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function App() {
+  const { isAuthenticated, user, logout } = useAuthContext();
+
+  // ── Per-user storage keys ──────────────────────────────────────
+  // Scoped to user.id so each account has its own flags & progress.
+  const flagKey  = user ? `azfc_flagged_${user.id}` : "azfc_flagged_guest";
+  const knownKey = user ? `azfc_known_${user.id}`   : "azfc_known_guest";
+
+  const [selectedExam, setSelectedExam] = useState(null); // null = show splash
+  const [categories, setCategories] = useState(new Set(["All"]));
+  const [index, setIndex] = useState(0);
+  const [known, setKnown] = useState(() => {
+    try { return new Set(JSON.parse(localStorage.getItem(knownKey) || "[]")); }
+    catch { return new Set(); }
+  });
+  const [finished, setFinished] = useState(false);
+  const [sessionKey, setSessionKey] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [randomised, setRandomised] = useState(false);
+  const [flagged, setFlagged] = useState(() => {
+    try { return new Set(JSON.parse(localStorage.getItem(flagKey) || "[]")); }
+    catch { return new Set(); }
+  });
+  const [showFlaggedOnly, setShowFlaggedOnly] = useState(false);
+  const [showDueOnly, setShowDueOnly] = useState(false);
+  const [cardType, setCardType] = useState("both"); // "both" | "flashcard" | "mcq"
+  const masteredKey = user ? `azfc_mastered_${user.id}` : "azfc_mastered_guest";
+  const [mastered, setMastered] = useState(() => {
+    try { return new Set(JSON.parse(localStorage.getItem(user ? `azfc_mastered_${user.id}` : "azfc_mastered_guest") || "[]")); }
+    catch { return new Set(); }
+  });
+  const [showMastered, setShowMastered] = useState(false); // include mastered in deck
+  const [srsMode, setSrsMode] = useState(false);
+  const [srsData, setSrsData] = useState({});
+  const [showProfile, setShowProfile] = useState(false);
+  const [confirmDialog, setConfirmDialog] = useState(null); // { title, message, onConfirm }
+  const [showDashboard, setShowDashboard] = useState(false);
+  const [showCustomDecks, setShowCustomDecks] = useState(false);
+  const [difficultyFilter, setDifficultyFilter] = useState(new Set()); // empty = all
+  const [shuffleKey, setShuffleKey] = useState(0); // increment to force re-shuffle
+  const [isExiting, setIsExiting] = useState(false); // true during exit animation
+  const [isEntering, setIsEntering] = useState(false); // true during deck enter animation
+
+  // ── Guided tour — shown once per user, or on demand ───────────
+  const tourSeenKey = user ? `azfc_tour_seen_${user.id}` : null;
+  const [showTour, setShowTour] = useState(false);
+  const [tourFired, setTourFired] = useState(false);
+
+  // ── Streak tracker ─────────────────────────────────────────────
+  const { streak, longestStreak, recordActivity } = useStreak(user?.id);
+
+  // Custom Decks
+  const [customDecks, setCustomDecks] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("customDecks") || "[]"); } catch { return []; }
+  });
+  const [customDeckCards, setCustomDeckCards] = useState([]); // active custom deck cards
+
+  // ── Theme ───────────────────────────────────────────────────────
+  const { theme, setTheme } = useTheme(user?.id);
+  const handleTourDone = () => {
+    setShowTour(false);
+    if (tourSeenKey) localStorage.setItem(tourSeenKey, "1");
+  };
+  const settingsKey = user ? `azfc_settings_${user.id}` : "azfc_settings_guest";
+  const [hideAnswers, setHideAnswers] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(user ? `azfc_settings_${user.id}` : "azfc_settings_guest") || "{}").hideAnswers ?? false; }
+    catch { return false; }
+  });
+  const [hideDifficulty, setHideDifficulty] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(user ? `azfc_settings_${user.id}` : "azfc_settings_guest") || "{}").hideDifficulty ?? false; }
+    catch { return false; }
+  });
+
+  const EXAM_DURATION = 60 * 60; // 60 minutes
+  const [examMode, setExamMode]           = useState(false);
+  const [examTimer, setExamTimer]         = useState(false); // optional timed mode
+  const [examReady, setExamReady]         = useState(false);
+  const [timeLeft, setTimeLeft]           = useState(EXAM_DURATION);
+  const [examExpired, setExamExpired]     = useState(false);
+  const [examResults, setExamResults]     = useState([]);
+  const [examDone, setExamDone]           = useState(false);
+  const timerRef                          = useRef(null);
+
+  // Start timer only once the user clicks Begin — and only if timed mode is on
+  useEffect(() => {
+    if (examReady && examTimer) {
+      setTimeLeft(EXAM_DURATION);
+      setExamExpired(false);
+      setExamResults([]);
+      setExamDone(false);
+      timerRef.current = setInterval(() => {
+        setTimeLeft((t) => {
+          if (t <= 1) {
+            clearInterval(timerRef.current);
+            setExamExpired(true);
+            setExamDone(true);
+            return 0;
+          }
+          return t - 1;
+        });
+      }, 1000);
+    } else {
+      clearInterval(timerRef.current);
+      if (!examReady) {
+        setTimeLeft(EXAM_DURATION);
+        setExamExpired(false);
+      }
+    }
+    return () => clearInterval(timerRef.current);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [examReady, examTimer]);
+
+  // Reset fully when exam mode is toggled off or exam changes
+  useEffect(() => {
+    if (!examMode) { setExamReady(false); setExamTimer(false); }
+  }, [examMode]);
+
+  useEffect(() => {
+    if (examMode) { setExamMode(false); setExamReady(false); }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedExam]);
+
+  const formatTime = (secs) => {
+    const m = String(Math.floor(secs / 60)).padStart(2, "0");
+    const s = String(secs % 60).padStart(2, "0");
+    return `${m}:${s}`;
+  };
+
+  // ── Re-load persisted data when the logged-in user changes ─────
+  // (e.g. user A logs out, user B logs in on the same device)
+  useEffect(() => {
+    try { setFlagged(new Set(JSON.parse(localStorage.getItem(flagKey)  || "[]"))); }
+    catch { setFlagged(new Set()); }
+    try { setKnown(  new Set(JSON.parse(localStorage.getItem(knownKey) || "[]"))); }
+    catch { setKnown(new Set()); }
+    try { setMastered(new Set(JSON.parse(localStorage.getItem(masteredKey) || "[]"))); }
+    catch { setMastered(new Set()); }
+    setIndex(0); setFinished(false); setCategories(new Set(["All"]));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
+
+  // Load SRS data whenever user or exam changes
+  useEffect(() => {
+    if (!user || !selectedExam) return;
+    setSrsData(loadSrsData(user.id, selectedExam));
+  }, [user?.id, selectedExam]);
+
+  // Refs for keyboard shortcuts — populated after deck/current are derived below
+  const deckRef    = useRef(null);
+  const indexRef   = useRef(index);
+  const currentRef = useRef(null);
+
+  // ── Persist flagged & known across page refreshes ─────────────
+  useEffect(() => {
+    if (!user) return;
+    localStorage.setItem(flagKey, JSON.stringify([...flagged]));
+  }, [flagged, flagKey, user]);
+
+  useEffect(() => {
+    if (!user) return;
+    localStorage.setItem(knownKey, JSON.stringify([...known]));
+  }, [known, knownKey, user]);
+
+  useEffect(() => {
+    if (!user) return;
+    localStorage.setItem(masteredKey, JSON.stringify([...mastered]));
+  }, [mastered, masteredKey, user]);
+
+  // ── Derived deck (all hooks must be above the auth gate) ───────
+  // Step 1: filter by exam
+  const examDeck = selectedExam?.startsWith("CUSTOM:")
+    ? customDeckCards
+    : selectedExam?.startsWith("TOPIC:")
+      ? flashcards.filter((c) => c.category === selectedExam.slice("TOPIC:".length))
+      : flashcards.filter((c) => c.exam === selectedExam);
+
+  // Step 2: filter by selected categories — "🚩 Flagged" and "All" are virtual
+  const filteredDeck = examDeck.filter((c) => {
+    if (categories.has("🚩 Flagged") && categories.size === 1) return flagged.has(c.id);
+    if (categories.has("All")) return true;
+    // Multi-select: card matches if its category is in the selected set
+    // Also include flagged cards if 🚩 Flagged is among selections
+    return categories.has(c.category) || (categories.has("🚩 Flagged") && flagged.has(c.id));
+  });
+
+  // Step 2b: filter flagged only if sidebar toggle is on
+  const afterFlagFilter = showFlaggedOnly
+    ? filteredDeck.filter((c) => flagged.has(c.id))
+    : filteredDeck;
+
+  // Step 2c: hide mastered cards unless the user wants to see them
+  const afterMasteredFilter = showMastered
+    ? afterFlagFilter
+    : afterFlagFilter.filter((c) => !mastered.has(c.id));
+
+  // Step 2d: filter by card type
+  const afterTypeFilter = afterMasteredFilter.filter((c) => {
+    if (cardType === "flashcard") return !c.choices && c.type !== "multi" && c.type !== "truefalse" && c.type !== "image-mcq" && c.type !== "task";
+    if (cardType === "mcq")       return !!c.choices && c.type !== "multi" && c.type !== "image-mcq";
+    if (cardType === "multi")     return c.type === "multi";
+    if (cardType === "truefalse") return c.type === "truefalse";
+    if (cardType === "image-mcq") return c.type === "image-mcq";
+    if (cardType === "task")      return c.type === "task" && c.taskType !== "script";
+    if (cardType === "script")    return c.type === "task" && c.taskType === "script";
+    return true;
+  });
+
+  // Step 2e: filter by difficulty
+  const afterDifficultyFilter = difficultyFilter.size === 0
+    ? afterTypeFilter
+    : afterTypeFilter.filter((c) => difficultyFilter.has(c.difficulty ?? "easy"));
+
+  // Step 2f: filter to due-for-review cards only
+  const preShuffle = showDueOnly
+    ? afterDifficultyFilter.filter((c) => isDue(srsData[c.id]))
+    : afterDifficultyFilter;
+
+  // Step 3: order — SRS sort when in SRS mode, shuffle otherwise
+  const deck = useMemo(
+    () => {
+      if (srsMode) return sortBySrs(preShuffle, srsData);
+      return randomised ? shuffle(preShuffle) : preShuffle;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [randomised, selectedExam, categories, showFlaggedOnly, flagged, cardType, mastered, showMastered, srsMode, srsData, difficultyFilter, shuffleKey, showDueOnly, customDeckCards]
+  );
+
+  const CATEGORIES = [
+    ...(examDeck.some((c) => flagged.has(c.id)) ? ["🚩 Flagged"] : []),
+    "All",
+    ...new Set(examDeck.map((c) => c.category)),
+  ];
+  const current = deck[index];
+
+  // Keep refs in sync — must be after deck/current are derived
+  useEffect(() => { deckRef.current    = deck;    }, [deck]);
+  useEffect(() => { indexRef.current   = index;   }, [index]);
+  useEffect(() => { currentRef.current = current; }, [current]);
+
+  // Auto-show tour when first card becomes visible for a new user
+  useEffect(() => {
+    if (!current || tourFired || !tourSeenKey) return;
+    if (!localStorage.getItem(tourSeenKey)) {
+      setShowTour(true);
+      setTourFired(true);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current]);
+
+  // ── Keyboard shortcuts ─────────────────────────────────────────
+  // ←/→ navigate, F = flag, M = master. Stable effect — reads via refs.
+  useEffect(() => {
+    if (!selectedExam || finished || examMode || showProfile || showDashboard || showCustomDecks || confirmDialog) return;
+    const handler = (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.isContentEditable) return;
+      if (e.key === "ArrowRight") {
+        const d = deckRef.current; const i = indexRef.current;
+        if (i + 1 >= d.length) setFinished(true);
+        else setIndex((prev) => prev + 1);
+      } else if (e.key === "ArrowLeft") {
+        setIndex((prev) => (prev > 0 ? prev - 1 : prev));
+      } else if (e.key === "f" || e.key === "F") {
+        const c = currentRef.current;
+        if (c) setFlagged((prev) => { const n = new Set(prev); n.has(c.id) ? n.delete(c.id) : n.add(c.id); return n; });
+      } else if (e.key === "m" || e.key === "M") {
+        const c = currentRef.current;
+        if (c) {
+          setMastered((prev) => { const n = new Set(prev); n.has(c.id) ? n.delete(c.id) : n.add(c.id); return n; });
+          setIndex((prev) => { const d = deckRef.current; return prev + 1 < d.length ? prev + 1 : prev; });
+        }
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedExam, finished, examMode, showProfile, showDashboard, showCustomDecks, confirmDialog]);
+
+  // useCallback must also be before any conditional return
+  const advance = useCallback(
+    (markKnown) => {
+      if (markKnown) {
+        setKnown((prev) => new Set(prev).add(current?.id));
+        recordActivity();
+      }
+      if (index + 1 >= deck.length) setFinished(true);
+      else setIndex((i) => i + 1);
+    },
+    [index, deck.length, current, recordActivity]
+  );
+
+  const handleExam = (exam) => {
+    setSelectedExam(exam); setCategories(new Set(["All"])); setIndex(0); setKnown(new Set()); setFinished(false); setCardType("both");
+    setCustomDeckCards([]);
+    setIsEntering(true);
+    setTimeout(() => setIsEntering(false), 350);
+  };
+
+  const handleCustomDeck = (deck) => {
+    const examId = `CUSTOM:${deck.id}`;
+    const nameSlug = deck.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const cards = deck.cards.map((c, i) => {
+      const sixDigit = String(i + 1).padStart(6, "0");
+      // Only use a user-set displayId if it's a non-numeric string (i.e. manually typed, not a Date.now() timestamp)
+      const rawId = c.id !== undefined && c.id !== null ? String(c.id).trim() : "";
+      const isTimestamp = /^\d{10,}$/.test(rawId); // 10+ digits = timestamp
+      const displayId = rawId && !isTimestamp ? rawId : `${nameSlug}-${sixDigit}`;
+      return {
+        id: `${examId}-${i}`,
+        displayId,
+        exam: examId,
+        category: deck.name,
+        question: c.question,
+        answer: c.answer,
+        tag: c.tag || "",
+        difficulty: c.difficulty || "medium",
+      };
+    });
+    setCustomDeckCards(cards);
+    setSelectedExam(examId);
+    setCategories(new Set(["All"]));
+    setIndex(0);
+    setKnown(new Set());
+    setFinished(false);
+    setCardType("both");
+    setShowCustomDecks(false);
+    setIsEntering(true);
+    setTimeout(() => setIsEntering(false), 350);
+  };
+
+  // Inline card save — updates localStorage + live session state without reopening the deck editor
+  const handleInlineCardSave = (card, { question, answer, tag, deckId, difficulty, newDeckName }) => {
+    const sourceDeckId = Number(card.exam.slice("CUSTOM:".length));
+    const cardIndex = Number(card.id.slice(card.exam.length + 1));
+    const allDecks = JSON.parse(localStorage.getItem("customDecks") || "[]");
+    let updatedDecks;
+
+    if (deckId === "__new__") {
+      const newDeck = { id: Date.now(), name: newDeckName, cards: [{ id: Date.now() + 1, question, answer, tag: tag || "", difficulty }] };
+      updatedDecks = allDecks.map(d =>
+        d.id !== sourceDeckId ? d : { ...d, cards: d.cards.filter((_, i) => i !== cardIndex) }
+      ).concat(newDeck);
+      localStorage.setItem("customDecks", JSON.stringify(updatedDecks));
+      setCustomDecks(updatedDecks);
+      setCustomDeckCards(prev => prev.filter(c => c.id !== card.id));
+      return;
+    }
+
+    const targetDeckId = Number(deckId);
+    if (sourceDeckId === targetDeckId) {
+      updatedDecks = allDecks.map(d =>
+        d.id !== targetDeckId ? d
+          : { ...d, cards: d.cards.map((c, i) => i === cardIndex ? { ...c, question, answer, tag, difficulty } : c) }
+      );
+    } else {
+      const rawCard = allDecks.find(d => d.id === sourceDeckId)?.cards[cardIndex] || {};
+      updatedDecks = allDecks.map(d => {
+        if (d.id === sourceDeckId) return { ...d, cards: d.cards.filter((_, i) => i !== cardIndex) };
+        if (d.id === targetDeckId) return { ...d, cards: [...d.cards, { ...rawCard, question, answer, tag, difficulty }] };
+        return d;
+      });
+    }
+
+    localStorage.setItem("customDecks", JSON.stringify(updatedDecks));
+    setCustomDecks(updatedDecks);
+
+    const targetDeck = updatedDecks.find(d => d.id === targetDeckId);
+    setCustomDeckCards(prev => prev.map(c =>
+      c.id !== card.id ? c : {
+        ...c, question, answer, tag, difficulty,
+        category: targetDeck?.name || c.category,
+        exam: `CUSTOM:${targetDeckId}`,
+      }
+    ));
+  };
+
+  // Smooth exit back to exam select — plays CSS animation then clears exam
+  const goToExams = () => {
+    setSidebarOpen(false);
+    setShowProfile(false);
+    setShowDashboard(false);
+    setIsExiting(true);
+    setTimeout(() => {
+      setIsExiting(false);
+      setSelectedExam(null);
+    }, 350);
+  };
+
+  // ── Auth gate — AFTER all hooks ────────────────────────────────
+  if (!isAuthenticated) return <Login />;
+
+  // ── Exam splash gate ───────────────────────────────────────────
+  if (!selectedExam) {
+    return (
+      <>
+        <ExamSelect
+          user={user}
+          onSelect={(exam) => handleExam(exam)}
+          onLogout={() => { logout(); }}
+          onOpenDecks={() => setShowCustomDecks(true)}
+          onSelectCustomDeck={handleCustomDeck}
+          onSelectByTopic={(topic) => handleExam(`TOPIC:${topic}`)}
+        />
+        {showCustomDecks && (
+          <CustomDecks
+            onClose={() => setShowCustomDecks(false)}
+            onStudy={handleCustomDeck}
+          />
+        )}
+      </>
+    );
+  }
+
+  const restart = () => { setIndex(0); setKnown(new Set()); setFinished(false); setSessionKey(k => k + 1); };
+
+  const toggleFlag = (id) => {
+    setFlagged((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const toggleMastered = (id) => {
+    const isCurrentlyMastered = mastered.has(id);
+    setMastered((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+    if (!isCurrentlyMastered) goNext();
+  };
+
+  const handleSrsRate = (quality) => {
+    if (!current) return;
+    const existing = srsData[current.id] || createSrsRecord(current.id);
+    const updated = updateSrsRecord(existing, quality);
+    const newSrsData = { ...srsData, [current.id]: updated };
+    setSrsData(newSrsData);
+    if (user) saveSrsData(user.id, selectedExam, newSrsData);
+    goNext();
+  };
+
+  const goNext = () => {
+    if (index + 1 >= deck.length) setFinished(true);
+    else setIndex((i) => i + 1);
+  };
+
+  const handleExamAnswer = (result) => {
+    const newResults = [...examResults, result];
+    setExamResults(newResults);
+    // If last card, end exam
+    if (index + 1 >= deck.length) {
+      clearInterval(timerRef.current);
+      setExamDone(true);
+    } else {
+      setIndex((i) => i + 1);
+    }
+  };
+
+  const goPrev = () => {
+    if (index > 0) setIndex((i) => i - 1);
+  };
+
+  const handleCategory = (cat) => {
+    setCategories((prev) => {
+      const next = new Set(prev);
+      if (cat === "All") {
+        // "All" clears everything else and selects only All
+        return new Set(["All"]);
+      }
+      // Deselect if already selected (unless it's the only one)
+      if (next.has(cat)) {
+        next.delete(cat);
+        // If nothing left, fall back to All
+        if (next.size === 0 || (next.size === 1 && next.has("All"))) return new Set(["All"]);
+        next.delete("All"); // remove All when a specific category is picked
+        return next;
+      }
+      // Select this category, remove "All"
+      next.delete("All");
+      next.add(cat);
+      return next;
+    });
+    setIndex(0); setKnown(new Set()); setFinished(false);
+  };
+
+  const handleRandomise = () => {
+    setRandomised((r) => !r);
+    setIndex(0); setKnown(new Set()); setFinished(false);
+  };
+
+  const knownInDeck = deck.filter((c) => known.has(c.id)).length;
+  const flaggedInDeck = deck.filter((c) => flagged.has(c.id)).length;
+  const progress = deck.length > 0 ? Math.round((knownInDeck / deck.length) * 100) : 0;
+  const srsStats = getSrsStats(deck, srsData);
+  const srsDueCount = deck.filter(c => isDue(srsData[c.id])).length;
+
+  // Derive the SRS progress dot for the current card
+  function getSrsDot(cardId) {
+    const r = srsData[cardId];
+    if (!r || r.repetitions === 0) return { cssVar: "--srs-dot-new",      label: "Not started" };
+    if (r.repetitions >= 3)        return { cssVar: "--srs-dot-mature",   label: "Mature" };
+    return                                { cssVar: "--srs-dot-learning", label: "Learning" };
+  }
+
+  return (
+    <div className={`app${isExiting ? " app--exiting" : ""}${isEntering ? " app--entering" : ""}`} data-exam={selectedExam}>
+
+      {showTour && <GuidedTour onDone={handleTourDone} />}
+
+      {showProfile && <UserProfile onClose={() => {
+        setShowProfile(false);
+        try {
+          const s = JSON.parse(localStorage.getItem(settingsKey) || "{}");
+          setHideAnswers(s.hideAnswers ?? false);
+          setHideDifficulty(s.hideDifficulty ?? false);
+        } catch { /* ignore */ }
+      }} onOpenDashboard={() => setShowDashboard(true)} />}
+
+      {showDashboard && (
+        <ReadinessDashboard
+          user={user}
+          initialExam={selectedExam}
+          onClose={() => setShowDashboard(false)}
+        />
+      )}
+
+      {showCustomDecks && (
+        <CustomDecks onClose={() => setShowCustomDecks(false)} onStudy={handleCustomDeck} />
+      )}
+
+      {confirmDialog && (
+        <ConfirmDialog
+          title={confirmDialog.title}
+          message={confirmDialog.message}
+          confirmLabel="Yes, reset"
+          onConfirm={() => { confirmDialog.onConfirm(); setConfirmDialog(null); }}
+          onCancel={() => setConfirmDialog(null)}
+        />
+      )}
+
+      {/* ── Sidebar overlay ── */}
+      {sidebarOpen && (
+        <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />
+      )}
+
+      {/* ── Sidebar panel ── */}
+      <aside className={`sidebar${sidebarOpen ? " open" : ""}`}>
+        <div className="sidebar-header">
+          <span>⚙️ Options</span>
+          <button className="sidebar-close" onClick={() => setSidebarOpen(false)}>✕</button>
+        </div>
+
+        <div className="sidebar-section">
+          <h3>Card Type</h3>
+          <div className="sidebar-type-filter">
+            {[
+              { value: "both",      label: "🃏 All" },
+              { value: "flashcard", label: "🔄 Flip" },
+              { value: "mcq",       label: "☑️ MCQ" },
+              { value: "multi",     label: "✅ Multi" },
+              { value: "truefalse", label: "⚖️ T/F" },
+              { value: "image-mcq", label: "🖼️ Diagram" },
+              { value: "task",      label: "⌨️ Task" },
+              { value: "script",    label: "📜 Script" },
+            ].map(({ value, label }) => (
+              <button
+                key={value}
+                className={`sidebar-type-btn${cardType === value ? " active" : ""}`}
+                onClick={() => { setCardType(value); setIndex(0); setFinished(false); }}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="sidebar-section">
+          <h3>Card Order</h3>
+          <label className="toggle-row">
+            <span>🧠 Spaced Repetition</span>
+            <div
+              className={`toggle${srsMode ? " on" : ""}`}
+              onClick={() => { setSrsMode(s => !s); setIndex(0); setFinished(false); }}
+              role="switch"
+              aria-checked={srsMode}
+            >
+              <div className="toggle-thumb" />
+            </div>
+          </label>
+          {srsMode && (
+            <div className="srs-sidebar-stats">
+              <span className="srs-stat srs-stat-due"><span className="srs-emoji-dot" style={{background:"var(--srs-dot-new)"}}></span> {srsStats.due} reviewing</span>
+              <span className="srs-stat srs-stat-learning"><span className="srs-emoji-dot" style={{background:"var(--srs-dot-learning)"}}></span> {srsStats.learning} learning</span>
+              <span className="srs-stat srs-stat-mature"><span className="srs-emoji-dot" style={{background:"var(--srs-dot-mature)"}}></span> {srsStats.mature} mature</span>
+            </div>
+          )}
+          <label className="toggle-row">
+            <span>🔀 Randomise cards</span>
+            <div
+              className={`toggle${randomised ? " on" : ""}${srsMode ? " disabled" : ""}`}
+              onClick={() => { if (!srsMode) handleRandomise(); }}
+              role="switch"
+              aria-checked={randomised}
+              aria-disabled={srsMode}
+            >
+              <div className="toggle-thumb" />
+            </div>
+          </label>
+          {randomised && !srsMode && (
+            <button className="sidebar-action-btn" onClick={() => { setShuffleKey((k) => k + 1); setIndex(0); setKnown(new Set()); setFinished(false); }}>
+              🔀 Re-shuffle deck
+            </button>
+          )}
+        </div>
+
+        <div className="sidebar-section">
+          <h3>Session</h3>
+          <button className="sidebar-action-btn" onClick={() => { restart(); setSidebarOpen(false); }}>
+            🔄 Restart session
+          </button>
+        </div>
+
+        <div className="sidebar-section">
+          <h3>Progress</h3>
+          <button className="sidebar-action-btn" onClick={() => { setShowDashboard(true); setSidebarOpen(false); }}>
+            📊 Readiness Dashboard
+          </button>
+        </div>
+
+        <div className="sidebar-section">
+          <h3>Exam Mode</h3>
+          <label className="toggle-row">
+            <span>🎓 Exam Mode</span>
+            <div
+              className={`toggle${examMode ? " on" : ""}`}
+              onClick={() => { setExamMode(m => !m); setSidebarOpen(false); }}
+              role="switch"
+              aria-checked={examMode}
+            >
+              <div className="toggle-thumb" />
+            </div>
+          </label>
+          {examMode && (
+            <label className="toggle-row" style={{ marginTop: "0.5rem" }}>
+              <span>⏱️ Timed <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>(15 min)</span></span>
+              <div
+                className={`toggle${examTimer ? " on" : ""}`}
+                onClick={() => setExamTimer(t => !t)}
+                role="switch"
+                aria-checked={examTimer}
+              >
+                <div className="toggle-thumb" />
+              </div>
+            </label>
+          )}
+        </div>
+
+        <div className="sidebar-section">
+          <h3>Review Filter</h3>
+          <label className="toggle-row">
+            <span><span className="srs-emoji-dot" style={{background:"var(--srs-dot-new)"}}></span> Due for review only ({srsDueCount})</span>
+            <div
+              className={`toggle${showDueOnly ? " on" : ""}`}
+              onClick={() => { setShowDueOnly(d => !d); setIndex(0); setFinished(false); }}
+              role="switch"
+              aria-checked={showDueOnly}
+            >
+              <div className="toggle-thumb" />
+            </div>
+          </label>
+        </div>
+
+        <div className="sidebar-section">
+          <h3>Flagged Cards</h3>          <label className="toggle-row">
+            <span>🚩 Flagged only ({flagged.size})</span>
+            <div
+              className={`toggle${showFlaggedOnly ? " on" : ""}`}
+              onClick={() => { setShowFlaggedOnly(f => !f); setIndex(0); setFinished(false); }}
+              role="switch"
+              aria-checked={showFlaggedOnly}
+            >
+              <div className="toggle-thumb" />
+            </div>
+          </label>
+          {flagged.size > 0 && (
+            <button className="sidebar-action-btn danger" onClick={() => { setFlagged(new Set()); setShowFlaggedOnly(false); }}>
+              🗑 Clear all flags
+            </button>
+          )}
+        </div>
+
+        <div className="sidebar-section">
+          <h3>Mastered Cards</h3>
+          <label className="toggle-row">
+            <span>⭐ Show mastered ({mastered.size})</span>
+            <div
+              className={`toggle${showMastered ? " on" : ""}`}
+              onClick={() => { setShowMastered(m => !m); setIndex(0); setFinished(false); }}
+              role="switch"
+              aria-checked={showMastered}
+            >
+              <div className="toggle-thumb" />
+            </div>
+          </label>
+          {mastered.size > 0 && (
+            <button className="sidebar-action-btn danger" onClick={() => setMastered(new Set())}>
+              🗑 Clear all mastered
+            </button>
+          )}
+        </div>
+
+        <div className="sidebar-section">
+          <h3>Difficulty</h3>
+          <div className="sidebar-type-filter">
+            {[
+              { value: "all",     dot: null,                     text: "All" },
+              { value: "easy",    dot: "var(--diff-easy-text)",   text: "Easy" },
+              { value: "medium",  dot: "var(--diff-med-text)",    text: "Medium" },
+              { value: "hard",    dot: "var(--diff-hard-text)",   text: "Hard" },
+              { value: "extreme", dot: "var(--diff-ext-text)",    text: "Extreme" },
+            ].map(({ value, dot, text }) => (
+              <button
+                key={value}
+                className={`sidebar-type-btn${value === "all" ? (difficultyFilter.size === 0 ? " active" : "") : (difficultyFilter.has(value) ? " active" : "")}`}
+                onClick={() => {
+                  if (value === "all") {
+                    setDifficultyFilter(new Set());
+                  } else {
+                    setDifficultyFilter(prev => {
+                      const next = new Set(prev);
+                      next.has(value) ? next.delete(value) : next.add(value);
+                      return next;
+                    });
+                  }
+                  setIndex(0);
+                  setFinished(false);
+                }}
+              >
+                {dot && <span className="diff-dot" style={{background: dot}}></span>}{text}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Theme ── */}
+        <div className="sidebar-section">
+          <h3>Appearance</h3>
+          <div className="sidebar-type-filter">
+            {THEMES.map(({ value, label }) => (
+              <button
+                key={value}
+                className={`sidebar-type-btn${theme === value ? " active" : ""}`}
+                onClick={() => setTheme(value)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+      </aside>
+
+      {/* ── Header ── */}
+      <header className="app-header">
+        <div className="header-inner">
+          <svg className="azure-icon-svg" viewBox="28 34 220 136" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <path id="headerCloud" d="M50 115C30 115 15 100 15 82C15 66 27 53 43 51C45 30 63 14 85 14C102 14 117 24 124 39C129 36 135 34 141 34C159 34 174 49 174 67C188 69 199 81 199 95C199 106 191 115 180 115Z"/>
+            </defs>
+            <use href="#headerCloud" x="20" y="27" fill="#185FA5"/>
+            <use href="#headerCloud" x="40" y="47" fill="#ffffff" stroke="#2980D9" strokeWidth="5"/>
+          </svg>
+          <div className="logo-text">
+            <h1>Azure<span className="title-ace">Ace</span></h1>
+            <p className="subtitle">Your Azure learning & certification hub</p>
+          </div>
+        </div>
+        <div className="header-actions">
+          {/* User pill — clickable to open profile */}
+          <span className="header-user" data-tour="header-user" onClick={() => setShowProfile(true)} title="Edit profile">
+            <svg className="user-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+            </svg>
+            {user.name}
+          </span>
+
+          {/* Streak pill */}
+          {streak > 0 && (
+            <span
+              className={`streak-pill${streak >= 7 ? " streak-pill--hot" : ""}`}
+              title={`${streak}-day streak 🔥  (best: ${longestStreak})`}
+            >
+              🔥 <strong>{streak}</strong>
+            </span>
+          )}
+
+          {/* Action buttons */}
+          <div className="header-buttons-stack">
+            <div className="header-buttons">
+              <button className="header-btn" onClick={() => setSidebarOpen(true)} aria-label="Open options" data-tour="options-btn">
+                <span className="header-btn-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                  </svg>
+                </span>
+                <span className="header-btn-label">Options</span>
+              </button>
+              <button className="header-btn" onClick={() => setShowTour(true)} title="Take the guided tour">
+                <span className="header-btn-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/>
+                    <line x1="9" y1="3" x2="9" y2="18"/>
+                    <line x1="15" y1="6" x2="15" y2="21"/>
+                  </svg>
+                </span>
+                <span className="header-btn-label">Tour</span>
+              </button>
+              {/* Divider */}
+              <span className="header-btn-divider" />
+              <button className="header-btn header-btn--signout" onClick={() => { goToExams(); setTimeout(() => logout(), 350); }} title="Sign out">
+                <span className="header-btn-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                  </svg>
+                </span>
+                <span className="header-btn-label">Sign Out</span>
+              </button>
+            </div>
+            <div className="header-btn-row">
+              <button className="header-btn header-btn--dashboard" onClick={() => setShowDashboard(true)} title="Readiness dashboard" data-tour="dashboard-btn">
+                <span className="header-btn-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                    <line x1="2" y1="20" x2="22" y2="20"/>
+                  </svg>
+                </span>
+                <span className="header-btn-label">Dashboard</span>
+              </button>
+              <button className="header-btn header-btn--decks" onClick={() => setShowCustomDecks(true)} title="My custom flashcard decks">
+                <span className="header-btn-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="2" y="6" width="20" height="14" rx="2"/>
+                    <path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                    <line x1="12" y1="11" x2="12" y2="17"/>
+                    <line x1="9" y1="14" x2="15" y2="14"/>
+                  </svg>
+                </span>
+                <span className="header-btn-label">My Cards</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* ── Exam Mode timer banner ── */}
+      {examMode && (
+        <div className={`exam-timer-banner${examExpired ? " expired" : examReady && examTimer && timeLeft <= 60 ? " warning" : ""}`}>
+          {examExpired ? (
+            <>
+              <span className="exam-timer-icon">🚨</span>
+              <span className="exam-timer-label">Time's up!</span>
+              <button className="exam-timer-stop" onClick={() => setExamMode(false)}>Dismiss</button>
+            </>
+          ) : !examReady ? (
+            <>
+              <span className="exam-timer-icon">🎓</span>
+              <span className="exam-timer-label">Exam Mode{examTimer ? " — timed" : ""} — ready when you are</span>
+              <button className="exam-timer-stop" onClick={() => setExamMode(false)}>✕ Cancel</button>
+            </>
+          ) : (
+            <>
+              <span className="exam-timer-icon">🎓</span>
+              <span className="exam-timer-label">Exam Mode</span>
+              {examTimer && (
+                <span className={`exam-timer-clock${timeLeft <= 60 ? " tick" : ""}`}>{formatTime(timeLeft)}</span>
+              )}
+              <button className="exam-timer-stop" onClick={() => setExamMode(false)}>✕ Stop</button>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Category pills — multi-select */}
+      <nav className="category-nav" data-tour="category-nav">
+        <button className="cat-btn" onClick={goToExams}>← Exams</button>
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            className={`cat-btn${categories.has(cat) ? " active" : ""}${cat === "🚩 Flagged" ? " flagged-cat" : ""}`}
+            onClick={() => handleCategory(cat)}
+          >
+            {cat}
+          </button>
+        ))}
+      </nav>
+
+      <div className="progress-area">
+        <div className="progress-stats">
+          <span>Card <strong>{Math.min(index + 1, deck.length)}</strong> of <strong>{deck.length}</strong></span>
+          <span>
+            {srsMode
+              ? srsDueCount > 0 && <span className="srs-due-badge"><span className="srs-emoji-dot" style={{background:"var(--srs-dot-new)"}}></span> {srsDueCount} reviewing</span>
+              : <>
+                  {flaggedInDeck > 0 && <span className="flag-stat">🚩 {flaggedInDeck} &nbsp;·&nbsp; </span>}
+                  <span className="known-check" aria-hidden="true">✓</span> <strong>{knownInDeck}</strong> known ({progress}%)
+                </>
+            }
+          </span>
+        </div>
+        <div className="progress-bar-track">
+          <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
+        </div>
+      </div>
+
+      <main className={`main-content${(current?.taskType === "script" || cardType === "script") ? " main-content--wide" : ""}`}>
+        {examMode && !examReady ? (
+          <div className="exam-intro-box">
+            <div className="exam-intro-icon">⏱️</div>
+            <h2 className="exam-intro-title">Exam Mode</h2>
+            <p className="exam-intro-desc">
+              {examTimer
+                ? <>You have <strong>15 minutes</strong> to work through this deck.<br />The timer starts the moment you press <strong>Begin</strong>.</>
+                : <>Work through the deck at your own pace.<br />No feedback is shown until the end.</>
+              }
+            </p>
+            <ul className="exam-intro-rules">
+              <li>📋 Work through cards at your own pace</li>
+              <li>🚫 No feedback shown until the end</li>
+              {examTimer && <li>⏰ Timer counts down in the bar above</li>}
+              {examTimer && <li>🔴 Banner pulses red in the final 60 seconds</li>}
+            </ul>
+            <button className="exam-intro-begin" onClick={() => { setExamResults([]); setExamDone(false); setIndex(0); setExamReady(true); }}>
+              Begin Exam
+            </button>
+            <button className="exam-intro-cancel" onClick={() => setExamMode(false)}>
+              Cancel
+            </button>
+          </div>
+        ) : examMode && examDone ? (
+          <div className="exam-results-screen">
+            <div className="exam-results-header">
+              <span className="exam-results-icon">{examExpired ? "⏰" : "🎓"}</span>
+              <h2>{examExpired ? "Time's Up!" : "Exam Complete!"}</h2>
+              <p className="exam-results-sub">
+                {examResults.filter(r => r.correct).length} / {examResults.length} correct
+                {examResults.length < deck.length ? ` (${deck.length - examResults.length} not reached)` : ""}
+              </p>
+              <div className="exam-results-score">
+                {Math.round((examResults.filter(r => r.correct).length / Math.max(deck.length, 1)) * 100)}%
+              </div>
+            </div>
+
+            <div className="exam-results-list">
+              {deck.map((card, i) => {
+                const result = examResults[i];
+                if (!result) {
+                  return (
+                    <div key={card.id} className="exam-result-row exam-result-skipped">
+                      <span className="exam-result-num">{i + 1}</span>
+                      <div className="exam-result-body">
+                        <p className="exam-result-q">{card.question}</p>
+                        <p className="exam-result-meta">⏭️ Not reached</p>
+                        {card.learnUrl && (
+                          <a className="exam-result-learn-link" href={card.learnUrl} target="_blank" rel="noreferrer">
+                            📖 Learn more
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  );
+                }
+                return (
+                  <div key={card.id} className={`exam-result-row ${result.correct ? "exam-result-correct" : "exam-result-wrong"}`}>
+                    <span className="exam-result-num">{i + 1}</span>
+                    <div className="exam-result-body">
+                      <p className="exam-result-q">{card.question}</p>
+                      {result.given !== null && (
+                        <p className="exam-result-meta">
+                          Your answer: <strong>{result.given}</strong>
+                          {!result.correct && <> · Correct: <strong>{result.expected}</strong></>}
+                        </p>
+                      )}
+                      {card.explanation && (
+                        <p className="exam-result-explanation">💡 {card.explanation}</p>
+                      )}
+                      {card.learnUrl && !result.correct && (
+                        <a className="exam-result-learn-link" href={card.learnUrl} target="_blank" rel="noreferrer">
+                          📖 Learn more on Microsoft Learn
+                        </a>
+                      )}
+                    </div>
+                    <span className="exam-result-badge">{result.correct ? <span className="known-check">✓</span> : "❌"}</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="exam-results-actions">
+              <button className="exam-intro-begin" onClick={() => { setExamResults([]); setExamDone(false); setIndex(0); setExamReady(false); }}>
+                🔄 Try Again
+              </button>
+              <button className="exam-intro-cancel" onClick={() => { setExamMode(false); setIndex(0); }}>
+                Exit Exam Mode
+              </button>
+            </div>
+          </div>
+        ) : finished && !examMode ? (
+          <div className="results-card">
+            <h2>🎉 Session Complete!</h2>
+            <p>You've worked through all <strong>{deck.length}</strong> cards in this session.</p>
+            <button className="btn-restart" onClick={restart}>🔄 Start Again</button>
+          </div>
+        ) : deck.length === 0 ? (
+          <div className="empty-deck-card">
+            <p className="empty-deck-icon">🔍</p>
+            <h3 className="empty-deck-title">No cards match your filters</h3>
+            <p className="empty-deck-desc">
+              {showDueOnly
+                ? "No cards are due for review right now — check back later or turn off the Due for review filter."
+                : showFlaggedOnly
+                ? "You have no flagged cards under the current filters."
+                : cardType !== "both"
+                ? "No cards of this type exist in the selected categories."
+                : difficultyFilter.size > 0
+                ? "No cards match the selected difficulty."
+                : "Try selecting different categories or adjusting your filters."}
+            </p>
+            <div className="empty-deck-actions">
+              {showDueOnly && (
+                <button className="sidebar-action-btn" onClick={() => { setShowDueOnly(false); setIndex(0); }}>
+                  Remove due filter
+                </button>
+              )}
+              {showFlaggedOnly && (
+                <button className="sidebar-action-btn" onClick={() => { setShowFlaggedOnly(false); setIndex(0); }}>
+                  Remove flagged filter
+                </button>
+              )}
+              {cardType !== "both" && (
+                <button className="sidebar-action-btn" onClick={() => { setCardType("both"); setIndex(0); }}>
+                  Show all card types
+                </button>
+              )}
+              {difficultyFilter.size > 0 && (
+                <button className="sidebar-action-btn" onClick={() => { setDifficultyFilter(new Set()); setIndex(0); }}>
+                  Clear difficulty filter
+                </button>
+              )}
+              <button className="sidebar-action-btn" onClick={() => handleCategory("All")}>
+                Reset categories
+              </button>
+            </div>
+          </div>
+        ) : (
+          current && (
+            <div className="card-wrapper">
+              <div className="card-action-row" data-tour="flag-btn">
+                <button
+                  className={`flag-btn${flagged.has(current.id) ? " flagged" : ""}`}
+                  onClick={() => toggleFlag(current.id)}
+                  title={flagged.has(current.id) ? "Remove flag" : "Flag for review"}
+                >
+                  {flagged.has(current.id) ? "🚩 Flagged" : "🏳 Flag"}
+                </button>
+                <button
+                  className={`mastered-btn${mastered.has(current.id) ? " mastered" : ""}`}
+                  onClick={() => toggleMastered(current.id)}
+                  title={mastered.has(current.id) ? "Unmark as mastered" : "Mark as mastered — removes from deck"}
+                >
+                  {mastered.has(current.id) ? "⭐ Mastered" : "☆ Mark mastered"}
+                </button>
+              </div>
+              <div className="card-body-wrapper">
+                {current.type === "truefalse" ? (
+                  <TrueFalse
+                    key={`${sessionKey}-${current.id}`}
+                    card={current}
+                    onKnow={() => advance(true)}
+                    onSrsRate={srsMode ? handleSrsRate : undefined}
+                    hideAnswers={hideAnswers}
+                    examMode={examMode && examReady}
+                    onExamAnswer={handleExamAnswer}
+                  />
+                ) : current.type === "image-mcq" ? (
+                  <ImageMCQ
+                    key={`${sessionKey}-${current.id}`}
+                    card={current}
+                    onKnow={() => advance(true)}
+                    onSrsRate={srsMode ? handleSrsRate : undefined}
+                    hideAnswers={hideAnswers}
+                    examMode={examMode && examReady}
+                    onExamAnswer={handleExamAnswer}
+                  />
+                ) : current.type === "task" ? (
+                  <TaskSimulator
+                    key={`${sessionKey}-${current.id}`}
+                    card={current}
+                    onKnow={() => advance(true)}
+                    onSrsRate={srsMode ? handleSrsRate : undefined}
+                    hideAnswers={hideAnswers}
+                    examMode={examMode && examReady}
+                    onExamAnswer={handleExamAnswer}
+                  />
+                ) : current.type === "multi" ? (
+                  <MultiSelect
+                    key={`${sessionKey}-${current.id}`}
+                    card={current}
+                    onKnow={() => advance(true)}
+                    onSrsRate={srsMode ? handleSrsRate : undefined}
+                    hideAnswers={hideAnswers}
+                    examMode={examMode && examReady}
+                    onExamAnswer={handleExamAnswer}
+                  />
+                ) : current.choices ? (
+                  <MultipleChoice
+                    key={`${sessionKey}-${current.id}`}
+                    card={current}
+                    onKnow={() => advance(true)}
+                    onSrsRate={srsMode ? handleSrsRate : undefined}
+                    hideAnswers={hideAnswers}
+                    examMode={examMode && examReady}
+                    onExamAnswer={handleExamAnswer}
+                  />
+                ) : (
+                  <Flashcard
+                    key={`${sessionKey}-${current.id}`}
+                    card={current}
+                    onKnow={() => advance(true)}
+                    onSrsRate={srsMode ? handleSrsRate : undefined}
+                    hideAnswers={hideAnswers}
+                    examMode={examMode && examReady}
+                    onExamAnswer={handleExamAnswer}
+                    hideDifficulty={hideDifficulty}
+                    onSaveCard={selectedExam?.startsWith("CUSTOM:") ? (updated) => handleInlineCardSave(current, updated) : undefined}
+                    decks={selectedExam?.startsWith("CUSTOM:") ? customDecks : undefined}
+                    displayId={current.displayId || undefined}
+                  />
+                )}
+                {srsMode && (() => {
+                  const dot = getSrsDot(current.id);
+                  return (
+                    <div className="srs-dot-footer">
+                      <span
+                        className="srs-progress-dot"
+                        style={{ backgroundColor: `var(${dot.cssVar})` }}
+                        title={`SRS: ${dot.label}`}
+                      />
+                      <span className="srs-dot-label">{dot.label}</span>
+                    </div>
+                  );
+                })()}
+                {!current.id?.toString().startsWith("CUSTOM:") && !current.displayId && (
+                  <span className="card-id-badge">#{current.id}</span>
+                )}
+              </div>
+            </div>
+          )
+        )}
+      </main>
+
+      {/* Prev / Next navigation — hidden in exam mode */}
+      {!finished && !examMode && deck.length > 0 && (
+        <div className="card-nav" data-tour="card-nav">
+          <button
+            className="card-nav-btn"
+            onClick={goPrev}
+            disabled={index === 0}
+          >
+            ← Previous
+          </button>
+          <span className="card-nav-counter">{index + 1} / {deck.length}</span>
+          <button
+            className="card-nav-btn"
+            onClick={goNext}
+            disabled={index + 1 >= deck.length}
+          >
+            Next →
+          </button>
+        </div>
+      )}
+
+      <footer className="app-footer">
+        Built with React + Vite &nbsp;·&nbsp; Azure learning series
+      </footer>
+    </div>
+  );
+}
+
+export default App;

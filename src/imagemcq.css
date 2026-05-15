@@ -1,0 +1,40 @@
+/* ── Image MCQ styles ─────────────────────────────────────────── */
+
+.image-mcq-card {
+  max-width: 782px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.image-mcq-card:hover {
+  box-shadow: 0 16px 40px rgba(0, 63, 138, 0.2);
+}
+
+.image-mcq-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.image-mcq-diagram {
+  width: 100%;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-subtle);
+  background: var(--bg-card-hover);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.image-mcq-diagram svg {
+  width: 100%;
+  height: auto;
+  max-height: 299px;
+}
+
+[data-theme="dark"] .image-mcq-card {
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.375), 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+[data-theme="dark"] .image-mcq-card:hover {
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.625), 0 12px 30px rgba(0, 0, 0, 0.5);
+}

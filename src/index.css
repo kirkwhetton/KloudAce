@@ -1,0 +1,28 @@
+@import "./themes.css";
+
+/* Minimal reset — AzureAce */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-page);
+}
+
+body[data-theme="dark"] {
+  background: linear-gradient(135deg, #27394f 0%, #091527 50%, #050d1a 100%);
+  background-attachment: fixed;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
