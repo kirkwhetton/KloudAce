@@ -9,8 +9,9 @@ import az700tf      from "./az-700-tf.js";
 import az700task    from "./az-700-task.js";
 import az700image   from "./az-700-image.jsx";
 import az700hotspot from "./az-700-hotspot.jsx";
+import az700multi   from "./az-700-multi.js";
 
-export { az700mcq, az700tf, az700task, az700image, az700hotspot };
+export { az700mcq, az700tf, az700task, az700image, az700hotspot, az700multi };
 
 export const meta = {
   exam: "AZ-700",
@@ -23,6 +24,7 @@ const az700 = [
   ...az700task,
   ...az700image,
   ...az700hotspot,
+  ...az700multi,
 ].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 
 export default az700;
