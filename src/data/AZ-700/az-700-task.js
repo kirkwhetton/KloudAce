@@ -3,7 +3,7 @@
 
 const az700task = [
   {
-    id: "AZ-700-123",
+    id: "AZ-700-T-101",
     exam: "AZ-700",
     type: "task",
     taskType: "script",
@@ -51,7 +51,7 @@ EXAMPLE:
     learnUrl: "https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group",
   },
   {
-    id: "AZ-700-124",
+    id: "AZ-700-T-102",
     exam: "AZ-700",
     type: "task",
     taskType: "script",

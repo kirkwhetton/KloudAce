@@ -7,6 +7,7 @@ import MultiSelect from "./MultiSelect";
 import TrueFalse from "./TrueFalse";
 import ImageMCQ from "./ImageMCQ";
 import TaskSimulator from "./TaskSimulator";
+import Hotspot from "./Hotspot";
 import flashcards, { EXAM_META } from "./flashcards";
 import { useAuthContext } from "./auth/AuthProvider";
 import Login from "./auth/Login";
@@ -230,11 +231,12 @@ function App() {
 
   // Step 2d: filter by card type
   const afterTypeFilter = afterMasteredFilter.filter((c) => {
-    if (cardType === "flashcard") return !c.choices && c.type !== "multi" && c.type !== "truefalse" && c.type !== "image-mcq" && c.type !== "task";
+    if (cardType === "flashcard") return !c.choices && c.type !== "multi" && c.type !== "truefalse" && c.type !== "image-mcq" && c.type !== "task" && c.type !== "hotspot";
     if (cardType === "mcq")       return !!c.choices && c.type !== "multi" && c.type !== "image-mcq";
     if (cardType === "multi")     return c.type === "multi";
     if (cardType === "truefalse") return c.type === "truefalse";
     if (cardType === "image-mcq") return c.type === "image-mcq";
+    if (cardType === "hotspot")   return c.type === "hotspot";
     if (cardType === "task")      return c.type === "task" && c.taskType !== "script";
     if (cardType === "script")    return c.type === "task" && c.taskType === "script";
     return true;
@@ -596,6 +598,7 @@ function App() {
               { value: "multi",     label: "✅ Multi" },
               { value: "truefalse", label: "⚖️ T/F" },
               { value: "image-mcq", label: "🖼️ Diagram" },
+              { value: "hotspot",   label: "🎯 Hotspot" },
               { value: "task",      label: "⌨️ Task" },
               { value: "script",    label: "📜 Script" },
             ].map(({ value, label }) => (
@@ -1134,6 +1137,16 @@ function App() {
                   />
                 ) : current.type === "task" ? (
                   <TaskSimulator
+                    key={`${sessionKey}-${current.id}`}
+                    card={current}
+                    onKnow={() => advance(true)}
+                    onSrsRate={srsMode ? handleSrsRate : undefined}
+                    hideAnswers={hideAnswers}
+                    examMode={examMode && examReady}
+                    onExamAnswer={handleExamAnswer}
+                  />
+                ) : current.type === "hotspot" ? (
+                  <Hotspot
                     key={`${sessionKey}-${current.id}`}
                     card={current}
                     onKnow={() => advance(true)}

@@ -1,5 +1,5 @@
 // AZ-700 — Multiple Choice Questions
-// Cards: AZ-700-101, 102, 104, 106, 107, 109, 111, 113, 115, 117, 118, 120, 121, 122
+// Cards: AZ-700-101, 102, 104, 106, 107, 109, 111, 113, 115, 117, 118, 120, 121, 122, 123
 
 const az700mcq = [
   {
@@ -281,6 +281,26 @@ const az700mcq = [
     explanation:
       "This question requires synthesising four distinct AZ-700 domains: (1) UDR-forced routing through Azure Firewall for spoke-to-spoke transit (peering is non-transitive by design); (2) Azure Private DNS Resolver replaces the legacy 'DNS forwarder VM' pattern; (3) The NVA chaining requires careful UDR sequencing or Azure Route Server; (4) hub-spoke peering alone is non-transitive — without Firewall-as-router (via UDRs) or Virtual WAN, Spoke A and Spoke B are isolated. Option B is wrong — 'Allow Gateway Transit' only controls gateway route propagation, not spoke-to-spoke traffic. Option C is partially true but insufficient. Option D is wrong — NSGs do not sequence NVA and Firewall traffic; UDRs do.",
     learnUrl: "https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/hybrid-networking/hub-spoke",
+  },
+  {
+    id: "AZ-700-123",
+    exam: "AZ-700",
+    type: "mcq",
+    difficulty: "medium",
+    category: "Application Delivery Services",
+    question: "A company hosts its public web application in East US (primary) and West Europe (secondary). Requirements: all user traffic must go to East US when it is healthy; West Europe should only receive traffic if East US fails its health checks. A network engineer suggests using Traffic Manager with the Performance routing method because West Europe has lower latency for European users. Is this correct, and which routing method should be used?",
+    answer:
+      "Priority routing is correct: East US is assigned Priority 1 and West Europe Priority 2, so all traffic goes to East US unless it fails health probes.",
+    choices: [
+      "Priority routing",
+      "Performance routing",
+      "Weighted routing",
+      "Geographic routing",
+    ],
+    correctAnswer: 0,
+    explanation:
+      "Priority routing is the correct pattern for active/passive failover: Traffic Manager sends all traffic to the Priority 1 endpoint and only falls back to Priority 2 (or lower) when the higher-priority endpoint fails health probes. Performance routing, routes traffic using a latency table to determine which endpoint is best. Weighted routing with 0% weight still registers the endpoint and can receive traffic during failover — a 0% weighted endpoint is not the same as disabled. Geographic routing is for data residency requirements, not health-based failover.",
+    learnUrl: "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-routing-methods",
   },
 ];
 
