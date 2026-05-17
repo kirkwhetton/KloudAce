@@ -165,7 +165,7 @@
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
+  transition: background 0.2s;
 }
 .task-submit-btn:hover:not(:disabled) {
   background: var(--brand-dark);
@@ -402,12 +402,12 @@
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
+  transition: background 0.2s;
 }
 .btn-review { background: var(--bg-card); color: var(--brand); border: 2px solid var(--brand); }
-.btn-review:hover { background: var(--brand-light); transform: translateY(-1px); }
+.btn-review:hover { background: var(--brand-light); }
 .btn-know   { background: var(--brand); color: var(--text-on-brand); }
-.btn-know:hover { background: var(--brand-dark); transform: translateY(-1px); }
+.btn-know:hover { background: var(--brand-dark); }
 
 /* ── Learn More link (shared across all card types via App.css import) ── */
 .learn-more-link {

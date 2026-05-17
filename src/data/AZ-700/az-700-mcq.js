@@ -1,5 +1,5 @@
 // AZ-700 — Multiple Choice Questions
-// Cards: AZ-700-101, 102, 104, 106, 107, 109, 111, 113, 115, 117, 118, 120, 121, 122
+// Cards: AZ-700-101, 102, 104, 106, 107, 109, 111, 113, 115, 117, 118, 120, 121, 122, 123, 124, 125, 129, 130, 131, 132
 
 const az700mcq = [
   {
@@ -281,6 +281,152 @@ const az700mcq = [
     explanation:
       "This question requires synthesising four distinct AZ-700 domains: (1) UDR-forced routing through Azure Firewall for spoke-to-spoke transit (peering is non-transitive by design); (2) Azure Private DNS Resolver replaces the legacy 'DNS forwarder VM' pattern; (3) The NVA chaining requires careful UDR sequencing or Azure Route Server; (4) hub-spoke peering alone is non-transitive — without Firewall-as-router (via UDRs) or Virtual WAN, Spoke A and Spoke B are isolated. Option B is wrong — 'Allow Gateway Transit' only controls gateway route propagation, not spoke-to-spoke traffic. Option C is partially true but insufficient. Option D is wrong — NSGs do not sequence NVA and Firewall traffic; UDRs do.",
     learnUrl: "https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/hybrid-networking/hub-spoke",
+  },
+  {
+    id: "AZ-700-123",
+    exam: "AZ-700",
+    type: "mcq",
+    difficulty: "medium",
+    category: "Application Delivery Services",
+    question: "A company hosts its public web application in East US (primary) and West Europe (secondary). Requirements: all user traffic must go to East US when it is healthy; West Europe should only receive traffic if East US fails its health checks. A network engineer suggests using Traffic Manager with the Performance routing method because West Europe has lower latency for European users. Is this correct, and which routing method should be used?",
+    answer:
+      "Priority routing is correct: East US is assigned Priority 1 and West Europe Priority 2, so all traffic goes to East US unless it fails health probes.",
+    choices: [
+      "Priority routing",
+      "Performance routing",
+      "Weighted routing",
+      "Geographic routing",
+    ],
+    correctAnswer: 0,
+    explanation:
+      "Priority routing is the correct pattern for active/passive failover: Traffic Manager sends all traffic to the Priority 1 endpoint and only falls back to Priority 2 (or lower) when the higher-priority endpoint fails health probes. Performance routing, routes traffic using a latency table to determine which endpoint is best. Weighted routing with 0% weight still registers the endpoint and can receive traffic during failover — a 0% weighted endpoint is not the same as disabled. Geographic routing is for data residency requirements, not health-based failover.",
+    learnUrl: "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-routing-methods",
+  },
+  {
+    id: "AZ-700-124",
+    exam: "AZ-700",
+    type: "mcq",
+    difficulty: "medium",
+    category: "Private Access",
+    question: "A team stores sensitive customer data in Azure Blob Storage. Their security policy has two requirements: (1) the storage FQDN must resolve to a private IP from the application VNet, and (2) on-premises servers connected via ExpressRoute must also resolve and connect to the storage account using only private IPs. A network engineer proposes enabling a Service Endpoint for Microsoft.Storage on the application subnet. Which statement is correct?",
+    answer:
+      "Service Endpoints do not change DNS — the storage FQDN still resolves to its public IP. They also provide no private access path for on-premises clients. A Private Endpoint with a linked privatelink.blob.core.windows.net DNS zone satisfies requirement 1; an on-premises DNS forwarder pointing at Azure's private DNS is additionally required for requirement 2.",
+    choices: [
+      "Service Endpoints do not meet either requirement — a Private Endpoint with a Private DNS zone is needed for requirement 1, plus on-premises DNS forwarding for requirement 2",
+      "Service Endpoints meet requirement 1 by overriding DNS to return a private IP, but a separate configuration is needed for on-premises access",
+      "Service Endpoints meet both requirements when combined with a storage firewall rule restricting access to the VNet address space",
+      "Service Endpoints meet requirement 2 because ExpressRoute connections automatically follow Service Endpoint routes into the VNet",
+    ],
+    correctAnswer: 0,
+    explanation:
+      "Service Endpoints optimise routing — traffic travels over the Azure backbone rather than the public internet — but the storage account's public IP is still the destination and the FQDN still resolves publicly. They have no effect on on-premises clients at all; ExpressRoute does not propagate Service Endpoint routes. Private Endpoints are the only mechanism that assigns a private IP to the resource and updates DNS. For on-premises resolution, a DNS Private Resolver inbound endpoint (or a DNS forwarder VM) must be deployed so that on-premises DNS servers can forward privatelink zone queries into Azure's private DNS.",
+    learnUrl: "https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-overview",
+  },
+  {
+    id: "AZ-700-125",
+    exam: "AZ-700",
+    type: "mcq",
+    difficulty: "medium",
+    category: "Private Access",
+    question: "A SaaS company hosts a multi-tenant API in their Azure VNet behind a Standard Internal Load Balancer. They need customers in separate tenants to access the service privately — without VNet peering, without exposing a public IP, and without giving customers access to the provider's VNet. Which Azure feature should the provider configure?",
+    answer:
+      "Azure Private Link Service sits on top of the Standard Internal Load Balancer and generates a unique alias. Each customer uses that alias to create a Private Endpoint in their own VNet — no peering, no public IP, and no access to the provider's VNet is required.",
+    choices: [
+      "Create an Azure Private Link Service on the Standard Internal Load Balancer — customers connect via a Private Endpoint using the PLS alias",
+      "Configure VNet Global Peering to each customer VNet and restrict access to the service subnet using NSGs",
+      "Deploy an Azure Application Gateway with a private frontend IP and share a private DNS record with each customer",
+      "Enable a Service Endpoint policy on the provider subnet and grant access to each approved customer subscription",
+    ],
+    correctAnswer: 0,
+    explanation:
+      "Private Link Service is the provider-side counterpart to Private Endpoints. The provider creates a PLS resource on top of a Standard Internal Load Balancer; Azure generates a globally unique alias (e.g. myservice.abc123.centralus.azure.privatelinkservice). Each consumer creates a Private Endpoint in their own VNet referencing that alias — traffic flows over the Azure backbone with no VNet peering, no route overlap concerns, and no visibility into the provider's network. VNet peering (option B) requires non-overlapping address spaces and grants broader access. Application Gateway (option C) still requires network-layer connectivity. Service Endpoint policies (option D) apply to Azure PaaS services, not custom workloads.",
+    learnUrl: "https://learn.microsoft.com/en-us/azure/private-link/private-link-service-overview",
+  },
+  {
+    id: "AZ-700-129",
+    exam: "AZ-700",
+    type: "mcq",
+    difficulty: "hard",
+    category: "Private Access",
+    question: "You have configured an Azure Private Link Service for your internal API. Your backend VMs log the source IPs of incoming connections and consistently see IPs from 10.5.0.0/24 — an address range you don't recognise from any consumer VNet. What is the correct explanation?",
+    answer:
+      "Private Link Service performs SNAT on all inbound consumer traffic using IPs from a dedicated NAT subnet (10.5.0.0/24) configured in the provider VNet. The consumer's original IP is replaced with a NAT IP before the packet reaches the backend, preventing address-space conflicts between provider and consumer VNets.",
+    choices: [
+      "Private Link Service SNATs inbound consumer traffic to IPs from a dedicated NAT subnet in the provider VNet — 10.5.0.0/24 is that NAT subnet, not the consumer's address space",
+      "The consumer VNets are being peered to the provider VNet and 10.5.0.0/24 is leaking through as the consumer's subnet range",
+      "Azure automatically allocates a new IP range per consumer from the provider's address space to isolate each tenant's traffic",
+      "The Standard Load Balancer is performing DNAT and replacing both source and destination IPs before forwarding traffic to the backend pool",
+    ],
+    correctAnswer: 0,
+    explanation:
+      "When you create a Private Link Service, you must designate a NAT IP subnet in the provider VNet. Azure uses IPs from this subnet to SNAT all inbound connections from consumers — regardless of what address space the consumer's VNet uses. This is essential: it means the backend never sees consumer IPs directly, and overlapping address spaces between provider and consumer VNets are handled transparently. If you need the original consumer IP (e.g. for logging), you can enable TCP Proxy Protocol v2 on the Private Link Service, which passes the original source IP as metadata in the TCP handshake.",
+    learnUrl: "https://learn.microsoft.com/en-us/azure/private-link/private-link-service-overview#nat-ip-configuration",
+  },
+  {
+    id: "AZ-700-130",
+    exam: "AZ-700",
+    type: "mcq",
+    difficulty: "hard",
+    category: "Security & Monitoring",
+    question:
+      "A Site-to-Site VPN between your on-premises network and an Azure VNet shows as Connected in the portal. BGP is configured on both sides. However, several on-premises subnets are not appearing in the Azure VNet's effective routes, and VMs cannot reach those subnets. The on-premises BGP router reports that it is advertising the prefixes correctly. Which VPN Gateway diagnostic log should you review first?",
+    answer:
+      "RouteDiagnosticLog records BGP session events, route advertisements received and sent, and route table changes on the gateway. Because the tunnel is already established, IKE negotiation is not the issue — RouteDiagnosticLog is the correct log for diagnosing missing BGP-learned routes.",
+    choices: [
+      "IKEDiagnosticLog",
+      "RouteDiagnosticLog",
+      "GatewayDiagnosticLog",
+      "TunnelDiagnosticLog",
+    ],
+    correctAnswer: 1,
+    explanation:
+      "IKEDiagnosticLog covers Phase 1 (ISAKMP) and Phase 2 (IPsec SA) negotiation — relevant only when the tunnel fails to establish, which is not the case here. TunnelDiagnosticLog records connect/disconnect events and packet-level drops within an established tunnel, not route propagation. GatewayDiagnosticLog captures gateway health, restart events, and configuration changes — useful for gateway-level failures but not BGP specifics. RouteDiagnosticLog is the log that records which prefixes the VPN Gateway receives from BGP peers, which it advertises, and any route filtering or policy that might be silently dropping the on-premises advertisements. Reviewing it will show whether the gateway is receiving the missing prefixes from the BGP peer and whether they are being accepted into the route table.",
+    learnUrl:
+      "https://learn.microsoft.com/en-us/azure/vpn-gateway/troubleshoot-vpn-with-azure-diagnostics",
+  },
+  {
+    id: "AZ-700-131",
+    exam: "AZ-700",
+    type: "mcq",
+    difficulty: "hard",
+    category: "Hybrid Connectivity",
+    question:
+      "Your organisation has a compliance requirement to encrypt all data at Layer 2 between on-premises routers and Microsoft's network edge. You want to use MACsec. Which ExpressRoute configuration is required?",
+    answer:
+      "MACsec is only available on ExpressRoute Direct, where the customer's router physically connects to the Microsoft Enterprise Edge (MSEE) routers at a peering location via a dedicated 10 Gbps or 100 Gbps port pair.",
+    choices: [
+      "Any ExpressRoute circuit provisioned through a connectivity provider with the Premium add-on",
+      "ExpressRoute with Microsoft peering and BGP communities enabled",
+      "ExpressRoute Direct — a dedicated 10 Gbps or 100 Gbps port pair at a peering location",
+      "ExpressRoute with a zone-redundant gateway SKU (ErGw3Az) in the connected VNet",
+    ],
+    correctAnswer: 2,
+    explanation:
+      "MACsec (IEEE 802.1AE) is a Layer 2 standard that encrypts traffic on the physical Ethernet link. With standard ExpressRoute circuits, the connectivity provider manages the physical link between the customer and the MSEE, so customers cannot configure MACsec on that segment. ExpressRoute Direct bypasses the provider — the customer's router plugs directly into the MSEE at a colocation facility, giving full control over the physical link and enabling MACsec configuration. The Premium add-on, Microsoft peering, BGP communities, and gateway SKU are all unrelated to MACsec availability.",
+    learnUrl:
+      "https://learn.microsoft.com/en-us/azure/expressroute/expressroute-howto-macsec",
+  },
+  {
+    id: "AZ-700-132",
+    exam: "AZ-700",
+    type: "mcq",
+    difficulty: "hard",
+    category: "Hybrid Connectivity",
+    question:
+      "A financial services company has an ExpressRoute Premium circuit connecting their on-premises network to an Azure Hub VNet. A new regulatory requirement mandates that all data in transit between on-premises and Azure must be encrypted end-to-end. What should you configure?",
+    answer:
+      "Deploy a VPN Gateway in the Hub VNet and establish an IPsec/IKE tunnel over the ExpressRoute private peering. Traffic is encrypted end-to-end at Layer 3 from on-premises all the way into Azure, riding inside the existing circuit.",
+    choices: [
+      "Configure MACsec on the ExpressRoute circuit connections to encrypt traffic between on-premises and Azure",
+      "Deploy a VPN Gateway in the Hub VNet and establish an IPsec tunnel over the ExpressRoute private peering",
+      "Enable the ExpressRoute Premium add-on to activate AES-256 encryption on the private peering",
+      "Enable ExpressRoute Global Reach to route traffic through Microsoft's encrypted backbone between on-premises and Azure",
+    ],
+    correctAnswer: 1,
+    explanation:
+      "MACsec (option A) is only configurable on ExpressRoute Direct connections, where the customer's router physically plugs into the MSEE at a peering location — it is not available on provider-managed circuits. The Premium add-on (option C) unlocks global routing and more BGP prefixes; it has no encryption feature. ExpressRoute Global Reach (option D) connects two on-premises sites via Microsoft's backbone — it is not a mechanism for encrypting traffic between on-premises and Azure, and it adds no encryption regardless. The correct solution is to run an IPsec/IKE VPN tunnel over the ExpressRoute private peering (option B): a VPN Gateway in Azure terminates the tunnel, encrypting all traffic at Layer 3 end-to-end across the circuit.",
+    learnUrl:
+      "https://learn.microsoft.com/en-us/azure/vpn-gateway/site-to-site-vpn-private-peering",
   },
 ];
 

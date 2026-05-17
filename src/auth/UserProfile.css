@@ -159,7 +159,7 @@
   transition: opacity 0.15s, transform 0.1s;
   align-self: flex-start;
 }
-.profile-save-btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+.profile-save-btn:hover:not(:disabled) { opacity: 0.88; }
 .profile-save-btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
 /* ── Stats tab ── */

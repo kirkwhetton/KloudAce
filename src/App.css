@@ -518,7 +518,6 @@ button .known-check {
 
 .app--exiting {
   animation: app-exit 0.35s cubic-bezier(0.4, 0, 0.6, 1) both;
-  pointer-events: none;
 }
 
 /* Hide fixed-position panels during exit — parent transform breaks their positioning */
@@ -535,7 +534,6 @@ button .known-check {
 
 .app--entering {
   animation: app-enter 0.35s cubic-bezier(0, 0, 0.2, 1) both;
-  pointer-events: none;
 }
 
 /* Hide fixed-position panels during enter — parent transform breaks their positioning */

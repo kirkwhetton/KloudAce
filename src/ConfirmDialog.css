@@ -68,7 +68,7 @@
   border: 2px solid transparent;
   transition: opacity 0.15s, transform 0.1s;
 }
-.cdialog-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.cdialog-btn:hover { opacity: 0.85; }
 
 .cdialog-btn.cancel {
   background: var(--bg-card-hover);

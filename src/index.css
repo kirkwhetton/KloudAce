@@ -5,6 +5,16 @@
   box-sizing: border-box;
 }
 
+/* Ensure taps register on trackpad (Safari requires cursor:pointer for tap-to-click) */
+button, a, [role="button"], [role="tab"], [role="option"] {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+input, textarea, select {
+  touch-action: manipulation;
+}
+
 html, body {
   margin: 0;
   padding: 0;
