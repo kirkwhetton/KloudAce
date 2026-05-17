@@ -1,10 +1,22 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import "./multichoice.css";
 import "./multiselect.css";
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 export default function MultiSelect({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer }) {
   const [selected, setSelected] = useState(new Set());
   const [submitted, setSubmitted] = useState(false);
+  const [shuffleKey, setShuffleKey] = useState(0);
+
+  const shuffledChoices = useMemo(() => shuffle(card.choices), [card.id, shuffleKey]);
 
   const correctSet = new Set(card.correctAnswers);
   const totalCorrect = correctSet.size;
@@ -29,6 +41,7 @@ export default function MultiSelect({ card, onKnow, onSrsRate, hideAnswers, exam
   const handleReview = () => {
     setSelected(new Set());
     setSubmitted(false);
+    setShuffleKey(k => k + 1);
   };
 
   const isFullyCorrect =
@@ -52,7 +65,7 @@ export default function MultiSelect({ card, onKnow, onSrsRate, hideAnswers, exam
       </div>
 
       <div className="mcq-choices">
-        {card.choices.map((choice, i) => (
+        {shuffledChoices.map((choice, i) => (
           <button
             key={i}
             className={getButtonClass(choice)}
