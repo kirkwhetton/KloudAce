@@ -27,7 +27,7 @@ export default function TrueFalse({ card, onKnow, onSrsRate, hideAnswers, examMo
   };
 
   return (    <div className="mcq-card tf-card">
-      <div className="tf-top"><span className="mcq-category">{card.category}</span>
+      <div className="tf-top"><div className="card-meta"><span className="mcq-category">{card.category}</span><span className={`difficulty-badge difficulty-badge--${card.difficulty}`}>{card.difficulty}</span></div>
       </div>
 
       <p className="mcq-question">{card.question}</p>

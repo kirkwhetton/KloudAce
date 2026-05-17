@@ -37,7 +37,7 @@ export default function ImageMCQ({ card, onKnow, onSrsRate, hideAnswers, examMod
   };
 
   return (    <div className="mcq-card image-mcq-card">
-      <div className="image-mcq-top"><span className="mcq-category">{card.category}</span>
+      <div className="image-mcq-top"><div className="card-meta"><span className="mcq-category">{card.category}</span><span className={`difficulty-badge difficulty-badge--${card.difficulty}`}>{card.difficulty}</span></div>
       </div>
 
       <p className="mcq-question-header">{card.question_header}</p>

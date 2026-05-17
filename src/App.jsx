@@ -329,7 +329,7 @@ function App() {
     setSelectedExam(exam); setCategories(new Set(["All"])); setIndex(0); setKnown(new Set()); setFinished(false); setCardType("both");
     setCustomDeckCards([]);
     setIsEntering(true);
-    setTimeout(() => setIsEntering(false), 350);
+    setTimeout(() => setIsEntering(false), 380);
   };
 
   const handleCustomDeck = (deck) => {
@@ -361,7 +361,7 @@ function App() {
     setCardType("both");
     setShowCustomDecks(false);
     setIsEntering(true);
-    setTimeout(() => setIsEntering(false), 350);
+    setTimeout(() => setIsEntering(false), 380);
   };
 
   // Inline card save — updates localStorage + live session state without reopening the deck editor
@@ -419,7 +419,7 @@ function App() {
     setTimeout(() => {
       setIsExiting(false);
       setSelectedExam(null);
-    }, 350);
+    }, 380);
   };
 
   // ── Auth gate — AFTER all hooks ────────────────────────────────

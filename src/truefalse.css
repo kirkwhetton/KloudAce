@@ -89,10 +89,10 @@
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.15s, opacity 0.15s, background 0.15s;
+  transition: opacity 0.15s, background 0.15s;
   border: none;
 }
-.btn:hover { transform: translateY(-2px); opacity: 0.9; }
+.btn:hover { opacity: 0.85; }
 
 .btn-review {
   background: var(--bg-card);

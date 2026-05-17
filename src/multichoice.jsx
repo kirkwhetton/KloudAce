@@ -50,7 +50,10 @@ function MultipleChoice({ card, onKnow, onSrsRate, hideAnswers, examMode, onExam
   return (
     <div className="mcq-card">
       {/* Category badge— just displaying data from the card prop */}
-      <span className="mcq-category">{card.category}</span>
+      <div className="card-meta">
+        <span className="mcq-category">{card.category}</span>
+        <span className={`difficulty-badge difficulty-badge--${card.difficulty}`}>{card.difficulty}</span>
+      </div>
 
       {/* The question text */}
       <p className="mcq-question">{card.question}</p>

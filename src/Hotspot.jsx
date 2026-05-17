@@ -33,7 +33,10 @@ export default function Hotspot({ card, onKnow, onSrsRate, hideAnswers, examMode
   return (
     <div className="hotspot-card">
       <div className="hotspot-top">
-        <span className="mcq-category">{card.category}</span>
+        <div className="card-meta">
+          <span className="mcq-category">{card.category}</span>
+          <span className={`difficulty-badge difficulty-badge--${card.difficulty}`}>{card.difficulty}</span>
+        </div>
       </div>
 
       <p className="hotspot-question">{card.question}</p>

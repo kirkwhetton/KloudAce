@@ -1,5 +1,5 @@
 // AZ-700 — True / False
-// Cards: AZ-700-103, 105, 108, 110, 112, 114, 116, 119
+// Cards: AZ-700-103, 105, 108, 110, 112, 114, 116, 119, 128, 133
 
 const az700tf = [
   {
@@ -97,6 +97,32 @@ const az700tf = [
     explanation:
       "NSG Flow Logs capture 5-tuple information (source IP, destination IP, source port, destination port, protocol) plus whether the traffic was allowed or denied. The logs are written to a Storage Account in JSON format and can be sent to Log Analytics for analysis via Traffic Analytics — giving visibility into network traffic patterns and security threats.",
     learnUrl: "https://learn.microsoft.com/en-us/azure/network-watcher/nsg-flow-logs-overview",
+  },
+  {
+    id: "AZ-700-128",
+    exam: "AZ-700",
+    type: "truefalse",
+    difficulty: "easy",
+    category: "Private Access",
+    question: "An Azure Private Link Service can be created on top of an Azure Basic Internal Load Balancer, provided the backend pool contains fewer than 300 instances.",
+    answer: false,
+    explanation:
+      "Private Link Service requires a Standard Internal Load Balancer — the Basic tier is not supported regardless of backend pool size. Standard Load Balancer is required because it supports the health probe and frontend IP features that Private Link Service depends on. If your service currently uses a Basic Load Balancer, you must upgrade it to Standard before creating a Private Link Service.",
+    learnUrl: "https://learn.microsoft.com/en-us/azure/private-link/private-link-service-overview#properties",
+  },
+  {
+    id: "AZ-700-133",
+    exam: "AZ-700",
+    type: "truefalse",
+    difficulty: "hard",
+    category: "Hybrid Connectivity",
+    question:
+      "MACsec on ExpressRoute Direct encrypts all traffic end-to-end between on-premises virtual machines and Azure VMs in the connected virtual network.",
+    answer: false,
+    explanation:
+      "MACsec (IEEE 802.1AE) is a Layer 2 link-encryption standard. On ExpressRoute Direct it encrypts only the physical Ethernet segment between the customer's edge router (at the colocation/peering facility) and the Microsoft Enterprise Edge (MSEE) routers. Once traffic passes the MSEE it travels unencrypted through Microsoft's backbone to the ExpressRoute Gateway and into the VNet — MACsec does not follow the packet beyond that physical link. For end-to-end encryption all the way to Azure VMs, an IPsec VPN tunnel over the ExpressRoute private peering is required, optionally in combination with MACsec for defence-in-depth.",
+    learnUrl:
+      "https://learn.microsoft.com/en-us/azure/expressroute/expressroute-howto-macsec",
   },
 ];
 

@@ -67,7 +67,10 @@ function FillInTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnsw
   return (
     <div className="task-card">
       <div className="task-header">
-        <span className="task-category">{card.category}</span>
+        <div className="card-meta">
+          <span className="task-category">{card.category}</span>
+          <span className={`difficulty-badge difficulty-badge--${card.difficulty}`}>{card.difficulty}</span>
+        </div>
         <span className="task-type-badge">⌨️ Fill In</span>
       </div>
 
@@ -187,7 +190,10 @@ function OrderTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswe
   return (
     <div className="task-card">
       <div className="task-header">
-        <span className="task-category">{card.category}</span>
+        <div className="card-meta">
+          <span className="task-category">{card.category}</span>
+          <span className={`difficulty-badge difficulty-badge--${card.difficulty}`}>{card.difficulty}</span>
+        </div>
         <span className="task-type-badge">🔢 Order Steps</span>
       </div>
 
@@ -320,7 +326,10 @@ function MatchTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswe
   return (
     <div className="task-card">
       <div className="task-header">
-        <span className="task-category">{card.category}</span>
+        <div className="card-meta">
+          <span className="task-category">{card.category}</span>
+          <span className={`difficulty-badge difficulty-badge--${card.difficulty}`}>{card.difficulty}</span>
+        </div>
         <span className="task-type-badge">🔗 Match</span>
       </div>
 
@@ -543,7 +552,10 @@ function ScriptTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnsw
   const finalCorrect = finalTokenResults.length > 0 && finalTokenResults.every(t => t.ok);
   return (
     <div className="task-card task-card--script">      <div className="task-header">
-        <span className="task-category">{card.category}</span>
+        <div className="card-meta">
+          <span className="task-category">{card.category}</span>
+          <span className={`difficulty-badge difficulty-badge--${card.difficulty}`}>{card.difficulty}</span>
+        </div>
         <span className={shell === "powershell" ? "task-type-badge-ps" : "task-type-badge"}>{badgeLabel}</span>
       </div>
 

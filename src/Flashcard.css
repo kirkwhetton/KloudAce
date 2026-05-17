@@ -238,7 +238,7 @@
   background: var(--brand);
   color: #fff;
 }
-.fie-btn--save:hover:not(:disabled) { background: var(--brand-dark); transform: translateY(-1px); }
+.fie-btn--save:hover:not(:disabled) { background: var(--brand-dark); }
 .fie-btn--save:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .action-buttons {
