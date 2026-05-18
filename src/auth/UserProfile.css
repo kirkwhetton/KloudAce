@@ -348,3 +348,26 @@
   color: var(--text-muted);
   line-height: 1.45;
 }
+
+.premium-status-chip {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: var(--bg-card-hover);
+  color: var(--text-muted);
+  border: 1px solid var(--border-card);
+  white-space: nowrap;
+}
+.premium-status-chip--on {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+  border-color: transparent;
+}
+
+.settings-row--dev {
+  opacity: 0.65;
+  border-top: 1px dashed var(--border-subtle);
+  padding-top: 0.75rem;
+  margin-top: -0.25rem;
+}

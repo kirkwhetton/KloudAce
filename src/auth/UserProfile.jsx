@@ -6,7 +6,7 @@ import { clearSrsDataForExam, clearSrsDataForCards } from "../spacedRepetition";
 import "./UserProfile.css";
 
 export default function UserProfile({ onClose, onOpenDashboard }) {
-  const { user, updateProfile, changePassword, error, setError } = useAuthContext();
+  const { user, updateProfile, changePassword, togglePremium, error, setError } = useAuthContext();
 
   // ── Profile tab state
   const [name, setName]   = useState(user?.name || "");
@@ -380,6 +380,34 @@ export default function UserProfile({ onClose, onOpenDashboard }) {
                 <span className="toggle-thumb" />
               </button>
             </div>
+            <div className="settings-row">
+              <div className="settings-row-label">
+                <span className="settings-row-title">👑 Premium</span>
+                <span className="settings-row-desc">
+                  {user?.isPremium
+                    ? "Premium account — full access to all content."
+                    : "Free account — upgrade to unlock premium exams and cards."}
+                </span>
+              </div>
+              <span className={`premium-status-chip${user?.isPremium ? " premium-status-chip--on" : ""}`}>
+                {user?.isPremium ? "👑 Premium" : "Free"}
+              </span>
+            </div>
+            <div className="settings-row settings-row--dev">
+              <div className="settings-row-label">
+                <span className="settings-row-title">🔧 Simulate Premium</span>
+                <span className="settings-row-desc">Dev toggle — simulates premium access locally without a real purchase.</span>
+              </div>
+              <button
+                className={`toggle${user?.isPremium ? " on" : ""}`}
+                onClick={() => togglePremium(!user?.isPremium)}
+                aria-pressed={user?.isPremium}
+                aria-label="Toggle premium simulation"
+              >
+                <span className="toggle-thumb" />
+              </button>
+            </div>
+
             <div className="settings-row">
               <div className="settings-row-label">
                 <span className="settings-row-title">🏷️ Hide difficulty badges</span>

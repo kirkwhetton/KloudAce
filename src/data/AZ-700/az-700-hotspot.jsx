@@ -2,7 +2,7 @@
 // Cards: AZ-700-HS-101 … AZ-700-HS-105
 
 const TrafficManagerDiagram = (
-  <svg viewBox="0 0 680 370" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 680, fontFamily: "sans-serif" }}>
+  <svg viewBox="0 0 680 370" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
     <defs>
       <marker id="hs-ab" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
         <path d="M0,0 L0,7 L8,3.5 z" fill="#0078d4"/>
@@ -73,7 +73,7 @@ const TrafficManagerDiagram = (
 );
 
 const AzureFirewallDiagram = (
-  <svg viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 680, fontFamily: "sans-serif" }}>
+  <svg viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
     <defs>
       <marker id="fw-ab" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
         <path d="M0,0 L0,7 L8,3.5 z" fill="#3b82f6"/>
@@ -148,7 +148,7 @@ const AzureFirewallDiagram = (
 );
 
 const PrivateAccessDiagram = (
-  <svg viewBox="0 0 680 325" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 680, fontFamily: "sans-serif" }}>
+  <svg viewBox="0 0 680 325" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
     <defs>
       <marker id="pr-ab" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
         <path d="M0,0 L0,7 L8,3.5 z" fill="#0078d4"/>
@@ -213,7 +213,7 @@ const PrivateAccessDiagram = (
 );
 
 const S2SVPNDiagram = (
-  <svg viewBox="0 0 680 258" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 680, fontFamily: "sans-serif" }}>
+  <svg viewBox="0 0 680 258" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
     <defs>
       <marker id="s2s-arr" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
         <path d="M0,0 L0,7 L8,3.5 z" fill="#6366f1"/>
@@ -279,7 +279,7 @@ const S2SVPNDiagram = (
 );
 
 const HubSpokeTransitDiagram = (
-  <svg viewBox="0 0 680 342" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 680, fontFamily: "sans-serif" }}>
+  <svg viewBox="0 0 680 342" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
 
     <text x="340" y="17" textAnchor="middle" fontSize="9.5" fill="#475569" fontWeight="600">Spoke-A connectivity investigation — four diagnostic panels</text>
 
@@ -354,7 +354,7 @@ const HubSpokeTransitDiagram = (
 );
 
 const HubFaultTransitDiagram = (
-  <svg viewBox="0 0 680 342" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 680, fontFamily: "sans-serif" }}>
+  <svg viewBox="0 0 680 342" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
 
     <text x="340" y="17" textAnchor="middle" fontSize="9.5" fill="#475569" fontWeight="600">Spoke-A connectivity investigation — four diagnostic panels</text>
 

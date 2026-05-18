@@ -58,11 +58,11 @@ export function useAuth() {
     }
 
     const hash = await hashPassword(password);
-    const newUser = { id: crypto.randomUUID(), name, email, hash };
+    const newUser = { id: crypto.randomUUID(), name, email, hash, isPremium: false };
     saveUsers([...users, newUser]);
 
     // Auto-login after registration
-    const session = { id: newUser.id, name: newUser.name, email: newUser.email };
+    const session = { id: newUser.id, name: newUser.name, email: newUser.email, isPremium: false };
     localStorage.setItem(SESSION_KEY, JSON.stringify(session));
     setUser(session);
     return true;
@@ -85,7 +85,7 @@ export function useAuth() {
       return false;
     }
 
-    const session = { id: found.id, name: found.name, email: found.email };
+    const session = { id: found.id, name: found.name, email: found.email, isPremium: found.isPremium ?? false };
     localStorage.setItem(SESSION_KEY, JSON.stringify(session));
     setUser(session);
     return true;
@@ -105,7 +105,7 @@ export function useAuth() {
 
     users[idx] = { ...users[idx], name, email };
     saveUsers(users);
-    const session = { id: user.id, name, email };
+    const session = { id: user.id, name, email, isPremium: user.isPremium ?? false };
     localStorage.setItem(SESSION_KEY, JSON.stringify(session));
     setUser(session);
     return true;
@@ -129,6 +129,18 @@ export function useAuth() {
     return true;
   }, [user]);
 
+  // Toggle premium (dev / admin use — replace with real billing webhook in production)
+  const togglePremium = useCallback((value) => {
+    const users = loadUsers();
+    const idx = users.findIndex((u) => u.id === user?.id);
+    if (idx === -1) return;
+    users[idx] = { ...users[idx], isPremium: value };
+    saveUsers(users);
+    const session = { ...user, isPremium: value };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    setUser(session);
+  }, [user]);
+
   // Logout
   const logout = useCallback(() => {
     localStorage.removeItem(SESSION_KEY);
@@ -136,5 +148,5 @@ export function useAuth() {
     setError(null);
   }, []);
 
-  return { user, isAuthenticated, login, register, logout, updateProfile, changePassword, error, setError };
+  return { user, isAuthenticated, login, register, logout, updateProfile, changePassword, togglePremium, error, setError };
 }

@@ -1,5 +1,15 @@
 /* ── Task Simulator ───────────────────────────────────────── */
 
+.task-simulator-shell {
+  position: relative;
+  max-width: 660px;
+  width: 100%;
+  margin: 0 auto;
+}
+.task-simulator-shell--wide {
+  max-width: 100%;
+}
+
 .task-card {
   background: var(--bg-card);
   border-radius: 16px;
@@ -627,6 +637,83 @@
   font-size: 0.88rem;
   color: #86efac;
 }
+
+/* ── Fault Task ─────────────────────────────────────────── */
+
+.fault-scenario {
+  background: var(--bg-card-hover);
+  border: 1px solid var(--border-card);
+  border-left: 4px solid var(--brand);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  font-family: "Consolas", "Fira Code", monospace;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  overflow-x: auto;
+  line-height: 1.65;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.fault-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fault-option {
+  padding: 0.7rem 1rem;
+  border: 2px solid var(--border-card);
+  border-radius: 8px;
+  background: var(--bg-card);
+  text-align: left;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, opacity 0.15s;
+  color: var(--text-primary);
+  line-height: 1.45;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+.fault-option:hover:not(:disabled):not(.fault-selected) {
+  border-color: var(--brand);
+  background: var(--brand-light);
+}
+.fault-option.fault-selected {
+  border-color: var(--brand);
+  background: var(--brand-light);
+  font-weight: 600;
+}
+.fault-option.fault-correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+  color: var(--correct);
+  font-weight: 600;
+}
+.fault-option.fault-wrong {
+  border-color: var(--wrong);
+  background: var(--wrong-bg);
+  color: var(--wrong);
+}
+.fault-option.fault-dimmed {
+  opacity: 0.38;
+  cursor: default;
+}
+
+.fault-fix {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: var(--bg-card);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--correct-bg);
+  border-left: 3px solid var(--correct);
+}
+.fault-fix p { margin: 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.55; overflow-wrap: break-word; word-break: break-word; }
 
 [data-theme="dark"] .task-card {
   box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.375), 0 8px 32px rgba(0, 0, 0, 0.4);
