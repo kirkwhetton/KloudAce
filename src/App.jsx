@@ -7,6 +7,7 @@ import MultiSelect from "./MultiSelect";
 import TrueFalse from "./TrueFalse";
 import ImageMCQ from "./ImageMCQ";
 import TaskSimulator from "./TaskSimulator";
+import PremiumLockedCard from "./PremiumLockedCard";
 import Hotspot from "./Hotspot";
 import flashcards, { EXAM_META } from "./flashcards";
 import { useAuthContext } from "./auth/AuthProvider";
@@ -73,6 +74,7 @@ function App() {
   const [showDashboard, setShowDashboard] = useState(false);
   const [showCustomDecks, setShowCustomDecks] = useState(false);
   const [difficultyFilter, setDifficultyFilter] = useState(new Set()); // empty = all
+  const [showDevRecent, setShowDevRecent] = useState(false);
   const [shuffleKey, setShuffleKey] = useState(0); // increment to force re-shuffle
   const [isExiting, setIsExiting] = useState(false); // true during exit animation
   const [isEntering, setIsEntering] = useState(false); // true during deck enter animation
@@ -148,7 +150,8 @@ function App() {
 
   // Reset fully when exam mode is toggled off or exam changes
   useEffect(() => {
-    if (!examMode) { setExamReady(false); setExamTimer(false); }
+    if (examMode) { setExamTimer(true); }
+    else { setExamReady(false); setExamTimer(false); }
   }, [examMode]);
 
   useEffect(() => {
@@ -248,18 +251,32 @@ function App() {
     : afterTypeFilter.filter((c) => difficultyFilter.has(c.difficulty ?? "easy"));
 
   // Step 2f: filter to due-for-review cards only
-  const preShuffle = showDueOnly
+  const afterDueFilter = showDueOnly
     ? afterDifficultyFilter.filter((c) => isDue(srsData[c.id]))
     : afterDifficultyFilter;
 
-  // Step 3: order — SRS sort when in SRS mode, shuffle otherwise
+  // Step 2g: dev — show only cards added in the last 25 hours
+  const DEV_WINDOW_MS = 25 * 60 * 60 * 1000;
+  const preShuffle = showDevRecent
+    ? afterDueFilter.filter((c) => c.devAdded && Date.now() - new Date(c.devAdded).getTime() < DEV_WINDOW_MS)
+    : afterDueFilter;
+
+  // Step 3: order — exam mode gets its own pipeline (no easy, random 40); otherwise SRS or shuffle
+  const EXAM_CARD_LIMIT = 40;
   const deck = useMemo(
     () => {
+      if (examMode) {
+        const filtered = preShuffle.filter(c =>
+          (c.difficulty ?? "medium") !== "easy" &&
+          !(c.type === "task" && c.taskType === "script")
+        );
+        return shuffle(filtered).slice(0, EXAM_CARD_LIMIT);
+      }
       if (srsMode) return sortBySrs(preShuffle, srsData);
       return randomised ? shuffle(preShuffle) : preShuffle;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [randomised, selectedExam, categories, showFlaggedOnly, flagged, cardType, mastered, showMastered, srsMode, srsData, difficultyFilter, shuffleKey, showDueOnly, customDeckCards]
+    [randomised, selectedExam, categories, showFlaggedOnly, flagged, cardType, mastered, showMastered, srsMode, srsData, difficultyFilter, shuffleKey, showDueOnly, showDevRecent, customDeckCards, examMode]
   );
 
   const CATEGORIES = [
@@ -291,10 +308,12 @@ function App() {
     const handler = (e) => {
       if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.isContentEditable) return;
       if (e.key === "ArrowRight") {
+        e.preventDefault();
         const d = deckRef.current; const i = indexRef.current;
         if (i + 1 >= d.length) setFinished(true);
         else setIndex((prev) => prev + 1);
       } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
         setIndex((prev) => (prev > 0 ? prev - 1 : prev));
       } else if (e.key === "f" || e.key === "F") {
         const c = currentRef.current;
@@ -710,6 +729,21 @@ function App() {
         </div>
 
         <div className="sidebar-section">
+          <h3>Developer</h3>
+          <label className="toggle-row">
+            <span>🧪 Recently added <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>(last 25h)</span></span>
+            <div
+              className={`toggle${showDevRecent ? " on" : ""}`}
+              onClick={() => { setShowDevRecent(d => !d); setIndex(0); setFinished(false); }}
+              role="switch"
+              aria-checked={showDevRecent}
+            >
+              <div className="toggle-thumb" />
+            </div>
+          </label>
+        </div>
+
+        <div className="sidebar-section">
           <h3>Flagged Cards</h3>          <label className="toggle-row">
             <span>🚩 Flagged only ({flagged.size})</span>
             <div
@@ -959,21 +993,65 @@ function App() {
       <main className={`main-content${(current?.taskType === "script" || cardType === "script") ? " main-content--wide" : ""}`}>
         {examMode && !examReady ? (
           <div className="exam-intro-box">
-            <div className="exam-intro-icon">⏱️</div>
+            <div className="exam-intro-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
             <h2 className="exam-intro-title">Exam Mode</h2>
             <p className="exam-intro-desc">
-              {examTimer
-                ? <>You have <strong>15 minutes</strong> to work through this deck.<br />The timer starts the moment you press <strong>Begin</strong>.</>
-                : <>Work through the deck at your own pace.<br />No feedback is shown until the end.</>
-              }
+              You have <strong>60 minutes</strong> to answer <strong>40 random questions</strong>.<br />The timer starts the moment you press <strong>Begin</strong>.
             </p>
             <ul className="exam-intro-rules">
-              <li>📋 Work through cards at your own pace</li>
-              <li>🚫 No feedback shown until the end</li>
-              {examTimer && <li>⏰ Timer counts down in the bar above</li>}
-              {examTimer && <li>🔴 Banner pulses red in the final 60 seconds</li>}
+              <li>
+                <svg className="exam-rule-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
+                  <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+                </svg>
+                40 questions selected at random from this deck
+              </li>
+              <li>
+                <svg className="exam-rule-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                </svg>
+                Easy cards excluded — Medium, Hard and Extreme only
+              </li>
+              <li>
+                <svg className="exam-rule-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>
+                </svg>
+                Script/terminal cards excluded — question-based only
+              </li>
+              <li>
+                <svg className="exam-rule-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                No feedback or correct answers shown during the exam
+              </li>
+              {examTimer && <li>
+                <svg className="exam-rule-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                60-minute timer starts when you press Begin
+              </li>}
+              {examTimer && <li>
+                <svg className="exam-rule-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                Banner pulses red in the final 60 seconds
+              </li>}
+              <li>
+                <svg className="exam-rule-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
+                  <line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/>
+                </svg>
+                Score report with category breakdown shown at the end
+              </li>
             </ul>
-            <button className="exam-intro-begin" onClick={() => { setExamResults([]); setExamDone(false); setIndex(0); setExamReady(true); }}>
+            <button className="exam-intro-begin" onClick={() => { setShuffleKey(k => k + 1); setExamResults([]); setExamDone(false); setIndex(0); setExamReady(true); }}>
               Begin Exam
             </button>
             <button className="exam-intro-cancel" onClick={() => setExamMode(false)}>
@@ -994,6 +1072,35 @@ function App() {
               </div>
             </div>
 
+            {/* Category breakdown */}
+            {(() => {
+              const cats = {};
+              deck.forEach((card, i) => {
+                const cat = card.category || "Uncategorised";
+                if (!cats[cat]) cats[cat] = { correct: 0, total: 0 };
+                cats[cat].total++;
+                if (examResults[i]?.correct) cats[cat].correct++;
+              });
+              return (
+                <div className="exam-category-breakdown">
+                  <h3 className="exam-breakdown-title">Category breakdown</h3>
+                  <div className="exam-breakdown-grid">
+                    {Object.entries(cats).sort((a, b) => b[1].total - a[1].total).map(([cat, s]) => {
+                      const pct = Math.round((s.correct / s.total) * 100);
+                      const cls = pct >= 80 ? "strong" : pct >= 50 ? "ok" : "weak";
+                      return (
+                        <div key={cat} className={`exam-breakdown-item exam-breakdown-item--${cls}`}>
+                          <span className="exam-breakdown-cat">{cat}</span>
+                          <span className="exam-breakdown-score">{s.correct}/{s.total}</span>
+                          <span className="exam-breakdown-pct">{pct}%</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
+
             <div className="exam-results-list">
               {deck.map((card, i) => {
                 const result = examResults[i];
@@ -1002,13 +1109,9 @@ function App() {
                     <div key={card.id} className="exam-result-row exam-result-skipped">
                       <span className="exam-result-num">{i + 1}</span>
                       <div className="exam-result-body">
+                        <span className="exam-result-cat-chip">{card.category}</span>
                         <p className="exam-result-q">{card.question}</p>
                         <p className="exam-result-meta">⏭️ Not reached</p>
-                        {card.learnUrl && (
-                          <a className="exam-result-learn-link" href={card.learnUrl} target="_blank" rel="noreferrer">
-                            📖 Learn more
-                          </a>
-                        )}
                       </div>
                     </div>
                   );
@@ -1017,21 +1120,8 @@ function App() {
                   <div key={card.id} className={`exam-result-row ${result.correct ? "exam-result-correct" : "exam-result-wrong"}`}>
                     <span className="exam-result-num">{i + 1}</span>
                     <div className="exam-result-body">
+                      <span className="exam-result-cat-chip">{card.category}</span>
                       <p className="exam-result-q">{card.question}</p>
-                      {result.given !== null && (
-                        <p className="exam-result-meta">
-                          Your answer: <strong>{result.given}</strong>
-                          {!result.correct && <> · Correct: <strong>{result.expected}</strong></>}
-                        </p>
-                      )}
-                      {card.explanation && (
-                        <p className="exam-result-explanation">💡 {card.explanation}</p>
-                      )}
-                      {card.learnUrl && !result.correct && (
-                        <a className="exam-result-learn-link" href={card.learnUrl} target="_blank" rel="noreferrer">
-                          📖 Learn more on Microsoft Learn
-                        </a>
-                      )}
                     </div>
                     <span className="exam-result-badge">{result.correct ? <span className="known-check">✓</span> : "❌"}</span>
                   </div>
@@ -1059,7 +1149,9 @@ function App() {
             <p className="empty-deck-icon">🔍</p>
             <h3 className="empty-deck-title">No cards match your filters</h3>
             <p className="empty-deck-desc">
-              {showDueOnly
+              {showDevRecent
+                ? "No cards with a devAdded timestamp within the last 25 hours. Tag cards with devAdded to use this filter."
+                : showDueOnly
                 ? "No cards are due for review right now — check back later or turn off the Due for review filter."
                 : showFlaggedOnly
                 ? "You have no flagged cards under the current filters."
@@ -1070,6 +1162,11 @@ function App() {
                 : "Try selecting different categories or adjusting your filters."}
             </p>
             <div className="empty-deck-actions">
+              {showDevRecent && (
+                <button className="sidebar-action-btn" onClick={() => { setShowDevRecent(false); setIndex(0); }}>
+                  Remove dev filter
+                </button>
+              )}
               {showDueOnly && (
                 <button className="sidebar-action-btn" onClick={() => { setShowDueOnly(false); setIndex(0); }}>
                   Remove due filter
@@ -1114,7 +1211,9 @@ function App() {
                   {mastered.has(current.id) ? "⭐ Mastered" : "☆ Mark mastered"}
                 </button>
               </div>
-              <div className="card-body-wrapper">
+              {(current.premium || EXAM_META[current.exam]?.premium) && !user?.isPremium
+                ? <PremiumLockedCard card={current} onUpgrade={() => setShowProfile(true)} />
+                : <div className="card-body-wrapper">
                 {current.type === "truefalse" ? (
                   <TrueFalse
                     key={`${sessionKey}-${current.id}`}
@@ -1203,10 +1302,10 @@ function App() {
                     </div>
                   );
                 })()}
-                {!current.id?.toString().startsWith("CUSTOM:") && !current.displayId && (
+                {!current.id?.toString().startsWith("CUSTOM:") && !current.displayId && current.type !== "task" && (
                   <span className="card-id-badge">#{current.id}</span>
                 )}
-              </div>
+              </div>}
             </div>
           )
         )}

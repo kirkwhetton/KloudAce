@@ -19,6 +19,7 @@ const az104tf = [
     type: "truefalse",
     difficulty: "easy",
     exam: "AZ-104",
+    devAdded: "2026-05-18T00:00:00Z",
     category: "Networking",
     question:
       "An Azure Virtual Network (VNet) allows resources to communicate privately with each other, the internet, and on-premises networks without any additional configuration.",
@@ -137,6 +138,7 @@ const az104tf = [
     type: "truefalse",
     difficulty: "easy",
     exam: "AZ-104",
+    devAdded: "2026-05-18T00:00:00Z",
     category: "Networking",
     question:
       "Azure Load Balancer operates at Layer 7 of the OSI model, enabling it to route traffic based on HTTP URL paths and host headers.",
@@ -190,6 +192,7 @@ const az104tf = [
     type: "truefalse",
     difficulty: "easy",
     exam: "AZ-104",
+    devAdded: "2026-05-18T00:00:00Z",
     category: "Networking",
     question:
       "Network Security Groups (NSGs) can be associated with both subnets and individual network interfaces (NICs).",
@@ -198,6 +201,122 @@ const az104tf = [
       "NSGs are flexible — you can attach them at the subnet level (applies to all VMs in the subnet) or at the NIC level (applies to a single VM). When both are present, traffic must pass both sets of rules. This lets you layer security: broad rules at the subnet, specific overrides at the NIC.",
     learnUrl:
       "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview",
+  },
+  {
+    id: "AZ-104-033",
+    type: "truefalse",
+    difficulty: "easy",
+    exam: "AZ-104",
+    category: "Identity",
+    question:
+      "Microsoft Entra ID supports Organizational Units (OUs) and Group Policy Objects (GPOs) for managing users and devices, just like Active Directory Domain Services.",
+    answer: false,
+    explanation:
+      "Entra ID uses a flat structure — there are no OUs or GPOs. Policies in Entra ID are applied through Conditional Access, Intune device management, and Administrative Units. The hierarchical OU/GPO model belongs to AD DS only.",
+    learnUrl:
+      "https://learn.microsoft.com/en-us/training/modules/understand-azure-active-directory/3-compare-azure-active-directory-domain-services",
+  },
+  {
+    id: "AZ-104-034",
+    type: "truefalse",
+    difficulty: "extreme",
+    exam: "AZ-104",
+    category: "Identity",
+    question:
+      "Azure RBAC is a deny model — if a user has two role assignments and one includes a NotActions entry blocking an operation, that operation is denied regardless of other assignments.",
+    answer: false,
+    explanation:
+      "Azure RBAC is an allow model. Permissions are additive — a user's effective access is the union of all their role assignments. NotActions subtract permissions within a specific role definition, but they are not the same as deny assignments. Explicit deny assignments exist (used by Azure Blueprints) but are separate from NotActions and rare.",
+    learnUrl:
+      "https://learn.microsoft.com/en-us/training/modules/secure-azure-resources-with-rbac/2-rbac-overview",
+  },
+  {
+    id: "AZ-104-035",
+    type: "truefalse",
+    difficulty: "medium",
+    exam: "AZ-104",
+    category: "Identity",
+    question:
+      "Users with administrator roles in Microsoft Entra ID can select security questions as one of their SSPR authentication methods.",
+    answer: false,
+    explanation:
+      "Security questions are not available to accounts with an administrator role. Admins are always subject to a strong two-method authentication policy for SSPR, and security questions are excluded because their answers may be known to others. All other SSPR methods (authenticator app, email, mobile phone, office phone) remain available to admins.",
+    learnUrl:
+      "https://learn.microsoft.com/en-us/training/modules/allow-users-reset-their-password/2-self-service-password-reset",
+  },
+  {
+    id: "AZ-104-036",
+    type: "truefalse",
+    difficulty: "medium",
+    exam: "AZ-104",
+    category: "Identity",
+    question:
+      "Microsoft 365 groups in Microsoft Entra ID support Dynamic Device membership, allowing devices to be automatically added or removed based on device attribute rules.",
+    answer: false,
+    explanation:
+      "Dynamic Device membership is only supported for Security groups. Microsoft 365 groups support Dynamic User membership (based on user attributes such as department or job title) but not Dynamic Device. If you need dynamic device-based group membership, you must use a Security group.",
+    learnUrl:
+      "https://learn.microsoft.com/en-us/training/modules/create-configure-manage-identities/5-groups",
+  },
+  {
+    id: "AZ-104-125",
+    type: "truefalse",
+    difficulty: "easy",
+    exam: "AZ-104",
+    devAdded: "2026-05-18T00:00:00Z",
+    category: "Networking",
+    question:
+      "Azure Load Balancer operates at OSI Layer 7 and can route traffic based on HTTP URL paths.",
+    answer: false,
+    explanation:
+      "Azure Load Balancer operates at Layer 4 (Transport layer) and makes routing decisions based on IP address, port, and protocol only. It has no visibility into application-layer content such as HTTP headers or URL paths. For Layer 7 routing — including path-based or host-based routing — you need Azure Application Gateway.",
+    learnUrl:
+      "https://learn.microsoft.com/en-us/training/modules/intro-to-azure-load-balancer/3-how-azure-load-balancer-works",
+  },
+  {
+    id: "AZ-104-126",
+    type: "truefalse",
+    difficulty: "medium",
+    exam: "AZ-104",
+    devAdded: "2026-05-18T00:00:00Z",
+    category: "Networking",
+    question:
+      "Default NSG security rules (such as DenyAllInbound at priority 65500) can be deleted to simplify a network security group.",
+    answer: false,
+    explanation:
+      "Default NSG rules cannot be deleted or modified. Azure creates them automatically in every NSG to provide a baseline security posture. To override a default rule, you create a custom rule with a lower priority number (higher precedence) that matches the same traffic and applies the desired action. The default rules remain in place but are superseded by the higher-priority custom rule.",
+    learnUrl:
+      "https://learn.microsoft.com/en-us/training/modules/configure-network-security-groups/3-determine-network-security-groups-rules",
+  },
+  {
+    id: "AZ-104-127",
+    type: "truefalse",
+    difficulty: "medium",
+    exam: "AZ-104",
+    devAdded: "2026-05-18T00:00:00Z",
+    category: "Networking",
+    question:
+      "When multiple routes in an Azure route table match a destination IP address, Azure selects the route with the longest (most specific) prefix match.",
+    answer: true,
+    explanation:
+      "Azure uses longest prefix match to select a route. If a packet's destination matches both a /16 route and a /24 route, the /24 is selected because it specifies a smaller, more precise address range. Only when multiple routes share the exact same prefix does Azure apply the type priority order: UDR > BGP > System routes.",
+    learnUrl:
+      "https://learn.microsoft.com/en-us/training/modules/control-network-traffic-flow-with-routes/2-azure-virtual-network-route",
+  },
+  {
+    id: "AZ-104-128",
+    type: "truefalse",
+    difficulty: "hard",
+    exam: "AZ-104",
+    devAdded: "2026-05-18T00:00:00Z",
+    category: "Networking",
+    question:
+      "When creating a User-Defined Route (UDR), you can specify VirtualNetworkServiceEndpoint as the next hop type.",
+    answer: false,
+    explanation:
+      "VirtualNetworkServiceEndpoint is not a valid next hop type for user-defined routes. The supported UDR next hop types are: VirtualAppliance, VirtualNetworkGateway, VirtualNetwork, Internet, and None. Service endpoint routes are automatically created by Azure when you enable a service endpoint on a subnet — you cannot create a UDR with that hop type manually.",
+    learnUrl:
+      "https://learn.microsoft.com/en-us/training/modules/control-network-traffic-flow-with-routes/2-azure-virtual-network-route",
   },
 ];
 

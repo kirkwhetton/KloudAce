@@ -27,9 +27,20 @@ import "./tasksimulator.css";
           )}pairs?: { left: string, right: string }[],
  * }
  */
-export default function TaskSimulator({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer }) {  if (card.taskType === "order")  return <OrderTask  card={card} onKnow={onKnow} onSrsRate={onSrsRate} hideAnswers={hideAnswers} examMode={examMode} onExamAnswer={onExamAnswer} />;
-  if (card.taskType === "match")  return <MatchTask  card={card} onKnow={onKnow} onSrsRate={onSrsRate} hideAnswers={hideAnswers} examMode={examMode} onExamAnswer={onExamAnswer} />;  if (card.taskType === "script") return <ScriptTask card={card} onKnow={onKnow} onSrsRate={onSrsRate} hideAnswers={hideAnswers} examMode={examMode} onExamAnswer={onExamAnswer} />;
-  return                                 <FillInTask card={card} onKnow={onKnow} onSrsRate={onSrsRate} hideAnswers={hideAnswers} examMode={examMode} onExamAnswer={onExamAnswer} />;
+export default function TaskSimulator({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer }) {
+  const props = { card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer };
+  const Inner =
+    card.taskType === "order"  ? <OrderTask  {...props} /> :
+    card.taskType === "match"  ? <MatchTask  {...props} /> :
+    card.taskType === "script" ? <ScriptTask {...props} /> :
+    card.taskType === "fault"  ? <FaultTask  {...props} /> :
+                                 <FillInTask {...props} />;
+  return (
+    <div className={`task-simulator-shell${card.taskType === "script" ? " task-simulator-shell--wide" : ""}`}>
+      {Inner}
+      <span className="card-id-badge">#{card.id}</span>
+    </div>
+  );
 }
 
 /* ─────────────────────────────────────────────
@@ -434,6 +445,108 @@ function MatchTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswe
    History is a list of { input, output, kind } entries.
 ───────────────────────────────────────────── */
 
+/* ─────────────────────────────────────────────
+   FAULT TASK
+   User reads a scenario and selects which option describes the fault.
+───────────────────────────────────────────── */
+function FaultTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer }) {
+  const [selected, setSelected] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [revealed, setRevealed] = useState(false);
+
+  const isCorrect = selected === card.correctFault;
+
+  const handleSubmit = () => {
+    if (submitted || selected === null) return;
+    setSubmitted(true);
+    if (examMode) {
+      onExamAnswer({ card, correct: isCorrect, given: selected, expected: card.correctFault });
+    }
+  };
+
+  const handleRetry = () => { setSelected(null); setSubmitted(false); setRevealed(false); };
+  const handleNext  = () => onSrsRate ? onSrsRate(isCorrect ? 3 : 1) : onKnow();
+
+  return (
+    <div className="task-card">
+      <div className="task-header">
+        <div className="card-meta">
+          <span className="task-category">{card.category}</span>
+          <span className={`difficulty-badge difficulty-badge--${card.difficulty}`}>{card.difficulty}</span>
+        </div>
+        <span className="task-type-badge">🔍 Find the Fault</span>
+      </div>
+
+      <p className="task-question">{card.question}</p>
+
+      <div className="fault-scenario">{card.scenario}</div>
+
+      <p className="task-instruction">Select the fault in this configuration:</p>
+
+      <div className="fault-options">
+        {card.faults.map((fault, i) => {
+          let cls = "fault-option";
+          if (submitted) {
+            if (fault === card.correctFault) cls += " fault-correct";
+            else if (fault === selected)     cls += " fault-wrong";
+            else                             cls += " fault-dimmed";
+          } else if (fault === selected) {
+            cls += " fault-selected";
+          }
+          return (
+            <button key={i} className={cls} onClick={() => { if (!submitted) setSelected(fault); }} disabled={submitted}>
+              {fault}
+            </button>
+          );
+        })}
+      </div>
+
+      {!submitted ? (
+        <button className="task-submit-btn" onClick={handleSubmit} disabled={selected === null}>
+          ✔ Identify Fault
+        </button>
+      ) : (
+        <div className={`task-feedback ${isCorrect ? "feedback-correct" : "feedback-wrong"}`}>
+          <p className="task-feedback-text">
+            {isCorrect ? <><span className="known-check">✓</span> Correct — fault identified!</> : "❌ Not quite — the correct fault is highlighted above"}
+          </p>
+          {!hideAnswers && card.fix && (
+            <div className="fault-fix">
+              <span className="explanation-label">🔧 Fix</span>
+              <p>{card.fix}</p>
+            </div>
+          )}
+          {!hideAnswers && card.explanation && !revealed && (
+            <button className="task-reveal-btn" onClick={() => setRevealed(true)}>💡 Show explanation</button>
+          )}
+          {!hideAnswers && revealed && card.explanation && (
+            <div className="task-explanation">
+              <span className="explanation-label">💡 Explanation</span>
+              <p>{card.explanation}</p>
+            </div>
+          )}
+          {!hideAnswers && card.learnUrl && (
+            <a className="learn-more-link" href={card.learnUrl} target="_blank" rel="noopener noreferrer">
+              📖 Learn more on Microsoft Learn
+            </a>
+          )}
+          {hideAnswers && (
+            <p className="hide-answers-notice">🙈 Answer hidden — toggle off in ⚙️ Settings to see explanations</p>
+          )}
+          {!examMode && (
+            <div className="task-actions">
+              <button className="btn btn-review" onClick={handleRetry}>🔁 Try Again</button>
+              <button className="btn btn-know" onClick={handleNext}>
+                {onSrsRate ? "Continue →" : <><span className="known-check">✓</span> Next Card</>}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /** Detect help invocations and return the help text string, or null. */
 function resolveHelp(raw, card) {
   const t = raw.trim();
@@ -524,9 +637,6 @@ function ScriptTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnsw
       inputRef.current?.focus();
       return;
     }    // It's the real answer attempt — grade it
-    const rawNorm = normalise(raw);
-    const tok = normTokens.map(t => ({ label: t.label, ok: tokenMatches(t, rawNorm) }));
-    const correct = tok.length > 0 && tok.every(t => t.ok);
     setHistory(h => [...h, { input: raw, output: null, kind: "answer" }]);
     setSubmitted(true);
     setValue("");
@@ -542,7 +652,7 @@ function ScriptTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnsw
     setSubmitted(false);
     setRevealed(false);
   };
-  const handleNext = () => onSrsRate ? onSrsRate(allCorrect ? 3 : 1) : onKnow();
+  const handleNext = () => onSrsRate ? onSrsRate(finalCorrect ? 3 : 1) : onKnow();
   // Final token results are based on the answer line in history
   const answerEntry = history.find(h => h.kind === "answer");
   const finalTokenResults = normTokens.map(t => ({

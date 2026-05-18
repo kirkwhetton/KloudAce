@@ -21,6 +21,7 @@
 .hotspot-diagram-wrap {
   position: relative;
   width: 100%;
+  max-width: 680px;
   border-radius: 0.75rem;
   overflow: hidden;
   border: 1px solid var(--border-card);

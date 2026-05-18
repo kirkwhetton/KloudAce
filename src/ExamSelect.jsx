@@ -245,6 +245,7 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
                   <span className="splash-exam-code">{meta.exam}</span>
                   <span className="splash-exam-name">{meta.fullName}</span>
                   <span className="splash-exam-count">{count} cards</span>
+                  {meta.premium && <span className="splash-premium-badge">👑 Premium</span>}
                   <span className="splash-exam-arrow">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="14" height="14">
                       <polyline points="9 18 15 12 9 6"/>
