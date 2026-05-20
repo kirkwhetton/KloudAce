@@ -403,3 +403,31 @@ To migrate:
 - Followups:
   - Wire `onSelectByTopic` in `App.jsx` to filter `examDeck` by category across all exams.
   - Optionally persist `preferredStudyMode` in `azfc_settings_<userId>` to skip the chooser on return visits.
+
+---
+
+## App Improvement Ideas
+
+### Quick wins (1–2 hours each)
+- **Search bar** — find any card by keyword across all exams
+- **Streak calendar** — visual heatmap of daily study activity
+- **Card bookmarks** — save specific cards to a "revisit" list separate from flags
+- **Sound effects** — subtle audio feedback on correct/incorrect answers
+
+### Medium effort (half a day)
+- **Daily goal** — set a target number of cards per day, progress ring in the header
+- **Leaderboard** — anonymous ranking by cards studied / streak (requires Supabase)
+- **Share a card** — generate a shareable link to a specific card
+- **Print/export** — export a deck to PDF for offline study
+
+### Bigger features
+- **AWS / GCP exam content** — unlock the coming soon platforms
+- **Practice exam simulator** — timed mock exam with pass/fail scoring and review
+- **AI-generated explanations** — "explain this answer" button powered by Claude API
+- **Mobile app** — wrap the PWA or build React Native
+
+### Monetisation / growth
+- **Payment system** — integrate Paddle or LemonSqueezy (both act as Merchant of Record, handling UK/EU VAT automatically). Flow: user clicks Upgrade → hosted checkout → webhook sets `is_premium = true` via Supabase Admin SDK. Needs a small serverless function (Azure Functions or Supabase Edge Function) to receive the webhook.
+- **Referral system** — share a link, both users get bonus cards unlocked
+- **Team/org accounts** — company can bulk-assign premium to employees
+- **Progress reports** — weekly email summary of SRS maturity and weak areas

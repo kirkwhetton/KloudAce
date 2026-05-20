@@ -914,7 +914,7 @@ function App() {
           </svg>
           <div className="logo-text">
             <h1>Kloud<span className="title-ace">Ace</span></h1>
-            <p className="subtitle">Your cloud certification hub</p>
+            <p className="subtitle">Your cloud learning and certification hub</p>
           </div>
         </div>
         <div className="header-actions">
