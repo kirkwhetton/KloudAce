@@ -1,4 +1,4 @@
-/* AzureAce App */
+/* KloudAce App */
 
 * {
   box-sizing: border-box;
@@ -1918,6 +1918,14 @@ button .known-check {
 }
 .splash-exam-card:hover .splash-exam-arrow { opacity: 1; transform: translateX(4px); }
 
+.splash-footer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-top: -0.25rem;
+}
+
 .splash-signout {
   background: none;
   border: none;
@@ -1927,10 +1935,23 @@ button .known-check {
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   transition: color 0.2s;
-  margin-top: -0.25rem;
 }
 .splash-signout:hover {
   color: var(--wrong);
+}
+
+.splash-change-platform {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+.splash-change-platform:hover {
+  color: var(--brand);
 }
 
 /* ── Custom Decks section on splash ─────────────────────────── */

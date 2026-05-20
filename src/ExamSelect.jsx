@@ -61,7 +61,7 @@ const EXAM_ICONS = {
   ),
 };
 
-export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck }) {
+export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack }) {
   const exams = Object.values(EXAM_META);
   const [signingOut, setSigningOut] = useState(false);
   const handleSignOut = async () => {
@@ -159,10 +159,10 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
           <use href="#splashCloud" x="40" y="47" fill="#ffffff" stroke="#2980D9" strokeWidth="5"/>
         </svg>
         <div className="splash-cloud-text">
-          <span className="splash-cloud-brand">Azure<span className="title-ace">Ace</span></span>
+          <span className="splash-cloud-brand">Kloud<span className="title-ace">Ace</span></span>
         </div>
       </div>
-      <p className="splash-cloud-tagline">Your Azure learning &amp; certification hub</p>
+      <p className="splash-cloud-tagline">Your cloud certification hub</p>
     </>
   );
   // ── Chooser ──────────────────────────────────────────────────
@@ -263,7 +263,12 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
             })}
           </div>
 
-          <button className="splash-signout" onClick={handleSignOut} disabled={signingOut}>{signingOut ? "Signing out…" : "Sign out"}</button>
+          <div className="splash-footer-actions">
+            {onBack && (
+              <button className="splash-change-platform" onClick={onBack}>← Change platform</button>
+            )}
+            <button className="splash-signout" onClick={handleSignOut} disabled={signingOut}>{signingOut ? "Signing out…" : "Sign out"}</button>
+          </div>
         </div>
       </div>
     );

@@ -11,7 +11,7 @@ import "./GuidedTour.css";
 const STEPS = [
   {
     target: null,
-    title: "Welcome to AzureAce! 👋",
+    title: "Welcome to KloudAce! 👋",
     body:  "This quick tour shows you the key features. It only takes 30 seconds — or skip any time.",
     placement: "center",
   },
@@ -54,7 +54,7 @@ const STEPS = [
   {
     target: null,
     title: "You're all set! 🎉",
-    body:  "Good luck with your Azure certification. You can replay this tour anytime using the 🗺️ Tour button in the header.",
+    body:  "Good luck with your cloud certification. You can replay this tour anytime using the 🗺️ Tour button in the header.",
     placement: "center",
   },
 ];

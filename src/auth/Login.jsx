@@ -46,15 +46,19 @@ export default function Login() {
       <div className="login-card">
         {/* Logo */}
         <div className="login-logo">
-          <svg className="login-cloud-svg" viewBox="28 34 220 136" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <defs>
-              <path id="loginCloud" d="M50 115C30 115 15 100 15 82C15 66 27 53 43 51C45 30 63 14 85 14C102 14 117 24 124 39C129 36 135 34 141 34C159 34 174 49 174 67C188 69 199 81 199 95C199 106 191 115 180 115Z"/>
-            </defs>
-            <use href="#loginCloud" x="20" y="27" fill="#185FA5"/>
-            <use href="#loginCloud" x="40" y="47" fill="#ffffff" stroke="#2980D9" strokeWidth="5"/>
-          </svg>
-          <h1>Azure<span className="title-ace">Ace</span></h1>
-          <p>Your Azure learning & certification hub</p>
+          <div className="login-cloud-logo">
+            <svg className="login-cloud-svg" viewBox="0 0 260 165" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <path id="loginCloud" d="M50 115C30 115 15 100 15 82C15 66 27 53 43 51C45 30 63 14 85 14C102 14 117 24 124 39C129 36 135 34 141 34C159 34 174 49 174 67C188 69 199 81 199 95C199 106 191 115 180 115Z"/>
+              </defs>
+              <use href="#loginCloud" x="20" y="27" fill="#185FA5"/>
+              <use href="#loginCloud" x="40" y="47" fill="#ffffff" stroke="#2980D9" strokeWidth="5"/>
+            </svg>
+            <div className="login-cloud-text">
+              <span className="login-cloud-brand">Kloud<span className="title-ace">Ace</span></span>
+            </div>
+          </div>
+          <p className="login-cloud-tagline">Your cloud certification hub</p>
         </div>
 
         {/* Email confirmation holding screen */}

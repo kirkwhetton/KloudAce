@@ -1,0 +1,312 @@
+/* ─── Platform Selection Page ──────────────────────────────────── */
+
+.platform-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-page);
+  font-family: "Inter", sans-serif;
+}
+
+/* ── Header ── */
+.platform-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+}
+
+.platform-header-logo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.platform-header-cloud {
+  width: 7rem;
+  height: auto;
+  display: block;
+  user-select: none;
+}
+
+.platform-header-text {
+  position: absolute;
+  top: 79%;
+  left: 57%;
+  transform: translate(-50%, -50%);
+}
+
+.platform-header-brand {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--brand);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.platform-header-brand .title-ace {
+  font-weight: 800;
+  margin-left: 0.15em;
+  color: var(--brand-dark);
+}
+
+.platform-signout {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.platform-signout svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.platform-signout:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+/* ── Main ── */
+.platform-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  gap: 2.5rem;
+}
+
+.platform-intro {
+  text-align: center;
+}
+
+.platform-title {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.03em;
+}
+
+.platform-subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── Cards grid ── */
+.platform-grid {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 900px;
+}
+
+.platform-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  width: 240px;
+  min-height: 280px;
+  border: none;
+  border-radius: 1.25rem;
+  padding: 2rem 1.5rem;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  overflow: hidden;
+  font-family: inherit;
+}
+
+.platform-card:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 3px;
+}
+
+/* Azure — Microsoft blue */
+.platform-card--azure {
+  background: linear-gradient(145deg, #0078d4 0%, #005a9e 60%, #003f6e 100%);
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(0, 120, 212, 0.4);
+}
+
+.platform-card--azure:hover:not(:disabled) {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 16px 48px rgba(0, 120, 212, 0.55);
+}
+
+/* AWS — dark slate with orange */
+.platform-card--aws {
+  background: linear-gradient(145deg, #232f3e 0%, #1a242f 100%);
+  color: #ff9900;
+  box-shadow: 0 8px 32px rgba(35, 47, 62, 0.45);
+}
+
+/* GCP — light with Google colours */
+.platform-card--gcp {
+  background: linear-gradient(145deg, #ffffff 0%, #f1f3f4 100%);
+  color: #4285f4;
+  box-shadow: 0 8px 32px rgba(66, 133, 244, 0.2);
+  border: 1px solid #e0e0e0;
+}
+
+/* Coming soon — muted */
+.platform-card--soon {
+  cursor: default;
+  filter: saturate(0.55) opacity(0.7);
+}
+
+.platform-card--soon:hover {
+  transform: none !important;
+  box-shadow: inherit !important;
+}
+
+/* Soon badge */
+.platform-soon-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: inherit;
+}
+
+.platform-card--gcp .platform-soon-badge {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.12);
+  color: #5f6368;
+}
+
+/* Icon */
+.platform-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.platform-icon {
+  width: 4rem;
+  height: 4rem;
+}
+
+/* Card body */
+.platform-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.platform-card-name {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.platform-card-tagline {
+  font-size: 0.8rem;
+  font-weight: 500;
+  opacity: 0.75;
+}
+
+/* Arrow */
+.platform-card-arrow {
+  width: 1.25rem;
+  height: 1.25rem;
+  opacity: 0.7;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.platform-card--azure:hover .platform-card-arrow {
+  transform: translateX(4px);
+  opacity: 1;
+}
+
+/* GCP coloured dots on icon */
+.platform-card--gcp .platform-icon {
+  color: #4285f4;
+}
+
+/* Footer hint */
+.platform-user-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .platform-header {
+    padding: 0.85rem 1.25rem;
+  }
+
+  .platform-title {
+    font-size: 1.75rem;
+  }
+
+  .platform-grid {
+    gap: 1rem;
+  }
+
+  .platform-card {
+    width: 100%;
+    max-width: 360px;
+    min-height: 100px;
+    flex-direction: row;
+    padding: 1.25rem 1.5rem;
+    text-align: left;
+    gap: 1rem;
+  }
+
+  .platform-card-icon {
+    flex-shrink: 0;
+  }
+
+  .platform-icon {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .platform-card-body {
+    flex: 1;
+    align-items: flex-start;
+  }
+
+  .platform-card-arrow {
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  .platform-soon-badge {
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+}

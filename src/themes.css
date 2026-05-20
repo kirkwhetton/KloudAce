@@ -1,4 +1,4 @@
-/* ─── AzureAce Theme System ──────────────────────────────────────
+/* ─── KloudAce Theme System ──────────────────────────────────────
    All colour tokens live here. Every component should consume
    var(--...) rather than hard-coded hex values.
    Body classes:  (none) = light   |  data-theme="dark"

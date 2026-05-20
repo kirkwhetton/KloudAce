@@ -20,6 +20,7 @@ import {
 import ConfirmDialog from "./ConfirmDialog";
 import ReadinessDashboard from "./ReadinessDashboard";
 import GuidedTour from "./GuidedTour";
+import PlatformSelect from "./PlatformSelect";
 import { useStreak } from "./useStreak";
 import { useTheme, THEMES } from "./useTheme";
 import "./App.css";
@@ -42,6 +43,7 @@ function App() {
   const flagKey  = user ? `azfc_flagged_${user.id}` : "azfc_flagged_guest";
   const knownKey = user ? `azfc_known_${user.id}`   : "azfc_known_guest";
 
+  const [selectedPlatform, setSelectedPlatform] = useState(null); // null = show platform picker
   const [selectedExam, setSelectedExam] = useState(null); // null = show splash
   const [categories, setCategories] = useState(new Set(["All"]));
   const [index, setIndex] = useState(0);
@@ -457,6 +459,17 @@ function App() {
   );
   if (!isAuthenticated) return <Login />;
 
+  // ── Platform gate ──────────────────────────────────────────────
+  if (!selectedPlatform) {
+    return (
+      <PlatformSelect
+        user={user}
+        onSelect={(platform) => setSelectedPlatform(platform)}
+        onLogout={logout}
+      />
+    );
+  }
+
   // ── Exam splash gate ───────────────────────────────────────────
   if (!selectedExam) {
     return (
@@ -468,6 +481,7 @@ function App() {
           onOpenDecks={() => setShowCustomDecks(true)}
           onSelectCustomDeck={handleCustomDeck}
           onSelectByTopic={(topic) => handleExam(`TOPIC:${topic}`)}
+          onBack={() => setSelectedPlatform(null)}
         />
         {showCustomDecks && (
           <CustomDecks
@@ -874,8 +888,8 @@ function App() {
             <use href="#headerCloud" x="40" y="47" fill="#ffffff" stroke="#2980D9" strokeWidth="5"/>
           </svg>
           <div className="logo-text">
-            <h1>Azure<span className="title-ace">Ace</span></h1>
-            <p className="subtitle">Your Azure learning & certification hub</p>
+            <h1>Kloud<span className="title-ace">Ace</span></h1>
+            <p className="subtitle">Your cloud certification hub</p>
           </div>
         </div>
         <div className="header-actions">
@@ -1376,7 +1390,7 @@ function App() {
       )}
 
       <footer className="app-footer">
-        Built with React + Vite &nbsp;·&nbsp; Azure learning series
+        Built with React + Vite &nbsp;·&nbsp; KloudAce
       </footer>
     </div>
   );
