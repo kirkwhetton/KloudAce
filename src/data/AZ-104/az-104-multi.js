@@ -252,6 +252,77 @@ const az104multi = [
     learnUrl:
       "https://learn.microsoft.com/en-us/training/modules/intro-to-azure-network-watcher/3-how-azure-network-watcher-works",
   },
+
+  // ── Compute: Virtual Machines & App Service ────────────────────────
+
+  {
+    id: "AZ-104-164",
+    type: "multi",
+    difficulty: "medium",
+    exam: "AZ-104",
+    category: "Compute",
+    question: "Which of the following Azure managed disk types can be used as an OS disk? Select all that apply.",
+    choices: [
+      "Ultra Disk",
+      "Premium SSD v2",
+      "Premium SSD",
+      "Standard SSD",
+      "Standard HDD",
+    ],
+    correctAnswers: ["Premium SSD", "Standard SSD", "Standard HDD"],
+    answer: "Premium SSD, Standard SSD, and Standard HDD can all be used as OS disks. Ultra Disk and Premium SSD v2 are data disks only.",
+    explanation:
+      "Ultra Disk and Premium SSD v2 are high-performance data disk options only — Azure does not support them as OS disks. Premium SSD is the recommended OS disk for production workloads needing consistent low latency. Standard SSD suits web servers and light enterprise use. Standard HDD is appropriate for dev/test or non-critical systems. Always check this constraint when designing a storage layout: your OS disk tier and your data disk tier can differ.",
+    learnUrl: "https://learn.microsoft.com/en-us/training/modules/configure-virtual-machines/4-determine-virtual-machine-storage",
+  },
+  {
+    id: "AZ-104-165",
+    type: "multi",
+    difficulty: "medium",
+    exam: "AZ-104",
+    category: "Compute",
+    question: "Which of the following statements about Azure Availability Zones are correct? Select all that apply.",
+    choices: [
+      "Every Azure region supports Availability Zones",
+      "Each enabled region has a minimum of three separate availability zones",
+      "Each zone has independent power, cooling, and networking",
+      "Availability Zones and Availability Sets provide identical protection",
+      "Availability Zones protect against the failure of an entire datacenter within a region",
+    ],
+    correctAnswers: [
+      "Each enabled region has a minimum of three separate availability zones",
+      "Each zone has independent power, cooling, and networking",
+      "Availability Zones protect against the failure of an entire datacenter within a region",
+    ],
+    answer: "Enabled regions have at least three zones, each with independent power/cooling/networking, protecting against full datacenter failure.",
+    explanation:
+      "Not every Azure region supports Availability Zones — only designated regions have them, and those regions guarantee at least three physically separate zones. Each zone has its own power, cooling, and network infrastructure, so a failure in one zone does not affect the others. Availability Zones and Availability Sets are different: Zones are physically separate datacenters in a region; Sets are a logical grouping within a single datacenter providing fault and update domain separation. Use Zones for datacenter-level resilience and Sets for rack-level and planned maintenance resilience.",
+    learnUrl: "https://learn.microsoft.com/en-us/training/modules/configure-virtual-machine-availability/6-review-availability-zones",
+  },
+  {
+    id: "AZ-104-166",
+    type: "multi",
+    difficulty: "hard",
+    exam: "AZ-104",
+    category: "Compute",
+    question: "Which of the following are valid use cases for multi-container groups in Azure Container Instances? Select all that apply.",
+    choices: [
+      "Running a web app container alongside a sidecar that pulls updated content from source control",
+      "Replacing an Azure Kubernetes Service cluster for large-scale microservice orchestration",
+      "Running an application container with a logging sidecar that ships output to long-term storage",
+      "Running a monitoring container that periodically probes the application container and raises alerts",
+      "Achieving stronger security isolation between workloads than a single VM provides",
+    ],
+    correctAnswers: [
+      "Running a web app container alongside a sidecar that pulls updated content from source control",
+      "Running an application container with a logging sidecar that ships output to long-term storage",
+      "Running a monitoring container that periodically probes the application container and raises alerts",
+    ],
+    answer: "Sidecar content updaters, logging sidecars, and monitoring sidecars are the documented multi-container group patterns for ACI.",
+    explanation:
+      "Multi-container groups are ACI's answer to the sidecar pattern: a primary container and one or more helper containers co-scheduled on the same host, sharing network and storage. Microsoft documents three specific patterns — content updater sidecars, log/metric collection sidecars, and application monitoring sidecars. ACI is not a replacement for AKS for large-scale microservice orchestration; AKS handles that. Containers provide lightweight isolation sharing the host kernel — they do not provide stronger isolation than a VM, which uses a hypervisor to create a hard security boundary.",
+    learnUrl: "https://learn.microsoft.com/en-us/training/modules/configure-azure-container-instances/5-implement-container-groups",
+  },
 ];
 
 export default az104multi;

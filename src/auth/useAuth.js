@@ -1,152 +1,127 @@
-// ─── useAuth — Local Storage implementation ──────────────────────
-// This file is the ONLY thing you replace when moving to Entra ID.
-// The hook always returns the same shape:
-//   { user, isAuthenticated, login, register, logout, error }
-//
-// Entra ID swap: replace the body of this file with MSAL calls.
-// The rest of the app never changes.
-// ────────────────────────────────────────────────────────────────
-import { useState, useCallback } from "react";
+// ─── useAuth — Supabase implementation ───────────────────────────
+// Auth state comes from Supabase Auth (JWT, server-signed).
+// isPremium comes from the profiles table, readable by the owner
+// but writable only via the service-role key (e.g. a Stripe webhook).
+// ─────────────────────────────────────────────────────────────────
+import { useState, useEffect, useCallback } from "react";
+import { supabase } from "./supabase";
 
-const USERS_KEY = "azfc_users";   // stored user accounts
-const SESSION_KEY = "azfc_session"; // current logged-in user
-
-// ---------- helpers ----------
-
-function loadUsers() {
-  try { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; }
-  catch { return []; }
+async function fetchProfile(supabaseUser) {
+  const { data } = await supabase
+    .from("profiles")
+    .select("name, email, is_premium, is_developer")
+    .eq("id", supabaseUser.id)
+    .single();
+  return {
+    id:          supabaseUser.id,
+    name:        data?.name        ?? supabaseUser.user_metadata?.name ?? "",
+    email:       data?.email       ?? supabaseUser.email,
+    isPremium:   data?.is_premium  ?? false,
+    isDeveloper: data?.is_developer ?? false,
+  };
 }
 
-function saveUsers(users) {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+function friendlyError(err) {
+  const msg = (err.message ?? "").toLowerCase();
+  if (msg.includes("after") && msg.includes("seconds"))
+    return "Too many attempts — please wait a moment and try again.";
+  if (msg.includes("email rate") || msg.includes("rate limit"))
+    return "Too many sign-up attempts right now — please try again in a few minutes.";
+  if (msg.includes("already registered") || msg.includes("already exists"))
+    return "An account with that email already exists.";
+  if (msg.includes("invalid login") || msg.includes("invalid credential"))
+    return "Incorrect email or password.";
+  if (msg.includes("email not confirmed"))
+    return "Please confirm your email address before signing in.";
+  if (msg.includes("password"))
+    return "Password must be at least 6 characters.";
+  return err.message || "Something went wrong. Please try again.";
 }
-
-function loadSession() {
-  try { return JSON.parse(localStorage.getItem(SESSION_KEY)) || null; }
-  catch { return null; }
-}
-
-// Simple hash — NOT cryptographically secure.
-// Fine for a local dev placeholder; Entra ID handles real auth.
-async function hashPassword(password) {
-  const buf = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(password)
-  );
-  return Array.from(new Uint8Array(buf))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
-// ---------- hook ----------
 
 export function useAuth() {
-  const [user, setUser] = useState(loadSession);
-  const [error, setError] = useState(null);
+  const [user,    setUser]    = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error,   setError]   = useState(null);
+
+  useEffect(() => {
+    // Restore existing session on mount
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (session?.user) setUser(await fetchProfile(session.user));
+      setLoading(false);
+    });
+
+    // Keep state in sync with Supabase auth events (sign-in, sign-out, token refresh)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        if (session?.user) setUser(await fetchProfile(session.user));
+        else               setUser(null);
+        setLoading(false);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const isAuthenticated = user !== null;
 
-  // Register a new account
   const register = useCallback(async ({ name, email, password }) => {
     setError(null);
-    const users = loadUsers();
-
-    if (users.find((u) => u.email.toLowerCase() === email.toLowerCase())) {
-      setError("An account with that email already exists.");
-      return false;
-    }
-
-    const hash = await hashPassword(password);
-    const newUser = { id: crypto.randomUUID(), name, email, hash, isPremium: false };
-    saveUsers([...users, newUser]);
-
-    // Auto-login after registration
-    const session = { id: newUser.id, name: newUser.name, email: newUser.email, isPremium: false };
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    setUser(session);
-    return true;
+    const { data, error: err } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { name } },
+    });
+    if (err) { setError(friendlyError(err)); return { success: false }; }
+    // If session is null, Supabase requires email confirmation before login
+    const needsConfirmation = !data.session;
+    return { success: true, needsConfirmation };
   }, []);
 
-  // Login with email + password
   const login = useCallback(async ({ email, password }) => {
     setError(null);
-    const users = loadUsers();
-    const found = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
-
-    if (!found) {
-      setError("No account found with that email.");
-      return false;
-    }
-
-    const hash = await hashPassword(password);
-    if (hash !== found.hash) {
-      setError("Incorrect password.");
-      return false;
-    }
-
-    const session = { id: found.id, name: found.name, email: found.email, isPremium: found.isPremium ?? false };
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    setUser(session);
+    const { error: err } = await supabase.auth.signInWithPassword({ email, password });
+    if (err) { setError(friendlyError(err)); return false; }
     return true;
   }, []);
-  // Update display name / email
+
+  const logout = useCallback(async () => {
+    try {
+      await supabase.auth.signOut();
+    } finally {
+      // Always clear local state — even if the network call fails
+      setUser(null);
+    }
+  }, []);
+
   const updateProfile = useCallback(async ({ name, email }) => {
     setError(null);
-    const users = loadUsers();
-    const idx = users.findIndex((u) => u.id === user?.id);
-    if (idx === -1) { setError("User not found."); return false; }
-
-    // Check email uniqueness (allow keeping same email)
-    const conflict = users.find(
-      (u) => u.email.toLowerCase() === email.toLowerCase() && u.id !== user.id
-    );
-    if (conflict) { setError("That email is already used by another account."); return false; }
-
-    users[idx] = { ...users[idx], name, email };
-    saveUsers(users);
-    const session = { id: user.id, name, email, isPremium: user.isPremium ?? false };
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    setUser(session);
+    const { error: authErr } = await supabase.auth.updateUser({ email });
+    if (authErr) { setError(authErr.message); return false; }
+    const { error: dbErr } = await supabase
+      .from("profiles")
+      .update({ name, email })
+      .eq("id", user.id);
+    if (dbErr) { setError(dbErr.message); return false; }
+    setUser(prev => ({ ...prev, name, email }));
     return true;
   }, [user]);
 
-  // Change password
   const changePassword = useCallback(async ({ currentPassword, newPassword }) => {
     setError(null);
-    const users = loadUsers();
-    const idx = users.findIndex((u) => u.id === user?.id);
-    if (idx === -1) { setError("User not found."); return false; }
-
-    const currentHash = await hashPassword(currentPassword);
-    if (currentHash !== users[idx].hash) {
-      setError("Current password is incorrect.");
-      return false;
-    }
-
-    users[idx] = { ...users[idx], hash: await hashPassword(newPassword) };
-    saveUsers(users);
+    // Re-authenticate with current password first to verify it
+    const { error: verifyErr } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: currentPassword,
+    });
+    if (verifyErr) { setError("Current password is incorrect."); return false; }
+    const { error: err } = await supabase.auth.updateUser({ password: newPassword });
+    if (err) { setError(err.message); return false; }
     return true;
   }, [user]);
 
-  // Toggle premium (dev / admin use — replace with real billing webhook in production)
-  const togglePremium = useCallback((value) => {
-    const users = loadUsers();
-    const idx = users.findIndex((u) => u.id === user?.id);
-    if (idx === -1) return;
-    users[idx] = { ...users[idx], isPremium: value };
-    saveUsers(users);
-    const session = { ...user, isPremium: value };
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    setUser(session);
-  }, [user]);
-
-  // Logout
-  const logout = useCallback(() => {
-    localStorage.removeItem(SESSION_KEY);
-    setUser(null);
-    setError(null);
-  }, []);
-
-  return { user, isAuthenticated, login, register, logout, updateProfile, changePassword, togglePremium, error, setError };
+  return {
+    user, isAuthenticated, loading,
+    login, register, logout, updateProfile, changePassword,
+    error, setError,
+  };
 }

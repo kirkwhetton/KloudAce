@@ -36,7 +36,7 @@ function shuffle(arr) {
 }
 
 function App() {
-  const { isAuthenticated, user, logout } = useAuthContext();
+  const { isAuthenticated, user, logout, loading } = useAuthContext();
 
   // ── Per-user storage keys ──────────────────────────────────────
   // Scoped to user.id so each account has its own flags & progress.
@@ -60,7 +60,7 @@ function App() {
   });
   const [showFlaggedOnly, setShowFlaggedOnly] = useState(false);
   const [showDueOnly, setShowDueOnly] = useState(false);
-  const [cardType, setCardType] = useState("both"); // "both" | "flashcard" | "mcq"
+  const [disabledTypes, setDisabledTypes] = useState(new Set());
   const masteredKey = user ? `azfc_mastered_${user.id}` : "azfc_mastered_guest";
   const [mastered, setMastered] = useState(() => {
     try { return new Set(JSON.parse(localStorage.getItem(user ? `azfc_mastered_${user.id}` : "azfc_mastered_guest") || "[]")); }
@@ -232,18 +232,22 @@ function App() {
     ? afterFlagFilter
     : afterFlagFilter.filter((c) => !mastered.has(c.id));
 
-  // Step 2d: filter by card type
-  const afterTypeFilter = afterMasteredFilter.filter((c) => {
-    if (cardType === "flashcard") return !c.choices && c.type !== "multi" && c.type !== "truefalse" && c.type !== "image-mcq" && c.type !== "task" && c.type !== "hotspot";
-    if (cardType === "mcq")       return !!c.choices && c.type !== "multi" && c.type !== "image-mcq";
-    if (cardType === "multi")     return c.type === "multi";
-    if (cardType === "truefalse") return c.type === "truefalse";
-    if (cardType === "image-mcq") return c.type === "image-mcq";
-    if (cardType === "hotspot")   return c.type === "hotspot";
-    if (cardType === "task")      return c.type === "task" && c.taskType !== "script";
-    if (cardType === "script")    return c.type === "task" && c.taskType === "script";
-    return true;
-  });
+  // Step 2d: exclude disabled card types
+  const getCardTypeKey = (c) => {
+    if (!!c.scenario && c.type !== "task")  return "case-study";
+    if (c.type === "task" && c.taskType === "fault")  return "fault";
+    if (c.type === "task" && c.taskType === "script") return "script";
+    if (c.type === "task")        return "task";
+    if (c.type === "hotspot")     return "hotspot";
+    if (c.type === "image-mcq")   return "image-mcq";
+    if (c.type === "truefalse")   return "truefalse";
+    if (c.type === "multi")       return "multi";
+    if (!!c.choices && !c.scenario) return "mcq";
+    return "flashcard";
+  };
+  const afterTypeFilter = disabledTypes.size === 0
+    ? afterMasteredFilter
+    : afterMasteredFilter.filter(c => !disabledTypes.has(getCardTypeKey(c)));
 
   // Step 2e: filter by difficulty
   const afterDifficultyFilter = difficultyFilter.size === 0
@@ -276,7 +280,7 @@ function App() {
       return randomised ? shuffle(preShuffle) : preShuffle;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [randomised, selectedExam, categories, showFlaggedOnly, flagged, cardType, mastered, showMastered, srsMode, srsData, difficultyFilter, shuffleKey, showDueOnly, showDevRecent, customDeckCards, examMode]
+    [randomised, selectedExam, categories, showFlaggedOnly, flagged, disabledTypes, mastered, showMastered, srsMode, srsData, difficultyFilter, shuffleKey, showDueOnly, showDevRecent, customDeckCards, examMode]
   );
 
   const CATEGORIES = [
@@ -345,7 +349,7 @@ function App() {
   );
 
   const handleExam = (exam) => {
-    setSelectedExam(exam); setCategories(new Set(["All"])); setIndex(0); setKnown(new Set()); setFinished(false); setCardType("both");
+    setSelectedExam(exam); setCategories(new Set(["All"])); setIndex(0); setKnown(new Set()); setFinished(false); setDisabledTypes(new Set());
     setCustomDeckCards([]);
     setIsEntering(true);
     setTimeout(() => setIsEntering(false), 380);
@@ -377,7 +381,7 @@ function App() {
     setIndex(0);
     setKnown(new Set());
     setFinished(false);
-    setCardType("both");
+    setDisabledTypes(new Set());
     setShowCustomDecks(false);
     setIsEntering(true);
     setTimeout(() => setIsEntering(false), 380);
@@ -442,6 +446,13 @@ function App() {
   };
 
   // ── Auth gate — AFTER all hooks ────────────────────────────────
+  if (loading) return (
+    <div className="app-loading">
+      <svg className="app-loading-spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+      </svg>
+    </div>
+  );
   if (!isAuthenticated) return <Login />;
 
   // ── Exam splash gate ───────────────────────────────────────────
@@ -451,7 +462,7 @@ function App() {
         <ExamSelect
           user={user}
           onSelect={(exam) => handleExam(exam)}
-          onLogout={() => { logout(); }}
+          onLogout={logout}
           onOpenDecks={() => setShowCustomDecks(true)}
           onSelectCustomDeck={handleCustomDeck}
           onSelectByTopic={(topic) => handleExam(`TOPIC:${topic}`)}
@@ -559,6 +570,24 @@ function App() {
     return                                { cssVar: "--srs-dot-learning", label: "Learning" };
   }
 
+  const isPremium = !!user?.isPremium;
+  const premiumLock = (content) => {
+    if (isPremium) return content;
+    return (
+      <div className="premium-gate-wrapper">
+        <div className="premium-gate" onClick={() => setShowProfile(true)}>
+          <div className="premium-gate-inner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" style={{width:12,height:12}}>
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Unlock Premium
+          </div>
+        </div>
+        <div className="premium-locked-content">{content}</div>
+      </div>
+    );
+  };
+
   return (
     <div className={`app${isExiting ? " app--exiting" : ""}${isEntering ? " app--entering" : ""}`} data-exam={selectedExam}>
 
@@ -611,225 +640,227 @@ function App() {
           <h3>Card Type</h3>
           <div className="sidebar-type-filter">
             {[
-              { value: "both",      label: "🃏 All" },
-              { value: "flashcard", label: "🔄 Flip" },
-              { value: "mcq",       label: "☑️ MCQ" },
-              { value: "multi",     label: "✅ Multi" },
-              { value: "truefalse", label: "⚖️ T/F" },
-              { value: "image-mcq", label: "🖼️ Diagram" },
-              { value: "hotspot",   label: "🎯 Hotspot" },
-              { value: "task",      label: "⌨️ Task" },
-              { value: "script",    label: "📜 Script" },
-            ].map(({ value, label }) => (
-              <button
-                key={value}
-                className={`sidebar-type-btn${cardType === value ? " active" : ""}`}
-                onClick={() => { setCardType(value); setIndex(0); setFinished(false); }}
-              >
-                {label}
-              </button>
-            ))}
+              { value: "both",       label: "All",            color: "#2563eb", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> },
+              { value: "flashcard",  label: "Flip",           color: "#7c3aed", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> },
+              { value: "mcq",        label: "MCQ",            color: "#16a34a", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> },
+              { value: "multi",      label: "Multi",          color: "#ea580c", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg> },
+              { value: "truefalse",  label: "T / F",          color: "#dc2626", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/><path d="M20 12H4"/></svg> },
+              { value: "image-mcq",  label: "Diagram",        color: "#0891b2", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> },
+              { value: "hotspot",    label: "Hotspot",        color: "#db2777", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg> },
+              { value: "task",       label: "Task",           color: "#d97706", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg> },
+              { value: "script",     label: "Script",         color: "#059669", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> },
+              { value: "fault",      label: "Find the Fault", color: "#e11d48", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> },
+              { value: "case-study", label: "Case Study",     color: "#4f46e5", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> },
+            ].map(({ value, label, color, icon }) => {
+              const isAll = value === "both";
+              const isDisabled = !isAll && disabledTypes.has(value);
+              const allClear = disabledTypes.size === 0;
+              return (
+                <button
+                  key={value}
+                  className={`sidebar-type-btn${isAll && allClear ? " active" : ""}${isDisabled ? " type-disabled" : ""}`}
+                  onClick={() => {
+                    if (isAll) { setDisabledTypes(new Set()); }
+                    else {
+                      setDisabledTypes(prev => {
+                        const next = new Set(prev);
+                        next.has(value) ? next.delete(value) : next.add(value);
+                        return next;
+                      });
+                    }
+                    setIndex(0); setFinished(false);
+                  }}
+                  style={!isDisabled ? { "--type-color": color } : {}}
+                  title={isDisabled ? `Re-enable ${label}` : isAll ? "Show all types" : `Hide ${label} cards`}
+                >
+                  <span className="sidebar-type-icon">{icon}</span>
+                  <span className="sidebar-type-label">{label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
         <div className="sidebar-section">
           <h3>Card Order</h3>
-          <label className="toggle-row">
-            <span>🧠 Spaced Repetition</span>
-            <div
-              className={`toggle${srsMode ? " on" : ""}`}
-              onClick={() => { setSrsMode(s => !s); setIndex(0); setFinished(false); }}
-              role="switch"
-              aria-checked={srsMode}
-            >
-              <div className="toggle-thumb" />
-            </div>
-          </label>
-          {srsMode && (
-            <div className="srs-sidebar-stats">
-              <span className="srs-stat srs-stat-due"><span className="srs-emoji-dot" style={{background:"var(--srs-dot-new)"}}></span> {srsStats.due} reviewing</span>
-              <span className="srs-stat srs-stat-learning"><span className="srs-emoji-dot" style={{background:"var(--srs-dot-learning)"}}></span> {srsStats.learning} learning</span>
-              <span className="srs-stat srs-stat-mature"><span className="srs-emoji-dot" style={{background:"var(--srs-dot-mature)"}}></span> {srsStats.mature} mature</span>
-            </div>
-          )}
-          <label className="toggle-row">
-            <span>🔀 Randomise cards</span>
-            <div
-              className={`toggle${randomised ? " on" : ""}${srsMode ? " disabled" : ""}`}
-              onClick={() => { if (!srsMode) handleRandomise(); }}
-              role="switch"
-              aria-checked={randomised}
-              aria-disabled={srsMode}
-            >
-              <div className="toggle-thumb" />
-            </div>
-          </label>
-          {randomised && !srsMode && (
-            <button className="sidebar-action-btn" onClick={() => { setShuffleKey((k) => k + 1); setIndex(0); setKnown(new Set()); setFinished(false); }}>
-              🔀 Re-shuffle deck
-            </button>
-          )}
+          {premiumLock(<>
+            <label className="toggle-row">
+              <span className="toggle-row-label">
+                <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="2" x2="9" y2="4"/><line x1="15" y1="2" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="22"/><line x1="15" y1="20" x2="15" y2="22"/><line x1="20" y1="9" x2="22" y2="9"/><line x1="20" y1="14" x2="22" y2="14"/><line x1="2" y1="9" x2="4" y2="9"/><line x1="2" y1="14" x2="4" y2="14"/></svg>
+                Spaced Repetition
+              </span>
+              <div className={`toggle${srsMode ? " on" : ""}`} onClick={() => { setSrsMode(s => !s); setIndex(0); setFinished(false); }} role="switch" aria-checked={srsMode}>
+                <div className="toggle-thumb" />
+              </div>
+            </label>
+            {srsMode && (
+              <div className="srs-sidebar-stats">
+                <span className="srs-stat srs-stat-due"><span className="srs-emoji-dot" style={{background:"var(--srs-dot-new)"}}></span> {srsStats.due} reviewing</span>
+                <span className="srs-stat srs-stat-learning"><span className="srs-emoji-dot" style={{background:"var(--srs-dot-learning)"}}></span> {srsStats.learning} learning</span>
+                <span className="srs-stat srs-stat-mature"><span className="srs-emoji-dot" style={{background:"var(--srs-dot-mature)"}}></span> {srsStats.mature} mature</span>
+              </div>
+            )}
+            <label className="toggle-row">
+              <span className="toggle-row-label">
+                <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+                Randomise cards
+              </span>
+              <div className={`toggle${randomised ? " on" : ""}${srsMode ? " disabled" : ""}`} onClick={() => { if (!srsMode) handleRandomise(); }} role="switch" aria-checked={randomised} aria-disabled={srsMode}>
+                <div className="toggle-thumb" />
+              </div>
+            </label>
+            {randomised && !srsMode && (
+              <button className="sidebar-action-btn" onClick={() => { setShuffleKey((k) => k + 1); setIndex(0); setKnown(new Set()); setFinished(false); }}>
+                <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+                Re-shuffle deck
+              </button>
+            )}
+          </>)}
         </div>
 
         <div className="sidebar-section">
           <h3>Session</h3>
           <button className="sidebar-action-btn" onClick={() => { restart(); setSidebarOpen(false); }}>
-            🔄 Restart session
+            <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            Restart session
           </button>
         </div>
 
         <div className="sidebar-section">
           <h3>Progress</h3>
-          <button className="sidebar-action-btn" onClick={() => { setShowDashboard(true); setSidebarOpen(false); }}>
-            📊 Readiness Dashboard
-          </button>
+          {premiumLock(
+            <button className="sidebar-action-btn" onClick={() => { setShowDashboard(true); setSidebarOpen(false); }}>
+              <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+              Readiness Dashboard
+            </button>
+          )}
         </div>
 
         <div className="sidebar-section">
           <h3>Exam Mode</h3>
-          <label className="toggle-row">
-            <span>🎓 Exam Mode</span>
-            <div
-              className={`toggle${examMode ? " on" : ""}`}
-              onClick={() => { setExamMode(m => !m); setSidebarOpen(false); }}
-              role="switch"
-              aria-checked={examMode}
-            >
-              <div className="toggle-thumb" />
-            </div>
-          </label>
-          {examMode && (
-            <label className="toggle-row" style={{ marginTop: "0.5rem" }}>
-              <span>⏱️ Timed <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>(15 min)</span></span>
-              <div
-                className={`toggle${examTimer ? " on" : ""}`}
-                onClick={() => setExamTimer(t => !t)}
-                role="switch"
-                aria-checked={examTimer}
-              >
+          {premiumLock(<>
+            <label className="toggle-row">
+              <span className="toggle-row-label">
+                <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+                Exam Mode
+              </span>
+              <div className={`toggle${examMode ? " on" : ""}`} onClick={() => { setExamMode(m => !m); setSidebarOpen(false); }} role="switch" aria-checked={examMode}>
+                <div className="toggle-thumb" />
+              </div>
+            </label>
+            {examMode && (
+              <label className="toggle-row" style={{ marginTop: "0.5rem" }}>
+                <span className="toggle-row-label">
+                  <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  Timed <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>(60 min)</span>
+                </span>
+                <div className={`toggle${examTimer ? " on" : ""}`} onClick={() => setExamTimer(t => !t)} role="switch" aria-checked={examTimer}>
+                  <div className="toggle-thumb" />
+                </div>
+              </label>
+            )}
+          </>)}
+        </div>
+
+        <div className="sidebar-section">
+          <h3>Review Filter</h3>
+          {premiumLock(
+            <label className="toggle-row">
+              <span className="toggle-row-label">
+                <span className="srs-emoji-dot" style={{background:"var(--srs-dot-new)"}}></span>
+                Due for review only ({srsDueCount})
+              </span>
+              <div className={`toggle${showDueOnly ? " on" : ""}`} onClick={() => { setShowDueOnly(d => !d); setIndex(0); setFinished(false); }} role="switch" aria-checked={showDueOnly}>
                 <div className="toggle-thumb" />
               </div>
             </label>
           )}
         </div>
 
-        <div className="sidebar-section">
-          <h3>Review Filter</h3>
-          <label className="toggle-row">
-            <span><span className="srs-emoji-dot" style={{background:"var(--srs-dot-new)"}}></span> Due for review only ({srsDueCount})</span>
-            <div
-              className={`toggle${showDueOnly ? " on" : ""}`}
-              onClick={() => { setShowDueOnly(d => !d); setIndex(0); setFinished(false); }}
-              role="switch"
-              aria-checked={showDueOnly}
-            >
-              <div className="toggle-thumb" />
-            </div>
-          </label>
-        </div>
+        {user?.isDeveloper && (
+          <div className="sidebar-section">
+            <h3>Developer</h3>
+            <label className="toggle-row">
+              <span className="toggle-row-label">
+                <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>
+                Recently added <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>(last 25h)</span>
+              </span>
+              <div className={`toggle${showDevRecent ? " on" : ""}`} onClick={() => { setShowDevRecent(d => !d); setIndex(0); setFinished(false); }} role="switch" aria-checked={showDevRecent}>
+                <div className="toggle-thumb" />
+              </div>
+            </label>
+          </div>
+        )}
 
         <div className="sidebar-section">
-          <h3>Developer</h3>
-          <label className="toggle-row">
-            <span>🧪 Recently added <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>(last 25h)</span></span>
-            <div
-              className={`toggle${showDevRecent ? " on" : ""}`}
-              onClick={() => { setShowDevRecent(d => !d); setIndex(0); setFinished(false); }}
-              role="switch"
-              aria-checked={showDevRecent}
-            >
-              <div className="toggle-thumb" />
-            </div>
-          </label>
-        </div>
-
-        <div className="sidebar-section">
-          <h3>Flagged Cards</h3>          <label className="toggle-row">
-            <span>🚩 Flagged only ({flagged.size})</span>
-            <div
-              className={`toggle${showFlaggedOnly ? " on" : ""}`}
-              onClick={() => { setShowFlaggedOnly(f => !f); setIndex(0); setFinished(false); }}
-              role="switch"
-              aria-checked={showFlaggedOnly}
-            >
-              <div className="toggle-thumb" />
-            </div>
-          </label>
-          {flagged.size > 0 && (
-            <button className="sidebar-action-btn danger" onClick={() => { setFlagged(new Set()); setShowFlaggedOnly(false); }}>
-              🗑 Clear all flags
-            </button>
-          )}
+          <h3>Flagged Cards</h3>
+          {premiumLock(<>
+            <label className="toggle-row">
+              <span className="toggle-row-label">
+                <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                Flagged only ({flagged.size})
+              </span>
+              <div className={`toggle${showFlaggedOnly ? " on" : ""}`} onClick={() => { setShowFlaggedOnly(f => !f); setIndex(0); setFinished(false); }} role="switch" aria-checked={showFlaggedOnly}>
+                <div className="toggle-thumb" />
+              </div>
+            </label>
+            {flagged.size > 0 && (
+              <button className="sidebar-action-btn danger" onClick={() => { setFlagged(new Set()); setShowFlaggedOnly(false); }}>
+                <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                Clear all flags
+              </button>
+            )}
+          </>)}
         </div>
 
         <div className="sidebar-section">
           <h3>Mastered Cards</h3>
-          <label className="toggle-row">
-            <span>⭐ Show mastered ({mastered.size})</span>
-            <div
-              className={`toggle${showMastered ? " on" : ""}`}
-              onClick={() => { setShowMastered(m => !m); setIndex(0); setFinished(false); }}
-              role="switch"
-              aria-checked={showMastered}
-            >
-              <div className="toggle-thumb" />
-            </div>
-          </label>
-          {mastered.size > 0 && (
-            <button className="sidebar-action-btn danger" onClick={() => setMastered(new Set())}>
-              🗑 Clear all mastered
-            </button>
-          )}
+          {premiumLock(<>
+            <label className="toggle-row">
+              <span className="toggle-row-label">
+                <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Show mastered ({mastered.size})
+              </span>
+              <div className={`toggle${showMastered ? " on" : ""}`} onClick={() => { setShowMastered(m => !m); setIndex(0); setFinished(false); }} role="switch" aria-checked={showMastered}>
+                <div className="toggle-thumb" />
+              </div>
+            </label>
+            {mastered.size > 0 && (
+              <button className="sidebar-action-btn danger" onClick={() => setMastered(new Set())}>
+                <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                Clear all mastered
+              </button>
+            )}
+          </>)}
         </div>
 
         <div className="sidebar-section">
           <h3>Difficulty</h3>
-          <div className="sidebar-type-filter">
-            {[
-              { value: "all",     dot: null,                     text: "All" },
-              { value: "easy",    dot: "var(--diff-easy-text)",   text: "Easy" },
-              { value: "medium",  dot: "var(--diff-med-text)",    text: "Medium" },
-              { value: "hard",    dot: "var(--diff-hard-text)",   text: "Hard" },
-              { value: "extreme", dot: "var(--diff-ext-text)",    text: "Extreme" },
-            ].map(({ value, dot, text }) => (
-              <button
-                key={value}
-                className={`sidebar-type-btn${value === "all" ? (difficultyFilter.size === 0 ? " active" : "") : (difficultyFilter.has(value) ? " active" : "")}`}
-                onClick={() => {
-                  if (value === "all") {
-                    setDifficultyFilter(new Set());
-                  } else {
-                    setDifficultyFilter(prev => {
-                      const next = new Set(prev);
-                      next.has(value) ? next.delete(value) : next.add(value);
-                      return next;
-                    });
-                  }
-                  setIndex(0);
-                  setFinished(false);
-                }}
-              >
-                {dot && <span className="diff-dot" style={{background: dot}}></span>}{text}
-              </button>
-            ))}
-          </div>
+          {premiumLock(
+            <div className="sidebar-type-filter">
+              {[
+                { value: "all",     dot: null,                     text: "All" },
+                { value: "easy",    dot: "var(--diff-easy-text)",   text: "Easy" },
+                { value: "medium",  dot: "var(--diff-med-text)",    text: "Medium" },
+                { value: "hard",    dot: "var(--diff-hard-text)",   text: "Hard" },
+                { value: "extreme", dot: "var(--diff-ext-text)",    text: "Extreme" },
+              ].map(({ value, dot, text }) => (
+                <button
+                  key={value}
+                  className={`sidebar-type-btn${value === "all" ? (difficultyFilter.size === 0 ? " active" : "") : (difficultyFilter.has(value) ? " active" : "")}`}
+                  onClick={() => {
+                    if (value === "all") { setDifficultyFilter(new Set()); }
+                    else { setDifficultyFilter(prev => { const next = new Set(prev); next.has(value) ? next.delete(value) : next.add(value); return next; }); }
+                    setIndex(0); setFinished(false);
+                  }}
+                >
+                  {dot && <span className="diff-dot" style={{background: dot}}></span>}{text}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* ── Theme ── */}
-        <div className="sidebar-section">
-          <h3>Appearance</h3>
-          <div className="sidebar-type-filter">
-            {THEMES.map(({ value, label }) => (
-              <button
-                key={value}
-                className={`sidebar-type-btn${theme === value ? " active" : ""}`}
-                onClick={() => setTheme(value)}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        </div>
 
       </aside>
 
@@ -990,7 +1021,7 @@ function App() {
         </div>
       </div>
 
-      <main className={`main-content${(current?.taskType === "script" || cardType === "script") ? " main-content--wide" : ""}`}>
+      <main className={`main-content${current?.taskType === "script" ? " main-content--wide" : ""}`}>
         {examMode && !examReady ? (
           <div className="exam-intro-box">
             <div className="exam-intro-icon">
@@ -1178,7 +1209,7 @@ function App() {
                 </button>
               )}
               {cardType !== "both" && (
-                <button className="sidebar-action-btn" onClick={() => { setCardType("both"); setIndex(0); }}>
+                <button className="sidebar-action-btn" onClick={() => { setDisabledTypes(new Set()); setIndex(0); }}>
                   Show all card types
                 </button>
               )}

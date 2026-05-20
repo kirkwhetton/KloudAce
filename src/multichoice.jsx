@@ -47,13 +47,35 @@ function MultipleChoice({ card, onKnow, onSrsRate, hideAnswers, examMode, onExam
   };
   // 💡 JSX looks like HTML but it's actually JavaScript.
   // Curly braces {} let you drop back into JS inside JSX.
+  const [scenarioOpen, setScenarioOpen] = useState(true);
+
   return (
     <div className="mcq-card">
       {/* Category badge— just displaying data from the card prop */}
       <div className="card-meta">
         <span className="mcq-category">{card.category}</span>
         <span className={`difficulty-badge difficulty-badge--${card.difficulty}`}>{card.difficulty}</span>
+        {card.scenario && <span className="case-study-badge">Case Study</span>}
       </div>
+
+      {/* Case study scenario — collapsible */}
+      {card.scenario && (
+        <div className="case-study-scenario">
+          <button
+            className="scenario-toggle"
+            onClick={() => setScenarioOpen(o => !o)}
+            aria-expanded={scenarioOpen}
+          >
+            <span className="scenario-toggle-icon">{scenarioOpen ? "▾" : "▸"}</span>
+            Scenario
+          </button>
+          {scenarioOpen && (
+            <div className="scenario-body">
+              <pre className="scenario-text">{card.scenario}</pre>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* The question text */}
       <p className="mcq-question">{card.question}</p>

@@ -6,6 +6,7 @@ export default function Login() {
   const { login, register, error, setError } = useAuthContext();
   const [mode, setMode] = useState("login"); // "login" | "register"
   const [loading, setLoading] = useState(false);
+  const [confirming, setConfirming] = useState(false); // awaiting email confirmation
 
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
 
@@ -16,6 +17,7 @@ export default function Login() {
 
   const switchMode = (m) => {
     setMode(m);
+    setConfirming(false);
     setForm({ name: "", email: "", password: "", confirm: "" });
     setError(null);
   };
@@ -30,7 +32,8 @@ export default function Login() {
         setLoading(false);
         return;
       }
-      await register({ name: form.name, email: form.email, password: form.password });
+      const result = await register({ name: form.name, email: form.email, password: form.password });
+      if (result?.needsConfirmation) setConfirming(true);
     } else {
       await login({ email: form.email, password: form.password });
     }
@@ -54,8 +57,23 @@ export default function Login() {
           <p>Your Azure learning & certification hub</p>
         </div>
 
-        {/* Tabs */}
-        <div className="login-tabs">
+        {/* Email confirmation holding screen */}
+        {confirming && (
+          <div className="login-confirm-screen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="login-confirm-icon">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            <h2>Check your email</h2>
+            <p>We sent a confirmation link to <strong>{form.email}</strong>. Click it to activate your account, then sign in.</p>
+            <button className="login-submit" onClick={() => switchMode("login")}>
+              Back to Sign In
+            </button>
+          </div>
+        )}
+
+        {/* Tabs + form — hidden while awaiting email confirmation */}
+        {!confirming && <><div className="login-tabs">
           <button
             className={`login-tab${mode === "login" ? " active" : ""}`}
             onClick={() => switchMode("login")}
@@ -137,11 +155,16 @@ export default function Login() {
           <button className="login-submit" type="submit" disabled={loading}>
             {loading ? "Please wait…" : mode === "login" ? "Sign In" : "Create Account"}
           </button>
-        </form>
+        </form></>}
 
-        <p className="login-note">
-          🔒 Your account is stored locally on this device.
-        </p>
+        {!confirming && (
+          <p className="login-note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" style={{width:12,height:12,display:"inline",verticalAlign:"middle",marginRight:"0.3rem"}}>
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Secured by Supabase
+          </p>
+        )}
       </div>
     </div>
   );

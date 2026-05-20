@@ -318,6 +318,57 @@ const az104tf = [
     learnUrl:
       "https://learn.microsoft.com/en-us/training/modules/control-network-traffic-flow-with-routes/2-azure-virtual-network-route",
   },
+
+  // ── Compute: Virtual Machines & App Service ────────────────────────
+
+  {
+    id: "AZ-104-160",
+    type: "truefalse",
+    difficulty: "medium",
+    exam: "AZ-104",
+    category: "Compute",
+    question: "An existing virtual machine can be added to an availability set after it has already been deployed.",
+    answer: false,
+    explanation:
+      "Availability set membership is set at VM creation time and cannot be changed afterward. To place an existing VM into an availability set, you must delete the VM (keeping its managed disks) and recreate it, selecting the availability set during creation. This is a common exam trap — plan availability sets before deployment, not after.",
+    learnUrl: "https://learn.microsoft.com/en-us/training/modules/configure-virtual-machine-availability/4-implement-azure-availability-sets",
+  },
+  {
+    id: "AZ-104-161",
+    type: "truefalse",
+    difficulty: "medium",
+    exam: "AZ-104",
+    category: "Compute",
+    question: "The number of update domains configured on an availability set can be changed after the availability set has been created.",
+    answer: false,
+    explanation:
+      "Update domain count is immutable after an availability set is created. The value is configurable from 1 to 20 at creation time (default is 5), but once set it cannot be modified. To change the update domain count, you must delete the availability set and all VMs in it and recreate them. Fault domain count has a similar constraint.",
+    learnUrl: "https://learn.microsoft.com/en-us/training/modules/configure-virtual-machine-availability/5-review-update-fault-domains",
+  },
+  {
+    id: "AZ-104-162",
+    type: "truefalse",
+    difficulty: "easy",
+    exam: "AZ-104",
+    category: "Compute",
+    question: "When an Azure virtual machine is stopped and deallocated, compute charges continue to accrue because the VM configuration remains held in Azure.",
+    answer: false,
+    explanation:
+      "Stopping and deallocating a VM releases the underlying hardware back to Azure's pool, so no compute charges are incurred. However, storage costs for the OS and data disks continue because the disks persist. A common mistake is stopping the VM from within the guest OS — this shuts the OS down but does NOT deallocate the VM, so compute charges continue. Always use the Azure portal, CLI, or PowerShell to properly deallocate.",
+    learnUrl: "https://learn.microsoft.com/en-us/training/modules/configure-virtual-machines/6-determine-virtual-machine-pricing",
+  },
+  {
+    id: "AZ-104-163",
+    type: "truefalse",
+    difficulty: "medium",
+    exam: "AZ-104",
+    category: "Compute",
+    question: "Azure Container Instances provide stronger security isolation than Azure Virtual Machines because containers do not require a host operating system.",
+    answer: false,
+    explanation:
+      "Virtual Machines provide stronger security isolation than containers. VMs run a complete guest OS on a hypervisor, creating a robust security boundary between workloads and between the workload and the host. Containers share the host OS kernel and only isolate the user-mode layer — this is lightweight process isolation, not a strong security boundary. For hostile multi-tenant workloads or strict compliance requirements, VMs are the correct choice.",
+    learnUrl: "https://learn.microsoft.com/en-us/training/modules/configure-azure-container-instances/3-compare-containers-to-virtual-machines",
+  },
 ];
 
 export default az104tf;

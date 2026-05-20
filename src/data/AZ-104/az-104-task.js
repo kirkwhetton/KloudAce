@@ -802,6 +802,65 @@ Examples
     learnUrl:
       "https://learn.microsoft.com/en-us/training/modules/configure-network-security-groups/5-create-network-security-groups-rules",
   },
+
+  // ── Compute: Virtual Machines, Scale Sets & App Service ───────────
+
+  {
+    id: "AZ-104-171",
+    type: "task",
+    taskType: "match",
+    difficulty: "medium",
+    exam: "AZ-104",
+    category: "Compute",
+    question: "Match each Azure VM disk type to its key characteristic.",
+    pairs: [
+      { left: "Ultra Disk",    right: "Up to 160,000 IOPS; data disk only — cannot be used as an OS disk" },
+      { left: "Premium SSD",  right: "Low-latency SSD for production; supports use as OS disk or data disk" },
+      { left: "Standard SSD", right: "Consistent SSD performance below Premium; suits web servers and dev/test" },
+      { left: "Standard HDD", right: "Lowest-cost HDD option; suitable for backup and non-critical workloads" },
+    ],
+    explanation:
+      "The two premium options (Ultra Disk and Premium SSD v2) are data disks only — they cannot be OS disks. Premium SSD is the standard choice for production OS and data disks. Standard SSD balances cost and performance for lighter workloads. Standard HDD is the cheapest tier and is appropriate only where performance is not a concern. IOPS ceilings: Ultra 160,000 → Premium SSD v2 80,000 → Premium SSD 20,000 → Standard SSD 6,000 → Standard HDD 2,000.",
+    learnUrl: "https://learn.microsoft.com/en-us/training/modules/configure-virtual-machines/4-determine-virtual-machine-storage",
+  },
+  {
+    id: "AZ-104-172",
+    type: "task",
+    taskType: "order",
+    difficulty: "medium",
+    exam: "AZ-104",
+    category: "Compute",
+    question: "Put the steps in the correct order to configure autoscaling on an existing VM Scale Set in the Azure portal.",
+    steps: [
+      "Navigate to the VM Scale Set in the Azure portal",
+      "Select 'Scaling' under the Settings section",
+      "Choose 'Custom autoscale'",
+      "Set the minimum and maximum instance count",
+      "Add scale-out and scale-in rules with metric thresholds (e.g. CPU > 75% for 10 minutes)",
+      "Click Save",
+    ],
+    explanation:
+      "Autoscaling in VM Scale Sets is configured through the Scaling blade. Choosing 'Custom autoscale' over 'Manual scale' unlocks rule-based scaling. Minimum and maximum counts define the bounds — Azure will never scale below the minimum or above the maximum. Rules then define the trigger conditions (metric threshold + evaluation window) and actions (increase or decrease instance count by N). Without saving, no changes are committed.",
+    learnUrl: "https://learn.microsoft.com/en-us/training/modules/configure-virtual-machine-availability/10-implement-autoscale",
+  },
+  {
+    id: "AZ-104-173",
+    type: "task",
+    taskType: "match",
+    difficulty: "medium",
+    exam: "AZ-104",
+    category: "Compute",
+    question: "Match each App Service deployment slot behaviour to its correct description.",
+    pairs: [
+      { left: "Staging slot swap",  right: "All staging instances are warmed up before traffic switches — zero downtime, no dropped requests" },
+      { left: "Swap rollback",      right: "The previous production version moves to the source slot during a swap, enabling instant revert if the new version fails" },
+      { left: "Auto Swap",          right: "Triggered automatically on every code push after warmup; enables continuous deployment with zero cold starts" },
+      { left: "Slot hostname",      right: "Each deployment slot has its own unique hostname, allowing independent testing before it is swapped into production" },
+    ],
+    explanation:
+      "Deployment slots are designed around zero-downtime production deployments. The swap mechanism warms all instances of the staging slot first, then atomically redirects traffic — no requests are dropped. Because the original production content moves to the source slot during the swap, rollback is instant. Auto Swap automates this entire flow on each successful deployment. Each slot's own hostname lets QA, stakeholders, or automated tests hit the staging version directly before it goes live.",
+    learnUrl: "https://learn.microsoft.com/en-us/training/modules/configure-azure-app-service/6-create-deployment-slots",
+  },
 ];
 
 export default az104task;

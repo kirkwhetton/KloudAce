@@ -3,10 +3,12 @@ import { useAuthContext } from "./AuthProvider";
 import ConfirmDialog from "../ConfirmDialog";
 import flashcards from "../flashcards";
 import { clearSrsDataForExam, clearSrsDataForCards } from "../spacedRepetition";
+import { useTheme, THEMES } from "../useTheme";
 import "./UserProfile.css";
 
 export default function UserProfile({ onClose, onOpenDashboard }) {
-  const { user, updateProfile, changePassword, togglePremium, error, setError } = useAuthContext();
+  const { user, updateProfile, changePassword, error, setError } = useAuthContext();
+  const { theme, setTheme } = useTheme(user?.id);
 
   // ── Profile tab state
   const [name, setName]   = useState(user?.name || "");
@@ -222,6 +224,46 @@ export default function UserProfile({ onClose, onOpenDashboard }) {
             <button className="profile-save-btn" type="submit" disabled={profileSaving}>
               {profileSaving ? "Saving…" : "Save changes"}
             </button>
+
+            {/* ── Premium status ── */}
+            <div className={`premium-profile-card${user?.isPremium ? " premium-profile-card--active" : ""}`}>
+              <div className="premium-profile-card-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="premium-profile-icon">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                <span className="premium-profile-title">
+                  {user?.isPremium ? "Premium" : "Free Plan"}
+                </span>
+                <span className={`premium-profile-badge${user?.isPremium ? " premium-profile-badge--on" : ""}`}>
+                  {user?.isPremium ? "Active" : "Upgrade"}
+                </span>
+              </div>
+              {user?.isPremium ? (
+                <ul className="premium-profile-perks">
+                  <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Full access to all exams and card types
+                  </li>
+                  <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Spaced repetition, exam mode &amp; readiness dashboard
+                  </li>
+                  <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Difficulty filters, flagged &amp; mastered card tracking
+                  </li>
+                </ul>
+              ) : (
+                <>
+                  <p className="premium-profile-desc">
+                    Upgrade to unlock spaced repetition, exam mode, readiness dashboard, difficulty filters, and full card access.
+                  </p>
+                  <button className="premium-profile-cta">
+                    Upgrade to Premium
+                  </button>
+                </>
+              )}
+            </div>
           </form>
         )}
 
@@ -382,34 +424,6 @@ export default function UserProfile({ onClose, onOpenDashboard }) {
             </div>
             <div className="settings-row">
               <div className="settings-row-label">
-                <span className="settings-row-title">👑 Premium</span>
-                <span className="settings-row-desc">
-                  {user?.isPremium
-                    ? "Premium account — full access to all content."
-                    : "Free account — upgrade to unlock premium exams and cards."}
-                </span>
-              </div>
-              <span className={`premium-status-chip${user?.isPremium ? " premium-status-chip--on" : ""}`}>
-                {user?.isPremium ? "👑 Premium" : "Free"}
-              </span>
-            </div>
-            <div className="settings-row settings-row--dev">
-              <div className="settings-row-label">
-                <span className="settings-row-title">🔧 Simulate Premium</span>
-                <span className="settings-row-desc">Dev toggle — simulates premium access locally without a real purchase.</span>
-              </div>
-              <button
-                className={`toggle${user?.isPremium ? " on" : ""}`}
-                onClick={() => togglePremium(!user?.isPremium)}
-                aria-pressed={user?.isPremium}
-                aria-label="Toggle premium simulation"
-              >
-                <span className="toggle-thumb" />
-              </button>
-            </div>
-
-            <div className="settings-row">
-              <div className="settings-row-label">
                 <span className="settings-row-title">🏷️ Hide difficulty badges</span>
                 <span className="settings-row-desc">
                   Hides the Easy / Medium / Hard / Extreme badge on each card — useful if you don't want difficulty hints while studying.
@@ -423,6 +437,21 @@ export default function UserProfile({ onClose, onOpenDashboard }) {
               >
                 <span className="toggle-thumb" />
               </button>
+            </div>
+
+            {/* ── Appearance ── */}
+            <div className="settings-section-title">Appearance</div>
+            <div className="theme-grid">
+              {THEMES.map(({ value, label }) => (
+                <button
+                  key={value}
+                  className={`theme-btn${theme === value ? " active" : ""}`}
+                  onClick={() => setTheme(value)}
+                >
+                  <span className={`theme-swatch theme-swatch--${value}`} />
+                  <span className="theme-btn-label">{label.replace(/^[^\s]+\s/, "")}</span>
+                </button>
+              ))}
             </div>
           </div>
         )}

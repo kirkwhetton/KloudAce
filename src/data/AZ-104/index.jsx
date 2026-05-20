@@ -2,7 +2,7 @@
 // Combines all question-type sub-files into a single array for use by the app.
 // Import the merged array:  import az104 from './data/AZ-104'
 // Or import individual sets: import az104mcq from './data/AZ-104/az-104-mcq'
-// ID range: AZ-104-001 – AZ-104-038, AZ-104-090 – AZ-104-114, AZ-104-115 – AZ-104-138 (Networking), AZ-104-HS-001 – AZ-104-HS-008
+// ID range: AZ-104-001 – AZ-104-038, AZ-104-090 – AZ-104-114, AZ-104-115 – AZ-104-138 (Networking), AZ-104-139 – AZ-104-143 (CS: Identity), AZ-104-144 – AZ-104-148 (CS: VNet), AZ-104-149 – AZ-104-153 (CS: Storage), AZ-104-154 – AZ-104-173 (Compute), AZ-104-HS-001 – AZ-104-HS-008
 
 import az104mcq       from "./az-104-mcq.js";
 import az104flashcard from "./az-104-flashcard.js";

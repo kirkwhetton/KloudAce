@@ -1,7 +1,7 @@
 // src/useTheme.js
 // Persists the user's chosen theme in localStorage and applies
-// a data-theme attribute on <body>. Also handles system dark-mode
-// preference as the default when no explicit choice has been stored.
+// a data-theme attribute on <body>. Defaults to light; user can
+// switch to dark or an accessibility theme in the sidebar.
 
 import { useState, useEffect } from "react";
 
@@ -21,9 +21,6 @@ function getStoredTheme(userId) {
   }
 }
 
-function systemPrefersDark() {
-  return window.matchMedia?.("(prefers-color-scheme: dark)").matches;
-}
 
 export function useTheme(userId) {
   const key = `azfc_theme_${userId ?? "guest"}`;
@@ -31,7 +28,7 @@ export function useTheme(userId) {
   const [theme, setThemeState] = useState(() => {
     const stored = getStoredTheme(userId);
     if (stored) return stored;
-    return systemPrefersDark() ? "dark" : "light";
+    return "light";
   });
 
   // Apply to <body> whenever theme changes
