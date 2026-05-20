@@ -922,7 +922,7 @@ function App() {
               </button>
               {/* Divider */}
               <span className="header-btn-divider" />
-              <button className="header-btn header-btn--signout" onClick={() => { goToExams(); setTimeout(() => logout(), 350); }} title="Sign out">
+              <button className="header-btn header-btn--signout" onClick={logout} title="Sign out">
                 <span className="header-btn-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
