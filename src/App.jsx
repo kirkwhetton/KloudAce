@@ -13,9 +13,10 @@ import { useAuthContext } from "./auth/AuthProvider";
 import Login from "./auth/Login";
 import ExamSelect from "./ExamSelect";
 import UserProfile from "./auth/UserProfile";
+import { loadCardStatesRemote, saveCardStatesRemote } from "./cardStates";
 import {
-  loadSrsData, saveSrsData, updateSrsRecord, createSrsRecord,
-  sortBySrs, isDue, getSrsStats,
+  loadSrsData, saveSrsData, loadSrsDataRemote, saveSrsDataRemote,
+  updateSrsRecord, createSrsRecord, sortBySrs, isDue, getSrsStats,
 } from "./spacedRepetition";
 import ConfirmDialog from "./ConfirmDialog";
 import ReadinessDashboard from "./ReadinessDashboard";
@@ -176,13 +177,32 @@ function App() {
     try { setMastered(new Set(JSON.parse(localStorage.getItem(masteredKey) || "[]"))); }
     catch { setMastered(new Set()); }
     setIndex(0); setFinished(false); setCategories(new Set(["All"]));
+    // Sync flagged & mastered from Supabase in background
+    if (user) {
+      loadCardStatesRemote(user.id).then((remote) => {
+        if (!remote) return;
+        const rf = new Set(remote.flagged);
+        const rm = new Set(remote.mastered);
+        setFlagged(rf);
+        setMastered(rm);
+        localStorage.setItem(flagKey,     JSON.stringify([...rf]));
+        localStorage.setItem(masteredKey, JSON.stringify([...rm]));
+      });
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
   // Load SRS data whenever user or exam changes
+  // Show localStorage cache immediately, then sync from Supabase in background
   useEffect(() => {
     if (!user || !selectedExam) return;
     setSrsData(loadSrsData(user.id, selectedExam));
+    loadSrsDataRemote(user.id, selectedExam).then((remote) => {
+      if (remote) {
+        setSrsData(remote);
+        saveSrsData(user.id, selectedExam, remote);
+      }
+    });
   }, [user?.id, selectedExam]);
 
   // Refs for keyboard shortcuts — populated after deck/current are derived below
@@ -194,6 +214,7 @@ function App() {
   useEffect(() => {
     if (!user) return;
     localStorage.setItem(flagKey, JSON.stringify([...flagged]));
+    saveCardStatesRemote(user.id, flagged, mastered);
   }, [flagged, flagKey, user]);
 
   useEffect(() => {
@@ -204,6 +225,7 @@ function App() {
   useEffect(() => {
     if (!user) return;
     localStorage.setItem(masteredKey, JSON.stringify([...mastered]));
+    saveCardStatesRemote(user.id, flagged, mastered);
   }, [mastered, masteredKey, user]);
 
   // ── Derived deck (all hooks must be above the auth gate) ───────
@@ -519,7 +541,10 @@ function App() {
     const updated = updateSrsRecord(existing, quality);
     const newSrsData = { ...srsData, [current.id]: updated };
     setSrsData(newSrsData);
-    if (user) saveSrsData(user.id, selectedExam, newSrsData);
+    if (user) {
+      saveSrsData(user.id, selectedExam, newSrsData);
+      saveSrsDataRemote(user.id, selectedExam, newSrsData);
+    }
     goNext();
   };
 

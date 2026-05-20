@@ -92,7 +92,7 @@ export function daysUntil(record) {
 }
 
 /**
- * Load all SRS records for a user+exam from localStorage.
+ * Load all SRS records for a user+exam from localStorage (cache).
  */
 export function loadSrsData(userId, exam) {
   const key = `azfc_srs_${userId}_${exam}`;
@@ -104,11 +104,47 @@ export function loadSrsData(userId, exam) {
 }
 
 /**
- * Save all SRS records for a user+exam to localStorage.
+ * Save all SRS records for a user+exam to localStorage (cache).
  */
 export function saveSrsData(userId, exam, data) {
   const key = `azfc_srs_${userId}_${exam}`;
   localStorage.setItem(key, JSON.stringify(data));
+}
+
+/**
+ * Load SRS records from Supabase. Returns null on error.
+ */
+export async function loadSrsDataRemote(userId, exam) {
+  try {
+    const { supabase } = await import("./auth/supabase.js");
+    const { data, error } = await supabase
+      .from("srs_data")
+      .select("records")
+      .eq("user_id", userId)
+      .eq("exam", exam)
+      .single();
+    if (error || !data) return null;
+    return data.records;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Upsert SRS records to Supabase. Fire-and-forget safe.
+ */
+export async function saveSrsDataRemote(userId, exam, data) {
+  try {
+    const { supabase } = await import("./auth/supabase.js");
+    await supabase
+      .from("srs_data")
+      .upsert(
+        { user_id: userId, exam, records: data, updated_at: new Date().toISOString() },
+        { onConflict: "user_id,exam" }
+      );
+  } catch {
+    // non-fatal — localStorage cache still holds the data
+  }
 }
 
 /**
