@@ -7,9 +7,8 @@ import MultiSelect from "./MultiSelect";
 import TrueFalse from "./TrueFalse";
 import ImageMCQ from "./ImageMCQ";
 import TaskSimulator from "./TaskSimulator";
-import PremiumLockedCard from "./PremiumLockedCard";
 import Hotspot from "./Hotspot";
-import flashcards, { EXAM_META } from "./flashcards";
+import flashcards, { EXAM_META, FREE_CARD_IDS } from "./flashcards";
 import { useAuthContext } from "./auth/AuthProvider";
 import Login from "./auth/Login";
 import ExamSelect from "./ExamSelect";
@@ -206,12 +205,15 @@ function App() {
   }, [mastered, masteredKey, user]);
 
   // ── Derived deck (all hooks must be above the auth gate) ───────
-  // Step 1: filter by exam
-  const examDeck = selectedExam?.startsWith("CUSTOM:")
+  const isPremium = !!user?.isPremium;
+
+  // Step 1: filter by exam, then apply free tier card restriction
+  const examDeck = (selectedExam?.startsWith("CUSTOM:")
     ? customDeckCards
     : selectedExam?.startsWith("TOPIC:")
       ? flashcards.filter((c) => c.category === selectedExam.slice("TOPIC:".length))
-      : flashcards.filter((c) => c.exam === selectedExam);
+      : flashcards.filter((c) => c.exam === selectedExam)
+  ).filter((c) => isPremium || c.exam === "AZ-900" || FREE_CARD_IDS.has(c.id) || selectedExam?.startsWith("CUSTOM:"));
 
   // Step 2: filter by selected categories — "🚩 Flagged" and "All" are virtual
   const filteredDeck = examDeck.filter((c) => {
@@ -570,7 +572,6 @@ function App() {
     return                                { cssVar: "--srs-dot-learning", label: "Learning" };
   }
 
-  const isPremium = !!user?.isPremium;
   const premiumLock = (content) => {
     if (isPremium) return content;
     return (
@@ -728,12 +729,10 @@ function App() {
 
         <div className="sidebar-section">
           <h3>Progress</h3>
-          {premiumLock(
-            <button className="sidebar-action-btn" onClick={() => { setShowDashboard(true); setSidebarOpen(false); }}>
-              <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
-              Readiness Dashboard
-            </button>
-          )}
+          <button className="sidebar-action-btn" onClick={() => { setShowDashboard(true); setSidebarOpen(false); }}>
+            <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+            Readiness Dashboard
+          </button>
         </div>
 
         <div className="sidebar-section">
@@ -1174,6 +1173,21 @@ function App() {
             <h2>🎉 Session Complete!</h2>
             <p>You've worked through all <strong>{deck.length}</strong> cards in this session.</p>
             <button className="btn-restart" onClick={restart}>🔄 Start Again</button>
+
+            {!isPremium && (
+              <div className="unlock-premium-card">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="unlock-premium-icon">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                <h3 className="unlock-premium-title">Want more?</h3>
+                <p className="unlock-premium-desc">
+                  You've completed your free deck. Upgrade to Premium to unlock the full question bank — hundreds more cards, exam mode, spaced repetition, and readiness tracking.
+                </p>
+                <button className="unlock-premium-btn" onClick={() => setShowProfile(true)}>
+                  Upgrade to Premium
+                </button>
+              </div>
+            )}
           </div>
         ) : deck.length === 0 ? (
           <div className="empty-deck-card">
@@ -1242,9 +1256,7 @@ function App() {
                   {mastered.has(current.id) ? "⭐ Mastered" : "☆ Mark mastered"}
                 </button>
               </div>
-              {(current.premium || EXAM_META[current.exam]?.premium) && !user?.isPremium
-                ? <PremiumLockedCard card={current} onUpgrade={() => setShowProfile(true)} />
-                : <div className="card-body-wrapper">
+              <div className="card-body-wrapper">
                 {current.type === "truefalse" ? (
                   <TrueFalse
                     key={`${sessionKey}-${current.id}`}
@@ -1336,7 +1348,7 @@ function App() {
                 {!current.id?.toString().startsWith("CUSTOM:") && !current.displayId && current.type !== "task" && (
                   <span className="card-id-badge">#{current.id}</span>
                 )}
-              </div>}
+              </div>
             </div>
           )
         )}

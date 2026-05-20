@@ -62,7 +62,14 @@ const EXAM_ICONS = {
 };
 
 export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck }) {
-  const exams = Object.values(EXAM_META);  const [view, setView] = useState("chooser"); // "chooser" | "exams" | "topics" | "mydecks"
+  const exams = Object.values(EXAM_META);
+  const [signingOut, setSigningOut] = useState(false);
+  const handleSignOut = async () => {
+    if (signingOut) return;
+    setSigningOut(true);
+    try { await onLogout(); } finally { setSigningOut(false); }
+  };
+  const [view, setView] = useState("chooser"); // "chooser" | "exams" | "topics" | "mydecks"
   const [animClass, setAnimClass] = useState("splash-initial"); // start with entry anim on first load
   const [customDecks, setCustomDecks] = useState([]);
   const [topicSearch, setTopicSearch] = useState("");
@@ -207,7 +214,7 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
             </button>
           </div>
 
-          <button className="splash-signout" onClick={onLogout}>Sign out</button>
+          <button className="splash-signout" onClick={handleSignOut} disabled={signingOut}>{signingOut ? "Signing out…" : "Sign out"}</button>
         </div>
       </div>
     );
@@ -256,7 +263,7 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
             })}
           </div>
 
-          <button className="splash-signout" onClick={onLogout}>Sign out</button>
+          <button className="splash-signout" onClick={handleSignOut} disabled={signingOut}>{signingOut ? "Signing out…" : "Sign out"}</button>
         </div>
       </div>
     );
@@ -312,7 +319,7 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
             )}
           </div>
 
-          <button className="splash-signout" onClick={onLogout}>Sign out</button>
+          <button className="splash-signout" onClick={handleSignOut} disabled={signingOut}>{signingOut ? "Signing out…" : "Sign out"}</button>
         </div>
       </div>
     );
@@ -372,7 +379,7 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
             </>
           )}
 
-          <button className="splash-signout" onClick={onLogout}>Sign out</button>
+          <button className="splash-signout" onClick={handleSignOut} disabled={signingOut}>{signingOut ? "Signing out…" : "Sign out"}</button>
         </div>
       </div>
     );

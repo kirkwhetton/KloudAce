@@ -491,6 +491,113 @@
   color: var(--wrong);
 }
 
+/* Premium unlock card — shown at end of free deck */
+.unlock-premium-card {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  border: 1.5px solid #f59e0b;
+  border-radius: 14px;
+  background: color-mix(in srgb, #f59e0b 8%, var(--bg-card));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+.unlock-premium-icon {
+  width: 36px;
+  height: 36px;
+  color: #f59e0b;
+}
+
+.unlock-premium-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.unlock-premium-desc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 380px;
+}
+
+.unlock-premium-btn {
+  padding: 0.6rem 1.75rem;
+  background: #f59e0b;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.unlock-premium-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-2px);
+}
+
+/* Free tier limit card */
+.free-limit-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-card);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,114,198,0.12);
+}
+
+.free-limit-icon {
+  width: 40px;
+  height: 40px;
+  color: var(--brand);
+}
+
+.free-limit-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.free-limit-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.free-limit-btn {
+  margin-top: 0.5rem;
+  padding: 0.65rem 1.75rem;
+  background: var(--brand);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.free-limit-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-2px);
+}
+
 /* Auth loading spinner */
 .app-loading {
   min-height: 100dvh;

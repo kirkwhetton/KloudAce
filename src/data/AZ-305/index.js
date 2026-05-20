@@ -13,7 +13,6 @@ export { az305mcq, az305flashcard, az305tf, az305multi };
 export const meta = {
   exam: "AZ-305",
   fullName: "Microsoft Azure Solutions Architect Expert",
-  premium: true,
 };
 
 const az305 = [
