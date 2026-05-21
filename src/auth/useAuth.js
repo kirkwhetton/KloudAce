@@ -91,13 +91,9 @@ export function useAuth() {
     return true;
   }, []);
 
-  const logout = useCallback(async () => {
-    try {
-      await supabase.auth.signOut();
-    } finally {
-      // Always clear local state — even if the network call fails
-      setUser(null);
-    }
+  const logout = useCallback(() => {
+    setUser(null); // clear immediately — don't wait for network
+    supabase.auth.signOut().catch(() => {}); // fire and forget
   }, []);
 
   const updateProfile = useCallback(async ({ name, email }) => {

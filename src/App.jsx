@@ -167,6 +167,14 @@ function App() {
     return `${m}:${s}`;
   };
 
+  // ── Reset navigation state on sign out ────────────────────────
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setSelectedPlatform(null);
+      setSelectedExam(null);
+    }
+  }, [isAuthenticated]);
+
   // ── Re-load persisted data when the logged-in user changes ─────
   // (e.g. user A logs out, user B logs in on the same device)
   useEffect(() => {

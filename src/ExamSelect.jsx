@@ -94,25 +94,20 @@ const ProvidersButton = ({ onBack }) => onBack ? (
   <button type="button" className="splash-providers-btn" onClick={onBack}><Chevron /> Providers</button>
 ) : null;
 
-const SignOutButton = ({ onSignOut, signingOut }) => (
-  <button className="splash-signout" onClick={onSignOut} disabled={signingOut}>
+const SignOutButton = ({ onSignOut }) => (
+  <button className="splash-signout" onClick={onSignOut}>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden="true">
       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
       <polyline points="16 17 21 12 16 7"/>
       <line x1="21" y1="12" x2="9" y2="12"/>
     </svg>
-    {signingOut ? "Signing out…" : "Sign out"}
+    Sign out
   </button>
 );
 
 export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack }) {
   const exams = Object.values(EXAM_META);
-  const [signingOut, setSigningOut] = useState(false);
-  const handleSignOut = async () => {
-    if (signingOut) return;
-    setSigningOut(true);
-    try { await onLogout(); } finally { setSigningOut(false); }
-  };
+  const handleSignOut = () => onLogout();
   const [view, setView] = useState("chooser"); // "chooser" | "exams" | "topics" | "mydecks"
   const [animClass, setAnimClass] = useState("splash-initial"); // start with entry anim on first load
   const [customDecks, setCustomDecks] = useState([]);
@@ -242,7 +237,7 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
             </button>
           </div>
 
-          <SignOutButton onSignOut={handleSignOut} signingOut={signingOut} />
+          <SignOutButton onSignOut={handleSignOut} />
         </div>
       </div>
     );
@@ -291,7 +286,7 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
             })}
           </div>
 
-          <SignOutButton onSignOut={handleSignOut} signingOut={signingOut} />
+          <SignOutButton onSignOut={handleSignOut} />
         </div>
       </div>
     );
@@ -347,7 +342,7 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
             )}
           </div>
 
-          <SignOutButton onSignOut={handleSignOut} signingOut={signingOut} />
+          <SignOutButton onSignOut={handleSignOut} />
         </div>
       </div>
     );
@@ -407,7 +402,7 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
             </>
           )}
 
-          <SignOutButton onSignOut={handleSignOut} signingOut={signingOut} />
+          <SignOutButton onSignOut={handleSignOut} />
         </div>
       </div>
     );
