@@ -3,10 +3,11 @@ import { useAuthContext } from "./AuthProvider";
 import "./Login.css";
 
 export default function Login() {
-  const { login, register, error, setError } = useAuthContext();
+  const { login, register, verifyOtp, error, setError } = useAuthContext();
   const [mode, setMode] = useState("login"); // "login" | "register"
   const [loading, setLoading] = useState(false);
-  const [confirming, setConfirming] = useState(false); // awaiting email confirmation
+  const [confirming, setConfirming] = useState(false); // awaiting OTP confirmation
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
 
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
 
@@ -18,8 +19,40 @@ export default function Login() {
   const switchMode = (m) => {
     setMode(m);
     setConfirming(false);
+    setOtp(["", "", "", "", "", ""]);
     setForm({ name: "", email: "", password: "", confirm: "" });
     setError(null);
+  };
+
+  const handleOtpChange = (i, val) => {
+    if (!/^\d?$/.test(val)) return;
+    const next = [...otp];
+    next[i] = val;
+    setOtp(next);
+    if (val && i < 5) document.getElementById(`otp-${i + 1}`)?.focus();
+  };
+
+  const handleOtpKeyDown = (i, e) => {
+    if (e.key === "Backspace" && !otp[i] && i > 0) document.getElementById(`otp-${i - 1}`)?.focus();
+  };
+
+  const handleOtpPaste = (e) => {
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (pasted.length === 6) {
+      setOtp(pasted.split(""));
+      document.getElementById("otp-5")?.focus();
+      e.preventDefault();
+    }
+  };
+
+  const handleVerify = async () => {
+    const token = otp.join("");
+    if (token.length < 6) { setError("Please enter the full 6-digit code."); return; }
+    setLoading(true);
+    setError(null);
+    const ok = await verifyOtp({ email: form.email, token });
+    if (!ok) setLoading(false);
+    // if ok, onAuthStateChange handles navigation automatically
   };
 
   const handleSubmit = async (e) => {
@@ -61,7 +94,7 @@ export default function Login() {
           <p className="login-cloud-tagline">Your cloud certification hub</p>
         </div>
 
-        {/* Email confirmation holding screen */}
+        {/* OTP confirmation screen */}
         {confirming && (
           <div className="login-confirm-screen">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="login-confirm-icon">
@@ -69,8 +102,28 @@ export default function Login() {
               <polyline points="22,6 12,13 2,6"/>
             </svg>
             <h2>Check your email</h2>
-            <p>We sent a confirmation link to <strong>{form.email}</strong>. Click it to activate your account, then sign in.</p>
-            <button className="login-submit" onClick={() => switchMode("login")}>
+            <p>We sent a 6-digit code to <strong>{form.email}</strong>. Enter it below to activate your account.</p>
+            <div className="otp-inputs" onPaste={handleOtpPaste}>
+              {otp.map((digit, i) => (
+                <input
+                  key={i}
+                  id={`otp-${i}`}
+                  className="otp-box"
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleOtpChange(i, e.target.value)}
+                  onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                  autoFocus={i === 0}
+                />
+              ))}
+            </div>
+            {error && <p className="login-error">⚠️ {error}</p>}
+            <button className="login-submit" onClick={handleVerify} disabled={loading}>
+              {loading ? "Verifying…" : "Verify Code"}
+            </button>
+            <button className="login-text-btn" onClick={() => switchMode("login")}>
               Back to Sign In
             </button>
           </div>

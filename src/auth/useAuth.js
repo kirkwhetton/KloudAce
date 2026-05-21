@@ -77,6 +77,13 @@ export function useAuth() {
     return { success: true, needsConfirmation };
   }, []);
 
+  const verifyOtp = useCallback(async ({ email, token }) => {
+    setError(null);
+    const { error: err } = await supabase.auth.verifyOtp({ email, token, type: "email" });
+    if (err) { setError("Invalid or expired code. Please check and try again."); return false; }
+    return true;
+  }, []);
+
   const login = useCallback(async ({ email, password }) => {
     setError(null);
     const { error: err } = await supabase.auth.signInWithPassword({ email, password });
@@ -121,7 +128,7 @@ export function useAuth() {
 
   return {
     user, isAuthenticated, loading,
-    login, register, logout, updateProfile, changePassword,
+    login, register, logout, updateProfile, changePassword, verifyOtp,
     error, setError,
   };
 }
