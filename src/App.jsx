@@ -14,6 +14,7 @@ import Login from "./auth/Login";
 import ExamSelect from "./ExamSelect";
 import UserProfile from "./auth/UserProfile";
 import { loadCardStatesRemote, saveCardStatesRemote } from "./cardStates";
+import { loadExamCardsRemote, SUPABASE_EXAMS } from "./cardLoader";
 import {
   loadSrsData, saveSrsData, loadSrsDataRemote, saveSrsDataRemote,
   updateSrsRecord, createSrsRecord, sortBySrs, isDue, getSrsStats,
@@ -44,8 +45,9 @@ function App() {
   const flagKey  = user ? `azfc_flagged_${user.id}` : "azfc_flagged_guest";
   const knownKey = user ? `azfc_known_${user.id}`   : "azfc_known_guest";
 
-  const [selectedPlatform, setSelectedPlatform] = useState(null); // null = show platform picker
-  const [selectedExam, setSelectedExam] = useState(null); // null = show splash
+  const [selectedPlatform, setSelectedPlatform] = useState(null);
+  const [selectedExam, setSelectedExam] = useState(null);
+  const [remoteCards, setRemoteCards] = useState(null); // Supabase cards for current exam
   const [categories, setCategories] = useState(new Set(["All"]));
   const [index, setIndex] = useState(0);
   const [known, setKnown] = useState(() => {
@@ -213,6 +215,18 @@ function App() {
     });
   }, [user?.id, selectedExam]);
 
+  // Load cards from Supabase for migrated exams, fall back to bundled on error
+  useEffect(() => {
+    if (!selectedExam || !SUPABASE_EXAMS.has(selectedExam)) {
+      setRemoteCards(null);
+      return;
+    }
+    setRemoteCards(null); // clear while loading
+    loadExamCardsRemote(selectedExam).then((cards) => {
+      setRemoteCards(cards); // null if failed — examDeck falls back to bundled
+    });
+  }, [selectedExam]);
+
   // Refs for keyboard shortcuts — populated after deck/current are derived below
   const deckRef    = useRef(null);
   const indexRef   = useRef(index);
@@ -240,11 +254,13 @@ function App() {
   const isPremium = !!user?.isPremium;
 
   // Step 1: filter by exam, then apply free tier card restriction
+  // For migrated exams, use remoteCards (Supabase) — fall back to bundled if null
+  const baseCards = remoteCards ?? flashcards;
   const examDeck = (selectedExam?.startsWith("CUSTOM:")
     ? customDeckCards
     : selectedExam?.startsWith("TOPIC:")
       ? flashcards.filter((c) => c.category === selectedExam.slice("TOPIC:".length))
-      : flashcards.filter((c) => c.exam === selectedExam)
+      : baseCards.filter((c) => c.exam === selectedExam)
   ).filter((c) => isPremium || c.exam === "AZ-900" || FREE_CARD_IDS.has(c.id) || selectedExam?.startsWith("CUSTOM:"));
 
   // Step 2: filter by selected categories — "🚩 Flagged" and "All" are virtual

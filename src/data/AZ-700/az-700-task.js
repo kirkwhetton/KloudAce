@@ -101,7 +101,7 @@ EXAMPLE:
     learnUrl: "https://learn.microsoft.com/en-us/azure/vpn-gateway/tutorial-create-gateway-portal",
   },
   {
-    id: "AZ-700-125",
+    id: "AZ-700-134",
     exam: "AZ-700",
     type: "task",
     taskType: "script",
