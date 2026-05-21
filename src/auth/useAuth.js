@@ -79,7 +79,7 @@ export function useAuth() {
 
   const verifyOtp = useCallback(async ({ email, token }) => {
     setError(null);
-    const { error: err } = await supabase.auth.verifyOtp({ email, token, type: "email" });
+    const { error: err } = await supabase.auth.verifyOtp({ email, token, type: "signup" });
     if (err) { setError("Invalid or expired code. Please check and try again."); return false; }
     return true;
   }, []);
