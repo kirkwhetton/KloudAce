@@ -262,6 +262,16 @@
   margin: 0;
 }
 
+/* ── Footer ── */
+.platform-footer {
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  padding: 1rem 2rem;
+  border-top: 1px solid var(--border);
+  line-height: 1.5;
+}
+
 /* ── Responsive ── */
 @media (max-width: 600px) {
   .platform-header {

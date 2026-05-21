@@ -1,3 +1,4 @@
+import { TbBrandAzure, TbBrandAws, TbBrandGoogle } from "react-icons/tb";
 import "./PlatformSelect.css";
 
 const PLATFORMS = [
@@ -7,12 +8,7 @@ const PLATFORMS = [
     shortName: "Azure",
     tagline: "Explore Azure certifications",
     live: true,
-    icon: (
-      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="platform-icon">
-        <path d="M44 12L20 68h16l6-14h24L44 12z" fill="currentColor" opacity="0.9"/>
-        <path d="M36 20L16 68h12l26-48H36z" fill="currentColor" opacity="0.6"/>
-      </svg>
-    ),
+    icon: <TbBrandAzure className="platform-icon" aria-hidden="true" />,
   },
   {
     id: "aws",
@@ -20,15 +16,7 @@ const PLATFORMS = [
     shortName: "AWS",
     tagline: "Coming soon",
     live: false,
-    icon: (
-      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="platform-icon">
-        <path d="M14 50c0 0 12 8 26 8s26-8 26-8" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"/>
-        <path d="M14 50l-4 6 4-6zM66 50l4 6-4-6z" fill="currentColor"/>
-        <rect x="20" y="22" width="12" height="18" rx="2" fill="currentColor" opacity="0.8"/>
-        <rect x="34" y="18" width="12" height="22" rx="2" fill="currentColor" opacity="0.9"/>
-        <rect x="48" y="26" width="12" height="14" rx="2" fill="currentColor" opacity="0.7"/>
-      </svg>
-    ),
+    icon: <TbBrandAws className="platform-icon" aria-hidden="true" />,
   },
   {
     id: "gcp",
@@ -36,14 +24,7 @@ const PLATFORMS = [
     shortName: "GCP",
     tagline: "Coming soon",
     live: false,
-    icon: (
-      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="platform-icon">
-        <path d="M55 30H50.5C48.5 22 41.5 16 33 16C22.5 16 14 24.5 14 35C14 45.5 22.5 54 33 54H55C62.3 54 68 48.3 68 41C68 33.7 62.3 28 55 28V30Z" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
-        <line x1="33" y1="62" x2="33" y2="68" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-        <line x1="44" y1="62" x2="44" y2="72" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-        <line x1="22" y1="62" x2="22" y2="65" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-      </svg>
-    ),
+    icon: <TbBrandGoogle className="platform-icon" aria-hidden="true" />,
   },
 ];
 
@@ -106,6 +87,10 @@ export default function PlatformSelect({ user, onSelect, onLogout }) {
 
         <p className="platform-user-hint">Signed in as <strong>{user?.name || user?.email}</strong></p>
       </main>
+
+      <footer className="platform-footer">
+        Microsoft Azure, Amazon Web Services, and Google Cloud are trademarks of their respective owners. KloudAce is not affiliated with or endorsed by Microsoft, Amazon, or Google.
+      </footer>
     </div>
   );
 }
