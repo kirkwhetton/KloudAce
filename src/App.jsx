@@ -1281,7 +1281,7 @@ function App() {
                 ? "No cards are due for review right now — check back later or turn off the Due for review filter."
                 : showFlaggedOnly
                 ? "You have no flagged cards under the current filters."
-                : cardType !== "both"
+                : disabledTypes.size > 0
                 ? "No cards of this type exist in the selected categories."
                 : difficultyFilter.size > 0
                 ? "No cards match the selected difficulty."
@@ -1303,7 +1303,7 @@ function App() {
                   Remove flagged filter
                 </button>
               )}
-              {cardType !== "both" && (
+              {disabledTypes.size > 0 && (
                 <button className="sidebar-action-btn" onClick={() => { setDisabledTypes(new Set()); setIndex(0); }}>
                   Show all card types
                 </button>
