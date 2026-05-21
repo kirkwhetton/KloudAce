@@ -265,7 +265,7 @@ function App() {
   // Step 1: filter by exam, then apply free tier card restriction
   // For migrated exams, use remoteCards (Supabase) + bundled hotspot/image cards (not in DB)
   const bundledSpecial = selectedExam
-    ? flashcards.filter((c) => c.exam === selectedExam && (c.type === "hotspot" || c.type === "image" || c.type === "image-mcq"))
+    ? flashcards.filter((c) => c.exam === selectedExam && (c.type === "hotspot" || c.type === "image"))
     : [];
   const baseCards = remoteCards ? [...remoteCards, ...bundledSpecial] : flashcards;
   const examDeck = (selectedExam?.startsWith("CUSTOM:")

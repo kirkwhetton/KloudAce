@@ -261,7 +261,7 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
                   <rect x="3" y="3" width="18" height="18" rx="2"/>
                 </svg>
               );
-              const bundledExtra = flashcards.filter((c) => c.exam === meta.exam && (c.type === "hotspot" || c.type === "image" || c.type === "image-mcq")).length;
+              const bundledExtra = flashcards.filter((c) => c.exam === meta.exam && (c.type === "hotspot" || c.type === "image")).length;
               const count = examCardCounts
                 ? (examCardCounts[meta.exam] || 0) + bundledExtra
                 : flashcards.filter((c) => c.exam === meta.exam).length;
