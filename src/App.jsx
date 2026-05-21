@@ -14,7 +14,7 @@ import Login from "./auth/Login";
 import ExamSelect from "./ExamSelect";
 import UserProfile from "./auth/UserProfile";
 import { loadCardStatesRemote, saveCardStatesRemote } from "./cardStates";
-import { loadExamCardsRemote, SUPABASE_EXAMS } from "./cardLoader";
+import { loadExamCardsRemote, loadCardsByCategory, loadAllTopics, loadExamCardCounts, SUPABASE_EXAMS } from "./cardLoader";
 import {
   loadSrsData, saveSrsData, loadSrsDataRemote, saveSrsDataRemote,
   updateSrsRecord, createSrsRecord, sortBySrs, isDue, getSrsStats,
@@ -47,7 +47,9 @@ function App() {
 
   const [selectedPlatform, setSelectedPlatform] = useState(null);
   const [selectedExam, setSelectedExam] = useState(null);
-  const [remoteCards, setRemoteCards] = useState(null); // Supabase cards for current exam
+  const [remoteCards, setRemoteCards] = useState(null);
+  const [remoteTopics, setRemoteTopics] = useState(null);
+  const [examCardCounts, setExamCardCounts] = useState(null);
   const [categories, setCategories] = useState(new Set(["All"]));
   const [index, setIndex] = useState(0);
   const [known, setKnown] = useState(() => {
@@ -215,16 +217,23 @@ function App() {
     });
   }, [user?.id, selectedExam]);
 
-  // Load cards from Supabase for migrated exams, fall back to bundled on error
+  // Load topic list and per-exam card counts from Supabase on mount
   useEffect(() => {
-    if (!selectedExam || !SUPABASE_EXAMS.has(selectedExam)) {
+    loadAllTopics().then((t) => { if (t) setRemoteTopics(t); });
+    loadExamCardCounts().then((c) => { if (c) setExamCardCounts(c); });
+  }, []);
+
+  // Load cards from Supabase for migrated exams or by category for TOPIC: views
+  useEffect(() => {
+    if (!selectedExam) { setRemoteCards(null); return; }
+    if (selectedExam.startsWith("TOPIC:")) {
       setRemoteCards(null);
+      loadCardsByCategory(selectedExam.slice("TOPIC:".length)).then(setRemoteCards);
       return;
     }
-    setRemoteCards(null); // clear while loading
-    loadExamCardsRemote(selectedExam).then((cards) => {
-      setRemoteCards(cards); // null if failed — examDeck falls back to bundled
-    });
+    if (!SUPABASE_EXAMS.has(selectedExam)) { setRemoteCards(null); return; }
+    setRemoteCards(null);
+    loadExamCardsRemote(selectedExam).then(setRemoteCards);
   }, [selectedExam]);
 
   // Refs for keyboard shortcuts — populated after deck/current are derived below
@@ -262,7 +271,7 @@ function App() {
   const examDeck = (selectedExam?.startsWith("CUSTOM:")
     ? customDeckCards
     : selectedExam?.startsWith("TOPIC:")
-      ? flashcards.filter((c) => c.category === selectedExam.slice("TOPIC:".length))
+      ? (remoteCards ?? [])
       : baseCards.filter((c) => c.exam === selectedExam)
   ).filter((c) => isPremium || c.exam === "AZ-900" || FREE_CARD_IDS.has(c.id) || selectedExam?.startsWith("CUSTOM:"));
 
@@ -531,6 +540,8 @@ function App() {
           onSelectCustomDeck={handleCustomDeck}
           onSelectByTopic={(topic) => handleExam(`TOPIC:${topic}`)}
           onBack={() => setSelectedPlatform(null)}
+          remoteTopics={remoteTopics}
+          examCardCounts={examCardCounts}
         />
         {showCustomDecks && (
           <CustomDecks

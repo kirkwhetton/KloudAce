@@ -105,7 +105,7 @@ const SignOutButton = ({ onSignOut }) => (
   </button>
 );
 
-export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack }) {
+export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack, remoteTopics, examCardCounts }) {
   const exams = Object.values(EXAM_META);
   const handleSignOut = () => onLogout();
   const [view, setView] = useState("chooser"); // "chooser" | "exams" | "topics" | "mydecks"
@@ -175,13 +175,12 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
     }
   };
 
-  // Build topic list aggregated from all flashcard categories
   const topicMap = flashcards.reduce((acc, c) => {
     const t = (c.category || "Uncategorised").trim();
     acc[t] = (acc[t] || 0) + 1;
     return acc;
   }, {});
-  const topics = Object.entries(topicMap).sort((a, b) => b[1] - a[1]);
+  const topics = remoteTopics ?? Object.entries(topicMap).sort((a, b) => b[1] - a[1]);
 
   const handleSelectTopic = (topic) => {
     if (onSelectByTopic) onSelectByTopic(topic);
@@ -262,7 +261,7 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
                   <rect x="3" y="3" width="18" height="18" rx="2"/>
                 </svg>
               );
-              const count = flashcards.filter((c) => c.exam === meta.exam).length;
+              const count = examCardCounts?.[meta.exam] ?? flashcards.filter((c) => c.exam === meta.exam).length;
               return (
                 <button
                   key={meta.exam}
