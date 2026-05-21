@@ -420,6 +420,11 @@ To migrate:
 - **Share a card** — generate a shareable link to a specific card
 - **Print/export** — export a deck to PDF for offline study
 
+### Test pipeline (backlog)
+- **Vitest** as the test runner (native Vite/ES module support), **React Testing Library** for component tests
+- Priority test targets: SRS logic (`spacedRepetition.js`), card filtering/free-tier gating, `cardLoader.js` with mocked Supabase
+- GitHub Actions: add a `test` job that runs before the Azure deploy step so failing tests block deployment
+
 ### Bigger features
 - **AWS / GCP exam content** — unlock the coming soon platforms
 - **Practice exam simulator** — timed mock exam with pass/fail scoring and review
