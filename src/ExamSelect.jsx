@@ -61,6 +61,50 @@ const EXAM_ICONS = {
   ),
 };
 
+// ── Static sub-components (defined outside to prevent remount on parent re-render) ──
+const Chevron = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="13" height="13" aria-hidden="true">
+    <polyline points="15 18 9 12 15 6"/>
+  </svg>
+);
+
+const Logo = () => (
+  <>
+    <div className="splash-cloud-logo">
+      <svg className="splash-cloud-icon" viewBox="0 0 260 165" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <path id="splashCloud" d="M50 115C30 115 15 100 15 82C15 66 27 53 43 51C45 30 63 14 85 14C102 14 117 24 124 39C129 36 135 34 141 34C159 34 174 49 174 67C188 69 199 81 199 95C199 106 191 115 180 115Z"/>
+        </defs>
+        <use href="#splashCloud" x="20" y="27" fill="#185FA5"/>
+        <use href="#splashCloud" x="40" y="47" fill="#ffffff" stroke="#2980D9" strokeWidth="5"/>
+      </svg>
+      <div className="splash-cloud-text">
+        <span className="splash-cloud-brand">Kloud<span className="title-ace">Ace</span></span>
+      </div>
+    </div>
+    <p className="splash-cloud-tagline">Your cloud certification hub</p>
+  </>
+);
+
+const BackButton = ({ onClick }) => (
+  <button type="button" className="splash-back" onClick={onClick}><Chevron /> Back</button>
+);
+
+const ProvidersButton = ({ onBack }) => onBack ? (
+  <button type="button" className="splash-providers-btn" onClick={onBack}><Chevron /> Providers</button>
+) : null;
+
+const SignOutButton = ({ onSignOut, signingOut }) => (
+  <button className="splash-signout" onClick={onSignOut} disabled={signingOut}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden="true">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <polyline points="16 17 21 12 16 7"/>
+      <line x1="21" y1="12" x2="9" y2="12"/>
+    </svg>
+    {signingOut ? "Signing out…" : "Sign out"}
+  </button>
+);
+
 export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack }) {
   const exams = Object.values(EXAM_META);
   const [signingOut, setSigningOut] = useState(false);
@@ -121,15 +165,19 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
   // Animated navigation: drill in (forward) or back to chooser
   const navigateTo = (nextView) => {
     const goingBack = nextView === "chooser";
-    setAnimClass(goingBack ? "subview-exit" : "subview-enter-prep");
-    // Let the exit frame render, then swap view and play enter
-    requestAnimationFrame(() => {
+    if (goingBack) {
+      setView(nextView);
+      setAnimClass("");
+    } else {
+      setAnimClass("subview-enter-prep");
       requestAnimationFrame(() => {
-        setView(nextView);
-        setAnimClass(goingBack ? "subview-enter-back" : "subview-enter");
-        setTimeout(() => setAnimClass(""), 380);
+        requestAnimationFrame(() => {
+          setView(nextView);
+          setAnimClass("subview-enter");
+          setTimeout(() => setAnimClass(""), 380);
+        });
       });
-    });
+    }
   };
 
   // Build topic list aggregated from all flashcard categories
@@ -144,32 +192,12 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
     if (onSelectByTopic) onSelectByTopic(topic);
     else onSelect && onSelect(`TOPIC:${topic}`);
   };
-  const BackButton = ({ onClick }) => (
-    <button type="button" className="splash-back" onClick={onClick}>← Back</button>
-  );
-
-  const Logo = () => (
-    <>
-      <div className="splash-cloud-logo">
-        <svg className="splash-cloud-icon" viewBox="0 0 260 165" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <defs>
-            <path id="splashCloud" d="M50 115C30 115 15 100 15 82C15 66 27 53 43 51C45 30 63 14 85 14C102 14 117 24 124 39C129 36 135 34 141 34C159 34 174 49 174 67C188 69 199 81 199 95C199 106 191 115 180 115Z"/>
-          </defs>
-          <use href="#splashCloud" x="20" y="27" fill="#185FA5"/>
-          <use href="#splashCloud" x="40" y="47" fill="#ffffff" stroke="#2980D9" strokeWidth="5"/>
-        </svg>
-        <div className="splash-cloud-text">
-          <span className="splash-cloud-brand">Kloud<span className="title-ace">Ace</span></span>
-        </div>
-      </div>
-      <p className="splash-cloud-tagline">Your cloud certification hub</p>
-    </>
-  );
   // ── Chooser ──────────────────────────────────────────────────
   if (view === "chooser") {
     return (
       <div className="splash-page">
         <div className={`splash-card ${animClass}`}>
+          <ProvidersButton onBack={onBack} />
           <Logo />
           <div className="splash-greeting-block">
             <h2 className="splash-greeting">
@@ -214,7 +242,7 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
             </button>
           </div>
 
-          <button className="splash-signout" onClick={handleSignOut} disabled={signingOut}>{signingOut ? "Signing out…" : "Sign out"}</button>
+          <SignOutButton onSignOut={handleSignOut} signingOut={signingOut} />
         </div>
       </div>
     );
@@ -263,12 +291,7 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
             })}
           </div>
 
-          <div className="splash-footer-actions">
-            {onBack && (
-              <button className="splash-change-platform" onClick={onBack}>← Change platform</button>
-            )}
-            <button className="splash-signout" onClick={handleSignOut} disabled={signingOut}>{signingOut ? "Signing out…" : "Sign out"}</button>
-          </div>
+          <SignOutButton onSignOut={handleSignOut} signingOut={signingOut} />
         </div>
       </div>
     );
@@ -324,7 +347,7 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
             )}
           </div>
 
-          <button className="splash-signout" onClick={handleSignOut} disabled={signingOut}>{signingOut ? "Signing out…" : "Sign out"}</button>
+          <SignOutButton onSignOut={handleSignOut} signingOut={signingOut} />
         </div>
       </div>
     );
@@ -384,7 +407,7 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
             </>
           )}
 
-          <button className="splash-signout" onClick={handleSignOut} disabled={signingOut}>{signingOut ? "Signing out…" : "Sign out"}</button>
+          <SignOutButton onSignOut={handleSignOut} signingOut={signingOut} />
         </div>
       </div>
     );
