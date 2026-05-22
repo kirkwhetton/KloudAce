@@ -40,9 +40,6 @@ npm run dev
 - **Session flow** — Login → ExamSelect splash → Main app; `← Exams` button returns to splash
 - **Header** — CSS Grid 3-col, gradient, AzureAce branding, SVG user icon, Sign Out + ← Exams + Options buttons
 
-### 🔴 High Priority — Complete 2026-05-23
-- **Bundle strip (retry)** — Strip bundled card data files and load all cards from Supabase at runtime. Previously attempted but failed (cards showed empty / AZ-900 not loading). RLS is confirmed fine ("Cards are publicly readable" policy + OR logic). Before confirming success, check the **Network tab response body** (not just the 200 status) to verify Supabase is returning card data. See commit `9240a7a` for the strip approach and `3be9694` for the revert.
-
 ### 🔲 Pending / Next Steps
 - **Change `EXAM_DURATION` back to `15 * 60`** before any release (currently `10` seconds for testing)
 - Add more cards to AZ-104 (currently 20), AZ-700 (20), AZ-900 (23)
