@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import flashcards, { EXAM_META } from "./flashcards";
+import { loadAllCards } from "./cardLoader";
 
 const DECK_COLOURS = [
   { from: "#f59e0b", to: "#b45309", icon: "#fcd34d" },
@@ -112,6 +113,8 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
   const [animClass, setAnimClass] = useState("splash-initial"); // start with entry anim on first load
   const [customDecks, setCustomDecks] = useState([]);
   const [topicSearch, setTopicSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [allCards, setAllCards] = useState(null);
 
   const [typedGreeting, setTypedGreeting] = useState("");
   const [typedSub, setTypedSub] = useState("");
@@ -175,6 +178,19 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
     }
   };
 
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim() || !allCards) return [];
+    const q = searchQuery.toLowerCase();
+    return allCards.filter(c => {
+      const parts = [
+        c.question, c.prompt, c.statement,
+        c.answer, c.explanation, c.category, c.exam,
+        ...(Array.isArray(c.choices) ? c.choices.map(ch => typeof ch === "string" ? ch : ch.text || "") : []),
+      ];
+      return parts.filter(Boolean).join(" ").toLowerCase().includes(q);
+    }).slice(0, 25);
+  }, [searchQuery, allCards]);
+
   const topicMap = flashcards.reduce((acc, c) => {
     const t = (c.category || "Uncategorised").trim();
     acc[t] = (acc[t] || 0) + 1;
@@ -202,39 +218,71 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
               {typedSub}
               {typingPhase === "sub" && <span className="typing-cursor" aria-hidden="true">|</span>}
             </p>
-          </div>          <div className="splash-chooser-grid">
-            <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #0ea5e9, #0369a1)" }} onClick={() => navigateTo("exams")}>
-              <span className="splash-choice-icon" style={{ color: "#7dd3fc", background: "rgba(255,255,255,0.15)", borderColor: "rgba(125,211,252,0.4)" }}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-                </svg>
-              </span>              <div className="splash-choice-title">Exam Cards</div>
-              <div className="splash-choice-desc">Study official exam decks (AZ-900, AZ-104, AZ-700…)</div>
-              <div className="splash-choice-cta">Start exam study →</div>
-            </button>
-
-            <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #8b5cf6, #5b21b6)" }} onClick={() => navigateTo("mydecks")}>
-              <span className="splash-choice-icon" style={{ color: "#c4b5fd", background: "rgba(255,255,255,0.15)", borderColor: "rgba(196,181,253,0.4)" }}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 2v3M8 2v3M2 10h20"/>
-                </svg>
-              </span>
-              <div className="splash-choice-title">My Cards</div>
-              <div className="splash-choice-desc">Create and study your own custom decks</div>
-              <div className="splash-choice-cta">Open My Cards →</div>
-            </button>
-
-            <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #10b981, #065f46)" }} onClick={() => navigateTo("topics")}>
-              <span className="splash-choice-icon" style={{ color: "#6ee7b7", background: "rgba(255,255,255,0.15)", borderColor: "rgba(110,231,183,0.4)" }}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                </svg>
-              </span>
-              <div className="splash-choice-title">By Topic</div>
-              <div className="splash-choice-desc">Browse cards by subject across all exams</div>
-              <div className="splash-choice-cta">Browse topics →</div>
-            </button>
+          </div>          <div className="splash-search-bar">
+            <svg className="splash-search-bar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input
+              className="splash-search-bar-input"
+              placeholder="Search all cards…"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              onFocus={() => { if (!allCards) loadAllCards().then(c => setAllCards(c || [])); }}
+            />
+            {searchQuery && (
+              <button className="splash-search-bar-clear" onClick={() => setSearchQuery("")} aria-label="Clear search">✕</button>
+            )}
           </div>
+
+          {searchQuery ? (
+            <div className="splash-search-results">
+              {!allCards && <p className="splash-search-status">Loading cards…</p>}
+              {allCards && searchResults.length === 0 && <p className="splash-search-status">No cards match "{searchQuery}"</p>}
+              {searchResults.map(c => (
+                <button key={c.id} className="splash-search-result" onClick={() => onSelect(c.exam)}>
+                  <div className="splash-search-result-meta">
+                    <span className="splash-search-badge exam-badge">{c.exam}</span>
+                    <span className="splash-search-badge type-badge">{c.type}</span>
+                    <span className="splash-search-badge cat-badge">{c.category}</span>
+                  </div>
+                  <p className="splash-search-result-text">{(c.question || c.prompt || c.statement || "").slice(0, 120)}</p>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="splash-chooser-grid">
+              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #0ea5e9, #0369a1)" }} onClick={() => navigateTo("exams")}>
+                <span className="splash-choice-icon" style={{ color: "#7dd3fc", background: "rgba(255,255,255,0.15)", borderColor: "rgba(125,211,252,0.4)" }}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                  </svg>
+                </span>
+                <div className="splash-choice-title">Exam Cards</div>
+                <div className="splash-choice-desc">Study official exam decks (AZ-900, AZ-104, AZ-700…)</div>
+                <div className="splash-choice-cta">Start exam study →</div>
+              </button>
+
+              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #8b5cf6, #5b21b6)" }} onClick={() => navigateTo("mydecks")}>
+                <span className="splash-choice-icon" style={{ color: "#c4b5fd", background: "rgba(255,255,255,0.15)", borderColor: "rgba(196,181,253,0.4)" }}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 2v3M8 2v3M2 10h20"/>
+                  </svg>
+                </span>
+                <div className="splash-choice-title">My Cards</div>
+                <div className="splash-choice-desc">Create and study your own custom decks</div>
+                <div className="splash-choice-cta">Open My Cards →</div>
+              </button>
+
+              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #10b981, #065f46)" }} onClick={() => navigateTo("topics")}>
+                <span className="splash-choice-icon" style={{ color: "#6ee7b7", background: "rgba(255,255,255,0.15)", borderColor: "rgba(110,231,183,0.4)" }}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                  </svg>
+                </span>
+                <div className="splash-choice-title">By Topic</div>
+                <div className="splash-choice-desc">Browse cards by subject across all exams</div>
+                <div className="splash-choice-cta">Browse topics →</div>
+              </button>
+            </div>
+          )}
 
           <SignOutButton onSignOut={handleSignOut} />
         </div>

@@ -60,4 +60,16 @@ export async function loadExamCardCounts() {
   }
 }
 
+export async function loadAllCards() {
+  try {
+    const { data, error } = await supabase
+      .from("cards")
+      .select("id, exam, category, type, difficulty, is_free, data");
+    if (error || !data) return null;
+    return data.map(reconstruct);
+  } catch {
+    return null;
+  }
+}
+
 export { SUPABASE_EXAMS };
