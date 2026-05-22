@@ -48,6 +48,7 @@ function App() {
   const [selectedPlatform, setSelectedPlatform] = useState(null);
   const [selectedExam, setSelectedExam] = useState(null);
   const [remoteCards, setRemoteCards] = useState(null);
+  const [loadingCards, setLoadingCards] = useState(false);
   const [categories, setCategories] = useState(new Set(["All"]));
   const [index, setIndex] = useState(0);
   const [known, setKnown] = useState(() => {
@@ -217,15 +218,23 @@ function App() {
 
   // Load cards from Supabase for migrated exams or by category for TOPIC: views
   useEffect(() => {
-    if (!selectedExam) { setRemoteCards(null); return; }
+    if (!selectedExam) { setRemoteCards(null); setLoadingCards(false); return; }
     if (selectedExam.startsWith("TOPIC:")) {
       setRemoteCards(null);
-      loadCardsByCategory(selectedExam.slice("TOPIC:".length)).then(setRemoteCards);
+      setLoadingCards(true);
+      loadCardsByCategory(selectedExam.slice("TOPIC:".length)).then(cards => {
+        setRemoteCards(cards);
+        setLoadingCards(false);
+      });
       return;
     }
-    if (!SUPABASE_EXAMS.has(selectedExam)) { setRemoteCards(null); return; }
+    if (!SUPABASE_EXAMS.has(selectedExam)) { setRemoteCards(null); setLoadingCards(false); return; }
     setRemoteCards(null);
-    loadExamCardsRemote(selectedExam).then(setRemoteCards);
+    setLoadingCards(true);
+    loadExamCardsRemote(selectedExam).then(cards => {
+      setRemoteCards(cards);
+      setLoadingCards(false);
+    });
   }, [selectedExam]);
 
   // Refs for keyboard shortcuts — populated after deck/current are derived below
@@ -1259,6 +1268,11 @@ function App() {
                 </button>
               </div>
             )}
+          </div>
+        ) : loadingCards ? (
+          <div className="empty-deck-card">
+            <div className="deck-loading-spinner" aria-label="Loading cards" />
+            <p className="empty-deck-desc" style={{ marginTop: "1rem" }}>Loading cards…</p>
           </div>
         ) : deck.length === 0 ? (
           <div className="empty-deck-card">
