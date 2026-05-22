@@ -14,7 +14,7 @@ import Login from "./auth/Login";
 import ExamSelect from "./ExamSelect";
 import UserProfile from "./auth/UserProfile";
 import { loadCardStatesRemote, saveCardStatesRemote } from "./cardStates";
-import { loadExamCardsRemote, loadCardsByCategory, loadAllTopics, loadExamCardCounts, SUPABASE_EXAMS } from "./cardLoader";
+import { loadExamCardsRemote, loadCardsByCategory, SUPABASE_EXAMS } from "./cardLoader";
 import {
   loadSrsData, saveSrsData, loadSrsDataRemote, saveSrsDataRemote,
   updateSrsRecord, createSrsRecord, sortBySrs, isDue, getSrsStats,
@@ -48,8 +48,6 @@ function App() {
   const [selectedPlatform, setSelectedPlatform] = useState(null);
   const [selectedExam, setSelectedExam] = useState(null);
   const [remoteCards, setRemoteCards] = useState(null);
-  const [remoteTopics, setRemoteTopics] = useState(null);
-  const [examCardCounts, setExamCardCounts] = useState(null);
   const [categories, setCategories] = useState(new Set(["All"]));
   const [index, setIndex] = useState(0);
   const [known, setKnown] = useState(() => {
@@ -216,12 +214,6 @@ function App() {
       }
     });
   }, [user?.id, selectedExam]);
-
-  // Load topic list and per-exam card counts from Supabase on mount
-  useEffect(() => {
-    loadAllTopics().then((t) => { if (t) setRemoteTopics(t); });
-    loadExamCardCounts().then((c) => { if (c) setExamCardCounts(c); });
-  }, []);
 
   // Load cards from Supabase for migrated exams or by category for TOPIC: views
   useEffect(() => {
@@ -540,8 +532,6 @@ function App() {
           onSelectCustomDeck={handleCustomDeck}
           onSelectByTopic={(topic) => handleExam(`TOPIC:${topic}`)}
           onBack={() => setSelectedPlatform(null)}
-          remoteTopics={remoteTopics}
-          examCardCounts={examCardCounts}
         />
         {showCustomDecks && (
           <CustomDecks

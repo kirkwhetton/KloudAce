@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import flashcards, { EXAM_META } from "./flashcards";
-import { loadAllCards } from "./cardLoader";
+import { loadAllCards, loadAllTopics, loadExamCardCounts } from "./cardLoader";
 
 const DECK_COLOURS = [
   { from: "#f59e0b", to: "#b45309", icon: "#fcd34d" },
@@ -106,7 +106,7 @@ const SignOutButton = ({ onSignOut }) => (
   </button>
 );
 
-export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack, remoteTopics, examCardCounts }) {
+export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack }) {
   const exams = Object.values(EXAM_META);
   const handleSignOut = () => onLogout();
   const [view, setView] = useState("chooser"); // "chooser" | "exams" | "topics" | "mydecks"
@@ -115,6 +115,8 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
   const [topicSearch, setTopicSearch] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [allCards, setAllCards] = useState(null);
+  const [remoteTopics, setRemoteTopics] = useState(null);
+  const [examCardCounts, setExamCardCounts] = useState(null);
 
   const [typedGreeting, setTypedGreeting] = useState("");
   const [typedSub, setTypedSub] = useState("");
@@ -162,6 +164,10 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
 
   // Animated navigation: drill in (forward) or back to chooser
   const navigateTo = (nextView) => {
+    if (nextView === "topics" && !remoteTopics)
+      loadAllTopics().then(t => { if (t) setRemoteTopics(t); });
+    if (nextView === "exams" && !examCardCounts)
+      loadExamCardCounts().then(c => { if (c) setExamCardCounts(c); });
     const goingBack = nextView === "chooser";
     if (goingBack) {
       setView(nextView);
