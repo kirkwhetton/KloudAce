@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./Flashcard.css";
 
-function Flashcard({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer, hideDifficulty, onSaveCard, decks, displayId }) {
+function Flashcard({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer, hideDifficulty, onSaveCard, decks, displayId, onAnswer }) {
   const [flipped, setFlipped] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editQuestion, setEditQuestion] = useState("");

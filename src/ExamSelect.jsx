@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import flashcards, { EXAM_META } from "./flashcards";
-import { loadAllCards, loadAllTopics, loadExamCardCounts } from "./cardLoader";
+import { loadAllTopics, loadExamCardCounts } from "./cardLoader";
 
 const DECK_COLOURS = [
   { from: "#f59e0b", to: "#b45309", icon: "#fcd34d" },
@@ -113,9 +113,7 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
   const [animClass, setAnimClass] = useState("splash-initial"); // start with entry anim on first load
   const [customDecks, setCustomDecks] = useState([]);
   const [topicSearch, setTopicSearch] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [allCards, setAllCards] = useState(null);
-  const [remoteTopics, setRemoteTopics] = useState(null);
+const [remoteTopics, setRemoteTopics] = useState(null);
   const [examCardCounts, setExamCardCounts] = useState(null);
 
   const [typedGreeting, setTypedGreeting] = useState("");
@@ -184,20 +182,7 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
     }
   };
 
-  const searchResults = useMemo(() => {
-    if (!searchQuery.trim() || !allCards) return [];
-    const q = searchQuery.toLowerCase();
-    return allCards.filter(c => {
-      const parts = [
-        c.question, c.prompt, c.statement,
-        c.answer, c.explanation, c.category, c.exam,
-        ...(Array.isArray(c.choices) ? c.choices.map(ch => typeof ch === "string" ? ch : ch.text || "") : []),
-      ];
-      return parts.filter(Boolean).join(" ").toLowerCase().includes(q);
-    }).slice(0, 25);
-  }, [searchQuery, allCards]);
-
-  const topicMap = flashcards.reduce((acc, c) => {
+const topicMap = flashcards.reduce((acc, c) => {
     const t = (c.category || "Uncategorised").trim();
     acc[t] = (acc[t] || 0) + 1;
     return acc;
@@ -224,37 +209,8 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
               {typedSub}
               {typingPhase === "sub" && <span className="typing-cursor" aria-hidden="true">|</span>}
             </p>
-          </div>          <div className="splash-search-bar">
-            <svg className="splash-search-bar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input
-              className="splash-search-bar-input"
-              placeholder="Search all cards…"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              onFocus={() => { if (!allCards) loadAllCards().then(c => setAllCards(c || [])); }}
-            />
-            {searchQuery && (
-              <button className="splash-search-bar-clear" onClick={() => setSearchQuery("")} aria-label="Clear search">✕</button>
-            )}
           </div>
-
-          {searchQuery ? (
-            <div className="splash-search-results">
-              {!allCards && <p className="splash-search-status">Loading cards…</p>}
-              {allCards && searchResults.length === 0 && <p className="splash-search-status">No cards match "{searchQuery}"</p>}
-              {searchResults.map(c => (
-                <button key={c.id} className="splash-search-result" onClick={() => onSelect(c.exam)}>
-                  <div className="splash-search-result-meta">
-                    <span className="splash-search-badge exam-badge">{c.exam}</span>
-                    <span className="splash-search-badge type-badge">{c.type}</span>
-                    <span className="splash-search-badge cat-badge">{c.category}</span>
-                  </div>
-                  <p className="splash-search-result-text">{(c.question || c.prompt || c.statement || "").slice(0, 120)}</p>
-                </button>
-              ))}
-            </div>
-          ) : (
-            <div className="splash-chooser-grid">
+          <div className="splash-chooser-grid">
               <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #0ea5e9, #0369a1)" }} onClick={() => navigateTo("exams")}>
                 <span className="splash-choice-icon" style={{ color: "#7dd3fc", background: "rgba(255,255,255,0.15)", borderColor: "rgba(125,211,252,0.4)" }}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -288,7 +244,6 @@ export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSe
                 <div className="splash-choice-cta">Browse topics →</div>
               </button>
             </div>
-          )}
 
           <SignOutButton onSignOut={handleSignOut} />
         </div>

@@ -14,7 +14,7 @@ function shuffle(arr) {
   return a;
 }
 
-function MultipleChoice({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer }) {
+function MultipleChoice({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer, onAnswer }) {
   const [selected, setSelected] = useState(null);
 
   // Shuffle choices once when the card mounts (card.id change = new card).
@@ -31,8 +31,9 @@ function MultipleChoice({ card, onKnow, onSrsRate, hideAnswers, examMode, onExam
   const handleSelect = (i) => {
     if (!hasAnswered) {
       setSelected(i);
+      const correct = shuffledChoices[i] === correctText;
+      onAnswer?.(correct);
       if (examMode) {
-        const correct = shuffledChoices[i] === correctText;
         onExamAnswer({ card, correct, given: shuffledChoices[i], expected: correctText });
       }
     }

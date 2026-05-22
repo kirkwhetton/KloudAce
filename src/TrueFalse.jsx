@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./truefalse.css";
 
-export default function TrueFalse({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer }) {
+export default function TrueFalse({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer, onAnswer }) {
   const [selected, setSelected] = useState(null); // true | false | null
   const [reviewed, setReviewed] = useState(false);
 
@@ -10,6 +10,7 @@ export default function TrueFalse({ card, onKnow, onSrsRate, hideAnswers, examMo
   const handlePick = (val) => {
     if (hasAnswered) return;
     setSelected(val);
+    onAnswer?.(val === card.answer);
     if (examMode) {
       onExamAnswer({ card, correct: val === card.answer, given: val ? "True" : "False", expected: card.answer ? "True" : "False" });
     }

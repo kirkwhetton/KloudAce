@@ -27,8 +27,8 @@ import "./tasksimulator.css";
           )}pairs?: { left: string, right: string }[],
  * }
  */
-export default function TaskSimulator({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer }) {
-  const props = { card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer };
+export default function TaskSimulator({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer, onAnswer }) {
+  const props = { card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer, onAnswer };
   const Inner =
     card.taskType === "order"  ? <OrderTask  {...props} /> :
     card.taskType === "match"  ? <MatchTask  {...props} /> :
@@ -47,7 +47,7 @@ export default function TaskSimulator({ card, onKnow, onSrsRate, hideAnswers, ex
    FILL-IN TASK
    User types the answer for each blank.
 ───────────────────────────────────────────── */
-function FillInTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer }) {
+function FillInTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer, onAnswer }) {
   const [values, setValues]     = useState(() => card.blanks.map(() => ""));
   const [submitted, setSubmitted] = useState(false);
   const [revealed, setRevealed]  = useState(false);
@@ -60,6 +60,7 @@ function FillInTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnsw
   const handleSubmit = () => {
     if (submitted) return;
     setSubmitted(true);
+    onAnswer?.(allCorrect);
     if (examMode) {
       onExamAnswer({ card, correct: allCorrect, given: values.join(", "), expected: card.blanks.map(b => b.answer).join(", ") });
     }

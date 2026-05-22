@@ -24,6 +24,8 @@ import ReadinessDashboard from "./ReadinessDashboard";
 import GuidedTour from "./GuidedTour";
 import PlatformSelect from "./PlatformSelect";
 import { useStreak } from "./useStreak";
+import { useSounds } from "./useSounds";
+import { useDailyGoal } from "./useDailyGoal";
 import { useTheme, THEMES } from "./useTheme";
 import "./App.css";
 
@@ -90,7 +92,8 @@ function App() {
   const [tourFired, setTourFired] = useState(false);
 
   // ── Streak tracker ─────────────────────────────────────────────
-  const { streak, longestStreak, recordActivity } = useStreak(user?.id);
+  const { streak, longestStreak, recordActivity, activeDates } = useStreak(user?.id);
+  const { goal: dailyGoal, count: dailyCount, increment: incrementGoal, setGoal } = useDailyGoal(user?.id);
 
   // Custom Decks
   const [customDecks, setCustomDecks] = useState(() => {
@@ -113,6 +116,13 @@ function App() {
     try { return JSON.parse(localStorage.getItem(user ? `azfc_settings_${user.id}` : "azfc_settings_guest") || "{}").hideDifficulty ?? false; }
     catch { return false; }
   });
+
+  const [soundEnabled, setSoundEnabled] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(user ? `azfc_settings_${user.id}` : "azfc_settings_guest") || "{}").soundEnabled ?? false; }
+    catch { return false; }
+  });
+  const sounds = useSounds(soundEnabled);
+  const onAnswer = (correct) => correct ? sounds.correct() : sounds.incorrect();
 
   const EXAM_DURATION = 60 * 60; // 60 minutes
   const [examMode, setExamMode]           = useState(false);
@@ -404,11 +414,12 @@ function App() {
       if (markKnown) {
         setKnown((prev) => new Set(prev).add(current?.id));
         recordActivity();
+        incrementGoal();
       }
       if (index + 1 >= deck.length) setFinished(true);
       else setIndex((i) => i + 1);
     },
-    [index, deck.length, current, recordActivity]
+    [index, deck.length, current, recordActivity, incrementGoal]
   );
 
   const handleExam = (exam) => {
@@ -676,8 +687,11 @@ function App() {
           const s = JSON.parse(localStorage.getItem(settingsKey) || "{}");
           setHideAnswers(s.hideAnswers ?? false);
           setHideDifficulty(s.hideDifficulty ?? false);
+          setSoundEnabled(s.soundEnabled ?? true);
         } catch { /* ignore */ }
-      }} onOpenDashboard={() => setShowDashboard(true)} />}
+      }} onOpenDashboard={() => setShowDashboard(true)}
+      streak={streak} longestStreak={longestStreak} activeDates={activeDates ?? []}
+      dailyGoal={dailyGoal} onSetGoal={setGoal} />}
 
       {showDashboard && (
         <ReadinessDashboard
@@ -966,6 +980,31 @@ function App() {
             </svg>
             {user.name}
           </span>
+
+          {/* Daily goal pill */}
+          {dailyGoal > 0 && (() => {
+            const R = 10;
+            const circ = 2 * Math.PI * R;
+            const pct = Math.min(dailyCount / dailyGoal, 1);
+            const done = dailyCount >= dailyGoal;
+            return (
+              <span className={`daily-goal-pill${done ? " daily-goal-pill--done" : ""}`} title="Daily card goal">
+                <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r={R} fill="none" stroke="currentColor" strokeWidth="2" opacity="0.25"/>
+                  <circle cx="12" cy="12" r={R} fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeDasharray={`${pct * circ} ${circ}`}
+                    strokeLinecap="round"
+                    transform="rotate(-90 12 12)"
+                  />
+                </svg>
+                <span className="daily-goal-label">
+                  {done ? "Goal met! ✓" : `${dailyCount} / ${dailyGoal} today`}
+                </span>
+              </span>
+            );
+          })()}
 
           {/* Streak pill */}
           {streak > 0 && (
@@ -1351,6 +1390,7 @@ function App() {
                     hideAnswers={hideAnswers}
                     examMode={examMode && examReady}
                     onExamAnswer={handleExamAnswer}
+                    onAnswer={onAnswer}
                   />
                 ) : current.type === "image-mcq" ? (
                   <ImageMCQ
@@ -1361,6 +1401,7 @@ function App() {
                     hideAnswers={hideAnswers}
                     examMode={examMode && examReady}
                     onExamAnswer={handleExamAnswer}
+                    onAnswer={onAnswer}
                   />
                 ) : current.type === "task" ? (
                   <TaskSimulator
@@ -1371,6 +1412,7 @@ function App() {
                     hideAnswers={hideAnswers}
                     examMode={examMode && examReady}
                     onExamAnswer={handleExamAnswer}
+                    onAnswer={onAnswer}
                   />
                 ) : current.type === "hotspot" ? (
                   <Hotspot
@@ -1381,6 +1423,7 @@ function App() {
                     hideAnswers={hideAnswers}
                     examMode={examMode && examReady}
                     onExamAnswer={handleExamAnswer}
+                    onAnswer={onAnswer}
                   />
                 ) : current.type === "multi" ? (
                   <MultiSelect
@@ -1391,6 +1434,7 @@ function App() {
                     hideAnswers={hideAnswers}
                     examMode={examMode && examReady}
                     onExamAnswer={handleExamAnswer}
+                    onAnswer={onAnswer}
                   />
                 ) : current.choices ? (
                   <MultipleChoice
@@ -1401,12 +1445,13 @@ function App() {
                     hideAnswers={hideAnswers}
                     examMode={examMode && examReady}
                     onExamAnswer={handleExamAnswer}
+                    onAnswer={onAnswer}
                   />
                 ) : (
                   <Flashcard
                     key={`${sessionKey}-${current.id}`}
                     card={current}
-                    onKnow={() => advance(true)}
+                    onKnow={() => { onAnswer(true); advance(true); }}
                     onSrsRate={srsMode ? handleSrsRate : undefined}
                     hideAnswers={hideAnswers}
                     examMode={examMode && examReady}

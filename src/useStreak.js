@@ -29,9 +29,9 @@ export function useStreak(userId) {
   // { streak: number, lastDate: "YYYY-MM-DD", longestStreak: number }
   const [streakData, setStreakData] = useState(() => {
     const d = load();    return {
-      streak: d.streak ?? 3,
+      streak: d.streak ?? 0,
       lastDate: d.lastDate ?? null,
-      longestStreak: d.longestStreak ?? 3,
+      longestStreak: d.longestStreak ?? 0,
     };
   });
 
@@ -39,34 +39,37 @@ export function useStreak(userId) {
   const recordActivity = useCallback(() => {
     setStreakData((prev) => {
       const today = todayStr();
-
-      // Already recorded today — no change
       if (prev.lastDate === today) return prev;
 
       let newStreak;
       if (!prev.lastDate) {
-        // First ever activity
         newStreak = 1;
       } else {
         const gap = daysBetween(prev.lastDate, today);
-        if (gap === 1) {
-          // Consecutive day — extend streak
-          newStreak = prev.streak + 1;
-        } else {
-          // Missed at least one day — reset
-          newStreak = 1;
-        }
+        newStreak = gap === 1 ? prev.streak + 1 : 1;
       }
+
+      // Keep rolling 90-day history of active dates
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - 90);
+      const cutoffStr = cutoff.toISOString().slice(0, 10);
+      const activeDates = [
+        ...((prev.activeDates || []).filter(d => d >= cutoffStr && d !== today)),
+        today,
+      ];
 
       const next = {
         streak: newStreak,
         lastDate: today,
         longestStreak: Math.max(newStreak, prev.longestStreak ?? 0),
+        activeDates,
       };
 
       localStorage.setItem(key, JSON.stringify(next));
       return next;
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key]);  return { ...streakData, recordActivity };
+  }, [key]);
+
+  return { ...streakData, recordActivity };
 }

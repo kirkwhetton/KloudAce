@@ -11,7 +11,7 @@ function shuffle(arr) {
   return a;
 }
 
-export default function MultiSelect({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer }) {
+export default function MultiSelect({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer, onAnswer }) {
   const [selected, setSelected] = useState(new Set());
   const [submitted, setSubmitted] = useState(false);
   const [reviewCount, setReviewCount] = useState(0);
@@ -40,8 +40,9 @@ export default function MultiSelect({ card, onKnow, onSrsRate, hideAnswers, exam
   const handleSubmit = () => {
     if (selected.size === 0) return;
     setSubmitted(true);
+    const correct = selected.size === correctSet.size && [...selected].every(s => correctSet.has(s));
+    onAnswer?.(correct);
     if (examMode) {
-      const correct = selected.size === correctSet.size && [...selected].every(s => correctSet.has(s));
       onExamAnswer({ card, correct, given: [...selected].join(", "), expected: [...correctSet].join(", ") });
     }
   };

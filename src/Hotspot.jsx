@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./hotspot.css";
 
-export default function Hotspot({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer }) {
+export default function Hotspot({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer, onAnswer }) {
   const [selectedZone, setSelectedZone] = useState(null);
   const [hoveredZone, setHoveredZone] = useState(null);
 
@@ -11,8 +11,9 @@ export default function Hotspot({ card, onKnow, onSrsRate, hideAnswers, examMode
   const handleZoneClick = (zoneId) => {
     if (hasAnswered) return;
     setSelectedZone(zoneId);
+    const correct = zoneId === card.correctZone;
+    onAnswer?.(correct);
     if (examMode) {
-      const correct = zoneId === card.correctZone;
       const zone = card.zones.find(z => z.id === zoneId);
       const correctZone = card.zones.find(z => z.id === card.correctZone);
       onExamAnswer({ card, correct, given: zone?.label, expected: correctZone?.label });

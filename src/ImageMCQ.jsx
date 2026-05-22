@@ -11,7 +11,7 @@ function shuffle(arr) {
   return a;
 }
 
-export default function ImageMCQ({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer }) {
+export default function ImageMCQ({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer, onAnswer }) {
   const [selected, setSelected] = useState(null);
 
   const shuffledChoices = useMemo(() => shuffle(card.choices), [card.id]);
@@ -22,8 +22,9 @@ export default function ImageMCQ({ card, onKnow, onSrsRate, hideAnswers, examMod
   const handleSelect = (i) => {
     if (!hasAnswered) {
       setSelected(i);
+      const correct = shuffledChoices[i] === correctText;
+      onAnswer?.(correct);
       if (examMode) {
-        const correct = shuffledChoices[i] === correctText;
         onExamAnswer({ card, correct, given: shuffledChoices[i], expected: correctText });
       }
     }

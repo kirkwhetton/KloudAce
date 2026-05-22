@@ -6,7 +6,59 @@ import { clearSrsDataForExam, clearSrsDataForCards } from "../spacedRepetition";
 import { useTheme, THEMES } from "../useTheme";
 import "./UserProfile.css";
 
-export default function UserProfile({ onClose, onOpenDashboard }) {
+function StreakCalendar({ activeDates = [], streak = 0, longestStreak = 0 }) {
+  const activeSet = new Set(activeDates);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Build 15 weeks × 7 days grid, newest week on the right
+  const WEEKS = 15;
+  const cells = [];
+  const startDay = new Date(today);
+  startDay.setDate(today.getDate() - (WEEKS * 7 - 1));
+
+  for (let w = 0; w < WEEKS; w++) {
+    const week = [];
+    for (let d = 0; d < 7; d++) {
+      const date = new Date(startDay);
+      date.setDate(startDay.getDate() + w * 7 + d);
+      const str = date.toISOString().slice(0, 10);
+      week.push({ str, active: activeSet.has(str), isToday: str === today.toISOString().slice(0, 10), future: date > today });
+    }
+    cells.push(week);
+  }
+
+  const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
+
+  return (
+    <div className="streak-calendar">
+      <div className="streak-calendar-stats">
+        <span>🔥 <strong>{streak}</strong> day streak</span>
+        <span>🏆 Best: <strong>{longestStreak}</strong></span>
+      </div>
+      <div className="streak-calendar-grid">
+        <div className="streak-calendar-days">
+          {DAY_LABELS.map((l, i) => <span key={i}>{l}</span>)}
+        </div>
+        <div className="streak-calendar-weeks">
+          {cells.map((week, wi) => (
+            <div key={wi} className="streak-calendar-week">
+              {week.map((cell) => (
+                <div
+                  key={cell.str}
+                  className={`streak-cell${cell.active ? " active" : ""}${cell.isToday ? " today" : ""}${cell.future ? " future" : ""}`}
+                  title={cell.str}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function UserProfile({ onClose, onOpenDashboard, streak = 0, longestStreak = 0, activeDates = [], dailyGoal = 20, onSetGoal }) {
   const { user, updateProfile, changePassword, error, setError } = useAuthContext();
   const { theme, setTheme } = useTheme(user?.id);
 
@@ -42,6 +94,13 @@ export default function UserProfile({ onClose, onOpenDashboard }) {
     setHideDifficultyState(val);
     const s = loadSettings();
     localStorage.setItem(settingsKey, JSON.stringify({ ...s, hideDifficulty: val }));
+  };
+
+  const [soundEnabled, setSoundEnabledState] = useState(() => loadSettings().soundEnabled ?? false);
+  const toggleSound = (val) => {
+    setSoundEnabledState(val);
+    const s = loadSettings();
+    localStorage.setItem(settingsKey, JSON.stringify({ ...s, soundEnabled: val }));
   };
 
   // ── Stats from localStorage
@@ -312,6 +371,7 @@ export default function UserProfile({ onClose, onOpenDashboard }) {
         {/* ── Stats tab ── */}
         {tab === "stats" && (
           <div className="profile-stats">
+            <StreakCalendar activeDates={activeDates} streak={streak} longestStreak={longestStreak} />
             <div className="profile-stats-summary">
               <div className="pstat-card">
                 <span className="pstat-value">{stats.masteredCount}</span>
@@ -437,6 +497,39 @@ export default function UserProfile({ onClose, onOpenDashboard }) {
               >
                 <span className="toggle-thumb" />
               </button>
+            </div>
+
+            <div className="settings-row">
+              <div className="settings-row-label">
+                <span className="settings-row-title">🔊 Sound effects</span>
+                <span className="settings-row-desc">
+                  Play a sound on correct and incorrect answers.
+                </span>
+              </div>
+              <button
+                className={`toggle${soundEnabled ? " on" : ""}`}
+                onClick={() => toggleSound(!soundEnabled)}
+                aria-pressed={soundEnabled}
+                aria-label="Toggle sound effects"
+              >
+                <span className="toggle-thumb" />
+              </button>
+            </div>
+
+            <div className="settings-row">
+              <div className="settings-row-label">
+                <span className="settings-row-title">🎯 Daily goal</span>
+                <span className="settings-row-desc">Target number of cards to answer each day.</span>
+              </div>
+              <select
+                className="goal-select"
+                value={dailyGoal}
+                onChange={e => onSetGoal?.(Number(e.target.value))}
+              >
+                {[5, 10, 15, 20, 30, 50].map(n => (
+                  <option key={n} value={n}>{n} cards</option>
+                ))}
+              </select>
             </div>
 
             {/* ── Appearance ── */}
