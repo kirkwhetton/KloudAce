@@ -3009,44 +3009,44 @@ button .known-check {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.2);
+  background: var(--bg-secondary, #f3f4f6);
+  border: 1.5px solid var(--border, #d1d5db);
   border-radius: 12px;
   padding: 10px 14px;
   width: 100%;
   margin: 14px 0 4px;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 .splash-search-bar:focus-within {
-  background: rgba(255,255,255,0.18);
-  border-color: rgba(255,255,255,0.4);
+  border-color: var(--brand, #0078d4);
+  box-shadow: 0 0 0 3px rgba(0,120,212,0.12);
 }
 .splash-search-bar-icon {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
-  opacity: 0.7;
-  color: #fff;
+  opacity: 0.45;
+  color: var(--text, #111);
 }
 .splash-search-bar-input {
   flex: 1;
   background: none;
   border: none;
   outline: none;
-  color: #fff;
+  color: var(--text, #111);
   font-size: 0.95rem;
 }
-.splash-search-bar-input::placeholder { color: rgba(255,255,255,0.5); }
+.splash-search-bar-input::placeholder { color: var(--text-muted, #9ca3af); }
 .splash-search-bar-clear {
   background: none;
   border: none;
-  color: rgba(255,255,255,0.6);
+  color: var(--text-muted, #9ca3af);
   cursor: pointer;
   font-size: 0.85rem;
   padding: 0;
   line-height: 1;
 }
-.splash-search-bar-clear:hover { color: #fff; }
+.splash-search-bar-clear:hover { color: var(--text, #111); }
 
 .splash-search-results {
   width: 100%;
@@ -3058,7 +3058,7 @@ button .known-check {
   padding-right: 2px;
 }
 .splash-search-status {
-  color: rgba(255,255,255,0.6);
+  color: var(--text-muted, #9ca3af);
   font-size: 0.9rem;
   text-align: center;
   padding: 16px 0;
@@ -3068,17 +3068,17 @@ button .known-check {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: var(--bg-secondary, #f9fafb);
+  border: 1.5px solid var(--border, #e5e7eb);
   border-radius: 10px;
   padding: 12px 14px;
   cursor: pointer;
   text-align: left;
-  transition: background 0.15s, border-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 .splash-search-result:hover {
-  background: rgba(255,255,255,0.18);
-  border-color: rgba(255,255,255,0.3);
+  border-color: var(--brand, #0078d4);
+  box-shadow: 0 2px 8px rgba(0,120,212,0.1);
 }
 .splash-search-result-meta {
   display: flex;
@@ -3092,13 +3092,13 @@ button .known-check {
   border-radius: 20px;
   letter-spacing: 0.02em;
 }
-.exam-badge  { background: rgba(0,120,212,0.4); color: #93c5fd; }
-.type-badge  { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
-.cat-badge   { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.55); }
+.exam-badge  { background: rgba(0,120,212,0.12); color: #0078d4; }
+.type-badge  { background: rgba(0,0,0,0.06); color: var(--text-muted, #6b7280); }
+.cat-badge   { background: rgba(0,0,0,0.04); color: var(--text-muted, #9ca3af); }
 .splash-search-result-text {
   margin: 0;
   font-size: 0.88rem;
-  color: rgba(255,255,255,0.85);
+  color: var(--text, #111);
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
