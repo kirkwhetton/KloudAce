@@ -42,7 +42,6 @@ npm run dev
 
 ### 🔲 Pending / Next Steps
 - Add more cards to AZ-104 (currently 20), AZ-700 (20), AZ-900 (23)
-- Azure Functions API + Cosmos DB for server-side card storage / user-created cards
 
 
 ### Card Ideas
