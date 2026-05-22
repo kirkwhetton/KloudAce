@@ -342,7 +342,7 @@ function App() {
       return randomised ? shuffle(preShuffle) : preShuffle;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [randomised, selectedExam, categories, showFlaggedOnly, flagged, disabledTypes, mastered, showMastered, srsMode, srsData, difficultyFilter, shuffleKey, showDueOnly, showDevRecent, customDeckCards, examMode]
+    [randomised, selectedExam, categories, showFlaggedOnly, flagged, disabledTypes, mastered, showMastered, srsMode, srsData, difficultyFilter, shuffleKey, showDueOnly, showDevRecent, customDeckCards, examMode, remoteCards]
   );
 
   const CATEGORIES = [
