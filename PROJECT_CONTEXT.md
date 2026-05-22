@@ -41,12 +41,7 @@ npm run dev
 - **Header** — CSS Grid 3-col, gradient, AzureAce branding, SVG user icon, Sign Out + ← Exams + Options buttons
 
 ### 🔲 Pending / Next Steps
-- **Change `EXAM_DURATION` back to `15 * 60`** before any release (currently `10` seconds for testing)
 - Add more cards to AZ-104 (currently 20), AZ-700 (20), AZ-900 (23)
-- Update dark theme side panel colours to match dark theme.
-- **Premium/free content distinction** — Add a `premium: true` field to card objects in data files. Update deck pipeline in `App.jsx` to filter/lock premium cards for non-premium users. Add `isPremium` flag to user state in `useAuth.js`. Add UI cues: 🔒 lock icon overlay on premium cards, "Upgrade" prompt modal, and a `premium` badge on the ExamSelect splash for premium-only exams.
-- Deploy to **Azure Static Web Apps**
-- Migrate auth to **Microsoft Entra External ID** (MSAL) — useAuth.js is the only file that changes
 - Azure Functions API + Cosmos DB for server-side card storage / user-created cards
 
 
