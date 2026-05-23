@@ -420,6 +420,7 @@ To migrate:
 - GitHub Actions: add a `test` job that runs before the Azure deploy step so failing tests block deployment
 
 ### Bigger features
+- **Developer admin panel (card management UI)** — developer-only panel (gated by `isDeveloper`) with a type-aware form for creating/editing individual cards and a bulk JSON import mode. Replaces the migration scripts now that local card data is stripped and Supabase is the sole source of truth.
 - **AWS / GCP exam content** — unlock the coming soon platforms
 - **Practice exam simulator** — timed mock exam with pass/fail scoring and review
 - **AI-generated explanations** — "explain this answer" button powered by Claude API

@@ -13,6 +13,7 @@ import { useAuthContext } from "./auth/AuthProvider";
 import Login from "./auth/Login";
 import ExamSelect from "./ExamSelect";
 import UserProfile from "./auth/UserProfile";
+import AdminPanel from "./admin/AdminPanel";
 import { loadCardStatesRemote, saveCardStatesRemote } from "./cardStates";
 import { loadExamCardsRemote, loadCardsByCategory, SUPABASE_EXAMS } from "./cardLoader";
 import {
@@ -82,6 +83,7 @@ function App() {
   const [showCustomDecks, setShowCustomDecks] = useState(false);
   const [difficultyFilter, setDifficultyFilter] = useState(new Set()); // empty = all
   const [showDevRecent, setShowDevRecent] = useState(false);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [shuffleKey, setShuffleKey] = useState(0); // increment to force re-shuffle
   const [isExiting, setIsExiting] = useState(false); // true during exit animation
   const [isEntering, setIsEntering] = useState(false); // true during deck enter animation
@@ -705,6 +707,10 @@ function App() {
         <CustomDecks onClose={() => setShowCustomDecks(false)} onStudy={handleCustomDeck} />
       )}
 
+      {showAdminPanel && (
+        <AdminPanel onClose={() => setShowAdminPanel(false)} />
+      )}
+
       {confirmDialog && (
         <ConfirmDialog
           title={confirmDialog.title}
@@ -878,6 +884,12 @@ function App() {
                 <div className="toggle-thumb" />
               </div>
             </label>
+            <button
+              className="sidebar-action-btn"
+              onClick={() => { setShowAdminPanel(true); setSidebarOpen(false); }}
+            >
+              + Card Manager
+            </button>
           </div>
         )}
 

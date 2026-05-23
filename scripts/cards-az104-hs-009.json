@@ -1,0 +1,25 @@
+[
+  {
+    "id": "AZ-104-HS-009",
+    "exam": "AZ-104",
+    "category": "Networking",
+    "type": "hotspot",
+    "difficulty": "hard",
+    "is_free": false,
+    "data": {
+      "question": "You need the same NSG rules to apply to all VMs in Subnet-web, including any VMs added in the future. Click the correct attachment point for the NSG.",
+      "diagram": "<svg viewBox=\"0 0 680 260\" xmlns=\"http://www.w3.org/2000/svg\" style=\"width:100%;font-family:sans-serif\"><defs><marker id=\"nsg-arr\" markerWidth=\"8\" markerHeight=\"7\" refX=\"7\" refY=\"3.5\" orient=\"auto\"><path d=\"M0,0 L0,7 L8,3.5 z\" fill=\"#f59e0b\"/></marker></defs><rect x=\"0\" y=\"0\" width=\"680\" height=\"260\" fill=\"#f8fafc\" rx=\"12\"/><rect x=\"10\" y=\"35\" width=\"510\" height=\"205\" rx=\"10\" fill=\"none\" stroke=\"#3b82f6\" stroke-width=\"2\" stroke-dasharray=\"6 3\"/><text x=\"20\" y=\"28\" font-size=\"9\" fill=\"#3b82f6\" font-weight=\"600\">VNet-app (10.0.0.0/16)</text><rect x=\"30\" y=\"55\" width=\"300\" height=\"165\" rx=\"8\" fill=\"#eff6ff\" stroke=\"#60a5fa\" stroke-width=\"1.5\"/><text x=\"40\" y=\"50\" font-size=\"8.5\" fill=\"#2563eb\" font-weight=\"600\">Subnet-web (10.0.1.0/24)</text><rect x=\"55\" y=\"80\" width=\"120\" height=\"115\" rx=\"8\" fill=\"#fff\" stroke=\"#94a3b8\" stroke-width=\"1.2\"/><text x=\"115\" y=\"100\" text-anchor=\"middle\" font-size=\"10\" fill=\"#334155\" font-weight=\"700\">VM-web-01</text><text x=\"115\" y=\"115\" text-anchor=\"middle\" font-size=\"8\" fill=\"#64748b\">Windows Server</text><rect x=\"65\" y=\"130\" width=\"100\" height=\"26\" rx=\"5\" fill=\"#e0f2fe\" stroke=\"#38bdf8\" stroke-width=\"1.2\"/><text x=\"115\" y=\"147\" text-anchor=\"middle\" font-size=\"8.5\" fill=\"#0369a1\" font-weight=\"600\">NIC: nic-web-01</text><rect x=\"200\" y=\"80\" width=\"110\" height=\"115\" rx=\"8\" fill=\"#f8fafc\" stroke=\"#cbd5e1\" stroke-width=\"1.2\" stroke-dasharray=\"4 2\"/><text x=\"255\" y=\"135\" text-anchor=\"middle\" font-size=\"8.5\" fill=\"#94a3b8\" font-style=\"italic\">VM-web-02</text><text x=\"255\" y=\"150\" text-anchor=\"middle\" font-size=\"7.5\" fill=\"#cbd5e1\">(future)</text><rect x=\"555\" y=\"90\" width=\"110\" height=\"58\" rx=\"8\" fill=\"#fef3c7\" stroke=\"#f59e0b\" stroke-width=\"1.5\"/><text x=\"610\" y=\"113\" text-anchor=\"middle\" font-size=\"10\" fill=\"#92400e\" font-weight=\"700\">NSG</text><text x=\"610\" y=\"128\" text-anchor=\"middle\" font-size=\"8\" fill=\"#b45309\">nsg-web-rules</text><line x1=\"553\" y1=\"119\" x2=\"342\" y2=\"119\" stroke=\"#f59e0b\" stroke-width=\"1.5\" stroke-dasharray=\"4 2\" marker-end=\"url(#nsg-arr)\"/><text x=\"340\" y=\"250\" text-anchor=\"middle\" font-size=\"7.5\" fill=\"#94a3b8\" font-style=\"italic\">Click the correct attachment point for the NSG</text></svg>",
+      "imageAlt": "VNet-app containing Subnet-web with VM-web-01 (showing NIC nic-web-01) and a future VM-web-02. An NSG labelled nsg-web-rules sits to the right with an arrow pointing at the subnet.",
+      "viewBox": "0 0 680 260",
+      "zones": [
+        { "id": "nic",    "label": "NIC: nic-web-01", "x": 65,  "y": 130, "width": 100, "height": 26  },
+        { "id": "subnet", "label": "Subnet-web",      "x": 30,  "y": 55,  "width": 300, "height": 165 },
+        { "id": "vnet",   "label": "VNet-app",        "x": 10,  "y": 35,  "width": 510, "height": 205 }
+      ],
+      "correctZone": "subnet",
+      "answer": "Associate the NSG with Subnet-web. Subnet-level association applies the rules to all current and future VMs in the subnet automatically.",
+      "explanation": "Associating an NSG with a NIC only protects that one VM — every new VM added to the subnet would need its own NSG association manually. Associating at the VNet level is not supported. Subnet-level association is the correct choice: all traffic entering or leaving any NIC in Subnet-web passes through the subnet NSG, including VMs added in the future. This is the standard pattern for applying consistent network controls to a tier.",
+      "learnUrl": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-group-how-it-works"
+    }
+  }
+]

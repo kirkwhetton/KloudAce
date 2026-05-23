@@ -43,9 +43,10 @@ export default function ImageMCQ({ card, onKnow, onSrsRate, hideAnswers, examMod
 
       <p className="mcq-question-header">{card.question_header}</p>
 
-      {/* SVG diagram — rendered inline from card data */}
       <div className="image-mcq-diagram" aria-label={card.imageAlt}>
-        {card.diagram}
+        {typeof card.diagram === "string"
+          ? <div dangerouslySetInnerHTML={{ __html: card.diagram }} style={{ width: "100%" }} />
+          : card.diagram}
       </div>
 
       <p className="imcq-question-footer">{card.question_footer}</p>

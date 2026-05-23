@@ -43,7 +43,11 @@ export default function Hotspot({ card, onKnow, onSrsRate, hideAnswers, examMode
       <p className="hotspot-question">{card.question}</p>
 
       <div className="hotspot-diagram-wrap" aria-label={card.imageAlt}>
-        <div className="hotspot-diagram-base">{card.diagram}</div>
+        <div className="hotspot-diagram-base">
+          {typeof card.diagram === "string"
+            ? <div dangerouslySetInnerHTML={{ __html: card.diagram }} style={{ width: "100%" }} />
+            : card.diagram}
+        </div>
         <svg
           className="hotspot-overlay"
           viewBox={card.viewBox}
