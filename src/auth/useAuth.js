@@ -34,7 +34,7 @@ function friendlyError(err) {
   if (msg.includes("email not confirmed"))
     return "Please confirm your email address before signing in.";
   if (msg.includes("password"))
-    return "Password must be at least 6 characters.";
+    return "Password must be at least 10 characters.";
   return err.message || "Something went wrong. Please try again.";
 }
 

@@ -193,7 +193,7 @@ export default function UserProfile({ onClose, onOpenDashboard, streak = 0, long
     e.preventDefault();
     setError(null); setPwMsg(null);
     if (!currentPw || !newPw || !confirmPw) { setPwMsg({ ok: false, text: "All fields are required." }); return; }
-    if (newPw.length < 6) { setPwMsg({ ok: false, text: "New password must be at least 6 characters." }); return; }
+    if (newPw.length < 10) { setPwMsg({ ok: false, text: "New password must be at least 10 characters." }); return; }
     if (newPw !== confirmPw) { setPwMsg({ ok: false, text: "New passwords do not match." }); return; }
     setPwSaving(true);
     const ok = await changePassword({ currentPassword: currentPw, newPassword: newPw });
