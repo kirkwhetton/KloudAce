@@ -2030,6 +2030,10 @@ button .known-check {
   transition: opacity 0.2s, transform 0.2s;
 }
 .splash-exam-card:hover .splash-exam-arrow { opacity: 1; transform: translateX(4px); }
+.splash-exam-card:disabled { opacity: 0.7; cursor: not-allowed; }
+.splash-exam-card:disabled .splash-exam-arrow { opacity: 1; transform: none; }
+@keyframes splashSpin { to { transform: rotate(360deg); } }
+.splash-loading-spin { animation: splashSpin 0.8s linear infinite; }
 
 .splash-footer-actions {
   display: flex;

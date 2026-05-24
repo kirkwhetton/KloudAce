@@ -52,6 +52,7 @@ function App() {
   const [selectedExam, setSelectedExam] = useState(null);
   const [remoteCards, setRemoteCards] = useState(null);
   const [loadingCards, setLoadingCards] = useState(false);
+  const [loadingExam, setLoadingExam] = useState(null);
   const [categories, setCategories] = useState(new Set(["All"]));
   const [index, setIndex] = useState(0);
   const [known, setKnown] = useState(() => {
@@ -228,25 +229,10 @@ function App() {
     });
   }, [user?.id, selectedExam]);
 
-  // Load cards from Supabase for migrated exams or by category for TOPIC: views
+  // Cards are pre-loaded in handleExam before selectedExam is set.
+  // Only clear remoteCards when returning to exam select.
   useEffect(() => {
-    if (!selectedExam) { setRemoteCards(null); setLoadingCards(false); return; }
-    if (selectedExam.startsWith("TOPIC:")) {
-      setRemoteCards(null);
-      setLoadingCards(true);
-      loadCardsByCategory(selectedExam.slice("TOPIC:".length)).then(cards => {
-        setRemoteCards(cards);
-        setLoadingCards(false);
-      });
-      return;
-    }
-    if (!SUPABASE_EXAMS.has(selectedExam)) { setRemoteCards(null); setLoadingCards(false); return; }
-    setRemoteCards(null);
-    setLoadingCards(true);
-    loadExamCardsRemote(selectedExam).then(cards => {
-      setRemoteCards(cards);
-      setLoadingCards(false);
-    });
+    if (!selectedExam) { setRemoteCards(null); setLoadingCards(false); }
   }, [selectedExam]);
 
   // Refs for keyboard shortcuts — populated after deck/current are derived below
@@ -424,9 +410,25 @@ function App() {
     [index, deck.length, current, recordActivity, incrementGoal]
   );
 
-  const handleExam = (exam) => {
-    setSelectedExam(exam); setCategories(new Set(["All"])); setIndex(0); setKnown(new Set()); setFinished(false); setDisabledTypes(new Set());
+  const handleExam = async (exam) => {
+    setCategories(new Set(["All"])); setIndex(0); setKnown(new Set()); setFinished(false); setDisabledTypes(new Set());
     setCustomDeckCards([]);
+
+    if (SUPABASE_EXAMS.has(exam)) {
+      setLoadingExam(exam);
+      const cards = await loadExamCardsRemote(exam);
+      setRemoteCards(cards);
+      setLoadingExam(null);
+    } else if (exam.startsWith("TOPIC:")) {
+      setLoadingExam(exam);
+      const cards = await loadCardsByCategory(exam.slice("TOPIC:".length));
+      setRemoteCards(cards);
+      setLoadingExam(null);
+    } else {
+      setRemoteCards(null);
+    }
+
+    setSelectedExam(exam);
     setIsEntering(true);
     setTimeout(() => setIsEntering(false), 380);
   };
@@ -554,6 +556,7 @@ function App() {
           onSelectCustomDeck={handleCustomDeck}
           onSelectByTopic={(topic) => handleExam(`TOPIC:${topic}`)}
           onBack={() => setSelectedPlatform(null)}
+          loadingExam={loadingExam}
         />
         {showCustomDecks && (
           <CustomDecks
