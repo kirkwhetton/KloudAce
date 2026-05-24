@@ -1,7 +1,7 @@
 // filepath: src/data/diagrams.jsx
 // SVG diagram components used in image-mcq cards
 
-export const VNetNsgDiagram = (
+export const VNetNsgDiagram = () => (
   <svg viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 520, fontFamily: "sans-serif" }}>
     {/* VNet border */}
     <rect x="10" y="10" width="500" height="280" rx="12" fill="#e8f4fd" stroke="#1e90ff" strokeWidth="2" strokeDasharray="8 4" />
@@ -56,7 +56,7 @@ export const VNetNsgDiagram = (
   </svg>
 );
 
-export const StorageRedundancyDiagram = (
+export const StorageRedundancyDiagram = () => (
   <svg viewBox="0 0 540 300" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 540, fontFamily: "sans-serif" }}>
     {/* Primary Region */}
     <rect x="10" y="10" width="310" height="280" rx="10" fill="#e8f4fd" stroke="#1e90ff" strokeWidth="2" />

@@ -1,7 +1,7 @@
 // AZ-700 — Hotspot (click-on-diagram) questions
 // Cards: AZ-700-HS-101 … AZ-700-HS-105
 
-const TrafficManagerDiagram = (
+const TrafficManagerDiagram = () => (
   <svg viewBox="0 0 680 370" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
     <defs>
       <marker id="hs-ab" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
@@ -72,7 +72,7 @@ const TrafficManagerDiagram = (
   </svg>
 );
 
-const AzureFirewallDiagram = (
+const AzureFirewallDiagram = () => (
   <svg viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
     <defs>
       <marker id="fw-ab" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
@@ -147,7 +147,7 @@ const AzureFirewallDiagram = (
   </svg>
 );
 
-const PrivateAccessDiagram = (
+const PrivateAccessDiagram = () => (
   <svg viewBox="0 0 680 325" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
     <defs>
       <marker id="pr-ab" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
@@ -212,7 +212,7 @@ const PrivateAccessDiagram = (
   </svg>
 );
 
-const S2SVPNDiagram = (
+const S2SVPNDiagram = () => (
   <svg viewBox="0 0 680 258" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
     <defs>
       <marker id="s2s-arr" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
@@ -278,7 +278,7 @@ const S2SVPNDiagram = (
   </svg>
 );
 
-const HubSpokeTransitDiagram = (
+const HubSpokeTransitDiagram = () => (
   <svg viewBox="0 0 680 342" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
 
     <text x="340" y="17" textAnchor="middle" fontSize="9.5" fill="#475569" fontWeight="600">Spoke-A connectivity investigation — four diagnostic panels</text>
@@ -353,7 +353,7 @@ const HubSpokeTransitDiagram = (
   </svg>
 );
 
-const HubFaultTransitDiagram = (
+const HubFaultTransitDiagram = () => (
   <svg viewBox="0 0 680 342" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
 
     <text x="340" y="17" textAnchor="middle" fontSize="9.5" fill="#475569" fontWeight="600">Spoke-A connectivity investigation — four diagnostic panels</text>

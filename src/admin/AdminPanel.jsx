@@ -438,7 +438,11 @@ function BulkImport() {
     if (!preview || preview.errors.length) return;
     setSaving(true); setStatus(null);
     try {
-      const { error } = await supabase.from("cards").upsert(preview.rows, { onConflict: "id" });
+      const upsert = supabase.from("cards").upsert(preview.rows, { onConflict: "id" });
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out — check your network or Supabase RLS policy")), 15_000)
+      );
+      const { error } = await Promise.race([upsert, timeout]);
       if (error) {
         setStatus({ ok: false, text: `Supabase error: ${error.message} (code: ${error.code})` });
         return;
@@ -446,7 +450,7 @@ function BulkImport() {
       setStatus({ ok: true, text: `${preview.rows.length} card${preview.rows.length !== 1 ? "s" : ""} imported.` });
       setJson(""); setPreview(null);
     } catch (err) {
-      setStatus({ ok: false, text: `Unexpected error: ${err.message}` });
+      setStatus({ ok: false, text: `Error: ${err.message}` });
     } finally {
       setSaving(false);
     }

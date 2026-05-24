@@ -1,5 +1,24 @@
-import { useState } from "react";
+import { useState, createElement } from "react";
 import "./hotspot.css";
+
+function reconstructElement(node) {
+  if (node === null || node === undefined || typeof node !== "object") return node;
+  if (Array.isArray(node)) return node.map(reconstructElement);
+  if (typeof node.type === "string" && node.props !== undefined) {
+    const { children, ...restProps } = node.props;
+    if (children === undefined) return createElement(node.type, restProps);
+    const recon = Array.isArray(children) ? children.map(reconstructElement) : reconstructElement(children);
+    return createElement(node.type, restProps, recon);
+  }
+  return node;
+}
+
+function renderDiagram(diagram) {
+  if (typeof diagram === "string") return <div dangerouslySetInnerHTML={{ __html: diagram }} style={{ width: "100%" }} />;
+  if (typeof diagram === "function") return diagram();
+  if (diagram && typeof diagram === "object" && typeof diagram.type === "string") return reconstructElement(diagram);
+  return diagram;
+}
 
 export default function Hotspot({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer, onAnswer }) {
   const [selectedZone, setSelectedZone] = useState(null);
@@ -44,9 +63,7 @@ export default function Hotspot({ card, onKnow, onSrsRate, hideAnswers, examMode
 
       <div className="hotspot-diagram-wrap" aria-label={card.imageAlt}>
         <div className="hotspot-diagram-base">
-          {typeof card.diagram === "string"
-            ? <div dangerouslySetInnerHTML={{ __html: card.diagram }} style={{ width: "100%" }} />
-            : card.diagram}
+          {renderDiagram(card.diagram)}
         </div>
         <svg
           className="hotspot-overlay"

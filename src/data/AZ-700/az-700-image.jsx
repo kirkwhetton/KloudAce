@@ -3,7 +3,7 @@
 
 // ── Diagrams ─────────────────────────────────────────────────────────────────
 
-export const FirewallDnatDiagram = (
+export const FirewallDnatDiagram = () => (
   <svg viewBox="0 0 680 470" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 680, fontFamily: "sans-serif" }}>
     <defs>
       <marker id="ag" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
@@ -69,7 +69,7 @@ export const FirewallDnatDiagram = (
     <text x="600" y="329" textAnchor="middle" fontSize="17" fill="#c62828">No public IP</text>  </svg>
 );
 
-export const LBHaPortsDiagram = (
+export const LBHaPortsDiagram = () => (
   <svg viewBox="0 0 960 900" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 960, fontFamily: "sans-serif" }}>
     <defs>
       <marker id="lbag" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
@@ -160,7 +160,7 @@ export const LBHaPortsDiagram = (
   </svg>
 );
 
-export const VNetPeeringExhibit = (
+export const VNetPeeringExhibit = () => (
   <svg width="440" height="201" viewBox="0 0 440 201" xmlns="http://www.w3.org/2000/svg">
     {/* Table border */}
     <rect x="0" y="0" width="440" height="201" rx="10" fill="#f8fafc" stroke="#d1d5db" strokeWidth="2"/>

@@ -1,7 +1,7 @@
 // AZ-104 — Hotspot (click-on-diagram) questions — Identity & Governance
 // Cards: AZ-104-HS-001 … AZ-104-HS-005
 
-const RBACHierarchyDiagram = (
+const RBACHierarchyDiagram = () => (
   <svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
     <defs>
       <marker id="h104-a" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
@@ -61,7 +61,7 @@ const RBACHierarchyDiagram = (
   </svg>
 );
 
-const NSGRulesDiagram = (
+const NSGRulesDiagram = () => (
   <svg viewBox="0 0 680 258" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
 
     <text x="340" y="12" textAnchor="middle" fontSize="9" fill="#64748b" fontWeight="600">NSG: nsg-web-tier — inbound security rules</text>
@@ -149,7 +149,7 @@ const NSGRulesDiagram = (
   </svg>
 );
 
-const EffectiveRoutesDiagram = (
+const EffectiveRoutesDiagram = () => (
   <svg viewBox="0 0 680 248" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
 
     <text x="340" y="11" textAnchor="middle" fontSize="9" fill="#64748b" fontWeight="600">Effective routes — NIC: nic-vm-prod01</text>
@@ -213,7 +213,7 @@ const EffectiveRoutesDiagram = (
   </svg>
 );
 
-const SSPRMethodsDiagram = (
+const SSPRMethodsDiagram = () => (
   <svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
     <text x="340" y="14" textAnchor="middle" fontSize="9" fill="#64748b" fontWeight="600">SSPR Authentication Methods</text>
 
@@ -255,7 +255,7 @@ const SSPRMethodsDiagram = (
   </svg>
 );
 
-const GroupMembershipDiagram = (
+const GroupMembershipDiagram = () => (
   <svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
 
     {/* Left header — Security Group */}
@@ -292,7 +292,7 @@ const GroupMembershipDiagram = (
   </svg>
 );
 
-const AppGatewayRoutingDiagram = (
+const AppGatewayRoutingDiagram = () => (
   <svg viewBox="0 0 680 266" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
     <defs>
       <marker id="agw-arr" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
@@ -370,7 +370,7 @@ const AppGatewayRoutingDiagram = (
   </svg>
 );
 
-const NetworkWatcherToolsDiagram = (
+const NetworkWatcherToolsDiagram = () => (
   <svg viewBox="0 0 680 254" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
 
     <text x="340" y="11" textAnchor="middle" fontSize="9" fill="#64748b" fontWeight="600">Azure Network Watcher — diagnostic tools</text>
@@ -424,7 +424,7 @@ const NetworkWatcherToolsDiagram = (
   </svg>
 );
 
-const AppGatewayVersionedRoutingDiagram = (
+const AppGatewayVersionedRoutingDiagram = () => (
   <svg viewBox="0 0 680 266" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
     <defs>
       <marker id="agv-arr" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">

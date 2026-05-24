@@ -1,6 +1,25 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, createElement } from "react";
 import "./multichoice.css";
 import "./imagemcq.css";
+
+function reconstructElement(node) {
+  if (node === null || node === undefined || typeof node !== "object") return node;
+  if (Array.isArray(node)) return node.map(reconstructElement);
+  if (typeof node.type === "string" && node.props !== undefined) {
+    const { children, ...restProps } = node.props;
+    if (children === undefined) return createElement(node.type, restProps);
+    const recon = Array.isArray(children) ? children.map(reconstructElement) : reconstructElement(children);
+    return createElement(node.type, restProps, recon);
+  }
+  return node;
+}
+
+function renderDiagram(diagram) {
+  if (typeof diagram === "string") return <div dangerouslySetInnerHTML={{ __html: diagram }} style={{ width: "100%" }} />;
+  if (typeof diagram === "function") return diagram();
+  if (diagram && typeof diagram === "object" && typeof diagram.type === "string") return reconstructElement(diagram);
+  return diagram;
+}
 
 function shuffle(arr) {
   const a = [...arr];
@@ -44,9 +63,7 @@ export default function ImageMCQ({ card, onKnow, onSrsRate, hideAnswers, examMod
       <p className="mcq-question-header">{card.question_header}</p>
 
       <div className="image-mcq-diagram" aria-label={card.imageAlt}>
-        {typeof card.diagram === "string"
-          ? <div dangerouslySetInnerHTML={{ __html: card.diagram }} style={{ width: "100%" }} />
-          : card.diagram}
+        {renderDiagram(card.diagram)}
       </div>
 
       <p className="imcq-question-footer">{card.question_footer}</p>
