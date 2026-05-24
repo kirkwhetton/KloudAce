@@ -44,22 +44,30 @@ export function useAuth() {
   const [error,   setError]   = useState(null);
 
   useEffect(() => {
-    // Restore existing session on mount
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      if (session?.user) setUser(await fetchProfile(session.user));
-      setLoading(false);
-    });
+    let settled = false;
+    const settle = () => { if (!settled) { settled = true; setLoading(false); } };
 
-    // Keep state in sync with Supabase auth events (sign-in, sign-out, token refresh)
+    // Hard timeout — if Supabase never responds, unblock the app after 6 s
+    const timeout = setTimeout(settle, 6000);
+
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      try {
+        if (session?.user) setUser(await fetchProfile(session.user));
+      } catch { /* profile fetch failed — continue as logged-out */ }
+      settle();
+    }).catch(settle);
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
-        if (session?.user) setUser(await fetchProfile(session.user));
-        else               setUser(null);
-        setLoading(false);
+        try {
+          if (session?.user) setUser(await fetchProfile(session.user));
+          else               setUser(null);
+        } catch { setUser(null); }
+        settle();
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => { subscription.unsubscribe(); clearTimeout(timeout); };
   }, []);
 
   const isAuthenticated = user !== null;
