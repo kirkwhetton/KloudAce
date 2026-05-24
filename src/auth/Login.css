@@ -14,7 +14,7 @@
   border-radius: 1.25rem;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   width: 100%;
-  max-width: 420px;
+  max-width: 480px;
   padding: 2.5rem 2rem;
   display: flex;
   flex-direction: column;
@@ -35,7 +35,7 @@
 
 .login-cloud-svg {
   display: block;
-  width: 22rem;
+  width: 27rem;
   height: auto;
   filter: drop-shadow(0 2px 6px rgba(0, 120, 212, 0.35));
   user-select: none;

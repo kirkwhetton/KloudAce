@@ -410,18 +410,21 @@ function App() {
     [index, deck.length, current, recordActivity, incrementGoal]
   );
 
+  const fetchWithTimeout = (promise, ms = 10_000) =>
+    Promise.race([promise, new Promise(resolve => setTimeout(() => resolve(null), ms))]);
+
   const handleExam = async (exam) => {
     setCategories(new Set(["All"])); setIndex(0); setKnown(new Set()); setFinished(false); setDisabledTypes(new Set());
     setCustomDeckCards([]);
 
     if (SUPABASE_EXAMS.has(exam)) {
       setLoadingExam(exam);
-      const cards = await loadExamCardsRemote(exam);
+      const cards = await fetchWithTimeout(loadExamCardsRemote(exam));
       setRemoteCards(cards);
       setLoadingExam(null);
     } else if (exam.startsWith("TOPIC:")) {
       setLoadingExam(exam);
-      const cards = await loadCardsByCategory(exam.slice("TOPIC:".length));
+      const cards = await fetchWithTimeout(loadCardsByCategory(exam.slice("TOPIC:".length)));
       setRemoteCards(cards);
       setLoadingExam(null);
     } else {
