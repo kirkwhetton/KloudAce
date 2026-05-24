@@ -211,8 +211,8 @@ const topicMap = flashcards.reduce((acc, c) => {
             </p>
           </div>
           <div className="splash-chooser-grid">
-              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #0ea5e9, #0369a1)" }} onClick={() => navigateTo("exams")}>
-                <span className="splash-choice-icon" style={{ color: "#7dd3fc", background: "rgba(255,255,255,0.15)", borderColor: "rgba(125,211,252,0.4)" }}>
+              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #0078d4, #004e8c)" }} onClick={() => navigateTo("exams")}>
+                <span className="splash-choice-icon" style={{ color: "#93c5fd", background: "rgba(255,255,255,0.15)", borderColor: "rgba(147,197,253,0.4)" }}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
                   </svg>
@@ -222,8 +222,8 @@ const topicMap = flashcards.reduce((acc, c) => {
                 <div className="splash-choice-cta">Start exam study →</div>
               </button>
 
-              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #8b5cf6, #5b21b6)" }} onClick={() => navigateTo("mydecks")}>
-                <span className="splash-choice-icon" style={{ color: "#c4b5fd", background: "rgba(255,255,255,0.15)", borderColor: "rgba(196,181,253,0.4)" }}>
+              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #0078d4, #004e8c)" }} onClick={() => navigateTo("mydecks")}>
+                <span className="splash-choice-icon" style={{ color: "#93c5fd", background: "rgba(255,255,255,0.15)", borderColor: "rgba(147,197,253,0.4)" }}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 2v3M8 2v3M2 10h20"/>
                   </svg>
@@ -233,8 +233,8 @@ const topicMap = flashcards.reduce((acc, c) => {
                 <div className="splash-choice-cta">Open My Cards →</div>
               </button>
 
-              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #10b981, #065f46)" }} onClick={() => navigateTo("topics")}>
-                <span className="splash-choice-icon" style={{ color: "#6ee7b7", background: "rgba(255,255,255,0.15)", borderColor: "rgba(110,231,183,0.4)" }}>
+              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #0078d4, #004e8c)" }} onClick={() => navigateTo("topics")}>
+                <span className="splash-choice-icon" style={{ color: "#93c5fd", background: "rgba(255,255,255,0.15)", borderColor: "rgba(147,197,253,0.4)" }}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                   </svg>
