@@ -38,10 +38,8 @@ function getReadinessScore({ total, mature, mastered, masteredAndMature }) {
   return Math.round((combined / total) * 100);
 }
 
-function scoreColor(score) {
-  if (score >= 75) return "var(--srs-dot-mature)";
-  if (score >= 40) return "var(--srs-dot-learning)";
-  return "var(--srs-dot-new)";
+function scoreColor() {
+  return "var(--brand)";
 }
 
 function scoreLabel(score) {
@@ -114,10 +112,10 @@ export default function ReadinessDashboard({ user, onClose, initialExam = null }
   const categories = current ? Object.entries(current.categoryMap).sort((a, b) => b[1].total - a[1].total) : [];
 
   const DIFF_META = [
-    { key: "easy",    label: "Easy",    color: "var(--diff-easy-text)" },
-    { key: "medium",  label: "Medium",  color: "var(--diff-med-text)" },
-    { key: "hard",    label: "Hard",    color: "var(--diff-hard-text)" },
-    { key: "extreme", label: "Extreme", color: "var(--diff-ext-text)" },
+    { key: "easy",    label: "Easy",    color: "var(--brand)" },
+    { key: "medium",  label: "Medium",  color: "var(--text-secondary)" },
+    { key: "hard",    label: "Hard",    color: "var(--text-secondary)" },
+    { key: "extreme", label: "Extreme", color: "var(--text-primary)" },
     { key: "untagged",label: "Untagged",color: "var(--text-muted)" },
   ];
 
@@ -214,25 +212,16 @@ export default function ReadinessDashboard({ user, onClose, initialExam = null }
                 <span className="rd-stat-val">{current.cards.length}</span>
                 <span className="rd-stat-lbl">Total Cards</span>
               </div>
-              <div className="rd-stat-pill rd-stat-mature">
-                <span className="rd-stat-val" style={{ color: "var(--srs-dot-mature)" }}>
-                  <span className="srs-emoji-dot" style={{ background: "var(--srs-dot-mature)" }}/>
-                  {current.mature}
-                </span>
+              <div className="rd-stat-pill">
+                <span className="rd-stat-val" style={{ color: "var(--brand)" }}>{current.mature}</span>
                 <span className="rd-stat-lbl">Mature</span>
               </div>
-              <div className="rd-stat-pill rd-stat-learning">
-                <span className="rd-stat-val" style={{ color: "var(--srs-dot-learning)" }}>
-                  <span className="srs-emoji-dot" style={{ background: "var(--srs-dot-learning)" }}/>
-                  {current.learning}
-                </span>
+              <div className="rd-stat-pill">
+                <span className="rd-stat-val" style={{ color: "var(--brand)" }}>{current.learning}</span>
                 <span className="rd-stat-lbl">Learning</span>
               </div>
-              <div className="rd-stat-pill rd-stat-due">
-                <span className="rd-stat-val" style={{ color: "var(--srs-dot-new)" }}>
-                  <span className="srs-emoji-dot" style={{ background: "var(--srs-dot-new)" }}/>
-                  {current.cards.length - current.tracked}
-                </span>
+              <div className="rd-stat-pill">
+                <span className="rd-stat-val">{current.cards.length - current.tracked}</span>
                 <span className="rd-stat-lbl">Not Started</span>
               </div>
             </div>
@@ -253,9 +242,8 @@ export default function ReadinessDashboard({ user, onClose, initialExam = null }
                       <div className="rd-cat-header">
                         <span className="rd-cat-name">{cat}</span>
                         <span className="rd-cat-counts">
-                          {stats.mature > 0 && <span className="rd-badge mature"><span className="srs-emoji-dot" style={{ background: "var(--srs-dot-mature)" }}/>{stats.mature}</span>}
-                          {stats.learning > 0 && <span className="rd-badge learning"><span className="srs-emoji-dot" style={{ background: "var(--srs-dot-learning)" }}/>{stats.learning}</span>}
-                          {(stats.total - stats.mature - stats.learning) > 0 && <span className="rd-badge not-started"><span className="srs-emoji-dot" style={{ background: "var(--srs-dot-new)" }}/>{stats.total - stats.mature - stats.learning}</span>}
+                          {stats.mature > 0 && <span className="rd-badge mature">{stats.mature} mature</span>}
+                          {stats.learning > 0 && <span className="rd-badge learning">{stats.learning} learning</span>}
                           <span className="rd-cat-total">{stats.total} cards</span>
                         </span>
                       </div>
