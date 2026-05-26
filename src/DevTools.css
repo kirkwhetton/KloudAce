@@ -84,6 +84,11 @@
   gap: 1rem;
   cursor: pointer;
 }
+.devtools-row--disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
 
 .devtools-row-label {
   display: flex;
