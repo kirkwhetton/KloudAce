@@ -24,7 +24,7 @@ const TEST_USER = { id: 'user-1', name: 'Test User', email: 'test@example.com', 
 
 function renderPasswordTab() {
   render(<UserProfile onClose={vi.fn()} />)
-  fireEvent.click(screen.getByText('🔒 Password'))
+  fireEvent.click(screen.getByRole('button', { name: /password/i }))
 }
 
 beforeEach(() => {
