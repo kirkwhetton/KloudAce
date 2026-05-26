@@ -109,8 +109,20 @@ const SignOutButton = ({ onSignOut }) => (
 export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack, loadingExam }) {
   const exams = Object.values(EXAM_META);
   const handleSignOut = () => onLogout();
-  const [view, setView] = useState("chooser"); // "chooser" | "exams" | "topics" | "mydecks"
-  const [animClass, setAnimClass] = useState("splash-initial"); // start with entry anim on first load
+  const [view, setView] = useState(() => {
+    if (!user?.id) return "chooser";
+    try {
+      const p = JSON.parse(localStorage.getItem(`azfc_settings_${user.id}`) || "{}").preferredStudyMode;
+      return ["exams", "topics", "mydecks"].includes(p) ? p : "chooser";
+    } catch { return "chooser"; }
+  });
+  const [animClass, setAnimClass] = useState(() => {
+    if (!user?.id) return "splash-initial";
+    try {
+      const p = JSON.parse(localStorage.getItem(`azfc_settings_${user.id}`) || "{}").preferredStudyMode;
+      return ["exams", "topics", "mydecks"].includes(p) ? "" : "splash-initial";
+    } catch { return "splash-initial"; }
+  });
   const [customDecks, setCustomDecks] = useState([]);
   const [topicSearch, setTopicSearch] = useState("");
 const [remoteTopics, setRemoteTopics] = useState(null);
@@ -164,10 +176,30 @@ const [remoteTopics, setRemoteTopics] = useState(null);
     loadExamCardCounts().then(c => { if (c) setExamCardCounts(c); });
   }, []);
 
+  // Load topics on mount if that's the preferred starting view
+  useEffect(() => {
+    if (view === "topics" && !remoteTopics)
+      loadAllTopics().then(t => { if (t) setRemoteTopics(t); });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Animated navigation: drill in (forward) or back to chooser
   const navigateTo = (nextView) => {
     if (nextView === "topics" && !remoteTopics)
       loadAllTopics().then(t => { if (t) setRemoteTopics(t); });
+
+    // Persist or clear preferred study mode
+    if (user?.id) {
+      try {
+        const key = `azfc_settings_${user.id}`;
+        const s = JSON.parse(localStorage.getItem(key) || "{}");
+        if (nextView === "chooser") {
+          const { preferredStudyMode: _, ...rest } = s;
+          localStorage.setItem(key, JSON.stringify(rest));
+        } else {
+          localStorage.setItem(key, JSON.stringify({ ...s, preferredStudyMode: nextView }));
+        }
+      } catch {}
+    }
 
     const goingBack = nextView === "chooser";
     if (goingBack) {

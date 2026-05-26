@@ -1071,6 +1071,10 @@ button .known-check {
 .card-body-wrapper {
   position: relative;
   width: 100%;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   transition: transform 0.2s ease, filter 0.2s ease;
 }
 
@@ -2980,6 +2984,9 @@ button .known-check {
   gap: 14px;
   width: 100%;
   margin: 18px 0 8px;
+}
+@media (max-width: 560px) {
+  .splash-chooser-grid { grid-template-columns: 1fr; }
 }
 
 .splash-choice-card {
