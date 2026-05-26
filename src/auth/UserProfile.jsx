@@ -103,6 +103,38 @@ export default function UserProfile({ onClose, onOpenDashboard, streak = 0, long
     localStorage.setItem(settingsKey, JSON.stringify({ ...s, soundEnabled: val }));
   };
 
+  const [randomised, setRandomisedState] = useState(() => loadSettings().randomised ?? false);
+  const toggleRandomised = (val) => {
+    setRandomisedState(val);
+    const s = loadSettings();
+    localStorage.setItem(settingsKey, JSON.stringify({ ...s, randomised: val }));
+  };
+
+  const CARD_TYPES = [
+    { key: "flashcard",  label: "Flip cards" },
+    { key: "mcq",        label: "MCQ" },
+    { key: "multi",      label: "Multi-select" },
+    { key: "truefalse",  label: "True / False" },
+    { key: "image-mcq",  label: "Diagram MCQ" },
+    { key: "hotspot",    label: "Hotspot" },
+    { key: "task",       label: "Task" },
+    { key: "script",     label: "Script" },
+    { key: "fault",      label: "Find the Fault" },
+    { key: "case-study", label: "Case Study" },
+  ];
+  const [defaultDisabledTypes, setDefaultDisabledTypesState] = useState(
+    () => new Set(loadSettings().defaultDisabledTypes ?? [])
+  );
+  const toggleDefaultType = (key) => {
+    setDefaultDisabledTypesState(prev => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      const s = loadSettings();
+      localStorage.setItem(settingsKey, JSON.stringify({ ...s, defaultDisabledTypes: [...next] }));
+      return next;
+    });
+  };
+
   // ── Stats from localStorage
   function getStats() {
     const prefix = `azfc_srs_${user?.id}_`;
@@ -238,21 +270,23 @@ export default function UserProfile({ onClose, onOpenDashboard, streak = 0, long
         </div>
 
         <div className="profile-tabs">
-          {[            { id: "profile",  label: "👤 Profile" },
-            { id: "password", label: "🔒 Password" },
-            { id: "stats",    label: "📊 Stats" },
-            { id: "settings", label: "⚙️ Settings" },
+          {[
+            { id: "profile",  label: "Profile",  icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
+            { id: "password", label: "Password", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> },
+            { id: "stats",    label: "Stats",    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> },
+            { id: "settings", label: "Settings", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg> },
           ].map((t) => (
             <button
               key={t.id}
               className={`profile-tab${tab === t.id ? " active" : ""}`}
               onClick={() => { setTab(t.id); setProfileMsg(null); setPwMsg(null); setError(null); }}
             >
-              {t.label}
+              {t.icon}{t.label}
             </button>
           ))}
         </div>
 
+        <div className="profile-tab-content">
         {/* ── Profile tab ── */}
         {tab === "profile" && (
           <form className="profile-form" onSubmit={handleProfileSave}>
@@ -391,7 +425,7 @@ export default function UserProfile({ onClose, onOpenDashboard, streak = 0, long
                 className="profile-dashboard-btn"
                 onClick={() => { onClose(); onOpenDashboard(); }}
               >
-                📊 View Full Readiness Dashboard
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" style={{width:15,height:15}}><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>View Full Readiness Dashboard
               </button>
             )}
             {stats.exams.length === 0 ? (
@@ -431,7 +465,7 @@ export default function UserProfile({ onClose, onOpenDashboard, streak = 0, long
                                 onConfirm: () => handleClearExamSrs(e.exam),
                               })}
                             >
-                              🗑
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" style={{width:14,height:14}}><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
                             </button>
                           </td>
                         </tr>
@@ -451,7 +485,7 @@ export default function UserProfile({ onClose, onOpenDashboard, streak = 0, long
                                   onConfirm: () => handleClearCategorySrs(e.exam, cat),
                                 })}
                               >
-                                🗑
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" style={{width:14,height:14}}><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
                               </button>
                             </td>
                           </tr>                        ))}
@@ -460,7 +494,7 @@ export default function UserProfile({ onClose, onOpenDashboard, streak = 0, long
                   </tbody>
                 </table>
                 <button className="profile-clear-srs-btn" onClick={() => setClearConfirm(true)}>
-                  🗑 Clear all SRS tracking
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" style={{width:14,height:14}}><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Clear all SRS tracking
                 </button>
               </>
             )}</div>
@@ -468,7 +502,7 @@ export default function UserProfile({ onClose, onOpenDashboard, streak = 0, long
         {tab === "settings" && (
           <div className="profile-settings">            <div className="settings-row">
               <div className="settings-row-label">
-                <span className="settings-row-title">🙈 Hide answers</span>
+                <span className="settings-row-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>Hide answers</span>
                 <span className="settings-row-desc">
                   Hides the correct answer and explanation after answering — helps avoid memorising answer text instead of understanding.
                 </span>
@@ -484,7 +518,7 @@ export default function UserProfile({ onClose, onOpenDashboard, streak = 0, long
             </div>
             <div className="settings-row">
               <div className="settings-row-label">
-                <span className="settings-row-title">🏷️ Hide difficulty badges</span>
+                <span className="settings-row-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Hide difficulty badges</span>
                 <span className="settings-row-desc">
                   Hides the Easy / Medium / Hard / Extreme badge on each card — useful if you don't want difficulty hints while studying.
                 </span>
@@ -501,7 +535,24 @@ export default function UserProfile({ onClose, onOpenDashboard, streak = 0, long
 
             <div className="settings-row">
               <div className="settings-row-label">
-                <span className="settings-row-title">🔊 Sound effects</span>
+                <span className="settings-row-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>Random card order</span>
+                <span className="settings-row-desc">
+                  Shuffle cards into a random order each session instead of following the deck sequence.
+                </span>
+              </div>
+              <button
+                className={`toggle${randomised ? " on" : ""}`}
+                onClick={() => toggleRandomised(!randomised)}
+                aria-pressed={randomised}
+                aria-label="Toggle random card order"
+              >
+                <span className="toggle-thumb" />
+              </button>
+            </div>
+
+            <div className="settings-row">
+              <div className="settings-row-label">
+                <span className="settings-row-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>Sound effects</span>
                 <span className="settings-row-desc">
                   Play a sound on correct and incorrect answers.
                 </span>
@@ -518,7 +569,7 @@ export default function UserProfile({ onClose, onOpenDashboard, streak = 0, long
 
             <div className="settings-row">
               <div className="settings-row-label">
-                <span className="settings-row-title">🎯 Daily goal</span>
+                <span className="settings-row-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Daily goal</span>
                 <span className="settings-row-desc">Target number of cards to answer each day.</span>
               </div>
               <select
@@ -530,6 +581,26 @@ export default function UserProfile({ onClose, onOpenDashboard, streak = 0, long
                   <option key={n} value={n}>{n} cards</option>
                 ))}
               </select>
+            </div>
+
+            {/* ── Default card types ── */}
+            <div className="settings-section-title">Default card types</div>
+            <p className="settings-section-desc">Disabled types are hidden by default in every session. You can still override them per-session from the sidebar.</p>
+            <div className="card-type-grid">
+              {CARD_TYPES.map(({ key, label }) => {
+                const enabled = !defaultDisabledTypes.has(key);
+                return (
+                  <button
+                    key={key}
+                    className={`card-type-chip${enabled ? " enabled" : " disabled"}`}
+                    onClick={() => toggleDefaultType(key)}
+                    aria-pressed={enabled}
+                  >
+                    <span className="card-type-chip-dot" />
+                    {label}
+                  </button>
+                );
+              })}
             </div>
 
             {/* ── Appearance ── */}
@@ -548,6 +619,7 @@ export default function UserProfile({ onClose, onOpenDashboard, streak = 0, long
             </div>
           </div>
         )}
+        </div>{/* profile-tab-content */}
       </div>
     </div>
   );

@@ -11,14 +11,37 @@ import "./GuidedTour.css";
 const STEPS = [
   {
     target: null,
-    title: "Welcome to KloudAce! 👋",
-    body:  "This quick tour shows you the key features. It only takes 30 seconds — or skip any time.",
+    title: "Welcome to KloudAce ☁️",
+    body: (
+      <>
+        <p className="tour-welcome-mission">
+          Designed to help cloud professionals stay sharp and give exam candidates
+          the edge they need to pass their Azure certifications.
+        </p>
+        <p className="tour-welcome-section-label">Exams covered</p>
+        <div className="tour-welcome-exams">
+          <span className="tour-exam-badge">AZ-104</span>
+          <span className="tour-exam-badge">AZ-900</span>
+          <span className="tour-exam-badge">AZ-305</span>
+        </div>
+        <p className="tour-welcome-section-label">Key features</p>
+        <div className="tour-welcome-features">
+          <span>📖 Flashcards</span>
+          <span>🎯 MCQ &amp; Multi-select</span>
+          <span>🧠 Spaced Repetition</span>
+          <span>⏱️ Exam Mode</span>
+          <span>🔥 Streaks</span>
+          <span>📅 Daily Goals</span>
+        </div>
+      </>
+    ),
     placement: "center",
+    welcome: true,
   },
   {
     target: "header-user",
     title: "Your profile",
-    body:  "Click your name to edit your account, toggle answer/difficulty visibility, and view your Spaced Repetition stats.",
+    body:  "Click your name to edit your account, set a daily card goal, choose default card types, toggle random order, and view your Spaced Repetition stats.",
     placement: "bottom",
   },
   {
@@ -38,6 +61,12 @@ const STEPS = [
     title: "Category filter",
     body:  "Drill into a specific topic or multi-select categories. Flagged cards appear as their own virtual category.",
     placement: "bottom",
+  },
+  {
+    target: "stats-strip",
+    title: "Daily goal & streak",
+    body:  "Your daily card goal progress and study streak live here. Set your goal in Profile — the ring fills as you study and resets at midnight.",
+    placement: "top",
   },
   {
     target: "flag-btn",
@@ -110,8 +139,8 @@ export default function GuidedTour({ onDone }) {
 
   // ── Bubble placement ─────────────────────────────────────────
   function bubbleStyle() {
-    const BUBBLE_W = 310;
-    const BUBBLE_H = 170;
+    const BUBBLE_W = current.welcome ? 460 : 310;
+    const BUBBLE_H = current.welcome ? 280 : 170;
     const GAP = 14;
 
     if (!rect || current.placement === "center") {
@@ -165,13 +194,13 @@ export default function GuidedTour({ onDone }) {
       )}
 
       {/* Step bubble */}
-      <div className={`tour-bubble${isCenter ? " tour-bubble--center" : ""}`} style={bubbleStyle()}>
+      <div className={`tour-bubble${isCenter ? " tour-bubble--center" : ""}${current.welcome ? " tour-bubble--welcome" : ""}`} style={bubbleStyle()}>
         <div className="tour-bubble-header">
           <span className="tour-step-counter">Step {step + 1} of {STEPS.length}</span>
           <button className="tour-skip" onClick={onDone}>✕ Skip</button>
         </div>
         <h3 className="tour-title">{current.title}</h3>
-        <p  className="tour-body">{current.body}</p>
+        <div className="tour-body">{current.body}</div>
         <div className="tour-actions">
           {step > 0 && (
             <button className="tour-btn tour-btn--secondary" onClick={goPrev}>← Back</button>

@@ -16,10 +16,20 @@
   border-radius: 16px;
   width: 100%;
   max-width: 480px;
+  max-height: min(90vh, 820px);
   padding: 2rem;
   position: relative;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.22);
   animation: profileSlideIn 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-tab-content {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  padding-right: 0.25rem;
 }
 
 @keyframes profileSlideIn {
@@ -90,6 +100,9 @@
 }
 
 .profile-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
   background: none;
   border: none;
   border-bottom: 3px solid transparent;
@@ -102,6 +115,7 @@
   transition: color 0.15s, border-color 0.15s;
   border-radius: 6px 6px 0 0;
 }
+.profile-tab svg { width: 15px; height: 15px; flex-shrink: 0; }
 .profile-tab:hover { color: var(--brand); }
 .profile-tab.active { color: var(--brand); border-bottom-color: var(--brand); }
 
@@ -232,6 +246,9 @@
 }
 
 .profile-clear-srs-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   align-self: flex-start;
   margin-top: 0.25rem;
   padding: 0.5rem 1rem;
@@ -338,9 +355,18 @@
 }
 
 .settings-row-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--text-primary);
+}
+.settings-row-title svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  color: var(--brand);
 }
 
 .settings-row-desc {
@@ -613,4 +639,56 @@
 .goal-select:focus {
   outline: none;
   border-color: var(--brand);
+}
+
+/* ── Default card types ── */
+.settings-section-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0.1rem 0 0.5rem;
+  line-height: 1.45;
+}
+
+.card-type-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.card-type-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--border-card);
+  transition: all 0.15s;
+}
+
+.card-type-chip.enabled {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+
+.card-type-chip.disabled {
+  background: var(--bg-card);
+  border-color: var(--border-card);
+  color: var(--text-muted);
+}
+
+.card-type-chip.disabled .card-type-chip-dot {
+  background: var(--text-muted);
+  opacity: 0.4;
+}
+
+.card-type-chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  flex-shrink: 0;
 }

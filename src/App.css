@@ -1277,24 +1277,35 @@ button .known-check {
 .header-user:hover { opacity: 1; }
 
 /* ── Streak pill ─────────────────────────────────────────────── */
+.study-stats-strip {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  max-width: 874px;
+  width: 100%;
+  margin: 0.5rem auto 0;
+  padding: 0 1rem;
+}
+
 .daily-goal-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.3);
-  color: #fff;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  color: var(--text-secondary);
   font-size: 0.78rem;
   font-weight: 600;
   padding: 0.2rem 0.55rem 0.2rem 0.4rem;
   border-radius: 20px;
   white-space: nowrap;
   cursor: default;
-  align-self: flex-end;
 }
 .daily-goal-pill--done {
-  background: rgba(16,185,129,0.3);
-  border-color: rgba(16,185,129,0.6);
+  background: rgba(16,185,129,0.08);
+  border-color: rgba(16,185,129,0.4);
+  color: #059669;
 }
 .daily-goal-label { font-size: 0.78rem; }
 
@@ -1302,9 +1313,9 @@ button .known-check {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #fff;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  color: var(--text-secondary);
   font-size: 0.78rem;
   font-weight: 600;
   padding: 0.2rem 0.55rem;
@@ -1312,17 +1323,17 @@ button .known-check {
   white-space: nowrap;
   cursor: default;
   transition: background 0.2s;
-  align-self: flex-end;
 }
 .streak-pill strong { font-size: 0.85rem; }
 .streak-pill--hot {
-  background: rgba(251, 146, 60, 0.35);
-  border-color: rgba(251, 146, 60, 0.6);
+  background: rgba(251, 146, 60, 0.1);
+  border-color: rgba(251, 146, 60, 0.5);
+  color: #ea580c;
   animation: streak-glow 2s ease-in-out infinite alternate;
 }
 @keyframes streak-glow {
-  from { box-shadow: 0 0 4px rgba(251, 146, 60, 0.4); }
-  to   { box-shadow: 0 0 10px rgba(251, 146, 60, 0.8); }
+  from { box-shadow: 0 0 4px rgba(251, 146, 60, 0.3); }
+  to   { box-shadow: 0 0 10px rgba(251, 146, 60, 0.6); }
 }
 @media (max-width: 560px) {
   .header-btn-label { display: none; }

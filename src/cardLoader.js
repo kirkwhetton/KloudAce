@@ -2,8 +2,8 @@ import { supabase } from "./auth/supabase.js";
 
 const SUPABASE_EXAMS = new Set(["AZ-900", "AZ-305", "AZ-700", "AZ-104"]);
 
-const reconstruct = ({ id, exam, category, type, difficulty, is_free, data: rest }) => ({
-  id, exam, category, type, difficulty, is_free, ...rest,
+const reconstruct = ({ id, exam, category, type, difficulty, is_free, created_at, data: rest }) => ({
+  id, exam, category, type, difficulty, is_free, created_at, ...rest,
 });
 
 export async function loadExamCardsRemote(exam) {
@@ -11,7 +11,7 @@ export async function loadExamCardsRemote(exam) {
   try {
     const { data, error } = await supabase
       .from("cards")
-      .select("id, exam, category, type, difficulty, is_free, data")
+      .select("id, exam, category, type, difficulty, is_free, created_at, data")
       .eq("exam", exam);
     if (error || !data) return null;
     return data.map(reconstruct);
@@ -24,7 +24,7 @@ export async function loadCardsByCategory(category) {
   try {
     const { data, error } = await supabase
       .from("cards")
-      .select("id, exam, category, type, difficulty, is_free, data")
+      .select("id, exam, category, type, difficulty, is_free, created_at, data")
       .eq("category", category);
     if (error || !data) return null;
     return data.map(reconstruct);

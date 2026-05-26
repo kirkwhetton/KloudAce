@@ -1,3 +1,11 @@
+## References for questions
+## AZ-104
+Identity & Governance = https://learn.microsoft.com/en-us/training/paths/az-104-manage-identities-governance/
+Virtual Networks      = https://learn.microsoft.com/en-us/training/paths/az-104-manage-virtual-networks/
+Storage               = https://learn.microsoft.com/en-us/training/paths/az-104-manage-storage/
+Compute               = https://learn.microsoft.com/en-us/training/paths/az-104-manage-compute-resources/
+Monitoring & Backup   = https://learn.microsoft.com/en-us/training/paths/az-104-monitor-backup-resources/
+
 # AzureAce — Project Context & Handoff Docume- **Task Simulator** ✅ — `TaskSimulator.jsx` + `tasksimulator.css`. Three sub-types via `taskType` field:
   - `"fill-in"` — one or more labelled text inputs; checked against `blanks[].answer` (case/whitespace-insensitive); shows per-field ✓/✕ icons + correct answer on wrong
   - `"order"` — shuffled steps displayed as clickable options; user builds the sequence by clicking; supports remove-from-sequence
@@ -10,7 +18,7 @@ _Last updated: May 14, 2026_
 
 ## What is this?
 
-**AzureAce** is a React + Vite Azure certification flashcard/MCQ web app.
+**KloudAce** is a React + Vite Azure certification flashcard/MCQ web app.
 It lives at: `c:\Devops Projects\learnazure\my-react-app`
 
 Run locally with:

@@ -28,6 +28,7 @@ import { useStreak } from "./useStreak";
 import { useSounds } from "./useSounds";
 import { useDailyGoal } from "./useDailyGoal";
 import { useTheme, THEMES } from "./useTheme";
+import DevTools from "./DevTools";
 import "./App.css";
 
 // Fisher-Yates shuffle — returns a new shuffled array, never mutates original
@@ -62,14 +63,24 @@ function App() {
   const [finished, setFinished] = useState(false);
   const [sessionKey, setSessionKey] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [randomised, setRandomised] = useState(false);
+  const [randomised, setRandomised] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(user ? `azfc_settings_${user.id}` : "azfc_settings_guest") || "{}").randomised ?? false; }
+    catch { return false; }
+  });
   const [flagged, setFlagged] = useState(() => {
     try { return new Set(JSON.parse(localStorage.getItem(flagKey) || "[]")); }
     catch { return new Set(); }
   });
   const [showFlaggedOnly, setShowFlaggedOnly] = useState(false);
   const [showDueOnly, setShowDueOnly] = useState(false);
-  const [disabledTypes, setDisabledTypes] = useState(new Set());
+  const [defaultDisabledTypes, setDefaultDisabledTypes] = useState(() => {
+    try { return new Set(JSON.parse(localStorage.getItem(user ? `azfc_settings_${user.id}` : "azfc_settings_guest") || "{}").defaultDisabledTypes ?? []); }
+    catch { return new Set(); }
+  });
+  const [disabledTypes, setDisabledTypes] = useState(() => {
+    try { return new Set(JSON.parse(localStorage.getItem(user ? `azfc_settings_${user.id}` : "azfc_settings_guest") || "{}").defaultDisabledTypes ?? []); }
+    catch { return new Set(); }
+  });
   const masteredKey = user ? `azfc_mastered_${user.id}` : "azfc_mastered_guest";
   const [mastered, setMastered] = useState(() => {
     try { return new Set(JSON.parse(localStorage.getItem(user ? `azfc_mastered_${user.id}` : "azfc_mastered_guest") || "[]")); }
@@ -83,8 +94,12 @@ function App() {
   const [showDashboard, setShowDashboard] = useState(false);
   const [showCustomDecks, setShowCustomDecks] = useState(false);
   const [difficultyFilter, setDifficultyFilter] = useState(new Set()); // empty = all
-  const [showDevRecent, setShowDevRecent] = useState(false);
+  const [showDevRecent, setShowDevRecent] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(user ? `azfc_settings_${user.id}` : "azfc_settings_guest") || "{}").showDevRecent ?? false; }
+    catch { return false; }
+  });
   const [showAdminPanel, setShowAdminPanel] = useState(false);
+  const [showDevTools, setShowDevTools] = useState(false);
   const [shuffleKey, setShuffleKey] = useState(0); // increment to force re-shuffle
   const [isExiting, setIsExiting] = useState(false); // true during exit animation
   const [isEntering, setIsEntering] = useState(false); // true during deck enter animation
@@ -323,7 +338,7 @@ function App() {
   // Step 2g: dev — show only cards added in the last 25 hours
   const DEV_WINDOW_MS = 25 * 60 * 60 * 1000;
   const preShuffle = showDevRecent
-    ? afterDueFilter.filter((c) => c.devAdded && Date.now() - new Date(c.devAdded).getTime() < DEV_WINDOW_MS)
+    ? afterDueFilter.filter((c) => { const ts = c.devAdded || c.created_at; return ts && Date.now() - new Date(ts).getTime() < DEV_WINDOW_MS; })
     : afterDueFilter;
 
   // Step 3: order — exam mode gets its own pipeline (no easy, random 40); otherwise SRS or shuffle
@@ -414,7 +429,7 @@ function App() {
     Promise.race([promise, new Promise(resolve => setTimeout(() => resolve(null), ms))]);
 
   const handleExam = async (exam) => {
-    setCategories(new Set(["All"])); setIndex(0); setKnown(new Set()); setFinished(false); setDisabledTypes(new Set());
+    setCategories(new Set(["All"])); setIndex(0); setKnown(new Set()); setFinished(false); setDisabledTypes(new Set(defaultDisabledTypes));
     setCustomDeckCards([]);
 
     if (SUPABASE_EXAMS.has(exam)) {
@@ -462,7 +477,7 @@ function App() {
     setIndex(0);
     setKnown(new Set());
     setFinished(false);
-    setDisabledTypes(new Set());
+    setDisabledTypes(new Set(defaultDisabledTypes));
     setShowCustomDecks(false);
     setIsEntering(true);
     setTimeout(() => setIsEntering(false), 380);
@@ -649,7 +664,11 @@ function App() {
   };
 
   const handleRandomise = () => {
-    setRandomised((r) => !r);
+    setRandomised((r) => {
+      const next = !r;
+      try { const s = JSON.parse(localStorage.getItem(settingsKey) || "{}"); localStorage.setItem(settingsKey, JSON.stringify({ ...s, randomised: next })); } catch {}
+      return next;
+    });
     setIndex(0); setKnown(new Set()); setFinished(false);
   };
 
@@ -696,6 +715,11 @@ function App() {
           setHideAnswers(s.hideAnswers ?? false);
           setHideDifficulty(s.hideDifficulty ?? false);
           setSoundEnabled(s.soundEnabled ?? true);
+          setShowDevRecent(s.showDevRecent ?? false);
+          setRandomised(s.randomised ?? false);
+          const ddt = new Set(s.defaultDisabledTypes ?? []);
+          setDefaultDisabledTypes(ddt);
+          setDisabledTypes(new Set(ddt));
         } catch { /* ignore */ }
       }} onOpenDashboard={() => setShowDashboard(true)}
       streak={streak} longestStreak={longestStreak} activeDates={activeDates ?? []}
@@ -715,6 +739,15 @@ function App() {
 
       {showAdminPanel && (
         <AdminPanel onClose={() => setShowAdminPanel(false)} />
+      )}
+
+      {showDevTools && user?.isDeveloper && (
+        <DevTools
+          onClose={() => setShowDevTools(false)}
+          showDevRecent={showDevRecent}
+          onToggleDevRecent={() => { setShowDevRecent(d => { const next = !d; try { const s = JSON.parse(localStorage.getItem(settingsKey) || "{}"); localStorage.setItem(settingsKey, JSON.stringify({ ...s, showDevRecent: next })); } catch {} return next; }); setIndex(0); setFinished(false); }}
+          onOpenCardManager={() => setShowAdminPanel(true)}
+        />
       )}
 
       {confirmDialog && (
@@ -763,7 +796,7 @@ function App() {
                   key={value}
                   className={`sidebar-type-btn${isAll && allClear ? " active" : ""}${isDisabled ? " type-disabled" : ""}`}
                   onClick={() => {
-                    if (isAll) { setDisabledTypes(new Set()); }
+                    if (isAll) { setDisabledTypes(new Set(defaultDisabledTypes)); }
                     else {
                       setDisabledTypes(prev => {
                         const next = new Set(prev);
@@ -878,27 +911,6 @@ function App() {
           )}
         </div>
 
-        {user?.isDeveloper && (
-          <div className="sidebar-section">
-            <h3>Developer</h3>
-            <label className="toggle-row">
-              <span className="toggle-row-label">
-                <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>
-                Recently added <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>(last 25h)</span>
-              </span>
-              <div className={`toggle${showDevRecent ? " on" : ""}`} onClick={() => { setShowDevRecent(d => !d); setIndex(0); setFinished(false); }} role="switch" aria-checked={showDevRecent}>
-                <div className="toggle-thumb" />
-              </div>
-            </label>
-            <button
-              className="sidebar-action-btn"
-              onClick={() => { setShowAdminPanel(true); setSidebarOpen(false); }}
-            >
-              + Card Manager
-            </button>
-          </div>
-        )}
-
         <div className="sidebar-section">
           <h3>Flagged Cards</h3>
           {premiumLock(<>
@@ -991,6 +1003,18 @@ function App() {
           </div>
         </div>
         <div className="header-actions">
+          {user?.isDeveloper && (
+            <button
+              className={`devtools-icon-btn${showDevTools ? " active" : ""}`}
+              onClick={() => setShowDevTools(v => !v)}
+              title="Developer tools"
+              aria-label="Developer tools"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+              </svg>
+            </button>
+          )}
           {/* User pill — clickable to open profile */}
           <span className="header-user" data-tour="header-user" onClick={() => setShowProfile(true)} title="Edit profile">
             <svg className="user-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -998,41 +1022,6 @@ function App() {
             </svg>
             {user.name}
           </span>
-
-          {/* Daily goal pill */}
-          {dailyGoal > 0 && (() => {
-            const R = 10;
-            const circ = 2 * Math.PI * R;
-            const pct = Math.min(dailyCount / dailyGoal, 1);
-            const done = dailyCount >= dailyGoal;
-            return (
-              <span className={`daily-goal-pill${done ? " daily-goal-pill--done" : ""}`} title="Daily card goal">
-                <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="12" cy="12" r={R} fill="none" stroke="currentColor" strokeWidth="2" opacity="0.25"/>
-                  <circle cx="12" cy="12" r={R} fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeDasharray={`${pct * circ} ${circ}`}
-                    strokeLinecap="round"
-                    transform="rotate(-90 12 12)"
-                  />
-                </svg>
-                <span className="daily-goal-label">
-                  {done ? "Goal met! ✓" : `${dailyCount} / ${dailyGoal} today`}
-                </span>
-              </span>
-            );
-          })()}
-
-          {/* Streak pill */}
-          {streak > 0 && (
-            <span
-              className={`streak-pill${streak >= 7 ? " streak-pill--hot" : ""}`}
-              title={`${streak}-day streak 🔥  (best: ${longestStreak})`}
-            >
-              🔥 <strong>{streak}</strong>
-            </span>
-          )}
 
           {/* Action buttons */}
           <div className="header-buttons-stack">
@@ -1156,6 +1145,40 @@ function App() {
           <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
         </div>
       </div>
+
+      {dailyGoal > 0 && (
+        <div className="study-stats-strip" data-tour="stats-strip">
+          {(() => {
+            const R = 10;
+            const circ = 2 * Math.PI * R;
+            const pct = Math.min(dailyCount / dailyGoal, 1);
+            const done = dailyCount >= dailyGoal;
+            return (
+              <span className={`daily-goal-pill${done ? " daily-goal-pill--done" : ""}`} title="Daily card goal">
+                <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r={R} fill="none" stroke="currentColor" strokeWidth="2" opacity="0.25"/>
+                  <circle cx="12" cy="12" r={R} fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeDasharray={`${pct * circ} ${circ}`}
+                    strokeLinecap="round"
+                    transform="rotate(-90 12 12)"
+                  />
+                </svg>
+                <span className="daily-goal-label">
+                  {done ? "Goal met! ✓" : `${dailyCount} / ${dailyGoal} today`}
+                </span>
+              </span>
+            );
+          })()}
+          <span
+            className={`streak-pill${streak >= 7 ? " streak-pill--hot" : ""}`}
+            title={`${streak}-day streak 🔥  (best: ${longestStreak})`}
+          >
+            🔥 <strong>{streak}</strong>
+          </span>
+        </div>
+      )}
 
       <main className={`main-content${current?.taskType === "script" ? " main-content--wide" : ""}`}>
         {examMode && !examReady ? (
@@ -1365,7 +1388,7 @@ function App() {
                 </button>
               )}
               {disabledTypes.size > 0 && (
-                <button className="sidebar-action-btn" onClick={() => { setDisabledTypes(new Set()); setIndex(0); }}>
+                <button className="sidebar-action-btn" onClick={() => { setDisabledTypes(new Set(defaultDisabledTypes)); setIndex(0); }}>
                   Show all card types
                 </button>
               )}

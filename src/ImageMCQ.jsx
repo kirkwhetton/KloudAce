@@ -66,7 +66,7 @@ export default function ImageMCQ({ card, onKnow, onSrsRate, hideAnswers, examMod
         {renderDiagram(card.diagram)}
       </div>
 
-      <p className="imcq-question-footer">{card.question_footer}</p>
+      <p className="imcq-question-footer">{card.question_footer ?? card.question}</p>
 
       <div className="mcq-choices">
         {shuffledChoices.map((choice, i) => (

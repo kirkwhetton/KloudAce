@@ -1,0 +1,195 @@
+.devtools-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: transparent;
+}
+
+.devtools-panel {
+  position: fixed;
+  top: 4rem;
+  right: 1rem;
+  width: 320px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 14px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+  animation: devtoolsSlideIn 0.18s ease;
+  z-index: 301;
+}
+
+@keyframes devtoolsSlideIn {
+  from { opacity: 0; transform: translateY(-10px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.devtools-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-card-hover);
+}
+
+.devtools-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.devtools-title svg {
+  width: 1rem;
+  height: 1rem;
+  color: var(--brand);
+}
+
+.devtools-close {
+  background: none;
+  border: none;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  line-height: 1;
+}
+.devtools-close:hover { color: var(--text-primary); background: var(--border-subtle); }
+
+.devtools-section {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.devtools-section:last-child { border-bottom: none; }
+
+.devtools-section-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.devtools-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.devtools-row-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.devtools-row-sub {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.devtools-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.85rem;
+  background: var(--bg-card-hover);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  width: 100%;
+  text-align: left;
+}
+.devtools-action-btn svg {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  color: var(--brand);
+}
+.devtools-action-btn:hover {
+  background: var(--brand-light, #e8f0fe);
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+.devtools-env-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.devtools-env-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.devtools-copy-btn {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 5px;
+  background: var(--bg-card-hover);
+  border: 1px solid var(--border-card);
+  color: var(--brand);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.devtools-copy-btn:hover { background: var(--brand-light, #e8f0fe); }
+
+.devtools-env-value {
+  font-size: 0.72rem;
+  font-family: monospace;
+  color: var(--text-muted);
+  word-break: break-all;
+  background: var(--bg-page, #f8fafc);
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+}
+
+/* ── Header icon button ── */
+.devtools-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+.devtools-icon-btn svg {
+  width: 1rem;
+  height: 1rem;
+}
+.devtools-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.devtools-icon-btn.active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}

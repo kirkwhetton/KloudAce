@@ -56,6 +56,61 @@
   justify-content: center;
 }
 
+/* welcome step — wider card, left-aligned content */
+.tour-bubble--welcome {
+  max-width: min(460px, calc(100vw - 24px));
+  text-align: left;
+}
+.tour-bubble--welcome .tour-actions {
+  justify-content: flex-end;
+}
+.tour-bubble--welcome .tour-dots {
+  justify-content: center;
+}
+
+.tour-welcome-mission {
+  margin: 0 0 0.9rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.tour-welcome-section-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+}
+
+.tour-welcome-exams {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
+}
+
+.tour-exam-badge {
+  background: var(--brand);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.22rem 0.65rem;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+.tour-welcome-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
 @keyframes bubble-in {
   from { opacity: 0; transform: scale(0.95) translateY(6px); }
   to   { opacity: 1; transform: scale(1)    translateY(0);   }

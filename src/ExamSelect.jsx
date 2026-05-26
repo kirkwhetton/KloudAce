@@ -160,12 +160,15 @@ const [remoteTopics, setRemoteTopics] = useState(null);
     return () => window.removeEventListener("storage", load);
   }, []);
 
+  useEffect(() => {
+    loadExamCardCounts().then(c => { if (c) setExamCardCounts(c); });
+  }, []);
+
   // Animated navigation: drill in (forward) or back to chooser
   const navigateTo = (nextView) => {
     if (nextView === "topics" && !remoteTopics)
       loadAllTopics().then(t => { if (t) setRemoteTopics(t); });
-    if (nextView === "exams" && !examCardCounts)
-      loadExamCardCounts().then(c => { if (c) setExamCardCounts(c); });
+
     const goingBack = nextView === "chooser";
     if (goingBack) {
       setView(nextView);
