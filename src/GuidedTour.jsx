@@ -18,20 +18,14 @@ const STEPS = [
           Designed to help cloud professionals stay sharp and give exam candidates
           the edge they need to pass their Azure certifications.
         </p>
-        <p className="tour-welcome-section-label">Exams covered</p>
-        <div className="tour-welcome-exams">
-          <span className="tour-exam-badge">AZ-104</span>
-          <span className="tour-exam-badge">AZ-900</span>
-          <span className="tour-exam-badge">AZ-305</span>
-        </div>
         <p className="tour-welcome-section-label">Key features</p>
         <div className="tour-welcome-features">
-          <span>📖 Flashcards</span>
-          <span>🎯 MCQ &amp; Multi-select</span>
-          <span>🧠 Spaced Repetition</span>
-          <span>⏱️ Exam Mode</span>
-          <span>🔥 Streaks</span>
-          <span>📅 Daily Goals</span>
+          <span>Flashcards</span>
+          <span>MCQ &amp; Multi-select</span>
+          <span>Spaced Repetition</span>
+          <span>Exam Mode</span>
+          <span>Streaks</span>
+          <span>Daily Goals</span>
         </div>
       </>
     ),
