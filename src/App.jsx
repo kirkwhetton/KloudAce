@@ -510,6 +510,20 @@ function App() {
     setTimeout(() => setIsEntering(false), 380);
   };
 
+  const handleDashboardLaunch = (cards) => {
+    setCustomDeckCards(cards);
+    setSelectedExam("CUSTOM:dashboard");
+    setCategories(new Set(["All"]));
+    setIndex(0);
+    setKnown(new Set());
+    setFinished(false);
+    setSrsMode(false);
+    setDisabledTypes(new Set(defaultDisabledTypes));
+    setShowDashboard(false);
+    setIsEntering(true);
+    setTimeout(() => setIsEntering(false), 380);
+  };
+
   // Inline card save — updates localStorage + live session state without reopening the deck editor
   const handleInlineCardSave = (card, { question, answer, tag, deckId, difficulty, newDeckName }) => {
     const sourceDeckId = Number(card.exam.slice("CUSTOM:".length));
@@ -757,6 +771,7 @@ function App() {
           user={user}
           initialExam={selectedExam}
           onClose={() => setShowDashboard(false)}
+          onLaunchDeck={handleDashboardLaunch}
         />
       )}
 

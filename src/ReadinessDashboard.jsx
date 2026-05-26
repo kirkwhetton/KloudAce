@@ -48,7 +48,28 @@ function scoreLabel(score) {
   return "Getting Started";
 }
 
-export default function ReadinessDashboard({ user, onClose, initialExam = null }) {
+function buildFilteredCards(filterType, filterKey, cards, userId, exam) {
+  const srsRec = loadSrsData(userId, exam);
+  if (filterType === "srs") {
+    if (filterKey === "mature")      return cards.filter(c => { const r = srsRec[c.id]; return r && r.repetitions >= 3; });
+    if (filterKey === "learning")    return cards.filter(c => { const r = srsRec[c.id]; return r && r.repetitions > 0 && r.repetitions < 3; });
+    if (filterKey === "not-started") return cards.filter(c => { const r = srsRec[c.id]; return !r || r.repetitions === 0; });
+  }
+  if (filterType === "cardtype") {
+    return cards.filter(c => {
+      if (filterKey === "truefalse") return c.type === "truefalse";
+      if (filterKey === "image-mcq") return c.type === "image-mcq";
+      if (filterKey === "multi")     return c.type === "multi";
+      if (filterKey === "script")    return c.type === "task" && c.taskType === "script";
+      if (filterKey === "task")      return c.type === "task" && c.taskType !== "script";
+      if (filterKey === "mcq")       return !!c.choices && !["truefalse","image-mcq","multi","task"].includes(c.type);
+      return !c.choices && !["truefalse","image-mcq","multi","task"].includes(c.type);
+    });
+  }
+  return cards;
+}
+
+export default function ReadinessDashboard({ user, onClose, onLaunchDeck, initialExam = null }) {
   const examData = useMemo(() => {
     let masteredIds;
     try { masteredIds = new Set(JSON.parse(localStorage.getItem(`azfc_mastered_${user.id}`) || "[]")); }
@@ -108,35 +129,8 @@ export default function ReadinessDashboard({ user, onClose, initialExam = null }
     return activeExams[0]?.exam ?? null;
   });
 
-  const [activeFilter, setActiveFilter] = useState(null);
-
   const current    = activeExams.find((d) => d.exam === selectedExam);
   const categories = current ? Object.entries(current.categoryMap).sort((a, b) => b[1].total - a[1].total) : [];
-
-  const filteredCards = useMemo(() => {
-    if (!activeFilter || !current) return null;
-    const srsRec = loadSrsData(user.id, current.exam);
-    const cards  = current.cards;
-    if (activeFilter.type === "srs") {
-      const mode = activeFilter.mode;
-      if (mode === "mature")      return cards.filter(c => { const r = srsRec[c.id]; return r && r.repetitions >= 3; });
-      if (mode === "learning")    return cards.filter(c => { const r = srsRec[c.id]; return r && r.repetitions > 0 && r.repetitions < 3; });
-      if (mode === "not-started") return cards.filter(c => { const r = srsRec[c.id]; return !r || r.repetitions === 0; });
-    }
-    if (activeFilter.type === "cardtype") {
-      const key = activeFilter.key;
-      return cards.filter(c => {
-        if (key === "truefalse") return c.type === "truefalse";
-        if (key === "image-mcq") return c.type === "image-mcq";
-        if (key === "multi")     return c.type === "multi";
-        if (key === "script")    return c.type === "task" && c.taskType === "script";
-        if (key === "task")      return c.type === "task" && c.taskType !== "script";
-        if (key === "mcq")       return !!c.choices && !["truefalse","image-mcq","multi","task"].includes(c.type);
-        return !c.choices && !["truefalse","image-mcq","multi","task"].includes(c.type);
-      });
-    }
-    return null;
-  }, [activeFilter, current, user.id]);
 
   const DIFF_META = [
     { key: "easy",    label: "Easy",    color: "var(--brand)" },
@@ -156,9 +150,11 @@ export default function ReadinessDashboard({ user, onClose, initialExam = null }
     { key: "script",     label: "Script" },
   ];
 
-  const filterLabel = activeFilter?.type === "srs"
-    ? { mature: "Mature", learning: "Learning", "not-started": "Not Started" }[activeFilter.mode]
-    : TYPE_META.find(t => t.key === activeFilter?.key)?.label;
+  const launch = (filterType, filterKey) => {
+    if (!current || !onLaunchDeck) return;
+    const cards = buildFilteredCards(filterType, filterKey, current.cards, user.id, current.exam);
+    if (cards.length > 0) onLaunchDeck(cards);
+  };
 
   return (
     <div className="rd-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
@@ -186,7 +182,7 @@ export default function ReadinessDashboard({ user, onClose, initialExam = null }
               <button
                 key={d.exam}
                 className={`rd-exam-tab${selectedExam === d.exam ? " active" : ""}`}
-                onClick={() => { setSelectedExam(d.exam); setActiveFilter(null); }}
+                onClick={() => setSelectedExam(d.exam)}
               >
                 <span className="rd-tab-icon">{EXAM_ICONS[d.exam] || DEFAULT_EXAM_ICON}</span>
                 <span className="rd-tab-code">{d.exam}</span>
@@ -243,49 +239,20 @@ export default function ReadinessDashboard({ user, onClose, initialExam = null }
                 <span className="rd-stat-val">{current.cards.length}</span>
                 <span className="rd-stat-lbl">Total Cards</span>
               </div>
-              <button className="rd-stat-pill rd-stat-pill--btn" onClick={() => setActiveFilter({ type: "srs", mode: "mature" })}>
+              <button className="rd-stat-pill rd-stat-pill--btn" onClick={() => launch("srs", "mature")}>
                 <span className="rd-stat-val" style={{ color: "var(--brand)" }}>{current.mature}</span>
                 <span className="rd-stat-lbl">Mature</span>
               </button>
-              <button className="rd-stat-pill rd-stat-pill--btn" onClick={() => setActiveFilter({ type: "srs", mode: "learning" })}>
+              <button className="rd-stat-pill rd-stat-pill--btn" onClick={() => launch("srs", "learning")}>
                 <span className="rd-stat-val" style={{ color: "var(--brand)" }}>{current.learning}</span>
                 <span className="rd-stat-lbl">Learning</span>
               </button>
-              <button className="rd-stat-pill rd-stat-pill--btn" onClick={() => setActiveFilter({ type: "srs", mode: "not-started" })}>
+              <button className="rd-stat-pill rd-stat-pill--btn" onClick={() => launch("srs", "not-started")}>
                 <span className="rd-stat-val">{current.cards.length - current.tracked}</span>
                 <span className="rd-stat-lbl">Not Started</span>
               </button>
             </div>
 
-            {/* ── Filter card list ── */}
-            {activeFilter ? (
-              <section className="rd-section">
-                <div className="rd-filter-header">
-                  <button className="rd-back-btn" onClick={() => setActiveFilter(null)}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="15 18 9 12 15 6"/>
-                    </svg>
-                    Back
-                  </button>
-                  <span className="rd-filter-label">{filterLabel} <span className="rd-filter-count">{filteredCards?.length ?? 0}</span></span>
-                </div>
-                <div className="rd-card-list">
-                  {filteredCards?.map(card => {
-                    const q = Array.isArray(card.question) ? card.question[0] : (card.question ?? "");
-                    return (
-                      <div key={card.id} className="rd-card-item">
-                        <p className="rd-card-q">{q}</p>
-                        <div className="rd-card-meta">
-                          {card.category && <span className="rd-card-cat">{card.category}</span>}
-                          {card.difficulty && <span className={`rd-card-diff rd-card-diff--${card.difficulty}`}>{card.difficulty}</span>}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </section>
-            ) : (
-              <>
             {/* ── By Category ── */}
             <section className="rd-section">
               <h3 className="rd-section-title">
@@ -353,15 +320,13 @@ export default function ReadinessDashboard({ user, onClose, initialExam = null }
               </h3>
               <div className="rd-type-grid">
                 {TYPE_META.filter((t) => (current.typeCount[t.key] || 0) > 0).map((t) => (
-                  <button key={t.key} className="rd-type-chip" onClick={() => setActiveFilter({ type: "cardtype", key: t.key })}>
+                  <button key={t.key} className="rd-type-chip" onClick={() => launch("cardtype", t.key)}>
                     <span className="rd-type-label">{t.label}</span>
                     <span className="rd-type-count">{current.typeCount[t.key]}</span>
                   </button>
                 ))}
               </div>
             </section>
-              </>
-            )}
 
           </div>
         )}
