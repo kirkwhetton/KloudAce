@@ -125,6 +125,33 @@ function App() {
     setShowTour(false);
     if (tourSeenKey) localStorage.setItem(tourSeenKey, "1");
   };
+
+  const handleSimulateSrs = (mode) => {
+    if (!user || !selectedExam) return;
+    const key = `azfc_srs_${user.id}_${selectedExam}`;
+    if (mode === 'clear') {
+      localStorage.removeItem(key);
+      setSrsData({});
+      return;
+    }
+    const future = (days) => { const d = new Date(); d.setDate(d.getDate() + days); return d.toISOString(); };
+    const past   = (days) => { const d = new Date(); d.setDate(d.getDate() - days); return d.toISOString(); };
+    const records = {};
+    deck.forEach((card, i) => {
+      if (mode === 'mature') {
+        records[card.id] = { id: card.id, easeFactor: 2.5, interval: 30, repetitions: 5, nextReview: future(30), lastReview: past(5) };
+      } else if (mode === 'mix') {
+        const bucket = i % 3;
+        if (bucket === 1)
+          records[card.id] = { id: card.id, easeFactor: 2.2, interval: 6,  repetitions: 1, nextReview: future(1),  lastReview: past(1) };
+        else if (bucket === 2)
+          records[card.id] = { id: card.id, easeFactor: 2.5, interval: 30, repetitions: 5, nextReview: future(25), lastReview: past(5) };
+        // bucket 0 = no record (not started)
+      }
+    });
+    localStorage.setItem(key, JSON.stringify(records));
+    setSrsData(records);
+  };
   const settingsKey = user ? `azfc_settings_${user.id}` : "azfc_settings_guest";
   const [hideAnswers, setHideAnswers] = useState(() => {
     try { return JSON.parse(localStorage.getItem(user ? `azfc_settings_${user.id}` : "azfc_settings_guest") || "{}").hideAnswers ?? false; }
@@ -747,6 +774,9 @@ function App() {
           showDevRecent={showDevRecent}
           onToggleDevRecent={() => { setShowDevRecent(d => { const next = !d; try { const s = JSON.parse(localStorage.getItem(settingsKey) || "{}"); localStorage.setItem(settingsKey, JSON.stringify({ ...s, showDevRecent: next })); } catch {} return next; }); setIndex(0); setFinished(false); }}
           onOpenCardManager={() => setShowAdminPanel(true)}
+          selectedExam={selectedExam}
+          deckSize={deck.length}
+          onSimulateSrs={handleSimulateSrs}
         />
       )}
 

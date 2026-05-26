@@ -127,6 +127,17 @@
   border-color: var(--brand);
   color: var(--brand);
 }
+.devtools-action-btn--danger { color: var(--wrong, #dc2626); }
+.devtools-action-btn--danger:hover {
+  background: var(--wrong-bg, #fef2f2);
+  border-color: var(--wrong, #dc2626);
+  color: var(--wrong, #dc2626);
+}
+.devtools-action-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
 
 .devtools-env-row {
   display: flex;
