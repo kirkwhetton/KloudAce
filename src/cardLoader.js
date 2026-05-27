@@ -19,60 +19,9 @@ function setCached(key, cards) {
   _cache.set(key, { cards, ts: Date.now() });
 }
 
-// ─── localStorage cache (survives page reload, 24-hour TTL) ─────
-const LS_PREFIX = "azfc_cards_";
-const LS_TTL = 24 * 60 * 60 * 1000;
-
-function lsGet(key) {
-  try {
-    const raw = localStorage.getItem(LS_PREFIX + key);
-    if (!raw) return null;
-    const { data, ts } = JSON.parse(raw);
-    return { data, stale: Date.now() - ts > LS_TTL };
-  } catch { return null; }
-}
-function lsSet(key, data) {
-  try {
-    localStorage.setItem(LS_PREFIX + key, JSON.stringify({ data, ts: Date.now() }));
-  } catch {} // quota exceeded — ignore silently
-}
-function lsDel(key) {
-  try { localStorage.removeItem(LS_PREFIX + key); } catch {}
-}
-function lsClear() {
-  try {
-    // Use clear() — Object.keys enumeration is unreliable in some environments (e.g. Node)
-    localStorage.clear();
-  } catch {}
-}
-
 export function bustCardCache(key) {
-  if (key) { _cache.delete(key); lsDel(key); }
-  else { _cache.clear(); lsClear(); }
-}
-
-// ─── Stale-while-revalidate ──────────────────────────────────────
-// 1. Return in-memory hit immediately (always fresh within MEM_TTL).
-// 2. Return localStorage hit immediately; if stale, refresh in background.
-// 3. Fall back to a blocking Supabase fetch on cold first visit.
-async function swr(key, fetcher) {
-  const mem = getCached(key);
-  if (mem) return mem;
-
-  const ls = lsGet(key);
-  if (ls) {
-    setCached(key, ls.data);
-    if (ls.stale) {
-      fetcher().then(fresh => {
-        if (fresh) { setCached(key, fresh); lsSet(key, fresh); }
-      }).catch(() => {});
-    }
-    return ls.data;
-  }
-
-  const fresh = await fetcher();
-  if (fresh) { setCached(key, fresh); lsSet(key, fresh); }
-  return fresh;
+  if (key) _cache.delete(key);
+  else _cache.clear();
 }
 
 // ─── Wake ping ───────────────────────────────────────────────────
@@ -87,49 +36,56 @@ export function wakeSupabase() {
 // ─── Public loaders ──────────────────────────────────────────────
 export async function loadExamCardsRemote(exam) {
   if (!SUPABASE_EXAMS.has(exam)) return null;
-  return swr(exam, async () => {
-    const { data, error } = await supabase
-      .from("cards")
-      .select("id, exam, category, type, difficulty, is_free, created_at, data")
-      .eq("exam", exam);
-    if (error || !data) return null;
-    return data.map(reconstruct);
-  });
+  const cached = getCached(exam);
+  if (cached) return cached;
+  const { data, error } = await supabase
+    .from("cards")
+    .select("id, exam, category, type, difficulty, is_free, created_at, data")
+    .eq("exam", exam);
+  if (error || !data) return null;
+  const cards = data.map(reconstruct);
+  setCached(exam, cards);
+  return cards;
 }
 
 export async function loadCardsByCategory(category) {
   const key = `TOPIC:${category}`;
-  return swr(key, async () => {
-    const { data, error } = await supabase
-      .from("cards")
-      .select("id, exam, category, type, difficulty, is_free, created_at, data")
-      .eq("category", category);
-    if (error || !data) return null;
-    return data.map(reconstruct);
-  });
+  const cached = getCached(key);
+  if (cached) return cached;
+  const { data, error } = await supabase
+    .from("cards")
+    .select("id, exam, category, type, difficulty, is_free, created_at, data")
+    .eq("category", category);
+  if (error || !data) return null;
+  const cards = data.map(reconstruct);
+  setCached(key, cards);
+  return cards;
 }
 
 export async function loadAllTopics() {
-  return swr("__topics__", async () => {
-    const { data, error } = await supabase.from("cards").select("category");
-    if (error || !data) return null;
-    const topicMap = {};
-    for (const { category } of data) {
-      const t = (category || "Uncategorised").trim();
-      topicMap[t] = (topicMap[t] || 0) + 1;
-    }
-    return Object.entries(topicMap).sort((a, b) => b[1] - a[1]);
-  });
+  const cached = getCached("__topics__");
+  if (cached) return cached;
+  const { data, error } = await supabase.from("cards").select("category");
+  if (error || !data) return null;
+  const topicMap = {};
+  for (const { category } of data) {
+    const t = (category || "Uncategorised").trim();
+    topicMap[t] = (topicMap[t] || 0) + 1;
+  }
+  const result = Object.entries(topicMap).sort((a, b) => b[1] - a[1]);
+  setCached("__topics__", result);
+  return result;
 }
 
 export async function loadExamCardCounts() {
-  return swr("__exam_counts__", async () => {
-    const { data, error } = await supabase.from("cards").select("exam");
-    if (error || !data) return null;
-    const counts = {};
-    for (const { exam } of data) counts[exam] = (counts[exam] || 0) + 1;
-    return counts;
-  });
+  const cached = getCached("__exam_counts__");
+  if (cached) return cached;
+  const { data, error } = await supabase.from("cards").select("exam");
+  if (error || !data) return null;
+  const counts = {};
+  for (const { exam } of data) counts[exam] = (counts[exam] || 0) + 1;
+  setCached("__exam_counts__", counts);
+  return counts;
 }
 
 export { SUPABASE_EXAMS };

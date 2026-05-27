@@ -39,7 +39,7 @@ function mockSelectError() {
 
 beforeEach(() => {
   vi.resetAllMocks()  // clears call records AND mock implementations from prior tests
-  bustCardCache()     // clears in-memory Map and localStorage
+  bustCardCache()     // clears in-memory Map
 })
 
 describe('SUPABASE_EXAMS', () => {
