@@ -27,6 +27,7 @@ export default function TrueFalse({ card, onKnow, onSrsRate, hideAnswers, examMo
     return `tf-btn tf-btn-${val ? "true" : "false"} tf-dimmed`;
   };
 
+  const badgeId = !card.id?.toString().startsWith("CUSTOM:") ? card.id : null;
   return (    <div className="mcq-card tf-card">
       <div className="tf-top"><div className="card-meta"><span className="mcq-category">{card.category}</span><span className={`difficulty-badge difficulty-badge--${card.difficulty}`}>{card.difficulty}</span></div>
       </div>
@@ -64,6 +65,7 @@ export default function TrueFalse({ card, onKnow, onSrsRate, hideAnswers, examMo
           </div>
         </div>
       )}
+      {badgeId && <span className="card-id-badge">#{badgeId}</span>}
     </div>
   );
 }

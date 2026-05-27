@@ -105,6 +105,7 @@ export default function ImageMCQ({ card, onKnow, onSrsRate, hideAnswers, examMod
           </div>
         </div>
       )}
+      {!card.id?.toString().startsWith("CUSTOM:") && <span className="card-id-badge">#{card.id}</span>}
     </div>
   );
 }

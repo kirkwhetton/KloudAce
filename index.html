@@ -10,6 +10,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <!-- Apply saved theme before React mounts to prevent flash of white/wrong-theme -->
+    <script>
+      try {
+        var keys = Object.keys(localStorage).filter(function(k){ return k.startsWith('azfc_theme_'); });
+        var theme = null;
+        for (var i = 0; i < keys.length; i++) {
+          var v = localStorage.getItem(keys[i]);
+          if (v && v !== 'light') { theme = v; break; }
+        }
+        if (theme) document.body.setAttribute('data-theme', theme);
+      } catch(e) {}
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

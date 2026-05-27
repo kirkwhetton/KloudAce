@@ -132,6 +132,7 @@ function MultipleChoice({ card, onKnow, onSrsRate, hideAnswers, examMode, onExam
           </div>
         </div>
       )}
+      {!card.id?.toString().startsWith("CUSTOM:") && <span className="card-id-badge">#{card.id}</span>}
     </div>
   );
 }

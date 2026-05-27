@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuthContext } from "./AuthProvider";
 import "./Login.css";
 
 export default function Login() {
-  const { login, register, verifyOtp, error, setError } = useAuthContext();
+  const { login, register, verifyOtp, loginAsGuest, error, setError } = useAuthContext();
   const [mode, setMode] = useState("login"); // "login" | "register"
   const [loading, setLoading] = useState(false);
+  const [slowWarning, setSlowWarning] = useState(false);
+  const slowTimer = useRef(null);
   const [confirming, setConfirming] = useState(false); // awaiting OTP confirmation
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
 
@@ -58,11 +60,15 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setSlowWarning(false);
+    slowTimer.current = setTimeout(() => setSlowWarning(true), 5000);
 
     if (mode === "register") {
       if (form.password !== form.confirm) {
         setError("Passwords do not match.");
         setLoading(false);
+        clearTimeout(slowTimer.current);
+        setSlowWarning(false);
         return;
       }
       const result = await register({ name: form.name, email: form.email, password: form.password });
@@ -72,6 +78,8 @@ export default function Login() {
     }
 
     setLoading(false);
+    clearTimeout(slowTimer.current);
+    setSlowWarning(false);
   };
 
   return (
@@ -212,7 +220,22 @@ export default function Login() {
           <button className="login-submit" type="submit" disabled={loading}>
             {loading ? "Please wait…" : mode === "login" ? "Sign In" : "Create Account"}
           </button>
+          {slowWarning && (
+            <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", textAlign: "center", marginTop: "0.5rem" }}>
+              Still connecting — Supabase may be waking up, please hold on…
+            </p>
+          )}
         </form></>}
+
+        {!confirming && (
+          <div className="login-guest-section">
+            <div className="login-guest-divider"><span>or</span></div>
+            <button className="login-guest-btn" onClick={loginAsGuest}>
+              Continue as Guest
+            </button>
+            <p className="login-guest-hint">30 cards per deck · no account needed · <strong>sign up free</strong> to unlock everything</p>
+          </div>
+        )}
 
         {!confirming && (
           <p className="login-note">

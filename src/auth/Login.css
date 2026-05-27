@@ -282,3 +282,50 @@
     font-size: 1.65rem;
   }
 }
+
+/* ─── Guest section ─────────────────────────────────────────────── */
+.login-guest-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.login-guest-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-muted, #999);
+  font-size: 0.78rem;
+}
+.login-guest-divider::before,
+.login-guest-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-card, #dde3ec);
+}
+
+.login-guest-btn {
+  width: 100%;
+  background: transparent;
+  border: 1.5px solid var(--border-card, #dde3ec);
+  border-radius: 8px;
+  padding: 0.72rem 1.2rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-secondary, #555);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.login-guest-btn:hover {
+  border-color: var(--brand, #1a73e8);
+  color: var(--brand, #1a73e8);
+}
+
+.login-guest-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-muted, #999);
+  margin: 0;
+  line-height: 1.5;
+}

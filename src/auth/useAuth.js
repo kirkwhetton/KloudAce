@@ -6,12 +6,15 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "./supabase";
 
+const withTimeout = (promise, ms, msg) =>
+  Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new Error(msg)), ms))]);
+
 async function fetchProfile(supabaseUser) {
-  const { data } = await supabase
-    .from("profiles")
-    .select("name, email, is_premium, is_developer")
-    .eq("id", supabaseUser.id)
-    .single();
+  const { data } = await withTimeout(
+    supabase.from("profiles").select("name, email, is_premium, is_developer").eq("id", supabaseUser.id).single(),
+    8_000,
+    "profile_timeout"
+  );
   return {
     id:          supabaseUser.id,
     name:        data?.name        ?? supabaseUser.user_metadata?.name ?? "",
@@ -38,10 +41,13 @@ function friendlyError(err) {
   return err.message || "Something went wrong. Please try again.";
 }
 
+const GUEST_USER = { id: "guest", name: "Guest", email: "", isPremium: false, isDeveloper: false };
+
 export function useAuth() {
   const [user,    setUser]    = useState(null);
   const [loading, setLoading] = useState(true);
   const [error,   setError]   = useState(null);
+  const [isGuest, setIsGuest] = useState(false);
 
   useEffect(() => {
     let settled = false;
@@ -50,19 +56,27 @@ export function useAuth() {
     // Hard timeout — if Supabase never responds, unblock the app after 6 s
     const timeout = setTimeout(settle, 6000);
 
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      try {
-        if (session?.user) setUser(await fetchProfile(session.user));
-      } catch { /* profile fetch failed — continue as logged-out */ }
-      settle();
-    }).catch(settle);
-
+    // onAuthStateChange fires INITIAL_SESSION on mount (from localStorage cache),
+    // which covers the same ground as getSession() — so we use only one source.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
-        try {
-          if (session?.user) setUser(await fetchProfile(session.user));
-          else               setUser(null);
-        } catch { setUser(null); }
+        if (session?.user) {
+          try {
+            setUser(await fetchProfile(session.user));
+          } catch {
+            // fetchProfile failed (network/RLS issue) but the session is valid —
+            // fall back to basic Supabase auth data so the user isn't logged out.
+            setUser({
+              id:          session.user.id,
+              name:        session.user.user_metadata?.name ?? "",
+              email:       session.user.email ?? "",
+              isPremium:   false,
+              isDeveloper: false,
+            });
+          }
+        } else {
+          setUser(null);
+        }
         settle();
       }
     );
@@ -94,14 +108,30 @@ export function useAuth() {
 
   const login = useCallback(async ({ email, password }) => {
     setError(null);
-    const { error: err } = await supabase.auth.signInWithPassword({ email, password });
-    if (err) { setError(friendlyError(err)); return false; }
-    return true;
+    try {
+      const { error: err } = await withTimeout(
+        supabase.auth.signInWithPassword({ email, password }),
+        20_000,
+        "timeout"
+      );
+      if (err) { setError(friendlyError(err)); return false; }
+      return true;
+    } catch {
+      setError("Sign in is taking too long — check your connection and try again.");
+      return false;
+    }
+  }, []);
+
+  const loginAsGuest = useCallback(() => {
+    setError(null);
+    setIsGuest(true);
+    setUser(GUEST_USER);
   }, []);
 
   const logout = useCallback(() => {
-    setUser(null); // clear immediately — don't wait for network
-    supabase.auth.signOut().catch(() => {}); // fire and forget
+    setUser(null);
+    setIsGuest(false);
+    supabase.auth.signOut().catch(() => {});
   }, []);
 
   const updateProfile = useCallback(async ({ name, email }) => {
@@ -132,6 +162,7 @@ export function useAuth() {
 
   return {
     user, isAuthenticated, loading,
+    isGuest, loginAsGuest,
     login, register, logout, updateProfile, changePassword, verifyOtp,
     error, setError,
   };

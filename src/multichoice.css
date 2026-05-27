@@ -1,4 +1,5 @@
 .mcq-card {
+  position: relative;
   background: var(--bg-card);
   border-radius: 16px;
   padding: 2rem;

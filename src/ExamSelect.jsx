@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import flashcards, { EXAM_META } from "./flashcards";
-import { loadAllTopics, loadExamCardCounts } from "./cardLoader";
+import { loadAllTopics, loadExamCardCounts, SUPABASE_EXAMS } from "./cardLoader";
 
 const DECK_COLOURS = [
   { from: "#f59e0b", to: "#b45309", icon: "#fcd34d" },
@@ -106,7 +106,7 @@ const SignOutButton = ({ onSignOut }) => (
   </button>
 );
 
-export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack, loadingExam }) {
+export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack, loadingExam, cardLoadError }) {
   const exams = Object.values(EXAM_META);
   const handleSignOut = () => onLogout();
   const [view, setView] = useState(() => {
@@ -308,7 +308,9 @@ const topicMap = flashcards.reduce((acc, c) => {
               const bundledExtra = flashcards.filter((c) => c.exam === meta.exam && (c.type === "hotspot" || c.type === "image")).length;
               const count = examCardCounts
                 ? (examCardCounts[meta.exam] || 0) + bundledExtra
-                : flashcards.filter((c) => c.exam === meta.exam).length;
+                : SUPABASE_EXAMS.has(meta.exam)
+                  ? null
+                  : flashcards.filter((c) => c.exam === meta.exam).length;
               return (
                 <button
                   key={meta.exam}
@@ -323,13 +325,17 @@ const topicMap = flashcards.reduce((acc, c) => {
                   <span className="splash-exam-name">{meta.fullName}</span>
                   {loadingExam === meta.exam
                     ? <span className="splash-exam-count">Loading…</span>
-                    : <span className="splash-exam-count">{count} cards</span>
+                    : cardLoadError === meta.exam
+                      ? <span className="splash-exam-count" style={{ color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>Failed to load — tap to retry</span>
+                      : <span className="splash-exam-count">{count === null ? "…" : `${count} cards`}</span>
                   }
                   {meta.premium && <span className="splash-premium-badge">👑 Premium</span>}
                   <span className="splash-exam-arrow">
                     {loadingExam === meta.exam
                       ? <svg className="splash-loading-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true" width="14" height="14"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-                      : <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="14" height="14"><polyline points="9 18 15 12 9 6"/></svg>
+                      : cardLoadError === meta.exam
+                        ? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="14" height="14"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                        : <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="14" height="14"><polyline points="9 18 15 12 9 6"/></svg>
                     }
                   </span>
                 </button>
@@ -380,9 +386,16 @@ const topicMap = flashcards.reduce((acc, c) => {
                   className="splash-topic-card"
                   style={{ "--topic-accent": accent }}
                   onClick={() => handleSelectTopic(topic)}
+                  disabled={loadingExam === `TOPIC:${topic}`}
                 >
                   <div className="splash-topic-name">{topic}</div>
-                  <div className="splash-topic-count">{count}</div>
+                  <div className="splash-topic-count">
+                    {loadingExam === `TOPIC:${topic}`
+                      ? "Loading…"
+                      : cardLoadError === `TOPIC:${topic}`
+                        ? "Failed — tap to retry"
+                        : count}
+                  </div>
                 </button>
               );
             })}

@@ -15,7 +15,7 @@ import ExamSelect from "./ExamSelect";
 import UserProfile from "./auth/UserProfile";
 import AdminPanel from "./admin/AdminPanel";
 import { loadCardStatesRemote, saveCardStatesRemote } from "./cardStates";
-import { loadExamCardsRemote, loadCardsByCategory, SUPABASE_EXAMS } from "./cardLoader";
+import { loadExamCardsRemote, loadCardsByCategory, SUPABASE_EXAMS, wakeSupabase } from "./cardLoader";
 import {
   loadSrsData, saveSrsData, loadSrsDataRemote, saveSrsDataRemote,
   updateSrsRecord, createSrsRecord, sortBySrs, isDue, getSrsStats,
@@ -42,7 +42,7 @@ function shuffle(arr) {
 }
 
 function App() {
-  const { isAuthenticated, user, logout, loading } = useAuthContext();
+  const { isAuthenticated, user, logout, loading, isGuest } = useAuthContext();
 
   // ── Per-user storage keys ──────────────────────────────────────
   // Scoped to user.id so each account has its own flags & progress.
@@ -54,6 +54,7 @@ function App() {
   const [remoteCards, setRemoteCards] = useState(null);
   const [loadingCards, setLoadingCards] = useState(false);
   const [loadingExam, setLoadingExam] = useState(null);
+  const [cardLoadError, setCardLoadError] = useState(null);
   const [categories, setCategories] = useState(new Set(["All"]));
   const [index, setIndex] = useState(0);
   const [known, setKnown] = useState(() => {
@@ -225,6 +226,9 @@ function App() {
     return `${m}:${s}`;
   };
 
+  // ── Wake Supabase on mount to pre-warm the connection ──────────
+  useEffect(() => { wakeSupabase(); }, []);
+
   // ── Reset navigation state on sign out ────────────────────────
   useEffect(() => {
     if (!isAuthenticated) {
@@ -314,7 +318,8 @@ function App() {
     : selectedExam?.startsWith("TOPIC:")
       ? (remoteCards ?? [])
       : baseCards.filter((c) => c.exam === selectedExam)
-  ).filter((c) => isPremium || c.exam === "AZ-900" || FREE_CARD_IDS.has(c.id) || selectedExam?.startsWith("CUSTOM:"));
+  ).filter((c) => isPremium || c.exam === "AZ-900" || FREE_CARD_IDS.has(c.id) || selectedExam?.startsWith("CUSTOM:"))
+  .slice(0, isGuest && selectedExam !== "AZ-900" && !selectedExam?.startsWith("CUSTOM:") ? 30 : Infinity);
 
   // Step 2: filter by selected categories — "🚩 Flagged" and "All" are virtual
   const filteredDeck = examDeck.filter((c) => {
@@ -452,23 +457,26 @@ function App() {
     [index, deck.length, current, recordActivity, incrementGoal]
   );
 
-  const fetchWithTimeout = (promise, ms = 10_000) =>
+  const fetchWithTimeout = (promise, ms = 25_000) =>
     Promise.race([promise, new Promise(resolve => setTimeout(() => resolve(null), ms))]);
 
   const handleExam = async (exam) => {
     setCategories(new Set(["All"])); setIndex(0); setKnown(new Set()); setFinished(false); setDisabledTypes(new Set(defaultDisabledTypes));
     setCustomDeckCards([]);
+    setCardLoadError(null);
 
     if (SUPABASE_EXAMS.has(exam)) {
       setLoadingExam(exam);
       const cards = await fetchWithTimeout(loadExamCardsRemote(exam));
-      setRemoteCards(cards);
       setLoadingExam(null);
+      if (!cards) { setCardLoadError(exam); return; }
+      setRemoteCards(cards);
     } else if (exam.startsWith("TOPIC:")) {
       setLoadingExam(exam);
       const cards = await fetchWithTimeout(loadCardsByCategory(exam.slice("TOPIC:".length)));
-      setRemoteCards(cards);
       setLoadingExam(null);
+      if (!cards) { setCardLoadError(exam); return; }
+      setRemoteCards(cards);
     } else {
       setRemoteCards(null);
     }
@@ -616,6 +624,7 @@ function App() {
           onSelectByTopic={(topic) => handleExam(`TOPIC:${topic}`)}
           onBack={() => setSelectedPlatform(null)}
           loadingExam={loadingExam}
+          cardLoadError={cardLoadError}
         />
         {showCustomDecks && (
           <CustomDecks
@@ -727,6 +736,23 @@ function App() {
     return                                { cssVar: "--srs-dot-learning", label: "Learning" };
   }
 
+  const guestLock = (content) => {
+    if (!isGuest) return content;
+    return (
+      <div className="guest-gate-wrapper">
+        <div className="guest-gate" onClick={logout}>
+          <div className="guest-gate-inner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" style={{width:12,height:12}}>
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Sign up free to unlock
+          </div>
+        </div>
+        <div className="guest-locked-content">{content}</div>
+      </div>
+    );
+  };
+
   const premiumLock = (content) => {
     if (isPremium) return content;
     return (
@@ -746,6 +772,13 @@ function App() {
 
   return (
     <div className={`app${isExiting ? " app--exiting" : ""}${isEntering ? " app--entering" : ""}`} data-exam={selectedExam}>
+
+      {isGuest && (
+        <div className="guest-banner">
+          <span>Welcome to Kloud Ace, you're exploring as a guest — <strong>Sign up for a free account to unlock additional features and the AZ-900 card deck.</strong></span>
+          <button className="guest-banner-cta" onClick={logout}>Sign up free</button>
+        </div>
+      )}
 
       {showTour && <GuidedTour onDone={handleTourDone} />}
 
@@ -819,7 +852,7 @@ function App() {
 
         <div className="sidebar-section">
           <h3>Card Type</h3>
-          <div className="sidebar-type-filter">
+          {guestLock(<div className="sidebar-type-filter">
             {[
               { value: "both",       label: "All",            color: "#2563eb", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> },
               { value: "flashcard",  label: "Flip",           color: "#7c3aed", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> },
@@ -859,7 +892,7 @@ function App() {
                 </button>
               );
             })}
-          </div>
+          </div>)}
         </div>
 
         <div className="sidebar-section">
@@ -909,10 +942,12 @@ function App() {
 
         <div className="sidebar-section">
           <h3>Progress</h3>
-          <button className="sidebar-action-btn" onClick={() => { setShowDashboard(true); setSidebarOpen(false); }}>
-            <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
-            Readiness Dashboard
-          </button>
+          {guestLock(
+            <button className="sidebar-action-btn" onClick={() => { setShowDashboard(true); setSidebarOpen(false); }}>
+              <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+              Readiness Dashboard
+            </button>
+          )}
         </div>
 
         <div className="sidebar-section">
@@ -1061,7 +1096,7 @@ function App() {
             </button>
           )}
           {/* User pill — clickable to open profile */}
-          <span className="header-user" data-tour="header-user" onClick={() => setShowProfile(true)} title="Edit profile">
+          <span className="header-user" data-tour="header-user" onClick={() => isGuest ? logout() : setShowProfile(true)} title={isGuest ? "Sign up for a free account" : "Edit profile"}>
             <svg className="user-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
             </svg>
@@ -1092,7 +1127,7 @@ function App() {
               </button>
               {/* Divider */}
               <span className="header-btn-divider" />
-              <button className="header-btn header-btn--signout" onClick={logout} title="Sign out">
+              <button className="header-btn header-btn--signout" onClick={logout} title={isGuest ? "Sign up for a free account" : "Sign out"}>
                 <span className="header-btn-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -1100,7 +1135,7 @@ function App() {
                     <line x1="21" y1="12" x2="9" y2="12"/>
                   </svg>
                 </span>
-                <span className="header-btn-label">Sign Out</span>
+                <span className="header-btn-label">{isGuest ? "Sign Up" : "Sign Out"}</span>
               </button>
             </div>
             <div className="header-btn-row">
@@ -1561,9 +1596,6 @@ function App() {
                     </div>
                   );
                 })()}
-                {!current.id?.toString().startsWith("CUSTOM:") && !current.displayId && current.type !== "task" && (
-                  <span className="card-id-badge">#{current.id}</span>
-                )}
               </div>
             </div>
           )

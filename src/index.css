@@ -22,7 +22,8 @@ html, body {
   font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: var(--bg-page);
+  background-color: #f0f4f8; /* fallback before CSS vars resolve */
+  background: var(--bg-page, #f0f4f8);
 }
 
 body[data-theme="dark"] {

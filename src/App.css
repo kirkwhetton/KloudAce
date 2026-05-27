@@ -1067,6 +1067,76 @@ button .known-check {
   transform: scale(1.45);
 }
 
+/* ── Guest banner ─────────────────────────────────────────────── */
+.guest-banner {
+  background: var(--brand);
+  color: #fff;
+  padding: 0.55rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.82rem;
+  flex-shrink: 0;
+  z-index: 50;
+}
+.guest-banner strong { font-weight: 700; }
+
+.guest-banner-cta {
+  white-space: nowrap;
+  background: #fff;
+  color: var(--brand);
+  border: none;
+  border-radius: 20px;
+  padding: 0.28rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+.guest-banner-cta:hover { opacity: 0.85; }
+
+/* ── Guest gate (locks sidebar sections for guests) ────────────── */
+.guest-gate-wrapper {
+  position: relative;
+}
+.guest-gate {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+[data-theme="dark"] .guest-gate {
+  background: rgba(9, 21, 39, 0.88);
+}
+.guest-gate-inner {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--brand);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  background: var(--bg-card);
+  border: 1.5px solid var(--brand);
+  border-radius: 20px;
+  pointer-events: none;
+}
+.guest-locked-content {
+  filter: blur(2px);
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.55;
+}
+
 /* ── Card body wrapper (relative container for badge overlay) ─── */
 .card-body-wrapper {
   position: relative;

@@ -140,6 +140,7 @@ export default function MultiSelect({ card, onKnow, onSrsRate, hideAnswers, exam
           </div>
         </div>
       )}
+      {!card.id?.toString().startsWith("CUSTOM:") && <span className="card-id-badge">#{card.id}</span>}
     </div>
   );
 }
