@@ -4,7 +4,6 @@ import { renderHook, act, waitFor } from '@testing-library/react'
 vi.mock('../auth/supabase.js', () => ({
   supabase: {
     auth: {
-      getSession: vi.fn(),
       onAuthStateChange: vi.fn(),
       signUp: vi.fn(),
       signInWithPassword: vi.fn(),
@@ -31,12 +30,17 @@ function mockProfileFetch(data = TEST_PROFILE) {
   supabase.from.mockReturnValue(chain)
 }
 
-beforeEach(() => {
-  vi.clearAllMocks()
-  supabase.auth.getSession.mockResolvedValue({ data: { session: null } })
-  supabase.auth.onAuthStateChange.mockImplementation(() => {
+// Fire onAuthStateChange with the given session (or null) on the next microtask
+function mockAuthState(session = null) {
+  supabase.auth.onAuthStateChange.mockImplementation((cb) => {
+    Promise.resolve().then(() => cb('INITIAL_SESSION', session))
     return { data: { subscription: { unsubscribe: vi.fn() } } }
   })
+}
+
+beforeEach(() => {
+  vi.clearAllMocks()
+  mockAuthState(null) // default: no session
   supabase.auth.signOut.mockResolvedValue({})
 })
 
@@ -63,7 +67,7 @@ describe('initial state', () => {
 
 describe('session restoration', () => {
   it('restores user from an existing Supabase session', async () => {
-    supabase.auth.getSession.mockResolvedValue({ data: { session: { user: TEST_USER } } })
+    mockAuthState({ user: TEST_USER })
     mockProfileFetch()
     const { result } = await renderAuth()
     expect(result.current.isAuthenticated).toBe(true)
@@ -180,7 +184,7 @@ describe('verifyOtp', () => {
 
 describe('logout', () => {
   it('clears the user immediately and calls signOut', async () => {
-    supabase.auth.getSession.mockResolvedValue({ data: { session: { user: TEST_USER } } })
+    mockAuthState({ user: TEST_USER })
     mockProfileFetch()
     const { result } = await renderAuth()
     expect(result.current.isAuthenticated).toBe(true)
@@ -194,7 +198,7 @@ describe('logout', () => {
 
 describe('updateProfile', () => {
   it('updates local user state and returns true on success', async () => {
-    supabase.auth.getSession.mockResolvedValue({ data: { session: { user: TEST_USER } } })
+    mockAuthState({ user: TEST_USER })
     mockProfileFetch()
     const { result } = await renderAuth()
 
@@ -213,7 +217,7 @@ describe('updateProfile', () => {
   })
 
   it('returns false and sets error when the auth update fails', async () => {
-    supabase.auth.getSession.mockResolvedValue({ data: { session: { user: TEST_USER } } })
+    mockAuthState({ user: TEST_USER })
     mockProfileFetch()
     supabase.auth.updateUser.mockResolvedValue({ error: { message: 'Update failed' } })
 
@@ -229,7 +233,7 @@ describe('updateProfile', () => {
 
 describe('changePassword', () => {
   it('returns false and sets error when current password is wrong', async () => {
-    supabase.auth.getSession.mockResolvedValue({ data: { session: { user: TEST_USER } } })
+    mockAuthState({ user: TEST_USER })
     mockProfileFetch()
     supabase.auth.signInWithPassword.mockResolvedValue({ error: { message: 'Invalid login credentials' } })
 
@@ -243,7 +247,7 @@ describe('changePassword', () => {
   })
 
   it('returns true when the password is successfully changed', async () => {
-    supabase.auth.getSession.mockResolvedValue({ data: { session: { user: TEST_USER } } })
+    mockAuthState({ user: TEST_USER })
     mockProfileFetch()
     supabase.auth.signInWithPassword.mockResolvedValue({ error: null })
     supabase.auth.updateUser.mockResolvedValue({ error: null })

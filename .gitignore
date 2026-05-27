@@ -18,6 +18,9 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 
+# Claude project context
+.claude/
+
 # Editor
 .vscode/
 .idea/

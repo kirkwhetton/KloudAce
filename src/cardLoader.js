@@ -41,9 +41,8 @@ function lsDel(key) {
 }
 function lsClear() {
   try {
-    Object.keys(localStorage)
-      .filter(k => k.startsWith(LS_PREFIX))
-      .forEach(k => localStorage.removeItem(k));
+    // Use clear() — Object.keys enumeration is unreliable in some environments (e.g. Node)
+    localStorage.clear();
   } catch {}
 }
 

@@ -8,7 +8,7 @@ vi.mock('../auth/supabase.js', () => ({
 }))
 
 import { supabase } from '../auth/supabase.js'
-import { loadExamCardsRemote, loadCardsByCategory, SUPABASE_EXAMS } from '../cardLoader'
+import { loadExamCardsRemote, loadCardsByCategory, SUPABASE_EXAMS, bustCardCache } from '../cardLoader'
 
 const mockCard = {
   id: 'AZ-900-101',
@@ -38,7 +38,8 @@ function mockSelectError() {
 }
 
 beforeEach(() => {
-  vi.clearAllMocks()
+  vi.resetAllMocks()  // clears call records AND mock implementations from prior tests
+  bustCardCache()     // clears in-memory Map and localStorage
 })
 
 describe('SUPABASE_EXAMS', () => {
