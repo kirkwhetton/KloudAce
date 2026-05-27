@@ -1052,16 +1052,35 @@ button .known-check {
 }
 
 .card-id-badge {
-  position: absolute;
-  bottom: 1.1rem;
-  right: 1.4rem;
+  display: block;
+  align-self: flex-end;
+  margin-top: 0.5rem;
   font-size: 0.68rem;
   font-weight: 600;
   color: var(--border-card);
   letter-spacing: 0.05em;
   pointer-events: none;
   user-select: none;
-  z-index: 2;
+}
+
+/* Flashcard faces are absolute-fill with centred flex — keep badge pinned to corner */
+.flashcard-face .card-id-badge,
+.flashcard-sizer-front .card-id-badge,
+.flashcard-sizer-back .card-id-badge {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 1rem;
+  margin-top: 0;
+  align-self: unset;
+}
+
+/* TaskSimulator shell is position:relative and flush with its task-card — pin badge to corner */
+.task-simulator-shell .card-id-badge {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 1rem;
+  margin-top: 0;
+  align-self: unset;
 }
 .srs-progress-dot:hover {
   transform: scale(1.45);
