@@ -168,8 +168,14 @@ function FillInTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnsw
    User clicks steps in the correct sequence.
 ───────────────────────────────────────────── */
 function OrderTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer }) {
-  // Shuffle the options for display
-  const [options]           = useState(() => [...card.steps].sort(() => Math.random() - 0.5));
+  const [options] = useState(() => {
+    const arr = [...card.steps];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  });
   const [sequence, setSequence] = useState([]); // indices into options[]
   const [submitted, setSubmitted]   = useState(false);
   const [revealed, setRevealed]     = useState(false);
@@ -295,7 +301,14 @@ function OrderTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswe
 ───────────────────────────────────────────── */
 function MatchTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer }) {
   const lefts  = card.pairs.map(p => p.left);
-  const [rights] = useState(() => [...card.pairs.map(p => p.right)].sort(() => Math.random() - 0.5));
+  const [rights] = useState(() => {
+    const arr = card.pairs.map(p => p.right);
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  });
   const [selections, setSelections] = useState({}); // { leftIndex: rightIndex }
   const [activeLeft, setActiveLeft] = useState(null);
   const [submitted, setSubmitted]   = useState(false);
