@@ -473,9 +473,9 @@ const topicMap = flashcards.reduce((acc, c) => {
       },
       {
         key: "nameit",
-        title: "Name That Service",
-        desc: "Read the description and type the Azure service name. 15 questions, multiple accepted answers.",
-        cta: "Play Name That Service →",
+        title: "Name That",
+        desc: "Services, storage tiers, redundancy options, support plans and more. Type the answer from the description.",
+        cta: "Play Name That →",
         from: "#7c3aed", to: "#4c1d95", icon: "#c4b5fd",
         onPlay: () => onSelect("GAMES:nameit"),
         iconSvg: (

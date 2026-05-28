@@ -483,7 +483,7 @@ function App() {
       if (!cards) { setCardLoadError(exam); return; }
       setRemoteCards(cards);
     } else if (exam === "GAMES:nameit") {
-      setRemoteCards(NAME_THAT_SERVICE_QUESTIONS.map(q => ({ ...q, type: "nameit", exam: "GAMES:nameit", category: "Name That Service" })));
+      setRemoteCards(NAME_THAT_SERVICE_QUESTIONS.map(q => ({ ...q, type: "nameit", exam: "GAMES:nameit", category: "Name That" })));
     } else if (exam.startsWith("GAMES:")) {
       setLoadingExam(exam);
       const cards = await fetchWithTimeout(loadConnectionsCards());
