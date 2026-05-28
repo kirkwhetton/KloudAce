@@ -8,6 +8,7 @@ import TrueFalse from "./TrueFalse";
 import ImageMCQ from "./ImageMCQ";
 import TaskSimulator from "./TaskSimulator";
 import Hotspot from "./Hotspot";
+import Connections from "./Connections";
 import flashcards, { EXAM_META, FREE_CARD_IDS } from "./flashcards";
 import { useAuthContext } from "./auth/AuthProvider";
 import Login from "./auth/Login";
@@ -863,8 +864,9 @@ function App() {
               { value: "hotspot",    label: "Hotspot",        color: "#db2777", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg> },
               { value: "task",       label: "Task",           color: "#d97706", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg> },
               { value: "script",     label: "Script",         color: "#059669", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> },
-              { value: "fault",      label: "Find the Fault", color: "#e11d48", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> },
+              { value: "fault",       label: "Find the Fault", color: "#e11d48", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> },
               { value: "case-study", label: "Case Study",     color: "#4f46e5", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> },
+              { value: "connections", label: "Connections",   color: "#0d9488", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> },
             ].map(({ value, label, color, icon }) => {
               const isAll = value === "both";
               const isDisabled = !isAll && disabledTypes.has(value);
@@ -1556,6 +1558,13 @@ function App() {
                     examMode={examMode && examReady}
                     onExamAnswer={handleExamAnswer}
                     onAnswer={onAnswer}
+                  />
+                ) : current.type === "connections" ? (
+                  <Connections
+                    key={`${sessionKey}-${current.id}`}
+                    card={current}
+                    onKnow={() => advance(true)}
+                    onSrsRate={srsMode ? handleSrsRate : undefined}
                   />
                 ) : current.choices ? (
                   <MultipleChoice

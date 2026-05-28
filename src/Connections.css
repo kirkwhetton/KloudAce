@@ -1,0 +1,220 @@
+.connections-card {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 1.5rem;
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;
+  box-shadow: 0 8px 32px rgba(0, 114, 198, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.connections-instruction {
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── Solved rows ─────────────────────────────── */
+.connections-solved {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.connections-solved-row {
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  animation: conn-reveal 0.3s ease;
+}
+
+@keyframes conn-reveal {
+  from { opacity: 0; transform: scaleY(0.6); }
+  to   { opacity: 1; transform: scaleY(1);   }
+}
+
+.connections-solved-row strong {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+}
+
+.connections-solved-row span {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.connections-colour--yellow { background: #f9df6d; color: #1a1a1a; }
+.connections-colour--green  { background: #a0c35a; color: #1a1a1a; }
+.connections-colour--blue   { background: #b0c4ef; color: #1a1a1a; }
+.connections-colour--purple { background: #ba81c5; color: #fff;    }
+
+/* ── Tile grid ───────────────────────────────── */
+.connections-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.35rem;
+}
+
+.connections-tile {
+  background: #e8edf5;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 0.35rem;
+  min-height: 64px;
+  font-size: 0.77rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.12s, transform 0.08s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-break: break-word;
+  hyphens: auto;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+
+.connections-tile:hover:not(.connections-tile--selected) {
+  background: #d4dce8;
+}
+
+.connections-tile--selected {
+  background: #3d4a5e;
+  color: #fff;
+}
+
+@keyframes conn-shake {
+  0%,100% { transform: translateX(0); }
+  20%     { transform: translateX(-6px); }
+  40%     { transform: translateX(6px); }
+  60%     { transform: translateX(-4px); }
+  80%     { transform: translateX(4px); }
+}
+
+.connections-tile--shake {
+  animation: conn-shake 0.55s ease;
+}
+
+/* ── Lives ───────────────────────────────────── */
+.connections-lives {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.connections-lives-label {
+  margin-right: 0.15rem;
+}
+
+.connections-life {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--border-subtle, #d1d5db);
+  transition: background 0.25s;
+}
+
+.connections-life--on {
+  background: var(--text-primary);
+}
+
+/* ── One away ────────────────────────────────── */
+.connections-one-away {
+  text-align: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  margin: 0;
+  color: var(--text-primary);
+  animation: conn-reveal 0.2s ease;
+}
+
+/* ── Controls ────────────────────────────────── */
+.connections-controls {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.connections-btn {
+  padding: 0.45rem 1.15rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.14s;
+  border: 2px solid;
+}
+
+.connections-btn--ghost {
+  background: transparent;
+  border-color: var(--border-card);
+  color: var(--text-primary);
+}
+
+.connections-btn--ghost:hover:not(:disabled) {
+  background: var(--border-subtle);
+}
+
+.connections-btn--ghost:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.connections-btn--primary {
+  background: var(--accent, #0072c6);
+  border-color: var(--accent, #0072c6);
+  color: #fff;
+}
+
+.connections-btn--primary:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.connections-btn--primary:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ── Result ──────────────────────────────────── */
+.connections-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  padding-top: 0.25rem;
+}
+
+.connections-result-msg {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+/* ── Dark mode ───────────────────────────────── */
+[data-theme="dark"] .connections-tile {
+  background: #1e2a3a;
+}
+
+[data-theme="dark"] .connections-tile:hover:not(.connections-tile--selected) {
+  background: #263447;
+}
+
+[data-theme="dark"] .connections-tile--selected {
+  background: #4a6080;
+  color: #fff;
+}
