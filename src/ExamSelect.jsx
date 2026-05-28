@@ -106,7 +106,7 @@ const SignOutButton = ({ onSignOut }) => (
   </button>
 );
 
-export default function ExamSelect({ user, isGuest, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack, loadingExam, cardLoadError }) {
+export default function ExamSelect({ user, isGuest, onSelect, onSelectGame, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack, loadingExam, cardLoadError }) {
   const exams = Object.values(EXAM_META);
   const handleSignOut = () => onLogout();
   const [view, setView] = useState(() => {
@@ -454,19 +454,35 @@ const topicMap = flashcards.reduce((acc, c) => {
 
   // ── Games subview ────────────────────────────────────────────
   if (view === "games" && !isGuest) {
-    const GAME_TYPES = [
+    const CARD_GAMES = [
       {
         key: "GAMES:connections",
         title: "Connections",
         desc: "Group 16 items into four hidden categories. Four colour-coded tiers, four mistakes allowed.",
         cta: "Play Connections →",
         from: "#0f766e", to: "#134e4a", icon: "#5eead4",
+        onPlay: () => onSelect("GAMES:connections"),
         iconSvg: (
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <rect x="2" y="2" width="9" height="9" rx="1.5"/>
             <rect x="13" y="2" width="9" height="9" rx="1.5"/>
             <rect x="2" y="13" width="9" height="9" rx="1.5"/>
             <rect x="13" y="13" width="9" height="9" rx="1.5"/>
+          </svg>
+        ),
+      },
+      {
+        key: "nameit",
+        title: "Name That Service",
+        desc: "Read the description and type the Azure service name. 15 questions, multiple accepted answers.",
+        cta: "Play Name That Service →",
+        from: "#7c3aed", to: "#4c1d95", icon: "#c4b5fd",
+        onPlay: () => onSelectGame("nameit"),
+        iconSvg: (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
         ),
       },
@@ -482,13 +498,13 @@ const topicMap = flashcards.reduce((acc, c) => {
           </div>
 
           <div className="splash-chooser-grid">
-            {GAME_TYPES.map(g => (
+            {CARD_GAMES.map(g => (
               <button
                 key={g.key}
                 className="splash-choice-card"
                 style={{ background: `linear-gradient(135deg, ${g.from}, ${g.to})` }}
-                onClick={() => onSelect(g.key)}
-                disabled={!!loadingExam}
+                onClick={g.onPlay}
+                disabled={g.key.startsWith("GAMES:") && !!loadingExam}
               >
                 <span className="splash-choice-icon" style={{ color: g.icon, background: "rgba(255,255,255,0.15)", borderColor: `${g.icon}44` }}>
                   {g.iconSvg}

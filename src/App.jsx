@@ -9,6 +9,7 @@ import ImageMCQ from "./ImageMCQ";
 import TaskSimulator from "./TaskSimulator";
 import Hotspot from "./Hotspot";
 import Connections from "./Connections";
+import NameThatService from "./NameThatService";
 import flashcards, { EXAM_META, FREE_CARD_IDS } from "./flashcards";
 import { useAuthContext } from "./auth/AuthProvider";
 import Login from "./auth/Login";
@@ -52,6 +53,7 @@ function App() {
 
   const [selectedPlatform, setSelectedPlatform] = useState(null);
   const [selectedExam, setSelectedExam] = useState(null);
+  const [selectedGame, setSelectedGame] = useState(null);
   const [remoteCards, setRemoteCards] = useState(null);
   const [loadingCards, setLoadingCards] = useState(false);
   const [loadingExam, setLoadingExam] = useState(null);
@@ -620,6 +622,11 @@ function App() {
     );
   }
 
+  // ── Standalone game gate ──────────────────────────────────────
+  if (selectedGame === "nameit") {
+    return <NameThatService onBack={() => setSelectedGame(null)} />;
+  }
+
   // ── Exam splash gate ───────────────────────────────────────────
   if (!selectedExam) {
     return (
@@ -628,6 +635,7 @@ function App() {
           user={user}
           isGuest={isGuest}
           onSelect={(exam) => handleExam(exam)}
+          onSelectGame={(game) => setSelectedGame(game)}
           onLogout={logout}
           onOpenDecks={() => setShowCustomDecks(true)}
           onSelectCustomDeck={handleCustomDeck}
