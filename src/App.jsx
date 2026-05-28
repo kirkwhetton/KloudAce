@@ -9,7 +9,6 @@ import ImageMCQ from "./ImageMCQ";
 import TaskSimulator from "./TaskSimulator";
 import Hotspot from "./Hotspot";
 import Connections from "./Connections";
-import NameThatService from "./NameThatService";
 import flashcards, { EXAM_META, FREE_CARD_IDS } from "./flashcards";
 import { useAuthContext } from "./auth/AuthProvider";
 import Login from "./auth/Login";
@@ -18,7 +17,6 @@ import UserProfile from "./auth/UserProfile";
 import AdminPanel from "./admin/AdminPanel";
 import { loadCardStatesRemote, saveCardStatesRemote } from "./cardStates";
 import { loadExamCardsRemote, loadCardsByCategory, loadConnectionsCards, SUPABASE_EXAMS, wakeSupabase } from "./cardLoader";
-import NAME_THAT_SERVICE_QUESTIONS from "./games/nameThatServiceData";
 import {
   loadSrsData, saveSrsData, loadSrsDataRemote, saveSrsDataRemote,
   updateSrsRecord, createSrsRecord, sortBySrs, isDue, getSrsStats,
@@ -482,8 +480,6 @@ function App() {
       setLoadingExam(null);
       if (!cards) { setCardLoadError(exam); return; }
       setRemoteCards(cards);
-    } else if (exam === "GAMES:nameit") {
-      setRemoteCards(NAME_THAT_SERVICE_QUESTIONS.map(q => ({ ...q, type: "nameit", exam: "GAMES:nameit", category: "Name That" })));
     } else if (exam.startsWith("GAMES:")) {
       setLoadingExam(exam);
       const cards = await fetchWithTimeout(loadConnectionsCards());
@@ -1574,13 +1570,6 @@ function App() {
                   />
                 ) : current.type === "connections" ? (
                   <Connections
-                    key={`${sessionKey}-${current.id}`}
-                    card={current}
-                    onKnow={() => advance(true)}
-                    onSrsRate={srsMode ? handleSrsRate : undefined}
-                  />
-                ) : current.type === "nameit" ? (
-                  <NameThatService
                     key={`${sessionKey}-${current.id}`}
                     card={current}
                     onKnow={() => advance(true)}
