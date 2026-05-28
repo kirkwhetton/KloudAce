@@ -106,7 +106,7 @@ const SignOutButton = ({ onSignOut }) => (
   </button>
 );
 
-export default function ExamSelect({ user, isGuest, onSelect, onSelectGame, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack, loadingExam, cardLoadError }) {
+export default function ExamSelect({ user, isGuest, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack, loadingExam, cardLoadError }) {
   const exams = Object.values(EXAM_META);
   const handleSignOut = () => onLogout();
   const [view, setView] = useState(() => {
@@ -477,7 +477,7 @@ const topicMap = flashcards.reduce((acc, c) => {
         desc: "Read the description and type the Azure service name. 15 questions, multiple accepted answers.",
         cta: "Play Name That Service →",
         from: "#7c3aed", to: "#4c1d95", icon: "#c4b5fd",
-        onPlay: () => onSelectGame("nameit"),
+        onPlay: () => onSelect("GAMES:nameit"),
         iconSvg: (
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="10"/>

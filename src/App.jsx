@@ -18,6 +18,7 @@ import UserProfile from "./auth/UserProfile";
 import AdminPanel from "./admin/AdminPanel";
 import { loadCardStatesRemote, saveCardStatesRemote } from "./cardStates";
 import { loadExamCardsRemote, loadCardsByCategory, loadConnectionsCards, SUPABASE_EXAMS, wakeSupabase } from "./cardLoader";
+import NAME_THAT_SERVICE_QUESTIONS from "./games/nameThatServiceData";
 import {
   loadSrsData, saveSrsData, loadSrsDataRemote, saveSrsDataRemote,
   updateSrsRecord, createSrsRecord, sortBySrs, isDue, getSrsStats,
@@ -53,7 +54,6 @@ function App() {
 
   const [selectedPlatform, setSelectedPlatform] = useState(null);
   const [selectedExam, setSelectedExam] = useState(null);
-  const [selectedGame, setSelectedGame] = useState(null);
   const [remoteCards, setRemoteCards] = useState(null);
   const [loadingCards, setLoadingCards] = useState(false);
   const [loadingExam, setLoadingExam] = useState(null);
@@ -321,7 +321,7 @@ function App() {
     : selectedExam?.startsWith("TOPIC:")
       ? (remoteCards ?? [])
       : selectedExam?.startsWith("GAMES:")
-        ? (remoteCards ?? []).filter((c) => c.type === "connections")
+        ? (remoteCards ?? []).filter((c) => c.type === selectedExam.slice("GAMES:".length))
         : baseCards.filter((c) => c.exam === selectedExam)
   ).filter((c) => isPremium || c.exam === "AZ-900" || FREE_CARD_IDS.has(c.id) || selectedExam?.startsWith("CUSTOM:") || selectedExam?.startsWith("GAMES:"))
   .slice(0, isGuest && selectedExam !== "AZ-900" && !selectedExam?.startsWith("CUSTOM:") && !selectedExam?.startsWith("GAMES:") ? 30 : Infinity);
@@ -482,6 +482,8 @@ function App() {
       setLoadingExam(null);
       if (!cards) { setCardLoadError(exam); return; }
       setRemoteCards(cards);
+    } else if (exam === "GAMES:nameit") {
+      setRemoteCards(NAME_THAT_SERVICE_QUESTIONS.map(q => ({ ...q, type: "nameit", exam: "GAMES:nameit", category: "Name That Service" })));
     } else if (exam.startsWith("GAMES:")) {
       setLoadingExam(exam);
       const cards = await fetchWithTimeout(loadConnectionsCards());
@@ -622,11 +624,6 @@ function App() {
     );
   }
 
-  // ── Standalone game gate ──────────────────────────────────────
-  if (selectedGame === "nameit") {
-    return <NameThatService onBack={() => setSelectedGame(null)} />;
-  }
-
   // ── Exam splash gate ───────────────────────────────────────────
   if (!selectedExam) {
     return (
@@ -635,7 +632,6 @@ function App() {
           user={user}
           isGuest={isGuest}
           onSelect={(exam) => handleExam(exam)}
-          onSelectGame={(game) => setSelectedGame(game)}
           onLogout={logout}
           onOpenDecks={() => setShowCustomDecks(true)}
           onSelectCustomDeck={handleCustomDeck}
@@ -1578,6 +1574,13 @@ function App() {
                   />
                 ) : current.type === "connections" ? (
                   <Connections
+                    key={`${sessionKey}-${current.id}`}
+                    card={current}
+                    onKnow={() => advance(true)}
+                    onSrsRate={srsMode ? handleSrsRate : undefined}
+                  />
+                ) : current.type === "nameit" ? (
+                  <NameThatService
                     key={`${sessionKey}-${current.id}`}
                     card={current}
                     onKnow={() => advance(true)}
