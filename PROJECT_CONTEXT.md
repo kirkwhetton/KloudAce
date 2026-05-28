@@ -14,7 +14,24 @@ _Last updated: May 26, 2026_
 | Storage | https://learn.microsoft.com/en-us/training/paths/az-104-manage-storage/ |
 | Compute | https://learn.microsoft.com/en-us/training/paths/az-104-manage-compute-resources/ |
 | Monitoring & Backup | https://learn.microsoft.com/en-us/training/paths/az-104-monitor-backup-resources/ |
+---
 
+### AZ-900
+| Topic | URL |
+|-------|-----|
+| Describe Cloud Concepts | https://learn.microsoft.com/en-us/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/ |
+| Describe Azure Architecture & Services | https://learn.microsoft.com/en-us/training/paths/azure-fundamentals-describe-azure-architecture-services/ |
+| Describe Azure Management & Governance | https://learn.microsoft.com/en-us/training/paths/describe-azure-management-governance/ |
+---
+
+### AZ-700
+| Topic | URL |
+|-------|-----|
+| Identity & Governance | https://learn.microsoft.com/en-us/training/paths/az-104-manage-identities-governance/ |
+| Virtual Networks | https://learn.microsoft.com/en-us/training/paths/az-104-manage-virtual-networks/ |
+| Storage | https://learn.microsoft.com/en-us/training/paths/az-104-manage-storage/ |
+| Compute | https://learn.microsoft.com/en-us/training/paths/az-104-manage-compute-resources/ |
+| Monitoring & Backup | https://learn.microsoft.com/en-us/training/paths/az-104-monitor-backup-resources/ |
 ---
 
 ## What is this?

@@ -86,10 +86,10 @@ export default function Connections({ card, onKnow, onSrsRate }) {
     setShaking(true);
     setTimeout(() => {
       setShaking(false);
+      setSelected([]);
       if (willLose) {
         setLost(true);
         setSolved(cats.map(c => c.name));
-        setSelected([]);
       }
     }, 600);
   };
@@ -172,13 +172,24 @@ export default function Connections({ card, onKnow, onSrsRate }) {
       {(won || lost) && (
         <div className="connections-result">
           <p className="connections-result-msg">
-            {won ? "🎉 Solved!" : "Better luck next time!"}
+            {won ? (
+              <>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="20" height="20" aria-hidden="true" style={{ verticalAlign: "middle", marginRight: "0.4rem" }}>
+                  <path d="M8 21h8M12 17v4M7 4H4a2 2 0 0 0-2 2v1c0 2.5 1.5 4.6 3.5 5.5"/>
+                  <path d="M17 4h3a2 2 0 0 1 2 2v1c0 2.5-1.5 4.6-3.5 5.5"/>
+                  <path d="M7 4h10v9a5 5 0 0 1-10 0V4z"/>
+                </svg>
+                Solved!
+              </>
+            ) : "Better luck next time!"}
           </p>
           <button className="connections-btn connections-btn--primary" onClick={handleNext}>
             Next →
           </button>
         </div>
       )}
+
+      {!card.id?.toString().startsWith("CUSTOM:") && <span className="card-id-badge">#{card.id}</span>}
     </div>
   );
 }

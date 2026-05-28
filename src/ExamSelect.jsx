@@ -83,7 +83,7 @@ const Logo = () => (
         <span className="splash-cloud-brand">Kloud<span className="title-ace">Ace</span></span>
       </div>
     </div>
-    <p className="splash-cloud-tagline">Your cloud certification hub</p>
+    <p className="splash-cloud-tagline">Your cloud learning and certification hub</p>
   </>
 );
 
@@ -106,23 +106,24 @@ const SignOutButton = ({ onSignOut }) => (
   </button>
 );
 
-export default function ExamSelect({ user, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack, loadingExam, cardLoadError }) {
+export default function ExamSelect({ user, isGuest, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack, loadingExam, cardLoadError }) {
   const exams = Object.values(EXAM_META);
   const handleSignOut = () => onLogout();
   const [view, setView] = useState(() => {
     if (!user?.id) return "chooser";
     try {
       const p = JSON.parse(localStorage.getItem(`azfc_settings_${user.id}`) || "{}").preferredStudyMode;
-      return ["exams", "topics", "mydecks"].includes(p) ? p : "chooser";
+      return ["exams", "topics", "mydecks", "games"].includes(p) ? p : "chooser";
     } catch { return "chooser"; }
   });
   const [animClass, setAnimClass] = useState(() => {
     if (!user?.id) return "splash-initial";
     try {
       const p = JSON.parse(localStorage.getItem(`azfc_settings_${user.id}`) || "{}").preferredStudyMode;
-      return ["exams", "topics", "mydecks"].includes(p) ? "" : "splash-initial";
+      return ["exams", "topics", "mydecks", "games"].includes(p) ? "" : "splash-initial";
     } catch { return "splash-initial"; }
   });
+  const [showGuestGamesModal, setShowGuestGamesModal] = useState(false);
   const [customDecks, setCustomDecks] = useState([]);
   const [topicSearch, setTopicSearch] = useState("");
 const [remoteTopics, setRemoteTopics] = useState(null);
@@ -231,6 +232,7 @@ const topicMap = flashcards.reduce((acc, c) => {
   // ── Chooser ──────────────────────────────────────────────────
   if (view === "chooser") {
     return (
+      <>
       <div className="splash-page">
         <div className={`splash-card ${animClass}`}>
           <ProvidersButton onBack={onBack} />
@@ -257,8 +259,8 @@ const topicMap = flashcards.reduce((acc, c) => {
                 <div className="splash-choice-cta">Start exam study →</div>
               </button>
 
-              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #0078d4, #004e8c)" }} onClick={() => navigateTo("mydecks")}>
-                <span className="splash-choice-icon" style={{ color: "#93c5fd", background: "rgba(255,255,255,0.15)", borderColor: "rgba(147,197,253,0.4)" }}>
+              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #7c3aed, #4c1d95)" }} onClick={() => navigateTo("mydecks")}>
+                <span className="splash-choice-icon" style={{ color: "#c4b5fd", background: "rgba(255,255,255,0.15)", borderColor: "rgba(196,181,253,0.4)" }}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 2v3M8 2v3M2 10h20"/>
                   </svg>
@@ -268,8 +270,8 @@ const topicMap = flashcards.reduce((acc, c) => {
                 <div className="splash-choice-cta">Open My Cards →</div>
               </button>
 
-              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #0078d4, #004e8c)" }} onClick={() => navigateTo("topics")}>
-                <span className="splash-choice-icon" style={{ color: "#93c5fd", background: "rgba(255,255,255,0.15)", borderColor: "rgba(147,197,253,0.4)" }}>
+              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #d97706, #92400e)" }} onClick={() => navigateTo("topics")}>
+                <span className="splash-choice-icon" style={{ color: "#fcd34d", background: "rgba(255,255,255,0.15)", borderColor: "rgba(252,211,77,0.4)" }}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                   </svg>
@@ -278,11 +280,49 @@ const topicMap = flashcards.reduce((acc, c) => {
                 <div className="splash-choice-desc">Browse cards by subject across all exams</div>
                 <div className="splash-choice-cta">Browse topics →</div>
               </button>
+
+              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #0f766e, #134e4a)" }} onClick={() => isGuest ? setShowGuestGamesModal(true) : navigateTo("games")}>
+                <span className="splash-choice-icon" style={{ color: "#5eead4", background: "rgba(255,255,255,0.15)", borderColor: "rgba(94,234,212,0.4)" }}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="2" y="2" width="9" height="9" rx="1.5"/>
+                    <rect x="13" y="2" width="9" height="9" rx="1.5"/>
+                    <rect x="2" y="13" width="9" height="9" rx="1.5"/>
+                    <rect x="13" y="13" width="9" height="9" rx="1.5"/>
+                  </svg>
+                </span>
+                <div className="splash-choice-title">Games</div>
+                <div className="splash-choice-desc">Connections puzzles and learning games</div>
+                <div className="splash-choice-cta">Play now →</div>
+              </button>
             </div>
 
           <SignOutButton onSignOut={handleSignOut} />
         </div>
       </div>
+
+      {showGuestGamesModal && (
+        <div className="guest-games-overlay" onClick={() => setShowGuestGamesModal(false)}>
+          <div className="guest-games-modal" onClick={e => e.stopPropagation()}>
+            <div className="guest-games-modal-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="28" height="28">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <h3 className="guest-games-modal-title">Account required</h3>
+            <p className="guest-games-modal-body">Games are available to registered users. Create a free account to access Connections puzzles and more.</p>
+            <div className="guest-games-modal-actions">
+              <button className="guest-games-modal-btn guest-games-modal-btn--primary" onClick={handleSignOut}>
+                Sign up / Sign in
+              </button>
+              <button className="guest-games-modal-btn guest-games-modal-btn--ghost" onClick={() => setShowGuestGamesModal(false)}>
+                Maybe later
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      </>
     );
   }
 
@@ -404,6 +444,62 @@ const topicMap = flashcards.reduce((acc, c) => {
                 No topics match "{topicSearch}"
               </p>
             )}
+          </div>
+
+          <SignOutButton onSignOut={handleSignOut} />
+        </div>
+      </div>
+    );
+  }
+
+  // ── Games subview ────────────────────────────────────────────
+  if (view === "games" && !isGuest) {
+    const GAME_TYPES = [
+      {
+        key: "GAMES:connections",
+        title: "Connections",
+        desc: "Group 16 items into four hidden categories. Four colour-coded tiers, four mistakes allowed.",
+        cta: "Play Connections →",
+        from: "#0f766e", to: "#134e4a", icon: "#5eead4",
+        iconSvg: (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <rect x="2" y="2" width="9" height="9" rx="1.5"/>
+            <rect x="13" y="2" width="9" height="9" rx="1.5"/>
+            <rect x="2" y="13" width="9" height="9" rx="1.5"/>
+            <rect x="13" y="13" width="9" height="9" rx="1.5"/>
+          </svg>
+        ),
+      },
+    ];
+
+    return (
+      <div className="splash-page">
+        <div className={`splash-card ${animClass}`}>
+          <BackButton onClick={() => navigateTo("chooser")} />
+          <div className="splash-greeting-block">
+            <h2 className="splash-greeting">Games</h2>
+            <p className="splash-sub">Learn through play — pick a game to get started.</p>
+          </div>
+
+          <div className="splash-chooser-grid">
+            {GAME_TYPES.map(g => (
+              <button
+                key={g.key}
+                className="splash-choice-card"
+                style={{ background: `linear-gradient(135deg, ${g.from}, ${g.to})` }}
+                onClick={() => onSelect(g.key)}
+                disabled={!!loadingExam}
+              >
+                <span className="splash-choice-icon" style={{ color: g.icon, background: "rgba(255,255,255,0.15)", borderColor: `${g.icon}44` }}>
+                  {g.iconSvg}
+                </span>
+                <div className="splash-choice-title">{g.title}</div>
+                <div className="splash-choice-desc">{g.desc}</div>
+                <div className="splash-choice-cta">
+                  {loadingExam === g.key ? "Loading…" : cardLoadError === g.key ? "Failed — tap to retry" : g.cta}
+                </div>
+              </button>
+            ))}
           </div>
 
           <SignOutButton onSignOut={handleSignOut} />

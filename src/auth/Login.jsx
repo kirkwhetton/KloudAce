@@ -99,7 +99,7 @@ export default function Login() {
               <span className="login-cloud-brand">Kloud<span className="title-ace">Ace</span></span>
             </div>
           </div>
-          <p className="login-cloud-tagline">Your cloud certification hub</p>
+          <p className="login-cloud-tagline">Your cloud learning and certification hub</p>
         </div>
 
         {/* OTP confirmation screen */}

@@ -13,7 +13,7 @@
 .task-card {
   background: var(--bg-card);
   border-radius: 16px;
-  padding: 2rem;
+  padding: 2rem 2rem 3rem;
   max-width: 660px;
   width: 100%;
   margin: 0 auto;

@@ -16,7 +16,7 @@ import ExamSelect from "./ExamSelect";
 import UserProfile from "./auth/UserProfile";
 import AdminPanel from "./admin/AdminPanel";
 import { loadCardStatesRemote, saveCardStatesRemote } from "./cardStates";
-import { loadExamCardsRemote, loadCardsByCategory, SUPABASE_EXAMS, wakeSupabase } from "./cardLoader";
+import { loadExamCardsRemote, loadCardsByCategory, loadConnectionsCards, SUPABASE_EXAMS, wakeSupabase } from "./cardLoader";
 import {
   loadSrsData, saveSrsData, loadSrsDataRemote, saveSrsDataRemote,
   updateSrsRecord, createSrsRecord, sortBySrs, isDue, getSrsStats,
@@ -318,9 +318,11 @@ function App() {
     ? customDeckCards
     : selectedExam?.startsWith("TOPIC:")
       ? (remoteCards ?? [])
-      : baseCards.filter((c) => c.exam === selectedExam)
-  ).filter((c) => isPremium || c.exam === "AZ-900" || FREE_CARD_IDS.has(c.id) || selectedExam?.startsWith("CUSTOM:"))
-  .slice(0, isGuest && selectedExam !== "AZ-900" && !selectedExam?.startsWith("CUSTOM:") ? 30 : Infinity);
+      : selectedExam?.startsWith("GAMES:")
+        ? (remoteCards ?? []).filter((c) => c.type === "connections")
+        : baseCards.filter((c) => c.exam === selectedExam)
+  ).filter((c) => isPremium || c.exam === "AZ-900" || FREE_CARD_IDS.has(c.id) || selectedExam?.startsWith("CUSTOM:") || selectedExam?.startsWith("GAMES:"))
+  .slice(0, isGuest && selectedExam !== "AZ-900" && !selectedExam?.startsWith("CUSTOM:") && !selectedExam?.startsWith("GAMES:") ? 30 : Infinity);
 
   // Step 2: filter by selected categories — "🚩 Flagged" and "All" are virtual
   const filteredDeck = examDeck.filter((c) => {
@@ -478,6 +480,12 @@ function App() {
       setLoadingExam(null);
       if (!cards) { setCardLoadError(exam); return; }
       setRemoteCards(cards);
+    } else if (exam.startsWith("GAMES:")) {
+      setLoadingExam(exam);
+      const cards = await fetchWithTimeout(loadConnectionsCards());
+      setLoadingExam(null);
+      if (!cards) { setCardLoadError(exam); return; }
+      setRemoteCards(cards);
     } else {
       setRemoteCards(null);
     }
@@ -618,6 +626,7 @@ function App() {
       <>
         <ExamSelect
           user={user}
+          isGuest={isGuest}
           onSelect={(exam) => handleExam(exam)}
           onLogout={logout}
           onOpenDecks={() => setShowCustomDecks(true)}
