@@ -9,6 +9,7 @@ import ImageMCQ from "./ImageMCQ";
 import TaskSimulator from "./TaskSimulator";
 import Hotspot from "./Hotspot";
 import Connections from "./Connections";
+import Crossword from "./Crossword";
 import flashcards, { EXAM_META, FREE_CARD_IDS } from "./flashcards";
 import { useAuthContext } from "./auth/AuthProvider";
 import Login from "./auth/Login";
@@ -16,7 +17,7 @@ import ExamSelect from "./ExamSelect";
 import UserProfile from "./auth/UserProfile";
 import AdminPanel from "./admin/AdminPanel";
 import { loadCardStatesRemote, saveCardStatesRemote } from "./cardStates";
-import { loadExamCardsRemote, loadCardsByCategory, loadConnectionsCards, SUPABASE_EXAMS, wakeSupabase } from "./cardLoader";
+import { loadExamCardsRemote, loadCardsByCategory, loadConnectionsCards, loadCrosswordCards, SUPABASE_EXAMS, wakeSupabase } from "./cardLoader";
 import {
   loadSrsData, saveSrsData, loadSrsDataRemote, saveSrsDataRemote,
   updateSrsRecord, createSrsRecord, sortBySrs, isDue, getSrsStats,
@@ -482,7 +483,8 @@ function App() {
       setRemoteCards(cards);
     } else if (exam.startsWith("GAMES:")) {
       setLoadingExam(exam);
-      const cards = await fetchWithTimeout(loadConnectionsCards());
+      const loader = exam === "GAMES:crossword" ? loadCrosswordCards() : loadConnectionsCards();
+      const cards = await fetchWithTimeout(loader);
       setLoadingExam(null);
       if (!cards) { setCardLoadError(exam); return; }
       setRemoteCards(cards);
@@ -1570,6 +1572,13 @@ function App() {
                   />
                 ) : current.type === "connections" ? (
                   <Connections
+                    key={`${sessionKey}-${current.id}`}
+                    card={current}
+                    onKnow={() => advance(true)}
+                    onSrsRate={srsMode ? handleSrsRate : undefined}
+                  />
+                ) : current.type === "crossword" ? (
+                  <Crossword
                     key={`${sessionKey}-${current.id}`}
                     card={current}
                     onKnow={() => advance(true)}

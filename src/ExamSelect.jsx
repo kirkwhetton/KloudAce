@@ -471,6 +471,27 @@ const topicMap = flashcards.reduce((acc, c) => {
           </svg>
         ),
       },
+      {
+        key: "GAMES:crossword",
+        title: "Crossword",
+        desc: "Solve Azure-themed crossword puzzles. Click a cell, type your answer, and work through across and down clues.",
+        cta: "Play Crossword →",
+        from: "#1d4ed8", to: "#1e3a8a", icon: "#93c5fd",
+        onPlay: () => onSelect("GAMES:crossword"),
+        iconSvg: (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="4" height="4" rx="0.5"/>
+            <rect x="10" y="3" width="4" height="4" rx="0.5"/>
+            <rect x="17" y="3" width="4" height="4" rx="0.5"/>
+            <rect x="3" y="10" width="4" height="4" rx="0.5"/>
+            <rect x="10" y="10" width="4" height="4" rx="0.5"/>
+            <rect x="17" y="10" width="4" height="4" rx="0.5"/>
+            <rect x="3" y="17" width="4" height="4" rx="0.5"/>
+            <rect x="10" y="17" width="4" height="4" rx="0.5"/>
+            <rect x="17" y="17" width="4" height="4" rx="0.5"/>
+          </svg>
+        ),
+      },
     ];
 
     return (

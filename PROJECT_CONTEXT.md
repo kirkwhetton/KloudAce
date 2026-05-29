@@ -1,12 +1,12 @@
 # KloudAce — Project Context & Handoff Document
 
-_Last updated: May 26, 2026_
+_Last updated: May 28, 2026_
 
 ---
 
 ## References for Questions
 
-### AZ-104
+### AZ-104 Microsoft Azure Administrator Associate
 | Topic | URL |
 |-------|-----|
 | Identity & Governance | https://learn.microsoft.com/en-us/training/paths/az-104-manage-identities-governance/ |
@@ -16,7 +16,7 @@ _Last updated: May 26, 2026_
 | Monitoring & Backup | https://learn.microsoft.com/en-us/training/paths/az-104-monitor-backup-resources/ |
 ---
 
-### AZ-900
+### AZ-900 Microsoft Azure Fundamentals
 | Topic | URL |
 |-------|-----|
 | Describe Cloud Concepts | https://learn.microsoft.com/en-us/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/ |
@@ -24,14 +24,23 @@ _Last updated: May 26, 2026_
 | Describe Azure Management & Governance | https://learn.microsoft.com/en-us/training/paths/describe-azure-management-governance/ |
 ---
 
-### AZ-700
+### AZ-700 Microsoft Azure Network Engineer Associate
 | Topic | URL |
 |-------|-----|
-| Identity & Governance | https://learn.microsoft.com/en-us/training/paths/az-104-manage-identities-governance/ |
-| Virtual Networks | https://learn.microsoft.com/en-us/training/paths/az-104-manage-virtual-networks/ |
-| Storage | https://learn.microsoft.com/en-us/training/paths/az-104-manage-storage/ |
-| Compute | https://learn.microsoft.com/en-us/training/paths/az-104-manage-compute-resources/ |
-| Monitoring & Backup | https://learn.microsoft.com/en-us/training/paths/az-104-monitor-backup-resources/ |
+| Core Networking Infrastructure | https://learn.microsoft.com/en-us/training/modules/introduction-to-azure-virtual-networks/ |
+| Hybrid Connectivity | https://learn.microsoft.com/en-us/training/modules/design-implement-hybrid-networking/ |
+| Application Delivery Services | https://learn.microsoft.com/en-us/training/modules/load-balancing-https-traffic-azure/ https://learn.microsoft.com/en-us/training/modules/load-balancing-non-https-traffic-azure/ |
+| Private Access | https://learn.microsoft.com/en-us/training/modules/design-implement-private-access-to-azure-services/ |
+| Security & Monitoring | https://learn.microsoft.com/en-us/training/modules/design-implement-network-security-monitoring/ |
+---
+
+### AZ-305 Microsoft Azure Solutions Architect Expert
+| Topic | URL |
+|-------|-----|
+| Design Identity, Governance and Monitoring Solutions | https://learn.microsoft.com/en-us/training/paths/design-identity-governance-monitor-solutions/ |
+| Design Business Continuity Solutions | https://learn.microsoft.com/en-us/training/paths/design-business-continuity-solutions/ |
+| Design Data Storage Solutions | https://learn.microsoft.com/en-us/training/paths/design-data-storage-solutions/ |
+| Design Infrastructure Solutions | https://learn.microsoft.com/en-us/training/paths/design-infranstructure-solutions/ |
 ---
 
 ## What is this?
