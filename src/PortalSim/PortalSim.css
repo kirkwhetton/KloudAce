@@ -743,58 +743,61 @@
 .psb-btn--ghost { color: var(--text-muted); }
 .psb-btn--ghost:hover:not(:disabled) { color: var(--wrong); border-color: var(--wrong); background: var(--wrong-bg); }
 
-/* ── Result banner ── */
-.psim-result {
+/* ── In-portal notification bar (shown inside shell after submit) ── */
+.psim-notification {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.65rem 1rem;
-  border-radius: 0 0 0.5rem 0.5rem;
-  font-size: 0.85rem;
+  padding: 0.55rem 1rem;
+  font-size: 0.82rem;
   font-weight: 600;
-  border-top: none;
+  flex-shrink: 0;
+  border-bottom: 1px solid transparent;
 }
 
-.psim-result--correct {
-  background: var(--correct-bg);
-  color: var(--correct);
-  border: 1px solid var(--correct-border);
-  border-top: none;
+.psim-notification--correct {
+  background: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
 }
 
-.psim-result--incorrect {
-  background: var(--wrong-bg);
-  color: var(--wrong);
-  border: 1px solid var(--wrong-border);
-  border-top: none;
+.psim-notification--incorrect {
+  background: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
 }
 
-.psim-result-icon { font-size: 1rem; }
-.psim-result-msg  { flex: 1; }
+[data-theme="dark"] .psim-notification--correct  { background: #14532d; color: #86efac; border-color: #166534; }
+[data-theme="dark"] .psim-notification--incorrect { background: #7f1d1d; color: #fca5a5; border-color: #991b1b; }
 
-.psim-result-actions { display: flex; gap: 0.5rem; margin-left: auto; }
+.psim-notification-icon { font-size: 0.9rem; flex-shrink: 0; }
+.psim-notification-msg  { flex: 1; }
 
-.psim-result-btn {
-  height: 28px;
-  padding: 0 0.9rem;
+.psim-notification-actions { display: flex; gap: 0.4rem; margin-left: auto; flex-shrink: 0; }
+
+.psim-notification-btn {
+  height: 26px;
+  padding: 0 0.75rem;
   border-radius: 0.2rem;
   border: 1.5px solid currentColor;
   background: transparent;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
   cursor: pointer;
   font-family: inherit;
   color: inherit;
   transition: background 0.1s;
+  opacity: 0.85;
 }
-.psim-result-btn--next {
+.psim-notification-btn:hover { opacity: 1; background: rgba(0,0,0,0.06); }
+
+.psim-notification-btn--primary {
   background: var(--brand);
   border-color: var(--brand);
   color: #fff;
+  opacity: 1;
 }
-.psim-result-btn--next:hover { background: var(--brand-dark); }
-.psim-result-btn--retry { opacity: 0.85; }
-.psim-result-btn--retry:hover { background: rgba(0,0,0,0.06); }
+.psim-notification-btn--primary:hover { background: var(--brand-dark); }
 
 /* ── Dark theme ── */
 [data-theme="dark"] .psim-shell  { background: #12151e; border-color: #374151; }

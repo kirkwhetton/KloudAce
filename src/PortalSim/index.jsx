@@ -106,6 +106,26 @@ export default function PortalSim({ card, onKnow, onSrsRate }) {
           </div>
         </header>
 
+        {/* In-portal notification bar — appears when task is submitted */}
+        {completed && (
+          <div className={`psim-notification psim-notification--${result}`}>
+            <span className="psim-notification-icon">{result === 'correct' ? '✓' : '✗'}</span>
+            <span className="psim-notification-msg">
+              {result === 'correct'
+                ? `Deployment succeeded${hintsUsed ? ' (hint used)' : ''}.`
+                : 'Deployment failed — configuration does not match the task requirements.'}
+            </span>
+            <div className="psim-notification-actions">
+              {result === 'incorrect' && (
+                <button className="psim-notification-btn" onClick={handleRetry}>↺ Retry</button>
+              )}
+              <button className="psim-notification-btn psim-notification-btn--primary" onClick={handleNext}>
+                Next →
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Body: left nav + blade area */}
         <div className="psim-body">
           <nav className="psim-leftnav" aria-label="Portal navigation">
@@ -142,27 +162,6 @@ export default function PortalSim({ card, onKnow, onSrsRate }) {
         </div>
       </div>
 
-      {/* Result banner */}
-      {completed && (
-        <div className={`psim-result psim-result--${result}`}>
-          <span className="psim-result-icon">{result === 'correct' ? '✓' : '✗'}</span>
-          <span className="psim-result-msg">
-            {result === 'correct'
-              ? `Correct${hintsUsed ? ' — solved with a hint' : ''}!`
-              : 'Not quite — check the required values and try again.'}
-          </span>
-          <div className="psim-result-actions">
-            {result === 'incorrect' && (
-              <button className="psim-result-btn psim-result-btn--retry" onClick={handleRetry}>
-                ↺ Retry
-              </button>
-            )}
-            <button className="psim-result-btn psim-result-btn--next" onClick={handleNext}>
-              Next →
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
