@@ -1,0 +1,534 @@
+/* ─── Landing Page ───────────────────────────────────────────── */
+
+.lp-root {
+  font-family: "Inter", sans-serif;
+  min-height: 100vh;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+/* ── Nav ── */
+.lp-nav {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2rem;
+  z-index: 10;
+}
+
+.lp-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lp-nav-cloud {
+  width: 3.5rem;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.lp-nav-wordmark {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.lp-nav-ace {
+  opacity: 0.8;
+  margin-left: 0.08em;
+}
+
+.lp-nav-login {
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.35);
+  color: #fff;
+  padding: 0.45rem 1.1rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.lp-nav-login:hover {
+  background: rgba(255,255,255,0.25);
+  border-color: rgba(255,255,255,0.55);
+}
+
+/* ── Hero ── */
+.lp-hero {
+  background: linear-gradient(135deg, #0078d4 0%, #005a9e 55%, #003f6e 100%);
+  padding: 8rem 2rem 5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle background texture */
+.lp-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.06) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.lp-hero-inner {
+  position: relative;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.lp-hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.9);
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.lp-hero-h1 {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin: 0 0 1.25rem;
+}
+
+.lp-hero-sub {
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  color: rgba(255,255,255,0.8);
+  line-height: 1.65;
+  margin: 0 0 2.25rem;
+}
+
+.lp-br { display: none; }
+@media (min-width: 560px) { .lp-br { display: inline; } }
+
+.lp-hero-ctas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 480px) {
+  .lp-hero-ctas { flex-direction: row; justify-content: center; }
+}
+
+.lp-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: #fff;
+  color: #0078d4;
+  border: none;
+  border-radius: 0.6rem;
+  padding: 0.85rem 1.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.lp-cta-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+}
+
+.lp-cta-primary svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.lp-cta-secondary {
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.85);
+  border-radius: 0.6rem;
+  padding: 0.85rem 1.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.lp-cta-secondary:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.6);
+}
+
+/* ── Hero stats ── */
+.lp-hero-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.lp-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lp-stat-n {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+}
+
+.lp-stat-l {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 0.2rem;
+}
+
+.lp-stat-div {
+  width: 1px;
+  height: 2.5rem;
+  background: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+}
+
+/* ── Section scaffolding ── */
+.lp-section {
+  padding: 5rem 2rem;
+}
+
+.lp-section--light {
+  background: #f1f5f9;
+}
+
+.lp-section-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.lp-section-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #0078d4;
+  margin-bottom: 0.6rem;
+}
+
+.lp-section-h2 {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  margin: 0 0 3rem;
+}
+
+/* ── Features grid ── */
+.lp-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.lp-feature-card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.75rem;
+  border: 1px solid #e2e8f0;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.lp-feature-card:hover {
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  transform: translateY(-3px);
+}
+
+.lp-feature-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #0078d4;
+  margin-bottom: 1rem;
+}
+
+.lp-feature-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.lp-feature-title {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.5rem;
+}
+
+.lp-feature-desc {
+  font-size: 0.875rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Exams grid ── */
+.lp-exams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.lp-exam-card {
+  border-radius: 1rem;
+  padding: 1.75rem;
+  color: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.lp-exam-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+}
+
+.lp-exam-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.lp-exam-code {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.lp-exam-cards {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(255,255,255,0.2);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  opacity: 0.9;
+}
+
+.lp-exam-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.65rem;
+  opacity: 0.9;
+}
+
+.lp-exam-desc {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  opacity: 0.75;
+  margin: 0;
+}
+
+/* ── Pricing ── */
+.lp-pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 720px;
+}
+
+.lp-plan {
+  border-radius: 1.25rem;
+  padding: 2rem;
+  position: relative;
+}
+
+.lp-plan--free {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+}
+
+.lp-plan--premium {
+  background: linear-gradient(135deg, #0078d4, #003f6e);
+  color: #fff;
+}
+
+.lp-plan-badge {
+  position: absolute;
+  top: -0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #f59e0b;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.lp-plan-header {
+  margin-bottom: 1.5rem;
+}
+
+.lp-plan-name {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 0.3rem;
+}
+
+.lp-plan-price {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.lp-plan-price span {
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0.6;
+  margin-left: 0.15em;
+}
+
+.lp-plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.lp-plan-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: #374151;
+}
+
+.lp-plan--premium .lp-plan-features li {
+  color: rgba(255,255,255,0.85);
+}
+
+.lp-plan-features li svg {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  color: #16a34a;
+}
+
+.lp-plan--premium .lp-plan-features li svg {
+  color: #86efac;
+}
+
+.lp-plan-cta {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.65rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.lp-plan-cta--free {
+  background: #0078d4;
+  border: none;
+  color: #fff;
+}
+
+.lp-plan-cta--free:hover {
+  background: #005a9e;
+}
+
+.lp-plan-cta--premium {
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.8);
+  cursor: not-allowed;
+}
+
+/* ── Footer CTA ── */
+.lp-footer-cta {
+  background: linear-gradient(135deg, #0078d4, #003f6e);
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.lp-footer-cta-inner {
+  text-align: center;
+}
+
+.lp-footer-cta-h2 {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.025em;
+}
+
+.lp-footer-cta-sub {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.75);
+  margin: 0 0 2rem;
+}
+
+/* ── Footer ── */
+.lp-footer {
+  background: #0f172a;
+  padding: 1.5rem 2rem;
+  text-align: center;
+}
+
+.lp-footer p {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.35);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ── Responsive ── */
+@media (max-width: 560px) {
+  .lp-nav { padding: 1rem 1.25rem; }
+  .lp-hero { padding: 6rem 1.25rem 3.5rem; }
+  .lp-section { padding: 3.5rem 1.25rem; }
+  .lp-hero-stats { gap: 1rem; }
+  .lp-stat-div { display: none; }
+  .lp-features-grid { grid-template-columns: 1fr; }
+  .lp-exams-grid { grid-template-columns: 1fr; }
+  .lp-pricing-grid { grid-template-columns: 1fr; }
+  .lp-footer-cta { padding: 3.5rem 1.25rem; }
+}

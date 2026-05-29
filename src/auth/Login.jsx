@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useAuthContext } from "./AuthProvider";
 import "./Login.css";
 
-export default function Login() {
+export default function Login({ onBack }) {
   const { login, register, verifyOtp, loginAsGuest, error, setError } = useAuthContext();
   const [mode, setMode] = useState("login"); // "login" | "register"
   const [loading, setLoading] = useState(false);
@@ -84,6 +84,14 @@ export default function Login() {
 
   return (
     <div className="login-page">
+      {onBack && (
+        <button className="login-back-btn" onClick={onBack}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Back
+        </button>
+      )}
       <div className="login-card">
         {/* Logo */}
         <div className="login-logo">

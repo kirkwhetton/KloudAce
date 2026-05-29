@@ -9,6 +9,7 @@ import ImageMCQ from "./ImageMCQ";
 import TaskSimulator from "./TaskSimulator";
 import Hotspot from "./Hotspot";
 import Connections from "./Connections";
+import LandingPage from "./LandingPage";
 import Crossword from "./Crossword";
 import Wordle from "./Wordle";
 import flashcards, { EXAM_META, FREE_CARD_IDS } from "./flashcards";
@@ -52,6 +53,7 @@ function App() {
   const flagKey  = user ? `azfc_flagged_${user.id}` : "azfc_flagged_guest";
   const knownKey = user ? `azfc_known_${user.id}`   : "azfc_known_guest";
 
+  const [showLogin, setShowLogin] = useState(false);
   const [selectedPlatform, setSelectedPlatform] = useState(null);
   const [selectedExam, setSelectedExam] = useState(null);
   const [remoteCards, setRemoteCards] = useState(null);
@@ -620,7 +622,8 @@ function App() {
       </svg>
     </div>
   );
-  if (!isAuthenticated) return <Login />;
+  if (!isAuthenticated && !showLogin) return <LandingPage onGetStarted={() => setShowLogin(true)} />;
+  if (!isAuthenticated) return <Login onBack={() => setShowLogin(false)} />;
 
   // ── Platform gate ──────────────────────────────────────────────
   if (!selectedPlatform) {
