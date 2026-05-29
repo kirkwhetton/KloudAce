@@ -86,6 +86,47 @@
   margin: 0 auto;
 }
 
+/* ── Hero logo — same cloud + wordmark pattern as PlatformSelect ── */
+.lp-hero-logo {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.lp-hero-cloud-svg {
+  width: 20rem;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 4px 20px rgba(0,0,0,0.35));
+  user-select: none;
+}
+
+.lp-hero-logo-text {
+  position: absolute;
+  top: 79%;
+  left: 57%;
+  transform: translate(-50%, -50%);
+}
+
+.lp-hero-brand {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.lp-hero-ace {
+  font-weight: 800;
+  margin-left: 0.15em;
+  opacity: 0.8;
+}
+
 .lp-hero-badge {
   display: inline-block;
   background: rgba(255,255,255,0.15);
@@ -350,6 +391,22 @@
   line-height: 1.55;
   opacity: 0.75;
   margin: 0;
+}
+
+.lp-exam-card--soon {
+  background: linear-gradient(135deg, #374151, #1f2937) !important;
+  opacity: 0.7;
+}
+
+.lp-exam-soon-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: rgba(255,255,255,0.15);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  opacity: 0.85;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* ── Pricing ── */

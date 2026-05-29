@@ -113,10 +113,10 @@ export default function LandingPage({ onGetStarted }) {
         <div className="lp-nav-brand">
           <svg className="lp-nav-cloud" viewBox="0 0 260 165" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
-              <path id="lpCloud" d="M50 115C30 115 15 100 15 82C15 66 27 53 43 51C45 30 63 14 85 14C102 14 117 24 124 39C129 36 135 34 141 34C159 34 174 49 174 67C188 69 199 81 199 95C199 106 191 115 180 115Z"/>
+              <path id="lpNavCloud" d="M50 115C30 115 15 100 15 82C15 66 27 53 43 51C45 30 63 14 85 14C102 14 117 24 124 39C129 36 135 34 141 34C159 34 174 49 174 67C188 69 199 81 199 95C199 106 191 115 180 115Z"/>
             </defs>
-            <use href="#lpCloud" x="20" y="27" fill="rgba(255,255,255,0.3)"/>
-            <use href="#lpCloud" x="40" y="47" fill="#ffffff" opacity="0.9"/>
+            <use href="#lpNavCloud" x="20" y="27" fill="#185FA5"/>
+            <use href="#lpNavCloud" x="40" y="47" fill="#ffffff" stroke="#2980D9" strokeWidth="5"/>
           </svg>
           <span className="lp-nav-wordmark">Kloud<span className="lp-nav-ace">Ace</span></span>
         </div>
@@ -126,11 +126,26 @@ export default function LandingPage({ onGetStarted }) {
       {/* ── Hero ── */}
       <section className="lp-hero">
         <div className="lp-hero-inner">
-          <div className="lp-hero-badge">Azure certifications</div>
-          <h1 className="lp-hero-h1">The smartest way<br />to learn Azure</h1>
+
+          {/* Site-wide logo — matches PlatformSelect and App header */}
+          <div className="lp-hero-logo">
+            <svg className="lp-hero-cloud-svg" viewBox="0 0 260 165" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <path id="lpHeroCloud" d="M50 115C30 115 15 100 15 82C15 66 27 53 43 51C45 30 63 14 85 14C102 14 117 24 124 39C129 36 135 34 141 34C159 34 174 49 174 67C188 69 199 81 199 95C199 106 191 115 180 115Z"/>
+              </defs>
+              <use href="#lpHeroCloud" x="20" y="27" fill="#185FA5"/>
+              <use href="#lpHeroCloud" x="40" y="47" fill="#ffffff" stroke="#2980D9" strokeWidth="5"/>
+            </svg>
+            <div className="lp-hero-logo-text">
+              <span className="lp-hero-brand">Kloud<span className="lp-hero-ace">Ace</span></span>
+            </div>
+          </div>
+
+          <div className="lp-hero-badge">Cloud certifications</div>
+          <h1 className="lp-hero-h1">The smartest way<br />to pass your cloud exam</h1>
           <p className="lp-hero-sub">
             Spaced repetition, scenario-based questions, timed exam mode, and<br className="lp-br" />
-            interactive games — built for AZ-900, AZ-104, AZ-700, and AZ-305.
+            interactive games — starting with Azure, expanding to AWS and GCP.
           </p>
           <div className="lp-hero-ctas">
             <button className="lp-cta-primary" onClick={onGetStarted}>
@@ -144,7 +159,7 @@ export default function LandingPage({ onGetStarted }) {
           <div className="lp-hero-stats">
             <div className="lp-stat"><span className="lp-stat-n">500+</span><span className="lp-stat-l">Questions</span></div>
             <div className="lp-stat-div"/>
-            <div className="lp-stat"><span className="lp-stat-n">4</span><span className="lp-stat-l">Azure exams</span></div>
+            <div className="lp-stat"><span className="lp-stat-n">4</span><span className="lp-stat-l">Certifications</span></div>
             <div className="lp-stat-div"/>
             <div className="lp-stat"><span className="lp-stat-n">9</span><span className="lp-stat-l">Card types</span></div>
             <div className="lp-stat-div"/>
@@ -173,8 +188,8 @@ export default function LandingPage({ onGetStarted }) {
       {/* ── Exams ── */}
       <section className="lp-section">
         <div className="lp-section-inner">
-          <div className="lp-section-label">Supported exams</div>
-          <h2 className="lp-section-h2">Four paths, one platform</h2>
+          <div className="lp-section-label">Supported certifications</div>
+          <h2 className="lp-section-h2">Start with Azure.<br />Expand to any cloud.</h2>
           <div className="lp-exams-grid">
             {EXAMS.map(e => (
               <div
@@ -190,6 +205,22 @@ export default function LandingPage({ onGetStarted }) {
                 <p className="lp-exam-desc">{e.desc}</p>
               </div>
             ))}
+            <div className="lp-exam-card lp-exam-card--soon">
+              <div className="lp-exam-top">
+                <span className="lp-exam-code">AWS</span>
+                <span className="lp-exam-soon-badge">Coming soon</span>
+              </div>
+              <div className="lp-exam-name">Amazon Web Services</div>
+              <p className="lp-exam-desc">Solutions Architect, SysOps, Developer, and more — in development.</p>
+            </div>
+            <div className="lp-exam-card lp-exam-card--soon">
+              <div className="lp-exam-top">
+                <span className="lp-exam-code">GCP</span>
+                <span className="lp-exam-soon-badge">Coming soon</span>
+              </div>
+              <div className="lp-exam-name">Google Cloud Platform</div>
+              <p className="lp-exam-desc">Associate Cloud Engineer, Professional Architect, and more — in development.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -241,7 +272,7 @@ export default function LandingPage({ onGetStarted }) {
       {/* ── Footer CTA ── */}
       <section className="lp-footer-cta">
         <div className="lp-section-inner lp-footer-cta-inner">
-          <h2 className="lp-footer-cta-h2">Ready to pass your Azure exam?</h2>
+          <h2 className="lp-footer-cta-h2">Ready to pass your cloud exam?</h2>
           <p className="lp-footer-cta-sub">Start studying for free today — no card required.</p>
           <button className="lp-cta-primary" onClick={onGetStarted}>
             Create free account
