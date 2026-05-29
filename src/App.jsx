@@ -320,7 +320,12 @@ function App() {
     : selectedExam?.startsWith("TOPIC:")
       ? (remoteCards ?? [])
       : selectedExam?.startsWith("GAMES:")
-        ? (remoteCards ?? []).filter((c) => c.type === selectedExam.slice("GAMES:".length))
+        ? (() => {
+            const [gameType, examFilter] = selectedExam.slice("GAMES:".length).split(":");
+            return (remoteCards ?? []).filter(
+              (c) => c.type === gameType && (!examFilter || c.exam === examFilter)
+            );
+          })()
         : baseCards.filter((c) => c.exam === selectedExam && c.type !== "connections" && c.type !== "crossword")
   ).filter((c) => isPremium || c.exam === "AZ-900" || FREE_CARD_IDS.has(c.id) || selectedExam?.startsWith("CUSTOM:") || selectedExam?.startsWith("GAMES:"))
   .slice(0, isGuest && selectedExam !== "AZ-900" && !selectedExam?.startsWith("CUSTOM:") && !selectedExam?.startsWith("GAMES:") ? 30 : Infinity);
@@ -485,7 +490,8 @@ function App() {
       setRemoteCards(cards);
     } else if (exam.startsWith("GAMES:")) {
       setLoadingExam(exam);
-      const loader = exam === "GAMES:crossword" ? loadCrosswordCards() : loadConnectionsCards();
+      const gameType = exam.slice("GAMES:".length).split(":")[0];
+      const loader = gameType === "crossword" ? loadCrosswordCards() : loadConnectionsCards();
       const cards = await fetchWithTimeout(loader);
       setLoadingExam(null);
       if (!cards) { setCardLoadError(exam); return; }

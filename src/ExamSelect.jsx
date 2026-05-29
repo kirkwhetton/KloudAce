@@ -124,6 +124,7 @@ export default function ExamSelect({ user, isGuest, onSelect, onLogout, onOpenDe
     } catch { return "splash-initial"; }
   });
   const [showGuestGamesModal, setShowGuestGamesModal] = useState(false);
+  const [gameExam, setGameExam] = useState("ALL");
   const [customDecks, setCustomDecks] = useState([]);
   const [topicSearch, setTopicSearch] = useState("");
 const [remoteTopics, setRemoteTopics] = useState(null);
@@ -454,6 +455,8 @@ const topicMap = flashcards.reduce((acc, c) => {
 
   // ── Games subview ────────────────────────────────────────────
   if (view === "games" && !isGuest) {
+    const gameKey = (base) => gameExam === "ALL" ? base : `${base}:${gameExam}`;
+
     const CARD_GAMES = [
       {
         key: "GAMES:connections",
@@ -461,7 +464,7 @@ const topicMap = flashcards.reduce((acc, c) => {
         desc: "Group 16 items into four hidden categories. Four colour-coded tiers, four mistakes allowed.",
         cta: "Play Connections →",
         from: "#0f766e", to: "#134e4a", icon: "#5eead4",
-        onPlay: () => onSelect("GAMES:connections"),
+        onPlay: () => onSelect(gameKey("GAMES:connections")),
         iconSvg: (
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <rect x="2" y="2" width="9" height="9" rx="1.5"/>
@@ -477,7 +480,7 @@ const topicMap = flashcards.reduce((acc, c) => {
         desc: "Solve Azure-themed crossword puzzles. Click a cell, type your answer, and work through across and down clues.",
         cta: "Play Crossword →",
         from: "#1d4ed8", to: "#1e3a8a", icon: "#93c5fd",
-        onPlay: () => onSelect("GAMES:crossword"),
+        onPlay: () => onSelect(gameKey("GAMES:crossword")),
         iconSvg: (
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <rect x="3" y="3" width="4" height="4" rx="0.5"/>
@@ -503,6 +506,18 @@ const topicMap = flashcards.reduce((acc, c) => {
             <p className="splash-sub">Learn through play — pick a game to get started.</p>
           </div>
 
+          <div className="games-exam-filter">
+            {["ALL", "AZ-900", "AZ-104", "AZ-700", "AZ-305"].map(ex => (
+              <button
+                key={ex}
+                className={`games-exam-pill${gameExam === ex ? " active" : ""}`}
+                onClick={() => setGameExam(ex)}
+              >
+                {ex === "ALL" ? "All exams" : ex}
+              </button>
+            ))}
+          </div>
+
           <div className="splash-chooser-grid">
             {CARD_GAMES.map(g => (
               <button
@@ -510,7 +525,7 @@ const topicMap = flashcards.reduce((acc, c) => {
                 className="splash-choice-card"
                 style={{ background: `linear-gradient(135deg, ${g.from}, ${g.to})` }}
                 onClick={g.onPlay}
-                disabled={g.key.startsWith("GAMES:") && !!loadingExam}
+                disabled={!!loadingExam}
               >
                 <span className="splash-choice-icon" style={{ color: g.icon, background: "rgba(255,255,255,0.15)", borderColor: `${g.icon}44` }}>
                   {g.iconSvg}
@@ -518,7 +533,7 @@ const topicMap = flashcards.reduce((acc, c) => {
                 <div className="splash-choice-title">{g.title}</div>
                 <div className="splash-choice-desc">{g.desc}</div>
                 <div className="splash-choice-cta">
-                  {loadingExam === g.key ? "Loading…" : cardLoadError === g.key ? "Failed — tap to retry" : g.cta}
+                  {loadingExam?.startsWith(g.key) ? "Loading…" : cardLoadError?.startsWith(g.key) ? "Failed — tap to retry" : g.cta}
                 </div>
               </button>
             ))}
