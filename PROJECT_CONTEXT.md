@@ -126,6 +126,21 @@ npm run dev
 
 ---
 
+### 🔴 v1 Blockers
+
+**Monetisation**
+- **Payment system** — Paddle or LemonSqueezy (Merchant of Record, handles VAT). Flow: user clicks Upgrade → hosted checkout → webhook sets `is_premium = true` via Supabase Admin SDK. Needs a small serverless function (Azure Functions or Supabase Edge Function). Consider free beta launch first, then add payments as v1.1.
+
+**Content**
+- **AZ-700 content expansion** — currently 49 cards; needs to reach AZ-900/AZ-104 depth before the exam is credibly listed as supported
+- **AZ-305 content expansion** — currently 10 cards; same issue
+
+**Launch infrastructure**
+- **Landing / marketing page** — first-time visitors currently hit the login screen with no explanation of what the product is or why they should sign up
+- **Terms of Service & Privacy Policy** — required before any paid product goes live, especially for UK/EU users (GDPR)
+
+---
+
 ### 🔲 Pending / To Do
 
 **Splash / Navigation**
@@ -155,7 +170,7 @@ npm run dev
 - **Daily challenge** — one new question per day with leaderboard
 
 ### Monetisation / Growth
-- **Payment system** — Paddle or LemonSqueezy (Merchant of Record, handles VAT). Flow: user clicks Upgrade → hosted checkout → webhook sets `is_premium = true` via Supabase Admin SDK. Needs a small serverless function (Azure Functions or Supabase Edge Function).
+- **Payment system** — see v1 Blockers above
 - **Referral system** — share a link, both users get bonus cards unlocked
 - **Team/org accounts** — company bulk-assigns premium to employees
 - **Progress reports** — weekly email summary of SRS maturity and weak areas
