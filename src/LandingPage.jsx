@@ -110,16 +110,7 @@ export default function LandingPage({ onGetStarted }) {
     <div className="lp-root">
       {/* ── Nav ── */}
       <nav className="lp-nav">
-        <div className="lp-nav-brand">
-          <svg className="lp-nav-cloud" viewBox="0 0 260 165" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <defs>
-              <path id="lpNavCloud" d="M50 115C30 115 15 100 15 82C15 66 27 53 43 51C45 30 63 14 85 14C102 14 117 24 124 39C129 36 135 34 141 34C159 34 174 49 174 67C188 69 199 81 199 95C199 106 191 115 180 115Z"/>
-            </defs>
-            <use href="#lpNavCloud" x="20" y="27" fill="#185FA5"/>
-            <use href="#lpNavCloud" x="40" y="47" fill="#ffffff" stroke="#2980D9" strokeWidth="5"/>
-          </svg>
-          <span className="lp-nav-wordmark">Kloud<span className="lp-nav-ace">Ace</span></span>
-        </div>
+        <span className="lp-nav-wordmark">Kloud<span className="lp-nav-ace">Ace</span></span>
         <button className="lp-nav-login" onClick={onGetStarted}>Log in</button>
       </nav>
 

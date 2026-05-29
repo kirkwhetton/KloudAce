@@ -18,18 +18,6 @@
   z-index: 10;
 }
 
-.lp-nav-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.lp-nav-cloud {
-  width: 3.5rem;
-  height: auto;
-  flex-shrink: 0;
-}
-
 .lp-nav-wordmark {
   font-family: "Plus Jakarta Sans", "Inter", sans-serif;
   font-size: 1.35rem;
