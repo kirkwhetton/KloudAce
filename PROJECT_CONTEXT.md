@@ -333,7 +333,7 @@ Cards needed to bring AZ-700 to AZ-900/AZ-104 depth (~100 more cards required). 
 
 ### 🔲 Security & Monitoring
 
-- [ ] **Web Application Firewall (WAF)** — WAF policy, Detection vs Prevention mode, OWASP core rule sets, custom rules, WAF on App Gateway vs Front Door
+- [x] **Web Application Firewall (WAF)** — WAF policy, Detection vs Prevention mode, OWASP CRS, custom rules (geo/IP/rate), exclusions, App Gateway vs Front Door policy types, SKU requirement (AZ-700-162 to 169)
 - [ ] **Azure DDoS Protection** — Standard/Network tier adaptive tuning, telemetry, attack analytics, rapid response team, cost protection guarantee
 - [ ] **Azure Firewall Policy** — rule collection groups, policy inheritance (parent/child policies), Premium features (IDPS, TLS inspection, URL filtering)
 - [ ] **Connection Monitor** — end-to-end reachability testing between sources and destinations, topology view, integration with Network Watcher
