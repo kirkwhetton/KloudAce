@@ -162,6 +162,22 @@ npm run dev
 
 ---
 
+## Content Standards
+
+### Card difficulty guidelines (AZ-700 and all professional-level exams)
+AZ-700 is a configuration and engineering exam — difficulty levels should reflect operational depth, not just awareness:
+
+| Difficulty | Focus |
+|---|---|
+| **Easy** | Definitions, T/F concept checks, "what is X" flashcards |
+| **Medium** | Scenario → which option/command/step to use; "given X requirement, what do you configure?" |
+| **Hard** | Step-by-step configuration with specific CLI/PowerShell commands; troubleshooting a broken configuration |
+| **Extreme** | End-to-end multi-component setup; fault-finding in real CLI code; complex interacting systems with dependencies |
+
+**Known tech debt:** The AZ-700 match tasks at medium difficulty added during the initial NAT Gateway / Bastion / DNS Resolver / BGP batches (IDs 139, 144, 149, 154) are "what is this term" definitions rather than configuration-focused — they should be replaced with scenario-based config questions or downgraded to easy.
+
+---
+
 ## App Improvement Ideas
 
 ### Pending
