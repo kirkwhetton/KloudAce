@@ -20,6 +20,7 @@ Thumbs.db
 
 # Claude project context
 .claude/
+PROJECT_CONTEXT.md
 
 # Editor
 .vscode/
