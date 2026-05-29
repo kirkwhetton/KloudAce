@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import "./Wordle.css";
 
 const MAX_GUESSES = 6;
+const MAX_HINTS   = 3;
 
 const KEYBOARD_ROWS = [
   ["Q","W","E","R","T","Y","U","I","O","P"],
@@ -42,11 +43,12 @@ export default function Wordle({ card, onKnow, onSrsRate }) {
   const answer  = card.answer.toUpperCase();
   const wordLen = answer.length;
 
-  const [guesses,   setGuesses]   = useState([]);   // submitted guess strings
-  const [current,   setCurrent]   = useState("");    // current input
-  const [shake,     setShake]     = useState(false); // invalid-submit animation
-  const [gameState, setGameState] = useState("playing"); // "playing"|"won"|"lost"
-  const [bounce,    setBounce]    = useState(false); // win bounce animation
+  const [guesses,          setGuesses]          = useState([]);
+  const [current,          setCurrent]          = useState("");
+  const [shake,            setShake]            = useState(false);
+  const [gameState,        setGameState]        = useState("playing");
+  const [bounce,           setBounce]           = useState(false);
+  const [hintedPositions,  setHintedPositions]  = useState(() => new Set());
 
   // Best colour per key seen so far
   const usedLetters = {};
@@ -96,7 +98,30 @@ export default function Wordle({ card, onKnow, onSrsRate }) {
     return () => window.removeEventListener("keydown", handler);
   }, [handleKey]);
 
-  const handleNext = () => onSrsRate ? onSrsRate(gameState === "won" ? 4 : 1) : onKnow?.();
+  // Positions the user has already placed correctly in any guess
+  const correctlySolved = new Set(
+    guesses.flatMap((g, _) =>
+      g.split("").map((ch, i) => ch === answer[i] ? i : -1).filter(i => i !== -1)
+    )
+  );
+
+  const useHint = useCallback(() => {
+    if (hintedPositions.size >= MAX_HINTS || gameState !== "playing") return;
+    for (let i = 0; i < wordLen; i++) {
+      if (!hintedPositions.has(i) && !correctlySolved.has(i)) {
+        setHintedPositions(prev => new Set(prev).add(i));
+        return;
+      }
+    }
+  }, [hintedPositions, gameState, wordLen, correctlySolved]);
+
+  // Reduce SRS score when hints were used
+  const handleNext = () => {
+    const score = gameState === "won"
+      ? hintedPositions.size === 0 ? 4 : 3
+      : 1;
+    onSrsRate ? onSrsRate(score) : onKnow?.();
+  };
 
   // Only render rows that are actually in use
   const rowCount = gameState === "playing" ? guesses.length + 1 : guesses.length;
@@ -161,6 +186,22 @@ export default function Wordle({ card, onKnow, onSrsRate }) {
           {Array.from({ length: attemptsLeft }, (_, i) => (
             <span key={i} className="wl-remaining-dot" />
           ))}
+        </div>
+      )}
+
+      {/* Hints */}
+      {gameState === "playing" && (
+        <div className="wl-hint-bar">
+          {[...hintedPositions].sort((a, b) => a - b).map(pos => (
+            <span key={pos} className="wl-hint-chip">
+              Letter {pos + 1}: <strong>{answer[pos]}</strong>
+            </span>
+          ))}
+          {hintedPositions.size < MAX_HINTS && (
+            <button className="wl-hint-btn" onClick={useHint}>
+              💡 Hint{hintedPositions.size > 0 ? ` (${MAX_HINTS - hintedPositions.size} left)` : ""}
+            </button>
+          )}
         </div>
       )}
 
