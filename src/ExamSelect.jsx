@@ -495,6 +495,31 @@ const topicMap = flashcards.reduce((acc, c) => {
           </svg>
         ),
       },
+      {
+        key: "GAMES:wordle",
+        title: "Azure Wordle",
+        desc: "Guess the Azure term from its definition. Six attempts, colour-coded feedback — green means correct position.",
+        cta: "Play Wordle →",
+        from: "#7c3aed", to: "#4c1d95", icon: "#c4b5fd",
+        onPlay: () => onSelect(gameKey("GAMES:wordle")),
+        iconSvg: (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <rect x="2" y="3" width="4" height="4" rx="0.5"/>
+            <rect x="7" y="3" width="4" height="4" rx="0.5"/>
+            <rect x="12" y="3" width="4" height="4" rx="0.5"/>
+            <rect x="17" y="3" width="4" height="4" rx="0.5"/>
+            <rect x="22" y="3" width="0" height="4" rx="0.5"/>
+            <rect x="2" y="10" width="4" height="4" rx="0.5" fill="currentColor" opacity="0.5"/>
+            <rect x="7" y="10" width="4" height="4" rx="0.5"/>
+            <rect x="12" y="10" width="4" height="4" rx="0.5" fill="currentColor" opacity="0.8"/>
+            <rect x="17" y="10" width="4" height="4" rx="0.5"/>
+            <rect x="2" y="17" width="4" height="4" rx="0.5"/>
+            <rect x="7" y="17" width="4" height="4" rx="0.5" fill="currentColor" opacity="0.5"/>
+            <rect x="12" y="17" width="4" height="4" rx="0.5"/>
+            <rect x="17" y="17" width="4" height="4" rx="0.5" fill="currentColor"/>
+          </svg>
+        ),
+      },
     ];
 
     return (

@@ -10,6 +10,7 @@ import TaskSimulator from "./TaskSimulator";
 import Hotspot from "./Hotspot";
 import Connections from "./Connections";
 import Crossword from "./Crossword";
+import Wordle from "./Wordle";
 import flashcards, { EXAM_META, FREE_CARD_IDS } from "./flashcards";
 import { useAuthContext } from "./auth/AuthProvider";
 import Login from "./auth/Login";
@@ -17,7 +18,7 @@ import ExamSelect from "./ExamSelect";
 import UserProfile from "./auth/UserProfile";
 import AdminPanel from "./admin/AdminPanel";
 import { loadCardStatesRemote, saveCardStatesRemote } from "./cardStates";
-import { loadExamCardsRemote, loadCardsByCategory, loadConnectionsCards, loadCrosswordCards, SUPABASE_EXAMS, wakeSupabase } from "./cardLoader";
+import { loadExamCardsRemote, loadCardsByCategory, loadConnectionsCards, loadCrosswordCards, loadWordleCards, SUPABASE_EXAMS, wakeSupabase } from "./cardLoader";
 import {
   loadSrsData, saveSrsData, loadSrsDataRemote, saveSrsDataRemote,
   updateSrsRecord, createSrsRecord, sortBySrs, isDue, getSrsStats,
@@ -491,7 +492,9 @@ function App() {
     } else if (exam.startsWith("GAMES:")) {
       setLoadingExam(exam);
       const gameType = exam.slice("GAMES:".length).split(":")[0];
-      const loader = gameType === "crossword" ? loadCrosswordCards() : loadConnectionsCards();
+      const loader = gameType === "crossword" ? loadCrosswordCards()
+                   : gameType === "wordle"    ? loadWordleCards()
+                   : loadConnectionsCards();
       const cards = await fetchWithTimeout(loader);
       setLoadingExam(null);
       if (!cards) { setCardLoadError(exam); return; }
@@ -1593,6 +1596,13 @@ function App() {
                   />
                 ) : current.type === "crossword" ? (
                   <Crossword
+                    key={`${sessionKey}-${current.id}`}
+                    card={current}
+                    onKnow={() => advance(true)}
+                    onSrsRate={srsMode ? handleSrsRate : undefined}
+                  />
+                ) : current.type === "wordle" ? (
+                  <Wordle
                     key={`${sessionKey}-${current.id}`}
                     card={current}
                     onKnow={() => advance(true)}
