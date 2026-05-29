@@ -321,7 +321,7 @@ function App() {
       ? (remoteCards ?? [])
       : selectedExam?.startsWith("GAMES:")
         ? (remoteCards ?? []).filter((c) => c.type === selectedExam.slice("GAMES:".length))
-        : baseCards.filter((c) => c.exam === selectedExam)
+        : baseCards.filter((c) => c.exam === selectedExam && c.type !== "connections" && c.type !== "crossword")
   ).filter((c) => isPremium || c.exam === "AZ-900" || FREE_CARD_IDS.has(c.id) || selectedExam?.startsWith("CUSTOM:") || selectedExam?.startsWith("GAMES:"))
   .slice(0, isGuest && selectedExam !== "AZ-900" && !selectedExam?.startsWith("CUSTOM:") && !selectedExam?.startsWith("GAMES:") ? 30 : Infinity);
 
