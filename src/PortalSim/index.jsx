@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import './PortalSim.css';
 import ResourceGroupList   from './blades/ResourceGroupList';
 import ResourceGroupCreate from './blades/ResourceGroupCreate';
@@ -25,6 +25,14 @@ export default function PortalSim({ card, onKnow, onSrsRate }) {
   const [result,    setResult]    = useState(null); // 'correct' | 'incorrect'
   const [hintsUsed, setHintsUsed] = useState(false);
   const [showHint,  setShowHint]  = useState(false);
+  const bladeAreaRef = useRef(null);
+
+  // Scroll blade area to the right whenever a new blade is pushed
+  useEffect(() => {
+    if (bladeAreaRef.current) {
+      bladeAreaRef.current.scrollTo({ left: bladeAreaRef.current.scrollWidth, behavior: 'smooth' });
+    }
+  }, [blades.length]);
 
   const openBlade = useCallback((id, props = {}) => {
     setBlades(prev => [...prev, { id, props }]);
@@ -142,7 +150,7 @@ export default function PortalSim({ card, onKnow, onSrsRate }) {
           </nav>
 
           {/* Blade stack — scrolls horizontally */}
-          <div className="psim-blade-area">
+          <div className="psim-blade-area" ref={bladeAreaRef}>
             {blades.map((blade, i) => {
               const Blade = BLADE_REGISTRY[blade.id];
               if (!Blade) return null;
