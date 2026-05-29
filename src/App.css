@@ -1870,12 +1870,42 @@ button .known-check {
     justify-content: center;
     gap: 0.3rem;
   }
-  /* Hide text labels on very small screens — keep emoji icons */
+  /* Hide text labels on very small screens */
   .header-btn-label {
     display: none;
   }
   .header-btn-divider {
     display: none;
+  }
+  /* Dashboard, My Cards, and Tour are accessible via sidebar — hide from header on mobile */
+  .header-btn-row,
+  .header-btn--tour {
+    display: none;
+  }
+  /* Touch targets ≥ 44px on all interactive elements */
+  .header-btn {
+    min-height: 44px;
+    height: auto;
+    padding: 0 0.75rem;
+  }
+  .cat-btn {
+    min-height: 44px;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.82rem;
+  }
+  .flag-btn,
+  .mastered-btn {
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+  }
+  .card-nav-btn {
+    min-height: 44px;
+  }
+  /* Prevent iOS Safari zoom on input focus (triggered when font-size < 16px) */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
   }
 }
 

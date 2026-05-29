@@ -692,3 +692,10 @@
   background: #fff;
   flex-shrink: 0;
 }
+
+@media (max-width: 560px) {
+  /* Prevent iOS Safari zoom on input focus */
+  input, textarea, select {
+    font-size: 16px;
+  }
+}

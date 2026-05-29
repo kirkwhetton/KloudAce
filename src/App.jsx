@@ -1141,7 +1141,7 @@ function App() {
                   <span className="header-btn-label">Options</span>
                 </button>
               )}
-              <button className="header-btn" onClick={() => setShowTour(true)} title="Take the guided tour">
+              <button className="header-btn header-btn--tour" onClick={() => setShowTour(true)} title="Take the guided tour">
                 <span className="header-btn-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/>
