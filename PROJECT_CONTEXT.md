@@ -136,8 +136,14 @@ npm run dev
 - **AZ-305 content expansion** — currently 10 cards; same issue
 
 **Launch infrastructure**
-- **Landing / marketing page** — first-time visitors currently hit the login screen with no explanation of what the product is or why they should sign up
+- **Landing / marketing page** ✅ Done
 - **Terms of Service & Privacy Policy** — required before any paid product goes live, especially for UK/EU users (GDPR)
+
+---
+
+### 🟡 Before public launch (not beta blockers)
+
+- **React Router v6** — URL-based routing so pages are bookmarkable, shareable, and SEO-indexable. Key routes: `/landing`, `/azure`, `/aws`, `/gcp`, `/azure/:exam`, `/azure/:exam/games`. Also requires `staticwebapp.config.json` at the repo root so Azure SWA serves `index.html` for all client-side paths. Skipped for beta — add before going fully public.
 
 ---
 
