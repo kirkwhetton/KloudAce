@@ -12,6 +12,7 @@ import Connections from "./Connections";
 import LandingPage from "./LandingPage";
 import Crossword from "./Crossword";
 import Wordle from "./Wordle";
+import PortalSim from "./PortalSim";
 import flashcards, { EXAM_META, FREE_CARD_IDS } from "./flashcards";
 import { useAuthContext } from "./auth/AuthProvider";
 import Login from "./auth/Login";
@@ -394,7 +395,8 @@ function App() {
       if (examMode) {
         const filtered = preShuffle.filter(c =>
           (c.difficulty ?? "medium") !== "easy" &&
-          !(c.type === "task" && c.taskType === "script")
+          !(c.type === "task" && c.taskType === "script") &&
+          c.type !== "portal"
         );
         return shuffle(filtered).slice(0, EXAM_CARD_LIMIT);
       }
@@ -1606,6 +1608,13 @@ function App() {
                   />
                 ) : current.type === "wordle" ? (
                   <Wordle
+                    key={`${sessionKey}-${current.id}`}
+                    card={current}
+                    onKnow={() => advance(true)}
+                    onSrsRate={srsMode ? handleSrsRate : undefined}
+                  />
+                ) : current.type === "portal" ? (
+                  <PortalSim
                     key={`${sessionKey}-${current.id}`}
                     card={current}
                     onKnow={() => advance(true)}
