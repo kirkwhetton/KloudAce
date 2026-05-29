@@ -328,7 +328,7 @@ Cards needed to bring AZ-700 to AZ-900/AZ-104 depth (~100 more cards required). 
 
 ### 🔲 Application Delivery Services
 
-- [ ] **Application Gateway advanced features** — URL path-based routing, multi-site hosting, cookie-based session affinity, SSL termination and end-to-end SSL, rewrite rules
+- [x] **Application Gateway advanced features** — Basic vs path-based rules, Basic vs Multi-site listeners, end-to-end SSL, path map config, multi-site fault (Basic listener ignores hostname) (AZ-700-185 to 189)
 - [ ] **Cross-region Load Balancer** — global Layer 4 load balancing across regions, how it differs from Traffic Manager and Front Door
 
 ### 🔲 Security & Monitoring
