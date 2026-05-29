@@ -335,5 +335,5 @@ Cards needed to bring AZ-700 to AZ-900/AZ-104 depth (~100 more cards required). 
 
 - [x] **Web Application Firewall (WAF)** — WAF policy, Detection vs Prevention mode, OWASP CRS, custom rules (geo/IP/rate), exclusions, App Gateway vs Front Door policy types, SKU requirement (AZ-700-162 to 169)
 - [x] **Azure DDoS Protection** — three tiers, adaptive tuning, 'Under DDoS Attack' metric, VNet association via plan, CLI fault (missing --ddos-protection-plan) (AZ-700-170 to 174)
-- [ ] **Azure Firewall Policy** — rule collection groups, policy inheritance (parent/child policies), Premium features (IDPS, TLS inspection, URL filtering)
+- [x] **Azure Firewall Policy** — rule collection groups, DNAT→Network→App processing order, parent-child inheritance, DNS proxy required for FQDN in Network rules (AZ-700-175 to 179)
 - [ ] **Connection Monitor** — end-to-end reachability testing between sources and destinations, topology view, integration with Network Watcher
