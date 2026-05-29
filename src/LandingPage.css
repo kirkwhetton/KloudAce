@@ -13,22 +13,9 @@
   top: 0; left: 0; right: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 1.25rem 2rem;
   z-index: 10;
-}
-
-.lp-nav-wordmark {
-  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
-  font-size: 1.35rem;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -0.02em;
-}
-
-.lp-nav-ace {
-  opacity: 0.8;
-  margin-left: 0.08em;
 }
 
 .lp-nav-login {

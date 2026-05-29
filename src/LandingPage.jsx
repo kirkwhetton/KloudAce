@@ -110,7 +110,6 @@ export default function LandingPage({ onGetStarted }) {
     <div className="lp-root">
       {/* ── Nav ── */}
       <nav className="lp-nav">
-        <span className="lp-nav-wordmark">Kloud<span className="lp-nav-ace">Ace</span></span>
         <button className="lp-nav-login" onClick={onGetStarted}>Log in</button>
       </nav>
 
