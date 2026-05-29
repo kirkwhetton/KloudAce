@@ -292,3 +292,32 @@ To migrate to MSAL:
 - `sessionKey` in card component keys (`${sessionKey}-${card.id}`) forces full remount on restart — required to reset MCQ state
 - Supabase `merge-duplicates` upsert does **not** update `created_at` — patch `devAdded` in the `data` JSONB instead when re-seeding a card
 - `.env.local` contains `SUPABASE_SERVICE_KEY` — must never be committed (already in `.gitignore`)
+
+---
+
+## AZ-700 Content Backlog
+
+Cards needed to bring AZ-700 to AZ-900/AZ-104 depth (~100 more cards required). Each item below needs ~3 cards across mixed types and difficulties.
+
+### 🔲 Core Networking Infrastructure
+
+- [ ] **Azure NAT Gateway** — outbound SNAT, SNAT port exhaustion, when to use NAT Gateway vs Load Balancer outbound rules vs instance-level public IPs
+- [ ] **Azure Bastion** — secure browser-based RDP/SSH without public IPs on VMs, Basic vs Standard tier, integration with JIT access
+- [ ] **Azure DNS Private Resolver** — inbound and outbound endpoints, conditional forwarding, resolving private endpoint FQDNs from on-premises without custom DNS servers
+
+### 🔲 Hybrid Connectivity
+
+- [ ] **BGP route filtering** — route filters on ExpressRoute Microsoft peering, BGP communities, controlling which prefixes are advertised and accepted
+- [ ] **ExpressRoute Global Reach** — dedicated card set for connecting two on-premises sites through Azure, requirements, and limitations
+
+### 🔲 Application Delivery Services
+
+- [ ] **Application Gateway advanced features** — URL path-based routing, multi-site hosting, cookie-based session affinity, SSL termination and end-to-end SSL, rewrite rules
+- [ ] **Cross-region Load Balancer** — global Layer 4 load balancing across regions, how it differs from Traffic Manager and Front Door
+
+### 🔲 Security & Monitoring
+
+- [ ] **Web Application Firewall (WAF)** — WAF policy, Detection vs Prevention mode, OWASP core rule sets, custom rules, WAF on App Gateway vs Front Door
+- [ ] **Azure DDoS Protection** — Standard/Network tier adaptive tuning, telemetry, attack analytics, rapid response team, cost protection guarantee
+- [ ] **Azure Firewall Policy** — rule collection groups, policy inheritance (parent/child policies), Premium features (IDPS, TLS inspection, URL filtering)
+- [ ] **Connection Monitor** — end-to-end reachability testing between sources and destinations, topology view, integration with Network Watcher
