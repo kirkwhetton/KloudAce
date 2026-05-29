@@ -325,6 +325,8 @@ function App() {
   ).filter((c) => isPremium || c.exam === "AZ-900" || FREE_CARD_IDS.has(c.id) || selectedExam?.startsWith("CUSTOM:") || selectedExam?.startsWith("GAMES:"))
   .slice(0, isGuest && selectedExam !== "AZ-900" && !selectedExam?.startsWith("CUSTOM:") && !selectedExam?.startsWith("GAMES:") ? 30 : Infinity);
 
+  const isGameMode = !!selectedExam?.startsWith("GAMES:");
+
   // Step 2: filter by selected categories — "🚩 Flagged" and "All" are virtual
   const filteredDeck = examDeck.filter((c) => {
     if (categories.has("🚩 Flagged") && categories.size === 1) return flagged.has(c.id);
@@ -1119,15 +1121,17 @@ function App() {
           {/* Action buttons */}
           <div className="header-buttons-stack">
             <div className="header-buttons">
-              <button className="header-btn" onClick={() => setSidebarOpen(true)} aria-label="Open options" data-tour="options-btn">
-                <span className="header-btn-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                  </svg>
-                </span>
-                <span className="header-btn-label">Options</span>
-              </button>
+              {!isGameMode && (
+                <button className="header-btn" onClick={() => setSidebarOpen(true)} aria-label="Open options" data-tour="options-btn">
+                  <span className="header-btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <circle cx="12" cy="12" r="3"/>
+                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                  </span>
+                  <span className="header-btn-label">Options</span>
+                </button>
+              )}
               <button className="header-btn" onClick={() => setShowTour(true)} title="Take the guided tour">
                 <span className="header-btn-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -1209,8 +1213,8 @@ function App() {
 
       {/* Category pills — multi-select */}
       <nav className="category-nav" data-tour="category-nav">
-        <button className="cat-btn" onClick={goToExams}>← Exams</button>
-        {CATEGORIES.map((cat) => (
+        <button className="cat-btn" onClick={goToExams}>{isGameMode ? "← Games" : "← Exams"}</button>
+        {!isGameMode && CATEGORIES.map((cat) => (
           <button
             key={cat}
             className={`cat-btn${categories.has(cat) ? " active" : ""}${cat === "🚩 Flagged" ? " flagged-cat" : ""}`}
@@ -1221,25 +1225,27 @@ function App() {
         ))}
       </nav>
 
-      <div className="progress-area">
-        <div className="progress-stats">
-          <span>Card <strong>{Math.min(index + 1, deck.length)}</strong> of <strong>{deck.length}</strong></span>
-          <span>
-            {srsMode
-              ? srsDueCount > 0 && <span className="srs-due-badge"><span className="srs-emoji-dot" style={{background:"var(--srs-dot-new)"}}></span> {srsDueCount} reviewing</span>
-              : <>
-                  {flaggedInDeck > 0 && <span className="flag-stat">🚩 {flaggedInDeck} &nbsp;·&nbsp; </span>}
-                  <span className="known-check" aria-hidden="true">✓</span> <strong>{knownInDeck}</strong> known ({progress}%)
-                </>
-            }
-          </span>
+      {!isGameMode && (
+        <div className="progress-area">
+          <div className="progress-stats">
+            <span>Card <strong>{Math.min(index + 1, deck.length)}</strong> of <strong>{deck.length}</strong></span>
+            <span>
+              {srsMode
+                ? srsDueCount > 0 && <span className="srs-due-badge"><span className="srs-emoji-dot" style={{background:"var(--srs-dot-new)"}}></span> {srsDueCount} reviewing</span>
+                : <>
+                    {flaggedInDeck > 0 && <span className="flag-stat">🚩 {flaggedInDeck} &nbsp;·&nbsp; </span>}
+                    <span className="known-check" aria-hidden="true">✓</span> <strong>{knownInDeck}</strong> known ({progress}%)
+                  </>
+              }
+            </span>
+          </div>
+          <div className="progress-bar-track">
+            <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
+          </div>
         </div>
-        <div className="progress-bar-track">
-          <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
-        </div>
-      </div>
+      )}
 
-      {dailyGoal > 0 && (
+      {!isGameMode && dailyGoal > 0 && (
         <div className="study-stats-strip" data-tour="stats-strip">
           {(() => {
             const R = 10;
@@ -1498,6 +1504,7 @@ function App() {
         ) : (
           current && (
             <div className="card-wrapper">
+              {!isGameMode && (
               <div className="card-action-row" data-tour="flag-btn">
                 <button
                   className={`flag-btn${flagged.has(current.id) ? " flagged" : ""}`}
@@ -1514,6 +1521,7 @@ function App() {
                   {mastered.has(current.id) ? "⭐ Mastered" : "☆ Mark mastered"}
                 </button>
               </div>
+            )}
               <div className="card-body-wrapper">
                 {current.type === "truefalse" ? (
                   <TrueFalse
@@ -1610,7 +1618,7 @@ function App() {
                     displayId={current.displayId || undefined}
                   />
                 )}
-                {srsMode && (() => {
+                {!isGameMode && srsMode && (() => {
                   const dot = getSrsDot(current.id);
                   return (
                     <div className="srs-dot-footer">
@@ -1629,8 +1637,8 @@ function App() {
         )}
       </main>
 
-      {/* Prev / Next navigation — hidden in exam mode */}
-      {!finished && !examMode && deck.length > 0 && (
+      {/* Prev / Next navigation — hidden in exam mode and game mode */}
+      {!finished && !examMode && !isGameMode && deck.length > 0 && (
         <div className="card-nav" data-tour="card-nav">
           <button
             className="card-nav-btn"
