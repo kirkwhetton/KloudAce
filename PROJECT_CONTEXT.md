@@ -301,7 +301,7 @@ Cards needed to bring AZ-700 to AZ-900/AZ-104 depth (~100 more cards required). 
 
 ### 🔲 Core Networking Infrastructure
 
-- [ ] **Azure NAT Gateway** — outbound SNAT, SNAT port exhaustion, when to use NAT Gateway vs Load Balancer outbound rules vs instance-level public IPs
+- [x] **Azure NAT Gateway** — outbound SNAT, SNAT port exhaustion, when to use NAT Gateway vs Load Balancer outbound rules vs instance-level public IPs (AZ-700-135 to 139)
 - [ ] **Azure Bastion** — secure browser-based RDP/SSH without public IPs on VMs, Basic vs Standard tier, integration with JIT access
 - [ ] **Azure DNS Private Resolver** — inbound and outbound endpoints, conditional forwarding, resolving private endpoint FQDNs from on-premises without custom DNS servers
 
