@@ -2012,6 +2012,10 @@ button .known-check {
   overflow: hidden; /* clip slide animations cleanly */
 }
 
+.splash-card--wide {
+  max-width: 960px;
+}
+
 .splash-card.splash-initial,
 .splash-card.subview-enter,
 .splash-card.subview-enter-back {

@@ -595,7 +595,7 @@ const topicMap = flashcards.reduce((acc, c) => {
 
     return (
       <div className="splash-page">
-        <div className={`splash-card ${animClass}`}>
+        <div className={`splash-card splash-card--wide ${animClass}`}>
           <BackButton onClick={() => navigateTo("chooser")} />
           <div className="splash-greeting-block">
             <h2 className="splash-greeting">Labs</h2>
