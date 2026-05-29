@@ -324,7 +324,7 @@ Cards needed to bring AZ-700 to AZ-900/AZ-104 depth (~100 more cards required). 
 ### 🔲 Hybrid Connectivity
 
 - [x] **BGP route filtering** — route filters on ExpressRoute Microsoft peering, BGP communities for traffic engineering (AZ-700-150 to 154)
-- [ ] **ExpressRoute Global Reach** — dedicated card set for connecting two on-premises sites through Azure, requirements, and limitations
+- [x] **ExpressRoute Global Reach** — circuit-to-circuit connectivity, Premium requirement, /29 interconnect range, BGP path selection, CLI configuration (AZ-700-157 to 161)
 
 ### 🔲 Application Delivery Services
 
