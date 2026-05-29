@@ -128,6 +128,27 @@
   100% { transform: rotateX(0deg);   background: var(--tile-bg); color: #fff; border-color: transparent; }
 }
 
+/* ── Remaining attempts dots ── */
+.wl-remaining {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  height: 14px;
+}
+
+.wl-remaining-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border, #d1d5db);
+  display: block;
+}
+
+[data-theme="dark"] .wl-remaining-dot {
+  background: #475569;
+}
+
 /* ── Result banner ── */
 .wl-result {
   display: flex;

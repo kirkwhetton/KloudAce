@@ -98,10 +98,14 @@ export default function Wordle({ card, onKnow, onSrsRate }) {
 
   const handleNext = () => onSrsRate ? onSrsRate(gameState === "won" ? 4 : 1) : onKnow?.();
 
+  // Only render rows that are actually in use
+  const rowCount = gameState === "playing" ? guesses.length + 1 : guesses.length;
+  const attemptsLeft = MAX_GUESSES - rowCount;
+
   // Build grid rows
-  const rows = Array.from({ length: MAX_GUESSES }, (_, r) => {
-    const isSubmitted   = r < guesses.length;
-    const isCurrentRow  = r === guesses.length && gameState === "playing";
+  const rows = Array.from({ length: rowCount }, (_, r) => {
+    const isSubmitted  = r < guesses.length;
+    const isCurrentRow = r === guesses.length && gameState === "playing";
     const letters = isSubmitted
       ? guesses[r].split("")
       : isCurrentRow
@@ -114,7 +118,7 @@ export default function Wordle({ card, onKnow, onSrsRate }) {
         key={r}
         className={[
           "wl-row",
-          shake && isCurrentRow  ? "wl-row--shake"  : "",
+          shake && isCurrentRow ? "wl-row--shake" : "",
           bounce && r < guesses.length && guesses[r] === answer ? "wl-row--bounce" : "",
         ].filter(Boolean).join(" ")}
       >
@@ -150,6 +154,15 @@ export default function Wordle({ card, onKnow, onSrsRate }) {
 
       {/* Grid */}
       <div className="wl-grid">{rows}</div>
+
+      {/* Remaining attempts indicator */}
+      {gameState === "playing" && attemptsLeft > 0 && (
+        <div className="wl-remaining" aria-label={`${attemptsLeft} attempts remaining`}>
+          {Array.from({ length: attemptsLeft }, (_, i) => (
+            <span key={i} className="wl-remaining-dot" />
+          ))}
+        </div>
+      )}
 
       {/* Result banner */}
       {gameState !== "playing" && (
