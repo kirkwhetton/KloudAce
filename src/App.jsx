@@ -20,7 +20,7 @@ import ExamSelect from "./ExamSelect";
 import UserProfile from "./auth/UserProfile";
 import AdminPanel from "./admin/AdminPanel";
 import { loadCardStatesRemote, saveCardStatesRemote } from "./cardStates";
-import { loadExamCardsRemote, loadCardsByCategory, loadConnectionsCards, loadCrosswordCards, loadWordleCards, SUPABASE_EXAMS, wakeSupabase } from "./cardLoader";
+import { loadExamCardsRemote, loadCardsByCategory, loadConnectionsCards, loadCrosswordCards, loadWordleCards, loadPortalCards, SUPABASE_EXAMS, wakeSupabase } from "./cardLoader";
 import {
   loadSrsData, saveSrsData, loadSrsDataRemote, saveSrsDataRemote,
   updateSrsRecord, createSrsRecord, sortBySrs, isDue, getSrsStats,
@@ -323,6 +323,8 @@ function App() {
     ? customDeckCards
     : selectedExam?.startsWith("TOPIC:")
       ? (remoteCards ?? [])
+      : selectedExam?.startsWith("LAB:")
+        ? (remoteCards ?? [])
       : selectedExam?.startsWith("GAMES:")
         ? (() => {
             const [gameType, examFilter] = selectedExam.slice("GAMES:".length).split(":");
@@ -331,10 +333,10 @@ function App() {
             );
           })()
         : baseCards.filter((c) => c.exam === selectedExam && c.type !== "connections" && c.type !== "crossword")
-  ).filter((c) => isPremium || c.exam === "AZ-900" || FREE_CARD_IDS.has(c.id) || selectedExam?.startsWith("CUSTOM:") || selectedExam?.startsWith("GAMES:"))
-  .slice(0, isGuest && selectedExam !== "AZ-900" && !selectedExam?.startsWith("CUSTOM:") && !selectedExam?.startsWith("GAMES:") ? 30 : Infinity);
+  ).filter((c) => isPremium || c.exam === "AZ-900" || FREE_CARD_IDS.has(c.id) || selectedExam?.startsWith("CUSTOM:") || selectedExam?.startsWith("GAMES:") || selectedExam?.startsWith("LAB:"))
+  .slice(0, isGuest && selectedExam !== "AZ-900" && !selectedExam?.startsWith("CUSTOM:") && !selectedExam?.startsWith("GAMES:") && !selectedExam?.startsWith("LAB:") ? 30 : Infinity);
 
-  const isGameMode = !!selectedExam?.startsWith("GAMES:");
+  const isGameMode = !!selectedExam?.startsWith("GAMES:") || !!selectedExam?.startsWith("LAB:");
 
   // Step 2: filter by selected categories — "🚩 Flagged" and "All" are virtual
   const filteredDeck = examDeck.filter((c) => {
@@ -503,6 +505,13 @@ function App() {
       setLoadingExam(null);
       if (!cards) { setCardLoadError(exam); return; }
       setRemoteCards(cards);
+    } else if (exam.startsWith("LAB:")) {
+      setLoadingExam(exam);
+      const cards = await fetchWithTimeout(loadPortalCards());
+      setLoadingExam(null);
+      if (!cards) { setCardLoadError(exam); return; }
+      const cardId = exam.slice("LAB:".length);
+      setRemoteCards(cards.filter(c => c.id === cardId));
     } else {
       setRemoteCards(null);
     }
@@ -1227,7 +1236,9 @@ function App() {
 
       {/* Category pills — multi-select */}
       <nav className="category-nav" data-tour="category-nav">
-        <button className="cat-btn" onClick={goToExams}>{isGameMode ? "← Games" : "← Exams"}</button>
+        <button className="cat-btn" onClick={goToExams}>
+          {selectedExam?.startsWith("LAB:") ? "← Labs" : selectedExam?.startsWith("GAMES:") ? "← Games" : "← Exams"}
+        </button>
         {!isGameMode && CATEGORIES.map((cat) => (
           <button
             key={cat}

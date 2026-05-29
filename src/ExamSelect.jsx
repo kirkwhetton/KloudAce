@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import flashcards, { EXAM_META } from "./flashcards";
-import { loadAllTopics, loadExamCardCounts, SUPABASE_EXAMS } from "./cardLoader";
+import { loadAllTopics, loadExamCardCounts, loadPortalCards, SUPABASE_EXAMS } from "./cardLoader";
 
 const DECK_COLOURS = [
   { from: "#f59e0b", to: "#b45309", icon: "#fcd34d" },
@@ -113,18 +113,20 @@ export default function ExamSelect({ user, isGuest, onSelect, onLogout, onOpenDe
     if (!user?.id) return "chooser";
     try {
       const p = JSON.parse(localStorage.getItem(`azfc_settings_${user.id}`) || "{}").preferredStudyMode;
-      return ["exams", "topics", "mydecks", "games"].includes(p) ? p : "chooser";
+      return ["exams", "topics", "labs", "games"].includes(p) ? p : "chooser";
     } catch { return "chooser"; }
   });
   const [animClass, setAnimClass] = useState(() => {
     if (!user?.id) return "splash-initial";
     try {
       const p = JSON.parse(localStorage.getItem(`azfc_settings_${user.id}`) || "{}").preferredStudyMode;
-      return ["exams", "topics", "mydecks", "games"].includes(p) ? "" : "splash-initial";
+      return ["exams", "topics", "labs", "games"].includes(p) ? "" : "splash-initial";
     } catch { return "splash-initial"; }
   });
   const [showGuestGamesModal, setShowGuestGamesModal] = useState(false);
   const [gameExam, setGameExam] = useState("ALL");
+  const [portalCards, setPortalCards] = useState(null);
+  const [labExam, setLabExam] = useState("ALL");
   const [customDecks, setCustomDecks] = useState([]);
   const [topicSearch, setTopicSearch] = useState("");
 const [remoteTopics, setRemoteTopics] = useState(null);
@@ -183,6 +185,12 @@ const [remoteTopics, setRemoteTopics] = useState(null);
     if (view === "topics" && !remoteTopics)
       loadAllTopics().then(t => { if (t) setRemoteTopics(t); });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Load portal cards when Labs view is opened
+  useEffect(() => {
+    if (view === "labs" && !portalCards)
+      loadPortalCards().then(c => { if (c) setPortalCards(c); });
+  }, [view]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Animated navigation: drill in (forward) or back to chooser
   const navigateTo = (nextView) => {
@@ -260,15 +268,16 @@ const topicMap = flashcards.reduce((acc, c) => {
                 <div className="splash-choice-cta">Start exam study →</div>
               </button>
 
-              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #7c3aed, #4c1d95)" }} onClick={() => navigateTo("mydecks")}>
-                <span className="splash-choice-icon" style={{ color: "#c4b5fd", background: "rgba(255,255,255,0.15)", borderColor: "rgba(196,181,253,0.4)" }}>
+              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #0369a1, #0c4a6e)" }} onClick={() => navigateTo("labs")}>
+                <span className="splash-choice-icon" style={{ color: "#7dd3fc", background: "rgba(255,255,255,0.15)", borderColor: "rgba(125,211,252,0.4)" }}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 2v3M8 2v3M2 10h20"/>
+                    <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+                    <path d="M7 8h10M7 11h6"/>
                   </svg>
                 </span>
-                <div className="splash-choice-title">My Cards</div>
-                <div className="splash-choice-desc">Create and study your own custom decks</div>
-                <div className="splash-choice-cta">Open My Cards →</div>
+                <div className="splash-choice-title">Labs</div>
+                <div className="splash-choice-desc">Hands-on Azure portal simulations — practice configuring real services</div>
+                <div className="splash-choice-cta">Open Labs →</div>
               </button>
 
               <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #d97706, #92400e)" }} onClick={() => navigateTo("topics")}>
@@ -570,58 +579,77 @@ const topicMap = flashcards.reduce((acc, c) => {
     );
   }
 
-  // ── My Decks subview ─────────────────────────────────────────
-  if (view === "mydecks") {
+  // ── Labs subview ──────────────────────────────────────────────
+  if (view === "labs") {
+    const EXAM_COLOURS_LAB = {
+      "AZ-900": { from: "#0ea5e9", to: "#0369a1" },
+      "AZ-104": { from: "#6366f1", to: "#3730a3" },
+      "AZ-700": { from: "#0891b2", to: "#155e75" },
+      "AZ-305": { from: "#8b5cf6", to: "#5b21b6" },
+    };
+    const DIFF_LABELS = { easy: "Easy", medium: "Medium", hard: "Hard", extreme: "Extreme" };
+
+    const filteredLabs = (portalCards ?? []).filter(
+      c => labExam === "ALL" || c.exam === labExam
+    );
+
     return (
       <div className="splash-page">
         <div className={`splash-card ${animClass}`}>
           <BackButton onClick={() => navigateTo("chooser")} />
           <div className="splash-greeting-block">
-            <h2 className="splash-greeting">My Cards</h2>
-            <p className="splash-sub">Pick a custom deck to study.</p>
+            <h2 className="splash-greeting">Labs</h2>
+            <p className="splash-sub">Hands-on portal simulations — configure real Azure services step by step.</p>
           </div>
 
-          {customDecks.length === 0 ? (
-            <div className="splash-mydecks-empty">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="40" height="40" style={{ opacity: 0.35 }}>
-                <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 2v3M8 2v3M2 10h20"/>
-              </svg>
-              <p>No custom decks yet.</p>
-              <button className="splash-mydecks-create-btn" onClick={() => { onOpenDecks && onOpenDecks(); }}>
-                + Create a Deck
+          <div className="games-exam-filter">
+            {["ALL", "AZ-900", "AZ-104", "AZ-700", "AZ-305"].map(ex => (
+              <button
+                key={ex}
+                className={`games-exam-pill${labExam === ex ? " active" : ""}`}
+                onClick={() => setLabExam(ex)}
+              >
+                {ex === "ALL" ? "All exams" : ex}
               </button>
+            ))}
+          </div>
+
+          {portalCards === null ? (
+            <div className="splash-mydecks-empty">
+              <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>Loading labs…</p>
+            </div>
+          ) : filteredLabs.length === 0 ? (
+            <div className="splash-mydecks-empty">
+              <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>No labs available for this exam yet.</p>
             </div>
           ) : (
-            <>
-              <div className="splash-cards">
-                {customDecks.map((deck, i) => {
-                  const colour = DECK_COLOURS[i % DECK_COLOURS.length];
-                  const initials = deck.name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
-                  return (
-                    <button
-                      key={deck.id}
-                      className="splash-exam-card"
-                      style={{ background: `linear-gradient(135deg, ${colour.from}, ${colour.to})` }}
-                      onClick={() => onSelectCustomDeck && onSelectCustomDeck(deck)}
+            <div className="splash-labs-grid">
+              {filteredLabs.map(card => {
+                const colours = EXAM_COLOURS_LAB[card.exam] ?? { from: "#374151", to: "#1f2937" };
+                return (
+                  <button
+                    key={card.id}
+                    className="splash-lab-card"
+                    onClick={() => onSelect(`LAB:${card.id}`)}
+                  >
+                    <div
+                      className="splash-lab-badge"
+                      style={{ background: `linear-gradient(135deg, ${colours.from}, ${colours.to})` }}
                     >
-                      <span className="splash-exam-icon" style={{ color: colour.icon, background: "rgba(255,255,255,0.15)", borderColor: `${colour.icon}44`, fontSize: "0.85rem", fontWeight: 800, letterSpacing: "0.5px" }}>
-                        {initials}
-                      </span>
-                      <span className="splash-exam-code" style={{ fontSize: "1.1rem" }}>{deck.name}</span>
-                      <span className="splash-exam-count">{deck.cards.length} card{deck.cards.length !== 1 ? "s" : ""}</span>
-                      <span className="splash-exam-arrow">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="14" height="14">
-                          <polyline points="9 18 15 12 9 6"/>
-                        </svg>
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-              <button className="splash-mydecks-create-btn" onClick={() => { onOpenDecks && onOpenDecks(); }}>
-                + Create New Deck
-              </button>
-            </>
+                      <span className="splash-lab-exam">{card.exam}</span>
+                      <span className="splash-lab-diff">{DIFF_LABELS[card.difficulty] ?? card.difficulty}</span>
+                    </div>
+                    <p className="splash-lab-task">{card.task}</p>
+                    <span className="splash-lab-cta">
+                      Start lab
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="12" height="12">
+                        <polyline points="9 18 15 12 9 6"/>
+                      </svg>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           )}
 
           <SignOutButton onSignOut={handleSignOut} />

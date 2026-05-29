@@ -119,6 +119,21 @@ export async function loadWordleCards() {
   return cards;
 }
 
+export async function loadPortalCards() {
+  const key = "__portal__";
+  const cached = getCached(key);
+  if (cached) return cached;
+  const { data, error } = await supabase
+    .from("cards")
+    .select("id, exam, category, type, difficulty, is_free, created_at, data")
+    .eq("type", "portal")
+    .order("id");
+  if (error || !data) return null;
+  const cards = data.map(reconstruct);
+  setCached(key, cards);
+  return cards;
+}
+
 export async function loadExamCardCounts() {
   const cached = getCached("__exam_counts__");
   if (cached) return cached;
