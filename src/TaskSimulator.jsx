@@ -732,7 +732,6 @@ function ScriptTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnsw
                 autoComplete="off"
                 autoCorrect="off"
                 rows={3}
-                autoFocus
               />
             </div>
           )}
