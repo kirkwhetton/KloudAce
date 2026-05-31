@@ -243,6 +243,26 @@ function App() {
     }
   }, [isAuthenticated]);
 
+  // ── Reload settings once user.id is known ─────────────────────
+  // useState initialisers run before auth resolves so they always
+  // read from azfc_settings_guest. This effect re-reads from the
+  // correct per-user key as soon as the user is authenticated.
+  useEffect(() => {
+    if (!user?.id) return;
+    try {
+      const s = JSON.parse(localStorage.getItem(`azfc_settings_${user.id}`) || "{}");
+      setHideAnswers(s.hideAnswers ?? false);
+      setHideDifficulty(s.hideDifficulty ?? false);
+      setSoundEnabled(s.soundEnabled ?? false);
+      setShowDevRecent(s.showDevRecent ?? false);
+      setRandomised(s.randomised ?? false);
+      const ddt = new Set(s.defaultDisabledTypes ?? []);
+      setDefaultDisabledTypes(ddt);
+      setDisabledTypes(new Set(ddt));
+    } catch {}
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
+
   // ── Re-load persisted data when the logged-in user changes ─────
   // (e.g. user A logs out, user B logs in on the same device)
   useEffect(() => {
