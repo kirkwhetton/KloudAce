@@ -328,33 +328,23 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
           </p>
 
           {/* IP address pools checkbox */}
-          <label className="psb-checkbox-label" style={{ marginBottom: '1rem' }}>
+          <label className="psb-checkbox-label" style={{ marginBottom: '1.25rem' }}>
             <input type="checkbox" className="psb-checkbox" />
             Allocate using IP address pools.{' '}
             <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more ↗</button>
           </label>
 
-          {/* Add a subnet link */}
-          <button className="psb-add-subnet-link" onClick={handleAddSubnet}>
-            <svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13" aria-hidden="true">
-              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd"/>
-            </svg>
-            Add a subnet
-          </button>
+          {/* IPv4 address space label + block */}
+          <div className="psb-field" style={{ marginBottom: 0 }}>
+            <label className="psb-label">
+              IPv4 address space <span className="psb-required">*</span>
+              <span className="psb-info-icon" title="The private IP address range for this VNet in CIDR notation">ⓘ</span>
+            </label>
+          </div>
 
-          {/* Address space block */}
           <div className="psb-addr-block">
-            <div className="psb-addr-block-header">
-              <span className="psb-addr-block-chevron">▾</span>
-              <span className="psb-addr-block-cidr">{addrIp}/{addrPfx}</span>
-              <button className="psb-addr-delete-btn">
-                <TrashIcon />
-                Delete address space
-              </button>
-            </div>
-
             <div className="psb-addr-block-body">
-              {/* IP + prefix inputs */}
+              {/* IP input + prefix dropdown + delete — all on one row */}
               <div className="psb-addr-inputs">
                 <input
                   className={`psb-input${errors.addressSpace ? ' psb-input--error' : ''}`}
@@ -370,8 +360,12 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
                 >
                   {PREFIX_SIZES.map(n => <option key={n} value={String(n)}>/{n}</option>)}
                 </select>
+                <button className="psb-addr-delete-btn">
+                  <TrashIcon />
+                  Delete address space
+                </button>
               </div>
-              {errors.addressSpace && <p className="psb-field-error">{errors.addressSpace}</p>}
+              {errors.addressSpace && <p className="psb-field-error" style={{ marginTop: '0.2rem' }}>{errors.addressSpace}</p>}
 
               {/* Range display */}
               {networkEnd && (
@@ -417,6 +411,16 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
                   )}
                 </tbody>
               </table>
+
+              {/* Add a subnet — inside the block, logically belongs to this address space */}
+              <div style={{ padding: '0.5rem 0.75rem' }}>
+                <button className="psb-add-subnet-link" onClick={handleAddSubnet}>
+                  <svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13" aria-hidden="true">
+                    <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd"/>
+                  </svg>
+                  Add a subnet
+                </button>
+              </div>
             </div>
           </div>
 
