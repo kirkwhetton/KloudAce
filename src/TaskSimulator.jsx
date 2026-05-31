@@ -52,7 +52,7 @@ function FillInTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnsw
   const [submitted, setSubmitted] = useState(false);
   const [revealed, setRevealed]  = useState(false);
 
-  const normalize = (s) => s.trim().toLowerCase().replace(/\s+/g, " ");
+  const normalize = (s) => s.trim().toLowerCase().replace(/,(?=\d)/g, "").replace(/\s+/g, " ");
 
   const results = card.blanks.map((b, i) => normalize(values[i]) === normalize(b.answer));
   const allCorrect = results.every(Boolean);
