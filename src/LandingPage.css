@@ -39,7 +39,7 @@
 /* ── Hero ── */
 .lp-hero {
   background: linear-gradient(135deg, #0078d4 0%, #005a9e 55%, #003f6e 100%);
-  padding: 8rem 2rem 5rem;
+  padding: 3.5rem 2rem 5rem;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -71,7 +71,7 @@
 }
 
 .lp-hero-cloud-svg {
-  width: 20rem;
+  width: 30rem;
   height: auto;
   display: block;
   filter: drop-shadow(0 8px 32px rgba(0,0,0,0.6)) drop-shadow(0 2px 8px rgba(0,0,0,0.4));
@@ -87,7 +87,7 @@
 
 .lp-hero-brand {
   font-family: "Plus Jakarta Sans", "Inter", sans-serif;
-  font-size: 2rem;
+  font-size: 4rem;
   font-weight: 800;
   color: #0078d4;
   letter-spacing: -0.02em;
