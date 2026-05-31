@@ -259,6 +259,21 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
               <span className="psb-info-icon" title="Requires an AzureFirewallSubnet with a /26 or larger address range">ⓘ</span>
             </label>
           </div>
+
+          <div className="psb-security-section">
+            <p className="psb-security-heading">Azure DDoS Network Protection</p>
+            <p className="psb-security-desc">
+              Azure DDoS Network Protection, combined with application design best practices, provides
+              enhanced DDoS mitigation features to defend against DDoS attacks. It is automatically
+              tuned to help protect your specific Azure resources in a virtual network.{' '}
+              <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more.</button>
+            </p>
+            <label className="psb-checkbox-label">
+              <input type="checkbox" className="psb-checkbox" />
+              Enable DDoS Network Protection
+              <span className="psb-info-icon" title="Standard DDoS protection — additional charges apply">ⓘ</span>
+            </label>
+          </div>
         </div>
       )}
 
@@ -413,6 +428,7 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
                 <tr><td>Virtual network encryption</td><td>Disabled</td></tr>
                 <tr><td>Azure Bastion</td><td>Disabled</td></tr>
                 <tr><td>Azure Firewall</td><td>Disabled</td></tr>
+                <tr><td>DDoS Network Protection</td><td>Disabled</td></tr>
               </tbody>
             </table>
           </div>
