@@ -54,7 +54,11 @@ function FillInTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnsw
 
   const normalize = (s) => s.trim().toLowerCase().replace(/,(?=\d)/g, "").replace(/\s+/g, " ");
 
-  const results = card.blanks.map((b, i) => normalize(values[i]) === normalize(b.answer));
+  const results = card.blanks.map((b, i) => {
+    const v = normalize(values[i]);
+    const acceptable = b.answers ? b.answers.map(normalize) : [normalize(b.answer)];
+    return acceptable.some(a => v === a);
+  });
   const allCorrect = results.every(Boolean);
 
   const handleSubmit = () => {
