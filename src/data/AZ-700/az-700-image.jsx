@@ -70,7 +70,7 @@ export const FirewallDnatDiagram = () => (
 );
 
 export const LBHaPortsDiagram = () => (
-  <svg viewBox="0 0 960 900" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 960, fontFamily: "sans-serif" }}>
+  <svg viewBox="0 0 780 400" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 780, fontFamily: "sans-serif" }}>
     <defs>
       <marker id="lbag" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
         <path d="M0,0 L0,6 L8,3 z" fill="#555" />
@@ -82,81 +82,77 @@ export const LBHaPortsDiagram = () => (
 
     {/* ── LEFT: Spoke subnets ── */}
 
-    {/* Spoke A  y:30–220 */}
-    <rect x="10" y="30" width="240" height="190" rx="8" fill="#e8eaf6" stroke="#3949ab" strokeWidth="1.5" />
-    <text x="130" y="62" textAnchor="middle" fontSize="29" fill="#283593" fontWeight="bold">Spoke A Subnet</text>
-    <text x="130" y="92" textAnchor="middle" fontSize="22" fill="#3949ab">10.1.0.0/24</text>
-    <rect x="20" y="108" width="220" height="54" rx="5" fill="#c5cae9" stroke="#3949ab" strokeWidth="1" />
-    <text x="130" y="140" textAnchor="middle" fontSize="20" fill="#1a237e">UDR: 0.0.0.0/0 → ILB</text>
+    {/* Spoke A */}
+    <rect x="8" y="18" width="192" height="160" rx="8" fill="#e8eaf6" stroke="#3949ab" strokeWidth="2" />
+    <text x="104" y="46" textAnchor="middle" fontSize="18" fill="#283593" fontWeight="bold">Spoke A</text>
+    <text x="104" y="66" textAnchor="middle" fontSize="13" fill="#3949ab">10.1.0.0/24</text>
+    <rect x="18" y="80" width="172" height="80" rx="6" fill="#3949ab" />
+    <text x="104" y="108" textAnchor="middle" fontSize="16" fill="white" fontWeight="bold">UDR</text>
+    <text x="104" y="128" textAnchor="middle" fontSize="13" fill="#c5cae9">0.0.0.0/0</text>
+    <text x="104" y="148" textAnchor="middle" fontSize="13" fill="#c5cae9">→ ILB frontend</text>
 
-    {/* Spoke B  y:310–500 */}
-    <rect x="10" y="310" width="240" height="190" rx="8" fill="#e8eaf6" stroke="#3949ab" strokeWidth="1.5" />
-    <text x="130" y="342" textAnchor="middle" fontSize="29" fill="#283593" fontWeight="bold">Spoke B Subnet</text>
-    <text x="130" y="372" textAnchor="middle" fontSize="22" fill="#3949ab">10.2.0.0/24</text>
-    <rect x="20" y="388" width="220" height="54" rx="5" fill="#c5cae9" stroke="#3949ab" strokeWidth="1" />
-    <text x="130" y="420" textAnchor="middle" fontSize="20" fill="#1a237e">UDR: 0.0.0.0/0 → ILB</text>
+    {/* Spoke B */}
+    <rect x="8" y="222" width="192" height="160" rx="8" fill="#e8eaf6" stroke="#3949ab" strokeWidth="2" />
+    <text x="104" y="250" textAnchor="middle" fontSize="18" fill="#283593" fontWeight="bold">Spoke B</text>
+    <text x="104" y="270" textAnchor="middle" fontSize="13" fill="#3949ab">10.2.0.0/24</text>
+    <rect x="18" y="284" width="172" height="80" rx="6" fill="#3949ab" />
+    <text x="104" y="312" textAnchor="middle" fontSize="16" fill="white" fontWeight="bold">UDR</text>
+    <text x="104" y="332" textAnchor="middle" fontSize="13" fill="#c5cae9">0.0.0.0/0</text>
+    <text x="104" y="352" textAnchor="middle" fontSize="13" fill="#c5cae9">→ ILB frontend</text>
 
     {/* Arrows: Spokes → ILB */}
-    <line x1="250" y1="125" x2="298" y2="210" stroke="#555" strokeWidth="2" markerEnd="url(#lbag)" />
-    <line x1="250" y1="405" x2="298" y2="340" stroke="#555" strokeWidth="2" markerEnd="url(#lbag)" />
+    <line x1="200" y1="98" x2="244" y2="168" stroke="#555" strokeWidth="2" markerEnd="url(#lbag)" />
+    <line x1="200" y1="302" x2="244" y2="232" stroke="#555" strokeWidth="2" markerEnd="url(#lbag)" />
 
-    {/* ── CENTRE: Standard ILB  x:300 y:20 w:310 h:490 ── */}
+    {/* ── CENTRE: Standard ILB ── */}
+    <rect x="248" y="8" width="274" height="384" rx="10" fill="#e3f2fd" stroke="#1565c0" strokeWidth="2.5" />
+    <text x="385" y="40" textAnchor="middle" fontSize="20" fill="#0d47a1" fontWeight="bold">Standard ILB</text>
+    <text x="385" y="60" textAnchor="middle" fontSize="13" fill="#555">Frontend: 10.0.1.4</text>
 
-    <rect x="300" y="20" width="310" height="490" rx="10" fill="#e3f2fd" stroke="#1565c0" strokeWidth="2.5" />
-    <text x="455" y="60" textAnchor="middle" fontSize="29" fill="#0d47a1" fontWeight="bold">Standard ILB</text>
-    <text x="455" y="92" textAnchor="middle" fontSize="22" fill="#555">Frontend: 10.0.1.4</text>
+    {/* HA Ports pill */}
+    <rect x="262" y="72" width="246" height="92" rx="8" fill="#1565c0" />
+    <text x="385" y="106" textAnchor="middle" fontSize="18" fill="white" fontWeight="bold">HA Ports Rule</text>
+    <text x="385" y="128" textAnchor="middle" fontSize="14" fill="#bbdefb">Protocol: All  |  Port: 0</text>
+    <text x="385" y="153" textAnchor="middle" fontSize="13" fill="#90caf9">Every TCP, UDP and ICMP flow</text>
 
-    {/* HA Ports rule pill  y:108 */}
-    <rect x="316" y="108" width="278" height="100" rx="8" fill="#1565c0" />
-    <text x="455" y="148" textAnchor="middle" fontSize="24" fill="white" fontWeight="bold">HA Ports Rule</text>
-    <text x="455" y="182" textAnchor="middle" fontSize="20" fill="#bbdefb">Protocol: All  |  Port: 0</text>
+    {/* Floating IP pill */}
+    <rect x="262" y="178" width="246" height="92" rx="8" fill="#0288d1" />
+    <text x="385" y="212" textAnchor="middle" fontSize="18" fill="white" fontWeight="bold">Floating IP (DSR)</text>
+    <text x="385" y="234" textAnchor="middle" fontSize="14" fill="#b3e5fc">Original dst IP preserved</text>
+    <text x="385" y="258" textAnchor="middle" fontSize="13" fill="#80deea">NVA sees real destination</text>
 
-    {/* Floating IP badge  y:228 */}
-    <rect x="316" y="228" width="278" height="100" rx="8" fill="#0288d1" />
-    <text x="455" y="268" textAnchor="middle" fontSize="24" fill="white" fontWeight="bold">Floating IP (DSR)</text>
-    <text x="455" y="302" textAnchor="middle" fontSize="20" fill="#b3e5fc">Original dst IP preserved</text>
-
-    {/* Health probe  y:348 */}
-    <rect x="316" y="348" width="278" height="72" rx="7" fill="#e1f5fe" stroke="#0288d1" strokeWidth="1" />
-    <text x="455" y="390" textAnchor="middle" fontSize="22" fill="#01579b">Health Probe: TCP 22</text>
-
-    {/* Arrows: ILB → NVAs */}
-    <line x1="610" y1="230" x2="648" y2="260" stroke="#1565c0" strokeWidth="2" strokeDasharray="6 3" markerEnd="url(#lbag2)" />
-    <line x1="610" y1="330" x2="648" y2="450" stroke="#1565c0" strokeWidth="2" strokeDasharray="6 3" markerEnd="url(#lbag2)" />
+    {/* Health probe */}
+    <rect x="262" y="284" width="246" height="54" rx="7" fill="#e1f5fe" stroke="#0288d1" strokeWidth="1" />
+    <text x="385" y="312" textAnchor="middle" fontSize="15" fill="#01579b" fontWeight="600">Health Probe: TCP 22</text>
 
     {/* "distributes" label */}
-    <text x="630" y="360" textAnchor="middle" fontSize="19" fill="#1565c0" fontStyle="italic">distributes</text>
-    <text x="630" y="382" textAnchor="middle" fontSize="19" fill="#1565c0" fontStyle="italic">all flows</text>
+    <text x="537" y="192" textAnchor="middle" fontSize="12" fill="#1565c0" fontStyle="italic">distributes</text>
+    <text x="537" y="207" textAnchor="middle" fontSize="12" fill="#1565c0" fontStyle="italic">all flows</text>
 
-    {/* ── RIGHT: NVA Subnet  x:650 y:20 w:300 h:620 ── */}
+    {/* Arrows: ILB → NVAs */}
+    <line x1="522" y1="158" x2="558" y2="172" stroke="#1565c0" strokeWidth="2" strokeDasharray="5 3" markerEnd="url(#lbag2)" />
+    <line x1="522" y1="242" x2="558" y2="308" stroke="#1565c0" strokeWidth="2" strokeDasharray="5 3" markerEnd="url(#lbag2)" />
 
-    <rect x="650" y="20" width="300" height="620" rx="10" fill="#fff3e0" stroke="#ef6c00" strokeWidth="2" />
-    <text x="800" y="60" textAnchor="middle" fontSize="29" fill="#bf360c" fontWeight="bold">NVA Subnet</text>
-    <text x="800" y="90" textAnchor="middle" fontSize="22" fill="#e65100">10.0.1.0/24</text>
+    {/* ── RIGHT: NVA Subnet ── */}
+    <rect x="562" y="8" width="210" height="384" rx="10" fill="#fff3e0" stroke="#ef6c00" strokeWidth="2" />
+    <text x="667" y="38" textAnchor="middle" fontSize="18" fill="#bf360c" fontWeight="bold">NVA Subnet</text>
+    <text x="667" y="56" textAnchor="middle" fontSize="12" fill="#e65100">10.0.1.0/24</text>
 
-    {/* NVA-1  y:106–346 */}
-    <rect x="662" y="106" width="276" height="240" rx="8" fill="white" stroke="#ef6c00" strokeWidth="1.5" />
-    <text x="800" y="162" textAnchor="middle" fontSize="48">🔒</text>
-    <text x="800" y="198" textAnchor="middle" fontSize="26" fill="#333" fontWeight="bold">NVA-1</text>
-    <text x="800" y="228" textAnchor="middle" fontSize="22" fill="#555">10.0.1.10</text>
-    <rect x="672" y="244" width="256" height="54" rx="5" fill="#fff8e1" stroke="#ffa000" strokeWidth="1" />
-    <text x="800" y="276" textAnchor="middle" fontSize="20" fill="#e65100">IP Forwarding: Enabled</text>
+    {/* NVA-1 */}
+    <rect x="572" y="66" width="190" height="148" rx="8" fill="white" stroke="#ef6c00" strokeWidth="1.5" />
+    <text x="667" y="102" textAnchor="middle" fontSize="36">🔒</text>
+    <text x="667" y="132" textAnchor="middle" fontSize="18" fill="#333" fontWeight="bold">NVA-1</text>
+    <text x="667" y="150" textAnchor="middle" fontSize="12" fill="#888">10.0.1.10</text>
+    <rect x="582" y="160" width="170" height="40" rx="5" fill="#fff3e0" stroke="#ef6c00" strokeWidth="1" />
+    <text x="667" y="185" textAnchor="middle" fontSize="14" fill="#e65100" fontWeight="bold">IP Forwarding: ✓</text>
 
-    {/* NVA-2  y:366–606 */}
-    <rect x="662" y="366" width="276" height="240" rx="8" fill="white" stroke="#ef6c00" strokeWidth="1.5" />
-    <text x="800" y="422" textAnchor="middle" fontSize="48">🔒</text>
-    <text x="800" y="458" textAnchor="middle" fontSize="26" fill="#333" fontWeight="bold">NVA-2</text>
-    <text x="800" y="488" textAnchor="middle" fontSize="22" fill="#555">10.0.1.11</text>
-    <rect x="672" y="504" width="256" height="54" rx="5" fill="#fff8e1" stroke="#ffa000" strokeWidth="1" />
-    <text x="800" y="536" textAnchor="middle" fontSize="20" fill="#e65100">IP Forwarding: Enabled</text>
-
-    {/* ── BOTTOM: legend  y:660 ── */}
-    <rect x="10" y="660" width="940" height="228" rx="8" fill="#f5f5f5" stroke="#bbb" strokeWidth="1" />
-    <text x="28" y="696" fontSize="24" fill="#333" fontWeight="bold">Key points:</text>
-    <text x="28" y="730" fontSize="22" fill="#555">① UDR forces spoke traffic to the ILB frontend — without it, spokes bypass the NVA entirely</text>
-    <text x="28" y="764" fontSize="22" fill="#555">② HA Ports (Protocol: All / Port: 0) matches every TCP, UDP and ICMP flow without per-port rules</text>
-    <text x="28" y="798" fontSize="22" fill="#555">③ Floating IP (DSR) — NVA receives the original destination IP so it can route the packet correctly</text>
-    <text x="28" y="836" fontSize="19" fill="#888" fontStyle="italic">All three settings are interdependent — removing any one breaks NVA inspection.</text>
+    {/* NVA-2 */}
+    <rect x="572" y="230" width="190" height="148" rx="8" fill="white" stroke="#ef6c00" strokeWidth="1.5" />
+    <text x="667" y="266" textAnchor="middle" fontSize="36">🔒</text>
+    <text x="667" y="296" textAnchor="middle" fontSize="18" fill="#333" fontWeight="bold">NVA-2</text>
+    <text x="667" y="314" textAnchor="middle" fontSize="12" fill="#888">10.0.1.11</text>
+    <rect x="582" y="324" width="170" height="40" rx="5" fill="#fff3e0" stroke="#ef6c00" strokeWidth="1" />
+    <text x="667" y="349" textAnchor="middle" fontSize="14" fill="#e65100" fontWeight="bold">IP Forwarding: ✓</text>
   </svg>
 );
 
