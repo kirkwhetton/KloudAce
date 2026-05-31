@@ -344,7 +344,15 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
 
           <div className="psb-addr-block">
             <div className="psb-addr-block-body">
-              {/* IP input + prefix dropdown + delete — all on one row */}
+              {/* Delete link — right-aligned above the inputs */}
+              <div className="psb-addr-delete-row">
+                <button className="psb-addr-delete-btn">
+                  <TrashIcon />
+                  Delete address space
+                </button>
+              </div>
+
+              {/* IP input + prefix dropdown only — no competing elements */}
               <div className="psb-addr-inputs">
                 <input
                   className={`psb-input${errors.addressSpace ? ' psb-input--error' : ''}`}
@@ -360,10 +368,6 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
                 >
                   {PREFIX_SIZES.map(n => <option key={n} value={String(n)}>/{n}</option>)}
                 </select>
-                <button className="psb-addr-delete-btn">
-                  <TrashIcon />
-                  Delete address space
-                </button>
               </div>
               {errors.addressSpace && <p className="psb-field-error" style={{ marginTop: '0.2rem' }}>{errors.addressSpace}</p>}
 

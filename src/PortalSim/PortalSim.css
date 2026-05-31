@@ -248,6 +248,12 @@
   overflow: hidden;
 }
 
+.psb-addr-delete-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.35rem;
+}
+
 .psb-addr-delete-btn {
   display: inline-flex;
   align-items: center;
@@ -261,8 +267,6 @@
   font-family: inherit;
   padding: 0;
   white-space: nowrap;
-  margin-left: auto;
-  flex-shrink: 0;
 }
 .psb-addr-delete-btn:hover { text-decoration: underline; }
 
@@ -276,8 +280,13 @@
   margin-bottom: 0.3rem;
 }
 
+.psb-addr-inputs .psb-input {
+  flex: 1;          /* IP field fills remaining space */
+  min-width: 0;
+}
+
 .psb-addr-prefix-select {
-  width: 90px;
+  width: 110px;
   flex-shrink: 0;
 }
 
