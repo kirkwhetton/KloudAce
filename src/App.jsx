@@ -332,7 +332,7 @@ function App() {
               (c) => c.type === gameType && (!examFilter || c.exam === examFilter)
             );
           })()
-        : baseCards.filter((c) => c.exam === selectedExam && c.type !== "connections" && c.type !== "crossword")
+        : baseCards.filter((c) => c.exam === selectedExam && c.type !== "connections" && c.type !== "crossword" && c.type !== "portal")
   ).filter((c) => isPremium || c.exam === "AZ-900" || FREE_CARD_IDS.has(c.id) || selectedExam?.startsWith("CUSTOM:") || selectedExam?.startsWith("GAMES:") || selectedExam?.startsWith("LAB:"))
   .slice(0, isGuest && selectedExam !== "AZ-900" && !selectedExam?.startsWith("CUSTOM:") && !selectedExam?.startsWith("GAMES:") && !selectedExam?.startsWith("LAB:") ? 30 : Infinity);
 
@@ -368,6 +368,7 @@ function App() {
     if (c.type === "truefalse")   return "truefalse";
     if (c.type === "multi")       return "multi";
     if (!!c.choices && !c.scenario) return "mcq";
+    if (c.type === "portal") return "portal";
     return "flashcard";
   };
   const afterTypeFilter = disabledTypes.size === 0
@@ -654,6 +655,7 @@ function App() {
         <ExamSelect
           user={user}
           isGuest={isGuest}
+          isPremium={isPremium}
           onSelect={(exam) => handleExam(exam)}
           onLogout={logout}
           onOpenDecks={() => setShowCustomDecks(true)}
@@ -806,6 +808,75 @@ function App() {
       </div>
     );
   };
+
+  // ── Full-screen portal lab layout ─────────────────────────────
+  if (selectedExam?.startsWith("LAB:")) {
+    const labHeader = (
+      <header className="lab-page-header">
+        <button className="lab-back-btn" onClick={goToExams}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="13" height="13" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+          Labs
+        </button>
+        <div className="lab-page-logo">
+          <svg className="lab-page-cloud-svg" viewBox="0 0 260 165" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <path id="labCloud" d="M50 115C30 115 15 100 15 82C15 66 27 53 43 51C45 30 63 14 85 14C102 14 117 24 124 39C129 36 135 34 141 34C159 34 174 49 174 67C188 69 199 81 199 95C199 106 191 115 180 115Z"/>
+            </defs>
+            <use href="#labCloud" x="20" y="27" fill="#185FA5"/>
+            <use href="#labCloud" x="40" y="47" fill="#ffffff" stroke="#2980D9" strokeWidth="5"/>
+          </svg>
+          <span className="lab-page-brand">Kloud<span className="title-ace">Ace</span></span>
+          <span className="lab-page-subtitle">Labs</span>
+        </div>
+        {current && (
+          <div className="lab-page-meta">
+            <span className="lab-page-exam-pill">{current.exam}</span>
+            <span className="lab-page-diff-pill" data-diff={current.difficulty}>{current.difficulty}</span>
+          </div>
+        )}
+      </header>
+    );
+
+    if (loadingCards) {
+      return (
+        <div className="lab-page">
+          {labHeader}
+          <div className="lab-page-body lab-page-body--loading">
+            <div className="deck-loading-spinner" aria-label="Loading lab" />
+            <p className="lab-page-loading-text">Loading lab…</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (current?.type === "portal") {
+      return (
+        <div className="lab-page">
+          {labHeader}
+          <div className="lab-page-body">
+            <PortalSim
+              key={`${sessionKey}-${current.id}`}
+              card={current}
+              onKnow={() => advance(true)}
+              onSrsRate={srsMode ? handleSrsRate : undefined}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="lab-page">
+        {labHeader}
+        <div className="lab-page-body lab-page-body--loading">
+          <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>Lab not found.</p>
+          <button className="lab-back-btn" onClick={goToExams} style={{ marginTop: "0.75rem" }}>← Back to Labs</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`app${isExiting ? " app--exiting" : ""}${isEntering ? " app--entering" : ""}`} data-exam={selectedExam}>

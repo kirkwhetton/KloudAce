@@ -58,24 +58,29 @@ export function useAuth() {
 
     // onAuthStateChange fires INITIAL_SESSION on mount (from localStorage cache),
     // which covers the same ground as getSession() — so we use only one source.
+    let seq = 0;
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
+        const mine = ++seq;
         if (session?.user) {
           try {
-            setUser(await fetchProfile(session.user));
+            const profile = await fetchProfile(session.user);
+            if (mine === seq) setUser(profile);
           } catch {
             // fetchProfile failed (network/RLS issue) but the session is valid —
-            // fall back to basic Supabase auth data so the user isn't logged out.
-            setUser({
-              id:          session.user.id,
-              name:        session.user.user_metadata?.name ?? "",
-              email:       session.user.email ?? "",
-              isPremium:   false,
-              isDeveloper: false,
-            });
+            // preserve any flags already loaded rather than clobbering them.
+            if (mine === seq) {
+              setUser(prev => ({
+                id:          session.user.id,
+                name:        prev?.name        ?? session.user.user_metadata?.name ?? "",
+                email:       prev?.email       ?? session.user.email ?? "",
+                isPremium:   prev?.isPremium   ?? false,
+                isDeveloper: prev?.isDeveloper ?? false,
+              }));
+            }
           }
         } else {
-          setUser(null);
+          if (mine === seq) setUser(null);
         }
         settle();
       }

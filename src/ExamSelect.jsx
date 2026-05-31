@@ -106,7 +106,7 @@ const SignOutButton = ({ onSignOut }) => (
   </button>
 );
 
-export default function ExamSelect({ user, isGuest, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack, loadingExam, cardLoadError }) {
+export default function ExamSelect({ user, isGuest, isPremium, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack, loadingExam, cardLoadError }) {
   const exams = Object.values(EXAM_META);
   const handleSignOut = () => onLogout();
   const [view, setView] = useState(() => {
@@ -124,6 +124,8 @@ export default function ExamSelect({ user, isGuest, onSelect, onLogout, onOpenDe
     } catch { return "splash-initial"; }
   });
   const [showGuestGamesModal, setShowGuestGamesModal] = useState(false);
+  const [showGuestLabsModal, setShowGuestLabsModal] = useState(false);
+  const [showLabUpgradeModal, setShowLabUpgradeModal] = useState(false);
   const [gameExam, setGameExam] = useState("ALL");
   const [portalCards, setPortalCards] = useState(null);
   const [labExam, setLabExam] = useState("ALL");
@@ -268,7 +270,7 @@ const topicMap = flashcards.reduce((acc, c) => {
                 <div className="splash-choice-cta">Start exam study →</div>
               </button>
 
-              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #0369a1, #0c4a6e)" }} onClick={() => navigateTo("labs")}>
+              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #0369a1, #0c4a6e)" }} onClick={() => isGuest ? setShowGuestLabsModal(true) : navigateTo("labs")}>
                 <span className="splash-choice-icon" style={{ color: "#7dd3fc", background: "rgba(255,255,255,0.15)", borderColor: "rgba(125,211,252,0.4)" }}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
@@ -327,6 +329,48 @@ const topicMap = flashcards.reduce((acc, c) => {
               </button>
               <button className="guest-games-modal-btn guest-games-modal-btn--ghost" onClick={() => setShowGuestGamesModal(false)}>
                 Maybe later
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showGuestLabsModal && (
+        <div className="guest-games-overlay" onClick={() => setShowGuestLabsModal(false)}>
+          <div className="guest-games-modal" onClick={e => e.stopPropagation()}>
+            <div className="guest-games-modal-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="28" height="28">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <h3 className="guest-games-modal-title">Account required</h3>
+            <p className="guest-games-modal-body">Labs are available to registered users. Create a free account to access Azure portal simulations and hands-on exercises.</p>
+            <div className="guest-games-modal-actions">
+              <button className="guest-games-modal-btn guest-games-modal-btn--primary" onClick={handleSignOut}>
+                Sign up / Sign in
+              </button>
+              <button className="guest-games-modal-btn guest-games-modal-btn--ghost" onClick={() => setShowGuestLabsModal(false)}>
+                Maybe later
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showLabUpgradeModal && (
+        <div className="guest-games-overlay" onClick={() => setShowLabUpgradeModal(false)}>
+          <div className="guest-games-modal" onClick={e => e.stopPropagation()}>
+            <div className="guest-games-modal-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="28" height="28">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            </div>
+            <h3 className="guest-games-modal-title">Premium lab</h3>
+            <p className="guest-games-modal-body">This lab requires a Premium subscription. Upgrade to unlock all portal simulations and hands-on Azure exercises.</p>
+            <div className="guest-games-modal-actions">
+              <button className="guest-games-modal-btn guest-games-modal-btn--ghost" onClick={() => setShowLabUpgradeModal(false)}>
+                Got it
               </button>
             </div>
           </div>
@@ -626,11 +670,12 @@ const topicMap = flashcards.reduce((acc, c) => {
             <div className="splash-labs-grid">
               {filteredLabs.map(card => {
                 const colours = EXAM_COLOURS_LAB[card.exam] ?? { from: "#374151", to: "#1f2937" };
+                const isLocked = !isPremium && !card.is_free;
                 return (
                   <button
                     key={card.id}
-                    className="splash-lab-card"
-                    onClick={() => onSelect(`LAB:${card.id}`)}
+                    className={`splash-lab-card${isLocked ? " splash-lab-card--locked" : ""}`}
+                    onClick={() => isLocked ? setShowLabUpgradeModal(true) : onSelect(`LAB:${card.id}`)}
                   >
                     <div
                       className="splash-lab-badge"
@@ -641,10 +686,22 @@ const topicMap = flashcards.reduce((acc, c) => {
                     </div>
                     <p className="splash-lab-task">{card.task}</p>
                     <span className="splash-lab-cta">
-                      Start lab
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="12" height="12">
-                        <polyline points="9 18 15 12 9 6"/>
-                      </svg>
+                      {isLocked ? (
+                        <>
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="11" height="11">
+                            <rect x="3" y="11" width="18" height="11" rx="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                          </svg>
+                          Premium
+                        </>
+                      ) : (
+                        <>
+                          Start lab
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="12" height="12">
+                            <polyline points="9 18 15 12 9 6"/>
+                          </svg>
+                        </>
+                      )}
                     </span>
                   </button>
                 );

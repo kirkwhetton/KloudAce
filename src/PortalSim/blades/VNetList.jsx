@@ -1,21 +1,16 @@
 import BladeShell from '../BladeShell';
 
-const EXISTING_RGS = [
-  { name: 'rg-dev-westus2',    subscription: 'Dev / Test',   location: 'West US 2' },
-  { name: 'rg-infra-eastus',   subscription: 'Production',   location: 'East US'   },
-  { name: 'rg-monitoring',     subscription: 'Production',   location: 'East US 2' },
+const EXISTING_VNETS = [
+  { name: 'vnet-hub-westus2',  rg: 'rg-networking',      location: 'West US 2', space: '10.0.0.0/16' },
+  { name: 'vnet-spoke-eastus', rg: 'rg-workloads-prod',  location: 'East US',   space: '10.10.0.0/16' },
+  { name: 'vnet-mgmt-westus2', rg: 'rg-management',      location: 'West US 2', space: '10.20.0.0/16' },
 ];
 
-export default function ResourceGroupList({ onOpen, onClose, completed }) {
+export default function VNetList({ onOpen, onClose, completed }) {
   return (
-    <BladeShell title="Resource groups" width={700} onClose={onClose}>
-      {/* Command bar */}
+    <BladeShell title="Virtual networks" width={780} onClose={onClose}>
       <div className="psb-commandbar">
-        <button
-          className="psb-cmd psb-cmd--primary"
-          onClick={() => onOpen('rg-create')}
-          disabled={completed}
-        >
+        <button className="psb-cmd psb-cmd--primary" onClick={() => onOpen('vnet-create')} disabled={completed}>
           <svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13" aria-hidden="true">
             <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd"/>
           </svg>
@@ -41,37 +36,39 @@ export default function ResourceGroupList({ onOpen, onClose, completed }) {
         </button>
       </div>
 
-      {/* Filter row */}
       <div className="psb-filterbar">
-        <input className="psb-filter-input" placeholder="Filter by name…" />
+        <input className="psb-filter-input" placeholder="Filter by name…" readOnly />
         <select className="psb-filter-select"><option>Subscription == all</option></select>
+        <select className="psb-filter-select"><option>Resource group == all</option></select>
         <select className="psb-filter-select"><option>Location == all</option></select>
         <button className="psb-cmd psb-cmd--sm">⊕ Add filter</button>
       </div>
 
-      {/* Table */}
       <table className="psb-table">
         <thead>
           <tr>
             <th style={{ width: 24 }}><input type="checkbox" /></th>
             <th>Name ↑</th>
-            <th>Subscription</th>
+            <th>Resource group</th>
             <th>Location</th>
+            <th>Address space</th>
+            <th>DNS servers</th>
           </tr>
         </thead>
         <tbody>
-          {EXISTING_RGS.map(rg => (
-            <tr key={rg.name}>
+          {EXISTING_VNETS.map(v => (
+            <tr key={v.name}>
               <td><input type="checkbox" /></td>
-              <td><button className="psb-link">{rg.name}</button></td>
-              <td>{rg.subscription}</td>
-              <td>{rg.location}</td>
+              <td><button className="psb-link">{v.name}</button></td>
+              <td>{v.rg}</td>
+              <td>{v.location}</td>
+              <td>{v.space}</td>
+              <td>Default (Azure-provided)</td>
             </tr>
           ))}
         </tbody>
       </table>
-
-      <p className="psb-table-footer">Showing 1 to {EXISTING_RGS.length} of {EXISTING_RGS.length} records</p>
+      <p className="psb-table-footer">Showing 1 to {EXISTING_VNETS.length} of {EXISTING_VNETS.length} records</p>
     </BladeShell>
   );
 }

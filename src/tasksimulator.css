@@ -444,6 +444,13 @@
   .task-card { padding: 1.25rem; }
   .match-grid { grid-template-columns: 1fr; }
   .match-paired-arrow { display: none; }
+  /* Prevent iOS Safari zoom on input focus */
+  .task-input,
+  .script-input,
+  input,
+  textarea {
+    font-size: 16px;
+  }
 }
 
 /* ─── SCRIPT TASK — terminal shell ─── */
