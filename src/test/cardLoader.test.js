@@ -8,7 +8,7 @@ vi.mock('../auth/supabase.js', () => ({
 }))
 
 import { supabase } from '../auth/supabase.js'
-import { loadExamCardsRemote, loadCardsByCategory, SUPABASE_EXAMS, bustCardCache } from '../cardLoader'
+import { loadExamCardsRemote, loadCardsByCategory, loadPortalCards, SUPABASE_EXAMS, bustCardCache } from '../cardLoader'
 
 const mockCard = {
   id: 'AZ-900-101',
@@ -33,6 +33,25 @@ function mockSelectError() {
   const chain = {
     select: vi.fn().mockReturnThis(),
     eq: vi.fn().mockResolvedValue({ data: null, error: { message: 'DB error' } }),
+  }
+  supabase.from.mockReturnValue(chain)
+}
+
+// loadPortalCards uses .select().eq().order() — different chain from loadExamCardsRemote
+function mockPortalSelect(rows) {
+  const chain = {
+    select: vi.fn().mockReturnThis(),
+    eq:     vi.fn().mockReturnThis(),
+    order:  vi.fn().mockResolvedValue({ data: rows, error: null }),
+  }
+  supabase.from.mockReturnValue(chain)
+}
+
+function mockPortalSelectError() {
+  const chain = {
+    select: vi.fn().mockReturnThis(),
+    eq:     vi.fn().mockReturnThis(),
+    order:  vi.fn().mockResolvedValue({ data: null, error: { message: 'DB error' } }),
   }
   supabase.from.mockReturnValue(chain)
 }
@@ -91,5 +110,57 @@ describe('loadCardsByCategory', () => {
     mockSelectError()
     const result = await loadCardsByCategory('Cloud Concepts')
     expect(result).toBeNull()
+  })
+})
+
+const mockPortalCard = {
+  id: 'AZ-900-PS-001',
+  exam: 'AZ-900',
+  category: 'Core Services',
+  type: 'portal',
+  difficulty: 'easy',
+  is_free: true,
+  data: {
+    initialBlade: 'rg-list',
+    task: 'Create a resource group named rg-demo in East US.',
+    solution: { name: 'rg-demo', region: 'East US' },
+  },
+}
+
+describe('loadPortalCards', () => {
+  it('returns portal cards with data fields spread onto the card object', async () => {
+    mockPortalSelect([mockPortalCard])
+    const cards = await loadPortalCards()
+    expect(cards).toHaveLength(1)
+    const card = cards[0]
+    expect(card.id).toBe('AZ-900-PS-001')
+    expect(card.type).toBe('portal')
+    // data fields are spread into the card by reconstruct
+    expect(card.initialBlade).toBe('rg-list')
+    expect(card.task).toBe('Create a resource group named rg-demo in East US.')
+    expect(card.solution).toEqual({ name: 'rg-demo', region: 'East US' })
+  })
+
+  it('returns null on Supabase error', async () => {
+    mockPortalSelectError()
+    const result = await loadPortalCards()
+    expect(result).toBeNull()
+  })
+
+  it('returns an empty array when no portal cards exist', async () => {
+    mockPortalSelect([])
+    const result = await loadPortalCards()
+    expect(result).toEqual([])
+  })
+
+  it('returns the cached result on a second call without hitting Supabase again', async () => {
+    mockPortalSelect([mockPortalCard])
+    const first = await loadPortalCards()
+    // Reset mock — a real network call would return empty; cache should prevent it
+    mockPortalSelect([])
+    const second = await loadPortalCards()
+    expect(second).toEqual(first)
+    // The eq mock should only have been called once (for the first request)
+    expect(supabase.from).toHaveBeenCalledTimes(1)
   })
 })

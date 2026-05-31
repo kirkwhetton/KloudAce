@@ -231,6 +231,98 @@ describe('updateProfile', () => {
   })
 })
 
+// ── Auth event race condition (seq counter) ─────────────────────
+// Two auth events fire. The first fetch is slow; the second resolves
+// first. After that, the stale first fetch resolves. The seq counter
+// must prevent it from overwriting correct state.
+describe('auth event race condition', () => {
+  it('ignores a stale profile when a newer auth event has already resolved', async () => {
+    let firstResolve
+    let callCount = 0
+
+    supabase.from.mockImplementation(() => ({
+      select: vi.fn().mockReturnThis(),
+      eq:     vi.fn().mockReturnThis(),
+      single: vi.fn().mockImplementation(() => {
+        callCount++
+        if (callCount === 1) return new Promise(resolve => { firstResolve = resolve })
+        return Promise.resolve({ data: { ...TEST_PROFILE, name: 'Second event' } })
+      }),
+    }))
+
+    // Fire event 1, then event 2 after a microtask (before event 1's fetch resolves)
+    supabase.auth.onAuthStateChange.mockImplementation(cb => {
+      Promise.resolve().then(() => {
+        cb('SIGNED_IN', { user: TEST_USER })
+        Promise.resolve().then(() => cb('TOKEN_REFRESHED', { user: TEST_USER }))
+      })
+      return { data: { subscription: { unsubscribe: vi.fn() } } }
+    })
+
+    const { result } = renderHook(() => useAuth())
+    await waitFor(() => expect(result.current.user?.name).toBe('Second event'))
+
+    // Resolve the first (stale) fetch — seq counter should discard it
+    firstResolve({ data: { ...TEST_PROFILE, name: 'Stale first event' } })
+    await new Promise(r => setTimeout(r, 30))
+
+    expect(result.current.user?.name).toBe('Second event')
+  })
+})
+
+// ── Profile fetch failure — flag preservation ───────────────────
+// When a profile fetch fails (network blip on token refresh), the
+// catch block must keep existing isPremium / isDeveloper flags
+// instead of clobbering them with false.
+describe('profile fetch failure — flag preservation', () => {
+  it('retains isPremium and isDeveloper when a subsequent profile fetch throws', async () => {
+    let callCount = 0
+
+    supabase.from.mockImplementation(() => ({
+      select: vi.fn().mockReturnThis(),
+      eq:     vi.fn().mockReturnThis(),
+      single: vi.fn().mockImplementation(() => {
+        callCount++
+        if (callCount === 1)
+          return Promise.resolve({ data: { ...TEST_PROFILE, is_premium: true, is_developer: true } })
+        return Promise.reject(new Error('network error'))
+      }),
+    }))
+
+    // Fire INITIAL_SESSION then TOKEN_REFRESHED sequentially
+    supabase.auth.onAuthStateChange.mockImplementation(cb => {
+      Promise.resolve()
+        .then(() => cb('INITIAL_SESSION', { user: TEST_USER }))
+        .then(() => cb('TOKEN_REFRESHED', { user: TEST_USER }))
+      return { data: { subscription: { unsubscribe: vi.fn() } } }
+    })
+
+    const { result } = renderHook(() => useAuth())
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    await new Promise(r => setTimeout(r, 50))
+
+    expect(result.current.user?.isPremium).toBe(true)
+    expect(result.current.user?.isDeveloper).toBe(true)
+  })
+
+  it('uses supabase user email as fallback identity when every profile fetch fails', async () => {
+    supabase.from.mockImplementation(() => ({
+      select: vi.fn().mockReturnThis(),
+      eq:     vi.fn().mockReturnThis(),
+      single: vi.fn().mockRejectedValue(new Error('network error')),
+    }))
+
+    mockAuthState({ user: TEST_USER })
+
+    const { result } = await renderAuth()
+
+    expect(result.current.user).not.toBeNull()
+    expect(result.current.user?.email).toBe(TEST_USER.email)
+    expect(result.current.user?.isPremium).toBe(false)
+    expect(result.current.user?.isDeveloper).toBe(false)
+  })
+})
+
 describe('changePassword', () => {
   it('returns false and sets error when current password is wrong', async () => {
     mockAuthState({ user: TEST_USER })

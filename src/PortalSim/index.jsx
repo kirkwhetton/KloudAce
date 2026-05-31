@@ -95,7 +95,7 @@ export default function PortalSim({ card, onKnow, onSrsRate }) {
 
   useEffect(() => {
     if (bladeAreaRef.current) {
-      bladeAreaRef.current.scrollTo({ left: bladeAreaRef.current.scrollWidth, behavior: 'smooth' });
+      bladeAreaRef.current.scrollTo?.({ left: bladeAreaRef.current.scrollWidth, behavior: 'smooth' });
     }
   }, [blades.length]);
 

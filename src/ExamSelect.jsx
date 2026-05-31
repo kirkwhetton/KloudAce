@@ -638,6 +638,7 @@ const topicMap = flashcards.reduce((acc, c) => {
     );
 
     return (
+      <>
       <div className="splash-page">
         <div className={`splash-card splash-card--wide ${animClass}`}>
           <BackButton onClick={() => navigateTo("chooser")} />
@@ -712,6 +713,26 @@ const topicMap = flashcards.reduce((acc, c) => {
           <SignOutButton onSignOut={handleSignOut} />
         </div>
       </div>
+
+      {showLabUpgradeModal && (
+        <div className="guest-games-overlay" onClick={() => setShowLabUpgradeModal(false)}>
+          <div className="guest-games-modal" onClick={e => e.stopPropagation()}>
+            <div className="guest-games-modal-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="28" height="28">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            </div>
+            <h3 className="guest-games-modal-title">Premium lab</h3>
+            <p className="guest-games-modal-body">This lab requires a Premium subscription. Upgrade to unlock all portal simulations and hands-on Azure exercises.</p>
+            <div className="guest-games-modal-actions">
+              <button className="guest-games-modal-btn guest-games-modal-btn--ghost" onClick={() => setShowLabUpgradeModal(false)}>
+                Got it
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      </>
     );
   }
 
