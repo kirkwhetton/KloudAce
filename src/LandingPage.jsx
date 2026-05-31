@@ -131,7 +131,6 @@ export default function LandingPage({ onGetStarted }) {
             </div>
           </div>
 
-          <div className="lp-hero-badge">Cloud certifications</div>
           <h1 className="lp-hero-h1">The smartest way<br />to pass your cloud exam</h1>
           <p className="lp-hero-sub">
             Spaced repetition, scenario-based questions, timed exam mode, and<br className="lp-br" />
@@ -162,7 +161,7 @@ export default function LandingPage({ onGetStarted }) {
       <section className="lp-section lp-section--light">
         <div className="lp-section-inner">
           <div className="lp-section-label">How it works</div>
-          <h2 className="lp-section-h2">Everything you need to pass,<br />nothing you don't</h2>
+          <h2 className="lp-section-h2">Everything you need to pass</h2>
           <div className="lp-features-grid">
             {FEATURES.map(f => (
               <div key={f.title} className="lp-feature-card">
@@ -225,7 +224,7 @@ export default function LandingPage({ onGetStarted }) {
             <div className="lp-plan lp-plan--free">
               <div className="lp-plan-header">
                 <div className="lp-plan-name">Free</div>
-                <div className="lp-plan-price">£0<span>/forever</span></div>
+                <div className="lp-plan-price">£0</div>
               </div>
               <ul className="lp-plan-features">
                 {FREE_FEATURES.map(f => (
