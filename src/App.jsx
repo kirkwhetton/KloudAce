@@ -859,8 +859,8 @@ function App() {
             <PortalSim
               key={`${sessionKey}-${current.id}`}
               card={current}
-              onKnow={() => advance(true)}
-              onSrsRate={srsMode ? handleSrsRate : undefined}
+              onKnow={() => { advance(true); goToExams(); }}
+              onSrsRate={srsMode ? (score) => { handleSrsRate(score); goToExams(); } : undefined}
             />
           </div>
         </div>
