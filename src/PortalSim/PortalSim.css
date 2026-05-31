@@ -200,6 +200,46 @@
   border-top: 1px solid rgba(245,158,11,0.2);
 }
 
+/* Security tab sections */
+.psb-security-section {
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.psb-security-section:last-child { border-bottom: none; }
+
+.psb-security-heading {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.45rem;
+}
+
+.psb-security-desc {
+  font-size: 0.79rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0 0 0.65rem;
+  max-width: 540px;
+}
+
+.psb-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.psb-checkbox {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--brand);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
 /* Empty subnet placeholder */
 .psb-empty-subnets {
   padding: 0.65rem 0.75rem;

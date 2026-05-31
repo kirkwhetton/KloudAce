@@ -16,7 +16,7 @@ const REGIONS = [
   'Brazil South',
 ];
 
-const TABS    = ['Basics', 'Security', 'IP addresses', 'Tags', 'Review + create'];
+const TABS    = ['Basics', 'Security', 'Address space', 'Tags', 'Review + create'];
 const TAB_IDS = ['basics', 'security', 'ip', 'tags', 'review'];
 
 const TrashIcon = () => (
@@ -213,55 +213,51 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
       {tab === 'security' && (
         <div className="psb-form">
           <p className="psb-section-desc">
-            Enable Azure security services to protect your virtual network resources.
+            Enhance the security of your virtual network with these additional paid security services.{' '}
+            <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more ↗</button>
           </p>
 
-          <div className="psb-field-group">
-            <p className="psb-field-group-title">Azure Bastion</p>
-            <p className="psb-field-group-desc">Azure Bastion provides seamless RDP and SSH connectivity to your VMs directly in the Azure portal over SSL, without exposing public IP addresses.</p>
-            <div className="psb-field">
-              <label className="psb-label">Enable Azure Bastion</label>
-              <div className="psb-toggle-row">
-                <label className="psb-toggle-option">
-                  <input type="radio" name="bastion" defaultChecked /> Disable
-                </label>
-                <label className="psb-toggle-option">
-                  <input type="radio" name="bastion" /> Enable
-                </label>
-              </div>
-            </div>
+          <div className="psb-security-section">
+            <p className="psb-security-heading">Virtual network encryption</p>
+            <p className="psb-security-desc">
+              Enable Virtual network encryption to encrypt traffic traveling within the virtual network.
+              Virtual machines must have accelerated networking enabled. Traffic to public IP addresses
+              is not encrypted.{' '}
+              <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more.</button>
+            </p>
+            <label className="psb-checkbox-label">
+              <input type="checkbox" className="psb-checkbox" />
+              Virtual network encryption
+            </label>
           </div>
 
-          <div className="psb-field-group">
-            <p className="psb-field-group-title">Azure DDoS Network Protection</p>
-            <p className="psb-field-group-desc">Azure DDoS Network Protection provides enhanced DDoS mitigation features against DDoS attacks on resources in this virtual network.</p>
-            <div className="psb-field">
-              <label className="psb-label">Enable Azure DDoS Network Protection</label>
-              <div className="psb-toggle-row">
-                <label className="psb-toggle-option">
-                  <input type="radio" name="ddos" defaultChecked /> Disable
-                </label>
-                <label className="psb-toggle-option">
-                  <input type="radio" name="ddos" /> Enable
-                </label>
-              </div>
-            </div>
+          <div className="psb-security-section">
+            <p className="psb-security-heading">Azure Bastion</p>
+            <p className="psb-security-desc">
+              Azure Bastion is a paid service that provides secure RDP/SSH connectivity to your virtual
+              machines over TLS. When you connect via Azure Bastion, your virtual machines do not need
+              a public IP address.{' '}
+              <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more.</button>
+            </p>
+            <label className="psb-checkbox-label">
+              <input type="checkbox" className="psb-checkbox" />
+              Enable Azure Bastion
+              <span className="psb-info-icon" title="Deploys a dedicated subnet and public IP for the Bastion host">ⓘ</span>
+            </label>
           </div>
 
-          <div className="psb-field-group">
-            <p className="psb-field-group-title">Azure Firewall</p>
-            <p className="psb-field-group-desc">Azure Firewall is a managed, cloud-based network security service that protects your Azure Virtual Network resources.</p>
-            <div className="psb-field">
-              <label className="psb-label">Enable Azure Firewall</label>
-              <div className="psb-toggle-row">
-                <label className="psb-toggle-option">
-                  <input type="radio" name="firewall" defaultChecked /> Disable
-                </label>
-                <label className="psb-toggle-option">
-                  <input type="radio" name="firewall" /> Enable
-                </label>
-              </div>
-            </div>
+          <div className="psb-security-section">
+            <p className="psb-security-heading">Azure Firewall</p>
+            <p className="psb-security-desc">
+              Azure Firewall is a managed cloud-based network security service that protects your Azure
+              Virtual Network resources.{' '}
+              <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more.</button>
+            </p>
+            <label className="psb-checkbox-label">
+              <input type="checkbox" className="psb-checkbox" />
+              Enable Azure Firewall
+              <span className="psb-info-icon" title="Requires an AzureFirewallSubnet with a /26 or larger address range">ⓘ</span>
+            </label>
           </div>
         </div>
       )}
@@ -414,15 +410,15 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
             <p className="psb-review-section-title">Security</p>
             <table className="psb-review-table">
               <tbody>
+                <tr><td>Virtual network encryption</td><td>Disabled</td></tr>
                 <tr><td>Azure Bastion</td><td>Disabled</td></tr>
-                <tr><td>DDoS protection</td><td>Disabled</td></tr>
                 <tr><td>Azure Firewall</td><td>Disabled</td></tr>
               </tbody>
             </table>
           </div>
 
           <div className="psb-review-section">
-            <p className="psb-review-section-title">IP addresses</p>
+            <p className="psb-review-section-title">Address space</p>
             <table className="psb-review-table">
               <tbody>
                 <tr><td>Address space</td><td><strong>{addressSpace || <em style={{ color: 'var(--text-muted)' }}>Not set</em>}</strong></td></tr>
