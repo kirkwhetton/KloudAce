@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import BladeShell from '../BladeShell';
 
-const SUBSCRIPTIONS  = ['Pay-As-You-Go', 'Dev / Test', 'Production'];
+const SUBSCRIPTIONS   = ['Pay-As-You-Go', 'Dev / Test', 'Production'];
 const RESOURCE_GROUPS = ['rg-networking', 'rg-workloads-dev', 'rg-workloads-prod', 'rg-management'];
 const REGIONS = [
   'East US', 'East US 2', 'West US', 'West US 2', 'West US 3',
@@ -15,21 +15,63 @@ const REGIONS = [
   'Japan East', 'Japan West',
   'Brazil South',
 ];
+const PREFIX_SIZES = [8, 10, 12, 14, 16, 18, 20, 22, 24, 25, 26, 27, 28, 29];
 
 const TABS    = ['Basics', 'Security', 'Address space', 'Tags', 'Review + create'];
 const TAB_IDS = ['basics', 'security', 'ip', 'tags', 'review'];
 
+// ── Icons ──────────────────────────────────────────────────────
 const TrashIcon = () => (
   <svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13" aria-hidden="true">
     <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd"/>
   </svg>
 );
 
+const PencilIcon = () => (
+  <svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13" aria-hidden="true">
+    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+  </svg>
+);
+
+// ── Address space helpers ───────────────────────────────────────
+function getNetworkEnd(ip, prefix) {
+  try {
+    const bits = parseInt(prefix, 10);
+    const parts = ip.trim().split('.').map(Number);
+    if (parts.length !== 4 || parts.some(isNaN)) return null;
+    const hostBits = 32 - bits;
+    const wildcard = hostBits === 32 ? 0xFFFFFFFF : (1 << hostBits) - 1;
+    const ipInt = (parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8) | parts[3];
+    const end = (ipInt | wildcard) >>> 0;
+    return [(end >>> 24) & 0xFF, (end >>> 16) & 0xFF, (end >>> 8) & 0xFF, end & 0xFF].join('.');
+  } catch { return null; }
+}
+
+function getAddressCount(prefix) {
+  const n = parseInt(prefix, 10);
+  if (isNaN(n)) return null;
+  return Math.pow(2, 32 - n).toLocaleString();
+}
+
+function subnetSizeLabel(range) {
+  const m = range?.match(/\/(\d+)$/);
+  if (!m) return '—';
+  const bits = parseInt(m[1], 10);
+  return `/${bits} (${Math.pow(2, 32 - bits).toLocaleString()} addresses)`;
+}
+
+function subnetRangeDisplay(range) {
+  const [ip, prefix] = (range ?? '').split('/');
+  const end = ip && prefix ? getNetworkEnd(ip, prefix) : null;
+  return end ? `${ip} – ${end}` : range;
+}
+
 export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
   const [tab,    setTab]    = useState('basics');
   const [form,   setForm]   = useState({ subscription: 'Pay-As-You-Go', resourceGroup: 'rg-networking', name: '', region: '' });
-  const [addressSpace, setAddressSpace] = useState('10.0.0.0/16');
-  const [subnets, setSubnets] = useState([]);
+  const [addrIp, setAddrIp] = useState('10.0.0.0');
+  const [addrPfx, setAddrPfx] = useState('16');
+  const [subnets, setSubnets] = useState([{ name: 'default', range: '10.0.0.0/24' }]);
   const [tags,   setTags]   = useState([{ name: '', value: '' }]);
   const [errors, setErrors] = useState({});
 
@@ -38,23 +80,24 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
     setErrors(prev => ({ ...prev, [field]: '' }));
   };
 
+  const addressSpace = `${addrIp.trim()}/${addrPfx}`;
+  const networkEnd   = getNetworkEnd(addrIp, addrPfx);
+  const addrCount    = getAddressCount(addrPfx);
+
   const validateBasics = () => {
     const errs = {};
     if (!form.name.trim())
       errs.name = 'Virtual network name is required.';
     else if (!/^[a-zA-Z0-9][a-zA-Z0-9_.\-]*$/.test(form.name.trim()))
-      errs.name = 'Name must start with a letter or number and contain only letters, numbers, hyphens, underscores, or periods.';
-    if (!form.region)
-      errs.region = 'Region is required.';
+      errs.name = 'Name must start with a letter or number.';
+    if (!form.region) errs.region = 'Region is required.';
     return errs;
   };
 
   const validateIp = () => {
     const errs = {};
-    if (!addressSpace.trim())
-      errs.addressSpace = 'IPv4 address space is required.';
-    else if (!/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$/.test(addressSpace.trim()))
-      errs.addressSpace = 'Enter a valid CIDR block (e.g. 10.1.0.0/16).';
+    if (!/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(addrIp.trim()))
+      errs.addressSpace = 'Enter a valid IPv4 address (e.g. 10.1.0.0).';
     return errs;
   };
 
@@ -72,13 +115,13 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
     } else if (tab === 'tags') {
       setTab('review');
     } else {
-      const [sn] = subnets;
+      const added = subnets.find(s => s.name !== 'default') ?? subnets[0] ?? {};
       onSubmit({
         name:         form.name.trim(),
         region:       form.region,
         addressSpace: addressSpace.trim(),
-        subnetName:   sn?.name  ?? '',
-        subnetRange:  sn?.range ?? '',
+        subnetName:   added.name  ?? '',
+        subnetRange:  added.range ?? '',
       });
     }
   };
@@ -102,7 +145,7 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
   };
 
   const tabIndex = TAB_IDS.indexOf(tab);
-  const canCreate = form.name && form.region && addressSpace;
+  const canCreate = form.name && form.region && addrIp;
 
   return (
     <BladeShell
@@ -151,9 +194,7 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
             <p className="psb-field-group-desc">Select the subscription to manage deployed resources and costs. Use resource groups like folders to organise and manage all your resources.</p>
 
             <div className="psb-field">
-              <label className="psb-label">
-                Subscription <span className="psb-required">*</span>
-              </label>
+              <label className="psb-label">Subscription <span className="psb-required">*</span></label>
               <select className="psb-select" value={form.subscription} onChange={e => update('subscription', e.target.value)}>
                 {SUBSCRIPTIONS.map(s => <option key={s}>{s}</option>)}
               </select>
@@ -177,9 +218,7 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
             <p className="psb-field-group-title">Instance details</p>
 
             <div className="psb-field">
-              <label className="psb-label">
-                Virtual network name <span className="psb-required">*</span>
-              </label>
+              <label className="psb-label">Virtual network name <span className="psb-required">*</span></label>
               <input
                 className={`psb-input${errors.name ? ' psb-input--error' : ''}`}
                 value={form.name}
@@ -277,91 +316,140 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
         </div>
       )}
 
-      {/* ── IP addresses ───────────────────────────────────────── */}
+      {/* ── Address space ───────────────────────────────────────── */}
       {tab === 'ip' && (
         <div className="psb-form">
           <p className="psb-section-desc">
-            Define the IPv4 address space and add subnets. Each subnet must fall within the address space of the virtual network.
+            Define the address space of your virtual network with one or more IPv4 or IPv6 address ranges.
+            Create subnets to segment the virtual network address space into smaller ranges for use by
+            your applications. When you deploy resources into a subnet, Azure assigns the resource an
+            IP address from the subnet.{' '}
+            <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more ↗</button>
           </p>
 
-          <div className="psb-field-group">
-            <p className="psb-field-group-title">IPv4 address space</p>
-            <div className="psb-field">
-              <label className="psb-label">
-                Add IPv4 address space <span className="psb-required">*</span>
-                <span className="psb-info-icon" title="The private IP address range for this VNet in CIDR notation">ⓘ</span>
-              </label>
-              <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
-                <input
-                  className={`psb-input${errors.addressSpace ? ' psb-input--error' : ''}`}
-                  value={addressSpace}
-                  onChange={e => { setAddressSpace(e.target.value); setErrors(prev => ({ ...prev, addressSpace: '' })); }}
-                  placeholder="e.g. 10.1.0.0/16"
-                  autoComplete="off"
-                  style={{ flex: 1 }}
-                />
-                <button
-                  className="psb-btn"
-                  onClick={() => setAddressSpace('')}
-                  title="Remove address space"
-                  style={{ padding: '0 0.5rem', height: 30 }}
-                >
-                  <TrashIcon />
-                </button>
-              </div>
-              {errors.addressSpace && <p className="psb-field-error">{errors.addressSpace}</p>}
-            </div>
-            <button className="psb-link psb-link--sm" style={{ marginTop: '0.25rem' }}>+ Add another address space</button>
-          </div>
+          {/* IP address pools checkbox */}
+          <label className="psb-checkbox-label" style={{ marginBottom: '1rem' }}>
+            <input type="checkbox" className="psb-checkbox" />
+            Allocate using IP address pools.{' '}
+            <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more ↗</button>
+          </label>
 
-          <div className="psb-field-group">
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <p className="psb-field-group-title" style={{ margin: 0 }}>Subnets</p>
-              <button className="psb-cmd psb-cmd--sm psb-cmd--primary" onClick={handleAddSubnet} style={{ margin: 0 }}>
-                <svg viewBox="0 0 20 20" fill="currentColor" width="11" height="11" aria-hidden="true">
-                  <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd"/>
-                </svg>
-                Add a subnet
+          {/* Add a subnet link */}
+          <button className="psb-add-subnet-link" onClick={handleAddSubnet}>
+            <svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13" aria-hidden="true">
+              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd"/>
+            </svg>
+            Add a subnet
+          </button>
+
+          {/* Address space block */}
+          <div className="psb-addr-block">
+            <div className="psb-addr-block-header">
+              <span className="psb-addr-block-chevron">▾</span>
+              <span className="psb-addr-block-cidr">{addrIp}/{addrPfx}</span>
+              <button className="psb-addr-delete-btn">
+                <TrashIcon />
+                Delete address space
               </button>
             </div>
 
-            {subnets.length === 0 ? (
-              <div className="psb-empty-subnets">
-                No subnets configured. Click <strong>Add a subnet</strong> to add one.
+            <div className="psb-addr-block-body">
+              {/* IP + prefix inputs */}
+              <div className="psb-addr-inputs">
+                <input
+                  className={`psb-input${errors.addressSpace ? ' psb-input--error' : ''}`}
+                  value={addrIp}
+                  onChange={e => { setAddrIp(e.target.value); setErrors(prev => ({ ...prev, addressSpace: '' })); }}
+                  placeholder="10.0.0.0"
+                  autoComplete="off"
+                />
+                <select
+                  className="psb-select psb-addr-prefix-select"
+                  value={addrPfx}
+                  onChange={e => setAddrPfx(e.target.value)}
+                >
+                  {PREFIX_SIZES.map(n => <option key={n} value={String(n)}>/{n}</option>)}
+                </select>
               </div>
-            ) : (
-              <table className="psb-table">
+              {errors.addressSpace && <p className="psb-field-error">{errors.addressSpace}</p>}
+
+              {/* Range display */}
+              {networkEnd && (
+                <div className="psb-addr-range">
+                  <span>{addrIp.trim()} – {networkEnd}</span>
+                  <span>{addrCount} addresses</span>
+                </div>
+              )}
+
+              {/* Subnets table */}
+              <table className="psb-table psb-addr-subnet-table">
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Address range</th>
+                    <th>Subnets</th>
+                    <th>IP address range</th>
+                    <th>Size</th>
                     <th>NAT gateway</th>
-                    <th>Security group</th>
-                    <th style={{ width: 60 }}></th>
+                    <th style={{ width: 52 }}></th>
                   </tr>
                 </thead>
                 <tbody>
-                  {subnets.map(s => (
-                    <tr key={s.name}>
-                      <td>{s.name}</td>
-                      <td>{s.range}</td>
-                      <td><span style={{ color: 'var(--text-muted)' }}>—</span></td>
-                      <td><span style={{ color: 'var(--text-muted)' }}>—</span></td>
-                      <td>
-                        <button
-                          className="psb-btn psb-btn--ghost"
-                          onClick={() => handleDeleteSubnet(s.name)}
-                          title="Remove subnet"
-                          style={{ padding: '0.1rem 0.4rem' }}
-                        >
-                          <TrashIcon />
-                        </button>
+                  {subnets.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} style={{ textAlign: 'center', color: 'var(--text-muted)', fontStyle: 'italic', padding: '0.6rem 1rem' }}>
+                        No subnets configured
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    subnets.map(s => (
+                      <tr key={s.name}>
+                        <td><button className="psb-link">{s.name}</button></td>
+                        <td>{subnetRangeDisplay(s.range)}</td>
+                        <td>{subnetSizeLabel(s.range)}</td>
+                        <td><span style={{ color: 'var(--text-muted)' }}>—</span></td>
+                        <td>
+                          <span style={{ display: 'inline-flex', gap: '0.1rem' }}>
+                            <button className="psb-icon-action-btn" title="Edit subnet"><PencilIcon /></button>
+                            <button className="psb-icon-action-btn" title="Delete subnet" onClick={() => handleDeleteSubnet(s.name)}><TrashIcon /></button>
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
-            )}
+            </div>
+          </div>
+
+          {/* Add IPv4 address space */}
+          <button className="psb-add-space-btn">
+            Add IPv4 address space
+            <svg viewBox="0 0 20 20" fill="currentColor" width="11" height="11" aria-hidden="true">
+              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd"/>
+            </svg>
+          </button>
+
+          {/* Advertised address prefixes */}
+          <div className="psb-advertised-section">
+            <p className="psb-field-group-title" style={{ marginBottom: '0.35rem' }}>Advertised address prefixes</p>
+            <button className="psb-add-subnet-link" style={{ marginBottom: '0.5rem' }}>
+              <svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13" aria-hidden="true">
+                <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd"/>
+              </svg>
+              Add address prefix
+            </button>
+            <p className="psb-advertised-desc">
+              Advertised gateway prefixes let you control route advertisements by specifying which IP address ranges Azure gateways advertise to on premises networks, instead of advertising all virtual network and spoke CIDRs.
+            </p>
+            <table className="psb-table">
+              <thead>
+                <tr><th>Starting address</th><th>Size</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colSpan={2} style={{ textAlign: 'center', color: 'var(--text-muted)', fontStyle: 'italic' }}>No address prefixes</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       )}
@@ -401,7 +489,7 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
               Validation passed
             </div>
           ) : (
-            <div className="psb-validation-banner" style={{ background: 'var(--wrong-bg)', color: 'var(--wrong)', border: '1px solid var(--wrong-border, var(--wrong))' }}>
+            <div className="psb-validation-banner" style={{ background: 'var(--wrong-bg)', color: 'var(--wrong)', border: '1px solid var(--wrong)' }}>
               <span className="psb-validation-icon">✗</span>
               Validation failed — complete all required fields before creating.
             </div>
@@ -437,13 +525,10 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
             <p className="psb-review-section-title">Address space</p>
             <table className="psb-review-table">
               <tbody>
-                <tr><td>Address space</td><td><strong>{addressSpace || <em style={{ color: 'var(--text-muted)' }}>Not set</em>}</strong></td></tr>
-                {subnets.length > 0 && subnets.map(s => (
+                <tr><td>IPv4 address space</td><td><strong>{addressSpace}</strong></td></tr>
+                {subnets.map(s => (
                   <tr key={s.name}><td>Subnet: {s.name}</td><td>{s.range}</td></tr>
                 ))}
-                {subnets.length === 0 && (
-                  <tr><td>Subnets</td><td><em style={{ color: 'var(--text-muted)' }}>None configured</em></td></tr>
-                )}
               </tbody>
             </table>
           </div>
