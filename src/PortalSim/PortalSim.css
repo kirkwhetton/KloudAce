@@ -280,11 +280,40 @@
   margin-bottom: 0.3rem;
 }
 
+/* Dedicated input/select for address space — no width:100% conflict */
+.psb-addr-ip {
+  flex: 1;
+  height: 30px;
+  padding: 0 0.6rem;
+  border: 1px solid var(--border-card);
+  border-radius: 0.2rem;
+  font-size: 0.82rem;
+  font-family: inherit;
+  color: var(--text-primary);
+  background: var(--bg-input, #fff);
+  outline: none;
+  transition: border-color 0.1s, box-shadow 0.1s;
+}
+.psb-addr-ip:focus { border-color: var(--brand); box-shadow: 0 0 0 2px var(--brand-light); }
+.psb-addr-ip--err  { border-color: var(--wrong); }
 
-.psb-addr-prefix-select {
+.psb-addr-pfx {
   width: 110px;
   flex-shrink: 0;
+  height: 30px;
+  padding: 0 0.5rem;
+  border: 1px solid var(--border-card);
+  border-radius: 0.2rem;
+  font-size: 0.82rem;
+  font-family: inherit;
+  color: var(--text-primary);
+  background: var(--bg-input, #fff);
+  outline: none;
+  transition: border-color 0.1s;
 }
+.psb-addr-pfx:focus { border-color: var(--brand); }
+
+[data-theme="dark"] .psb-addr-ip, [data-theme="dark"] .psb-addr-pfx { background: var(--bg-input); }
 
 .psb-addr-range {
   display: flex;
