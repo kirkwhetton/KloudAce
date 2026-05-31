@@ -101,6 +101,7 @@ const PREMIUM_FEATURES = [
   "Every card across all four exams — 1,000+ questions",
   "Complete AZ-104, AZ-700, and AZ-305 question banks",
   "All card types including scenario tasks and script simulators",
+  "Azure Portal Labs — hands-on simulations of real Azure workflows",
   "Priority access to new exam content",
   "Everything in Free, always",
 ];
@@ -241,7 +242,7 @@ export default function LandingPage({ onGetStarted }) {
               <div className="lp-plan-badge">Coming soon</div>
               <div className="lp-plan-header">
                 <div className="lp-plan-name">Premium</div>
-                <div className="lp-plan-price">TBC<span>/month</span></div>
+                <div className="lp-plan-price">£9.99<span>/month</span></div>
               </div>
               <ul className="lp-plan-features">
                 {PREMIUM_FEATURES.map(f => (
