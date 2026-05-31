@@ -352,15 +352,17 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
                 </button>
               </div>
 
-              {/* IP input + prefix dropdown only — no competing elements */}
+              {/* IP input + prefix dropdown — wrap input in flex div so width:100% resolves correctly */}
               <div className="psb-addr-inputs">
-                <input
-                  className={`psb-input${errors.addressSpace ? ' psb-input--error' : ''}`}
-                  value={addrIp}
-                  onChange={e => { setAddrIp(e.target.value); setErrors(prev => ({ ...prev, addressSpace: '' })); }}
-                  placeholder="10.0.0.0"
-                  autoComplete="off"
-                />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <input
+                    className={`psb-input${errors.addressSpace ? ' psb-input--error' : ''}`}
+                    value={addrIp}
+                    onChange={e => { setAddrIp(e.target.value); setErrors(prev => ({ ...prev, addressSpace: '' })); }}
+                    placeholder="10.0.0.0"
+                    autoComplete="off"
+                  />
+                </div>
                 <select
                   className="psb-select psb-addr-prefix-select"
                   value={addrPfx}
