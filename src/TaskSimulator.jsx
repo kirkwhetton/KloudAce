@@ -690,7 +690,7 @@ function ScriptTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnsw
         </p>
       )}
 
-      <div className={`script-terminal${submitted ? (finalCorrect ? " terminal-correct" : " terminal-wrong") : ""}`}>
+      <div className={`script-terminal${shell === "powershell" ? " terminal-ps" : ""}${submitted ? (finalCorrect ? " terminal-correct" : " terminal-wrong") : ""}`}>
         {/* Window chrome */}
         <div className="script-terminal-bar">
           <span className="terminal-dot red" />

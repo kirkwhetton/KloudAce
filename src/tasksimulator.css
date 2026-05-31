@@ -465,6 +465,40 @@
 .script-terminal.terminal-correct { border-color: #22c55e; }
 .script-terminal.terminal-wrong   { border-color: #ef4444; }
 
+/* PowerShell — Azure Cloud Shell dark navy theme */
+.script-terminal.terminal-ps {
+  background: #012456;
+  border-color: #01346b;
+}
+.script-terminal.terminal-ps .script-terminal-bar {
+  background: #01346b;
+}
+.script-terminal.terminal-ps .terminal-title {
+  color: #c8c8c8;
+}
+.script-terminal.terminal-ps .script-prompt {
+  color: #eae930;
+  font-family: "Cascadia Code", "Cascadia Mono", Consolas, monospace;
+}
+.script-terminal.terminal-ps .script-input {
+  color: #eae930;
+  font-family: "Cascadia Code", "Cascadia Mono", Consolas, monospace;
+  caret-color: #eae930;
+}
+.script-terminal.terminal-ps .script-input::placeholder {
+  color: rgba(234, 233, 48, 0.35);
+}
+.script-terminal.terminal-ps .script-terminal-output {
+  color: #eae930;
+  font-family: "Cascadia Code", "Cascadia Mono", Consolas, monospace;
+}
+.script-terminal.terminal-ps .script-output-line { color: #eae930; }
+.script-terminal.terminal-ps .script-output-line.output-correct { color: #4ade80; }
+.script-terminal.terminal-ps .script-output-line.output-wrong   { color: #f87171; }
+.script-terminal.terminal-ps .script-hint      { color: #a0aec0; }
+.script-terminal.terminal-ps .script-hint kbd  { background: #01346b; border-color: #0a4a8a; color: #c8c8c8; }
+.script-terminal.terminal-ps .script-hint code { color: #eae930; }
+
 .script-terminal-bar {
   display: flex;
   align-items: center;
