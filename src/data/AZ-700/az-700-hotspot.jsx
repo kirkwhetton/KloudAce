@@ -534,9 +534,9 @@ const NsgEvalOrderDiagram = () => (
     <text x="268" y="78" fontSize="12" fill="#1e293b">Allow</text>
     <line x1="14" y1="84" x2="324" y2="84" stroke="#f1f5f9" strokeWidth="1"/>
     <text x="22" y="101" fontSize="12" fill="#1e293b">200</text>
-    <text x="105" y="101" fontSize="12" fill="#1e293b">80</text>
+    <text x="105" y="101" fontSize="12" fill="#1e293b">443</text>
     <text x="168" y="101" fontSize="12" fill="#1e293b">TCP</text>
-    <text x="268" y="101" fontSize="12" fill="#1e293b">Deny</text>
+    <text x="268" y="101" fontSize="12" fill="#1e293b">Allow</text>
     <line x1="14" y1="107" x2="324" y2="107" stroke="#f1f5f9" strokeWidth="1"/>
     <text x="22" y="123" fontSize="11" fill="#94a3b8">65000</text>
     <text x="105" y="123" fontSize="11" fill="#94a3b8">Any</text>
@@ -565,7 +565,7 @@ const NsgEvalOrderDiagram = () => (
     <text x="610" y="78" fontSize="12" fill="#1e293b">Deny</text>
     <line x1="356" y1="84" x2="666" y2="84" stroke="#f1f5f9" strokeWidth="1"/>
     <text x="364" y="101" fontSize="12" fill="#1e293b">200</text>
-    <text x="447" y="101" fontSize="12" fill="#1e293b">80</text>
+    <text x="447" y="101" fontSize="12" fill="#1e293b">443</text>
     <text x="510" y="101" fontSize="12" fill="#1e293b">TCP</text>
     <text x="610" y="101" fontSize="12" fill="#1e293b">Allow</text>
     <line x1="356" y1="107" x2="666" y2="107" stroke="#f1f5f9" strokeWidth="1"/>
@@ -876,7 +876,7 @@ const az700hotspot = [
     type: "hotspot",
     difficulty: "hard",
     category: "Security & Monitoring",
-    question: "HTTP traffic from the internet is being denied to vm-web-01, despite the VM being healthy and the application confirmed as listening on port 80. Review the four panels and click the NSG containing the rule that is blocking the traffic.",
+    question: "HTTPS (port 443) to vm-web-01 is working correctly but HTTP (port 80) connections from the internet are being denied. The VM is running and listening on both ports. Review the NSG rules and click the NSG panel containing the rule that is blocking port 80.",
     imageAlt: "Four diagnostic panels: Subnet NSG inbound rules showing Priority 100 Allow TCP port 80; NIC NSG inbound rules showing Priority 100 Deny TCP port 80; inbound connection attempt details showing 203.0.113.1 to 10.1.1.4:80 result Connection denied; and Target VM panel showing vm-web-01 running with service listening on port 80.",
     viewBox: "0 0 680 356",
     diagram: NsgEvalOrderDiagram,
@@ -887,8 +887,8 @@ const az700hotspot = [
       { id: "vm",          label: "Target VM",            x: 352, y: 190, width: 318, height: 158 },
     ],
     correctZone: "nic-nsg",
-    answer: "The NIC NSG contains a Priority 100 DENY rule for TCP port 80. The Subnet NSG's Priority 100 ALLOW rule passes the traffic through — Azure then evaluates the NIC NSG where it is denied.",
-    explanation: "Inbound traffic: Subnet NSG first, then NIC NSG. Within each NSG, rules are evaluated in ascending priority order — lower numbers first. Subnet NSG Priority 100 Allow fires before Priority 200 Deny, so the traffic is permitted and evaluation continues to the NIC NSG. NIC NSG Priority 100 Deny fires before Priority 200 Allow, so the traffic is dropped. Both NSGs contain Deny rules for port 80 — the question requires applying priority order within each NSG and evaluation order between NSGs to determine which rule actually fires.",
+    answer: "The NIC NSG Priority 100 Deny TCP 80 is blocking the traffic. The Subnet NSG allows port 80 at Priority 100 — traffic passes through it. Azure then evaluates the NIC NSG where Priority 100 Deny fires before the traffic can reach the VM.",
+    explanation: "Inbound traffic is evaluated by the Subnet NSG first, then the NIC NSG. Within each NSG, rules fire in ascending priority order — lower numbers first. The Subnet NSG has Priority 100 Allow TCP 80 (web-tier subnet policy allowing HTTP); this matches and passes the traffic before the default Deny All at 65500 is reached. Azure then evaluates the NIC NSG: Priority 100 Deny TCP 80 matches and drops the packet — this VM is configured as HTTPS-only. Port 443 works because neither NSG blocks it. Both NSGs contain Deny rules, but only the NIC NSG has a Deny that matches port 80 at a priority that fires before an Allow.",
     learnUrl: "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-group-how-it-works",
   },
   // ─── Hybrid Connectivity ─────────────────────────────────────────────────────
