@@ -514,104 +514,64 @@ const ForcedTunnelDiagram = () => (
   </svg>
 );
 
-// ─── HS-109: NSG Inbound Evaluation Order ─────────────────────────────────────
-const NsgEvalOrderDiagram = () => (
-  <svg viewBox="0 0 680 356" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
+// ─── HS-109: Front Door — WAF Security Policy Association ────────────────────
+const FrontDoorWafDiagram = () => (
+  <svg viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
 
-    {/* Panel 1 — Subnet NSG */}
-    <rect x="10" y="10" width="318" height="168" rx="6" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5"/>
-    <rect x="10" y="10" width="318" height="28" rx="6" fill="#334155"/>
-    <rect x="10" y="28" width="318" height="10" fill="#334155"/>
-    <text x="169" y="30" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">Subnet NSG  —  Inbound rules</text>
-    <text x="22" y="56" fontSize="11" fill="#64748b" fontWeight="600">Priority</text>
-    <text x="105" y="56" fontSize="11" fill="#64748b" fontWeight="600">Port</text>
-    <text x="168" y="56" fontSize="11" fill="#64748b" fontWeight="600">Protocol</text>
-    <text x="268" y="56" fontSize="11" fill="#64748b" fontWeight="600">Action</text>
-    <line x1="14" y1="61" x2="324" y2="61" stroke="#e2e8f0" strokeWidth="1"/>
-    <text x="22" y="78" fontSize="12" fill="#1e293b">100</text>
-    <text x="105" y="78" fontSize="12" fill="#1e293b">80</text>
-    <text x="168" y="78" fontSize="12" fill="#1e293b">TCP</text>
-    <text x="268" y="78" fontSize="12" fill="#1e293b">Allow</text>
-    <line x1="14" y1="84" x2="324" y2="84" stroke="#f1f5f9" strokeWidth="1"/>
-    <text x="22" y="101" fontSize="12" fill="#1e293b">200</text>
-    <text x="105" y="101" fontSize="12" fill="#1e293b">443</text>
-    <text x="168" y="101" fontSize="12" fill="#1e293b">TCP</text>
-    <text x="268" y="101" fontSize="12" fill="#1e293b">Allow</text>
-    <line x1="14" y1="107" x2="324" y2="107" stroke="#f1f5f9" strokeWidth="1"/>
-    <text x="22" y="123" fontSize="11" fill="#94a3b8">65000</text>
-    <text x="105" y="123" fontSize="11" fill="#94a3b8">Any</text>
-    <text x="168" y="123" fontSize="11" fill="#94a3b8">Any</text>
-    <text x="268" y="123" fontSize="11" fill="#94a3b8">Allow</text>
-    <line x1="14" y1="129" x2="324" y2="129" stroke="#f1f5f9" strokeWidth="1"/>
-    <text x="22" y="145" fontSize="11" fill="#94a3b8">65500</text>
-    <text x="105" y="145" fontSize="11" fill="#94a3b8">Any</text>
-    <text x="168" y="145" fontSize="11" fill="#94a3b8">Any</text>
-    <text x="268" y="145" fontSize="11" fill="#94a3b8">Deny</text>
-    <text x="169" y="168" textAnchor="middle" fontSize="11" fill="#94a3b8" fontStyle="italic">Applied to subnet containing vm-web-01</text>
+    {/* WAF Policy — standalone resource on the left */}
+    <rect x="10" y="20" width="210" height="290" rx="8" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5"/>
+    <rect x="10" y="20" width="210" height="28" rx="8" fill="#334155"/>
+    <rect x="10" y="38" width="210" height="10" fill="#334155"/>
+    <text x="115" y="40" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">WAF Policy</text>
+    <text x="115" y="68" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#1e293b">waf-frontdoor-prod</text>
+    <text x="22" y="90" fontSize="11" fill="#64748b">Mode</text>
+    <text x="120" y="90" fontSize="12" fill="#1e293b">Prevention</text>
+    <text x="22" y="110" fontSize="11" fill="#64748b">Managed rules</text>
+    <text x="120" y="110" fontSize="12" fill="#1e293b">DRS 2.0 (enabled)</text>
+    <text x="22" y="130" fontSize="11" fill="#64748b">Custom rules</text>
+    <text x="120" y="130" fontSize="12" fill="#1e293b">3 configured</text>
+    <text x="22" y="150" fontSize="11" fill="#64748b">Status</text>
+    <text x="120" y="150" fontSize="12" fill="#1e293b">Enabled</text>
+    <text x="22" y="170" fontSize="11" fill="#64748b">Associations</text>
+    <text x="120" y="170" fontSize="12" fill="#94a3b8">None</text>
+    <text x="115" y="300" textAnchor="middle" fontSize="11" fill="#94a3b8" fontStyle="italic">Standalone resource</text>
 
-    {/* Panel 2 — NIC NSG */}
-    <rect x="352" y="10" width="318" height="168" rx="6" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5"/>
-    <rect x="352" y="10" width="318" height="28" rx="6" fill="#334155"/>
-    <rect x="352" y="28" width="318" height="10" fill="#334155"/>
-    <text x="511" y="30" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">NIC NSG  —  Inbound rules</text>
-    <text x="364" y="56" fontSize="11" fill="#64748b" fontWeight="600">Priority</text>
-    <text x="447" y="56" fontSize="11" fill="#64748b" fontWeight="600">Port</text>
-    <text x="510" y="56" fontSize="11" fill="#64748b" fontWeight="600">Protocol</text>
-    <text x="610" y="56" fontSize="11" fill="#64748b" fontWeight="600">Action</text>
-    <line x1="356" y1="61" x2="666" y2="61" stroke="#e2e8f0" strokeWidth="1"/>
-    <text x="364" y="78" fontSize="12" fill="#1e293b">100</text>
-    <text x="447" y="78" fontSize="12" fill="#1e293b">80</text>
-    <text x="510" y="78" fontSize="12" fill="#1e293b">TCP</text>
-    <text x="610" y="78" fontSize="12" fill="#1e293b">Deny</text>
-    <line x1="356" y1="84" x2="666" y2="84" stroke="#f1f5f9" strokeWidth="1"/>
-    <text x="364" y="101" fontSize="12" fill="#1e293b">200</text>
-    <text x="447" y="101" fontSize="12" fill="#1e293b">443</text>
-    <text x="510" y="101" fontSize="12" fill="#1e293b">TCP</text>
-    <text x="610" y="101" fontSize="12" fill="#1e293b">Allow</text>
-    <line x1="356" y1="107" x2="666" y2="107" stroke="#f1f5f9" strokeWidth="1"/>
-    <text x="364" y="123" fontSize="11" fill="#94a3b8">65000</text>
-    <text x="447" y="123" fontSize="11" fill="#94a3b8">Any</text>
-    <text x="510" y="123" fontSize="11" fill="#94a3b8">Any</text>
-    <text x="610" y="123" fontSize="11" fill="#94a3b8">Allow</text>
-    <line x1="356" y1="129" x2="666" y2="129" stroke="#f1f5f9" strokeWidth="1"/>
-    <text x="364" y="145" fontSize="11" fill="#94a3b8">65500</text>
-    <text x="447" y="145" fontSize="11" fill="#94a3b8">Any</text>
-    <text x="510" y="145" fontSize="11" fill="#94a3b8">Any</text>
-    <text x="610" y="145" fontSize="11" fill="#94a3b8">Deny</text>
-    <text x="511" y="168" textAnchor="middle" fontSize="11" fill="#94a3b8" fontStyle="italic">Applied to vm-web-01 NIC</text>
+    {/* Front Door Profile — on the right */}
+    <rect x="240" y="20" width="430" height="290" rx="8" fill="#eff6ff" stroke="#1d4ed8" strokeWidth="2"/>
+    <rect x="240" y="20" width="430" height="28" rx="8" fill="#1d4ed8"/>
+    <rect x="240" y="38" width="430" height="10" fill="#1d4ed8"/>
+    <text x="455" y="40" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">Front Door Profile  —  fd-prod (Standard)</text>
 
-    {/* Panel 3 — Connection details */}
-    <rect x="10" y="190" width="318" height="158" rx="6" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5"/>
-    <rect x="10" y="190" width="318" height="28" rx="6" fill="#334155"/>
-    <rect x="10" y="208" width="318" height="10" fill="#334155"/>
-    <text x="169" y="210" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">Inbound connection attempt</text>
-    <text x="22" y="236" fontSize="11" fill="#64748b">Source</text>
-    <text x="110" y="236" fontSize="12" fill="#1e293b">203.0.113.1  (Internet)</text>
-    <text x="22" y="258" fontSize="11" fill="#64748b">Destination</text>
-    <text x="110" y="258" fontSize="12" fill="#1e293b">10.1.1.4 : 80</text>
-    <text x="22" y="280" fontSize="11" fill="#64748b">Protocol</text>
-    <text x="110" y="280" fontSize="12" fill="#1e293b">TCP</text>
-    <text x="22" y="302" fontSize="11" fill="#64748b">Result</text>
-    <text x="110" y="302" fontSize="12" fontWeight="bold" fill="#1e293b">Connection denied</text>
-    <text x="22" y="338" fontSize="11" fill="#94a3b8" fontStyle="italic">Both NSGs are applied to vm-web-01</text>
+    {/* Endpoint */}
+    <rect x="255" y="58" width="190" height="52" rx="6" fill="white" stroke="#93c5fd" strokeWidth="1.5"/>
+    <text x="350" y="78" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#1e3a5f">Endpoint</text>
+    <text x="350" y="95" textAnchor="middle" fontSize="12" fill="#1e293b">app.contoso.com</text>
 
-    {/* Panel 4 — VM */}
-    <rect x="352" y="190" width="318" height="158" rx="6" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5"/>
-    <rect x="352" y="190" width="318" height="28" rx="6" fill="#334155"/>
-    <rect x="352" y="208" width="318" height="10" fill="#334155"/>
-    <text x="511" y="210" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">Target VM</text>
-    <text x="364" y="236" fontSize="11" fill="#64748b">Name</text>
-    <text x="440" y="236" fontSize="12" fill="#1e293b">vm-web-01</text>
-    <text x="364" y="258" fontSize="11" fill="#64748b">NIC IP</text>
-    <text x="440" y="258" fontSize="12" fill="#1e293b">10.1.1.4</text>
-    <text x="364" y="280" fontSize="11" fill="#64748b">Status</text>
-    <text x="440" y="280" fontSize="12" fill="#1e293b">Running</text>
-    <text x="364" y="302" fontSize="11" fill="#64748b">Service</text>
-    <text x="440" y="302" fontSize="12" fill="#1e293b">Listening on port 80</text>
-    <text x="364" y="338" fontSize="11" fill="#94a3b8" fontStyle="italic">Application is healthy</text>
+    {/* Routes */}
+    <rect x="255" y="120" width="190" height="72" rx="6" fill="white" stroke="#93c5fd" strokeWidth="1.5"/>
+    <text x="350" y="140" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#1e3a5f">Routes</text>
+    <text x="350" y="157" textAnchor="middle" fontSize="11" fill="#1e293b">/* → origin-group-a</text>
+    <text x="350" y="173" textAnchor="middle" fontSize="11" fill="#1e293b">/api/* → origin-group-b</text>
+
+    {/* Origins */}
+    <rect x="255" y="202" width="190" height="72" rx="6" fill="white" stroke="#93c5fd" strokeWidth="1.5"/>
+    <text x="350" y="222" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#1e3a5f">Origin Groups</text>
+    <text x="350" y="239" textAnchor="middle" fontSize="11" fill="#1e293b">origin-group-a  (East US)</text>
+    <text x="350" y="255" textAnchor="middle" fontSize="11" fill="#1e293b">origin-group-b  (West Europe)</text>
+    <text x="350" y="269" textAnchor="middle" fontSize="10" fill="#94a3b8">health probes: enabled</text>
+
+    {/* Security Policies — empty */}
+    <rect x="458" y="120" width="198" height="154" rx="6" fill="white" stroke="#93c5fd" strokeWidth="1.5"/>
+    <text x="557" y="140" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#1e3a5f">Security Policies</text>
+    <text x="557" y="185" textAnchor="middle" fontSize="12" fill="#94a3b8">No security policies</text>
+    <text x="557" y="203" textAnchor="middle" fontSize="12" fill="#94a3b8">configured</text>
+    <text x="557" y="248" textAnchor="middle" fontSize="11" fill="#94a3b8" fontStyle="italic">Associates a WAF policy</text>
+    <text x="557" y="264" textAnchor="middle" fontSize="11" fill="#94a3b8" fontStyle="italic">with an endpoint</text>
 
   </svg>
 );
+
+
 // ─── HS-110: Virtual WAN Routing Intent ───────────────────────────────────────
 const VwanRoutingIntentDiagram = () => (
   <svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
@@ -876,20 +836,20 @@ const az700hotspot = [
     type: "hotspot",
     difficulty: "hard",
     category: "Security & Monitoring",
-    question: "HTTPS (port 443) to vm-web-01 is working correctly but HTTP (port 80) connections from the internet are being denied. The VM is running and listening on both ports. Review the NSG rules and click the NSG panel containing the rule that is blocking port 80.",
-    imageAlt: "Four diagnostic panels: Subnet NSG inbound rules showing Priority 100 Allow TCP port 80; NIC NSG inbound rules showing Priority 100 Deny TCP port 80; inbound connection attempt details showing 203.0.113.1 to 10.1.1.4:80 result Connection denied; and Target VM panel showing vm-web-01 running with service listening on port 80.",
-    viewBox: "0 0 680 356",
-    diagram: NsgEvalOrderDiagram,
+    question: "A WAF policy in Prevention mode has been configured with DRS 2.0 and custom rules. Despite this, requests matching the WAF rules are still reaching the origins unfiltered. The Front Door profile is shown. Click the component that must be configured to activate the WAF policy.",
+    imageAlt: "Front Door architecture diagram. Left side shows a standalone WAF Policy (waf-frontdoor-prod) with Prevention mode, DRS 2.0, 3 custom rules, Status Enabled, and Associations None. Right side shows the Front Door profile (fd-prod) containing an Endpoint, Routes, Origin Groups, and an empty Security Policies section labelled 'No security policies configured'.",
+    viewBox: "0 0 680 330",
+    diagram: FrontDoorWafDiagram,
     zones: [
-      { id: "subnet-nsg",  label: "Subnet NSG",          x: 10,  y: 10,  width: 318, height: 168 },
-      { id: "nic-nsg",     label: "NIC NSG",              x: 352, y: 10,  width: 318, height: 168 },
-      { id: "connection",  label: "Connection Details",   x: 10,  y: 190, width: 318, height: 158 },
-      { id: "vm",          label: "Target VM",            x: 352, y: 190, width: 318, height: 158 },
+      { id: "waf-policy",        label: "WAF Policy",       x: 10,  y: 20,  width: 210, height: 290 },
+      { id: "endpoint",          label: "Endpoint",         x: 255, y: 58,  width: 190, height: 52  },
+      { id: "routes",            label: "Routes",           x: 255, y: 120, width: 190, height: 72  },
+      { id: "security-policies", label: "Security Policies",x: 458, y: 120, width: 198, height: 154 },
     ],
-    correctZone: "nic-nsg",
-    answer: "The NIC NSG Priority 100 Deny TCP 80 is blocking the traffic. The Subnet NSG allows port 80 at Priority 100 — traffic passes through it. Azure then evaluates the NIC NSG where Priority 100 Deny fires before the traffic can reach the VM.",
-    explanation: "Inbound traffic is evaluated by the Subnet NSG first, then the NIC NSG. Within each NSG, rules fire in ascending priority order — lower numbers first. The Subnet NSG has Priority 100 Allow TCP 80 (web-tier subnet policy allowing HTTP); this matches and passes the traffic before the default Deny All at 65500 is reached. Azure then evaluates the NIC NSG: Priority 100 Deny TCP 80 matches and drops the packet — this VM is configured as HTTPS-only. Port 443 works because neither NSG blocks it. Both NSGs contain Deny rules, but only the NIC NSG has a Deny that matches port 80 at a priority that fires before an Allow.",
-    learnUrl: "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-group-how-it-works",
+    correctZone: "security-policies",
+    answer: "A Security Policy must be created inside the Front Door profile to link the WAF policy to an endpoint. Without this association, the WAF policy exists but inspects no traffic.",
+    explanation: "Creating a WAF policy and enabling rules has no effect on traffic until the policy is associated with a Front Door profile through a Security Policy. A Security Policy is a resource within the Front Door profile that links a specific WAF policy to one or more endpoints or domains. Until this link exists, all traffic flows to origins uninspected regardless of WAF mode or rule configuration. The WAF policy shown on the left is correctly configured — the gap is on the right side where the Security Policies section is empty.",
+    learnUrl: "https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/waf-front-door-create-portal",
   },
   // ─── Hybrid Connectivity ─────────────────────────────────────────────────────
   {
