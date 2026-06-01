@@ -439,14 +439,14 @@ const NvaIpForwardingDiagram = () => (
     <text x="82" y="57" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#283593">Spoke-A</text>
     <text x="82" y="74" textAnchor="middle" fontSize="11" fill="#3949ab">10.1.0.0/24</text>
     <rect x="26" y="86" width="113" height="56" rx="5" fill="white" stroke="#3949ab" strokeWidth="1.5"/>
-    <text x="82" y="110" textAnchor="middle" fontSize="20" fill="#555">🖥</text>
-    <text x="82" y="131" textAnchor="middle" fontSize="11" fill="#555">VM-A</text>
+    <text x="82" y="112" textAnchor="middle" fontSize="22" fill="#555">🖥</text>
+    <text x="82" y="132" textAnchor="middle" fontSize="11" fill="#555">VM-A</text>
     <rect x="10" y="220" width="145" height="130" rx="8" fill="#e8eaf6" stroke="#3949ab" strokeWidth="2"/>
     <text x="82" y="247" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#283593">Spoke-B</text>
     <text x="82" y="264" textAnchor="middle" fontSize="11" fill="#3949ab">10.2.0.0/24</text>
     <rect x="26" y="276" width="113" height="56" rx="5" fill="white" stroke="#3949ab" strokeWidth="1.5"/>
-    <text x="82" y="300" textAnchor="middle" fontSize="20" fill="#555">🖥</text>
-    <text x="82" y="321" textAnchor="middle" fontSize="11" fill="#555">VM-B</text>
+    <text x="82" y="302" textAnchor="middle" fontSize="22" fill="#555">🖥</text>
+    <text x="82" y="322" textAnchor="middle" fontSize="11" fill="#555">VM-B</text>
     <line x1="155" y1="100" x2="212" y2="155" stroke="#555" strokeWidth="2" markerEnd="url(#nv1)"/>
     <line x1="155" y1="280" x2="212" y2="225" stroke="#555" strokeWidth="2" markerEnd="url(#nv1)"/>
     <rect x="215" y="80" width="145" height="220" rx="8" fill="#e3f2fd" stroke="#1565c0" strokeWidth="2.5"/>
@@ -456,182 +456,169 @@ const NvaIpForwardingDiagram = () => (
     <text x="287" y="156" textAnchor="middle" fontSize="12" fill="white" fontWeight="bold">HA Ports Rule</text>
     <text x="287" y="172" textAnchor="middle" fontSize="10" fill="#bbdefb">Protocol: All / Port: 0</text>
     <rect x="230" y="196" width="115" height="40" rx="4" fill="#0288d1"/>
-    <text x="287" y="212" textAnchor="middle" fontSize="11" fill="white" fontWeight="bold">Floating IP: ON</text>
-    <text x="287" y="226" textAnchor="middle" fontSize="10" fill="#b3e5fc">DSR — preserves dst IP</text>
+    <text x="287" y="214" textAnchor="middle" fontSize="11" fill="white" fontWeight="bold">Floating IP: ON</text>
+    <text x="287" y="228" textAnchor="middle" fontSize="10" fill="#b3e5fc">DSR enabled</text>
     <line x1="360" y1="150" x2="400" y2="138" stroke="#1565c0" strokeWidth="2" strokeDasharray="5 3" markerEnd="url(#nv2)"/>
     <line x1="360" y1="230" x2="400" y2="262" stroke="#1565c0" strokeWidth="2" strokeDasharray="5 3" markerEnd="url(#nv2)"/>
-    <text x="382" y="200" textAnchor="middle" fontSize="11" fill="#1565c0" fontStyle="italic">distributes</text>
     <rect x="402" y="20" width="270" height="340" rx="8" fill="#fff3e0" stroke="#ef6c00" strokeWidth="2"/>
-    <text x="537" y="47" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#bf360c">NVA Subnet 10.0.1.0/24</text>
-    <rect x="416" y="62" width="242" height="130" rx="7" fill="white" stroke="#ef6c00" strokeWidth="2"/>
-    <text x="537" y="87" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#333">NVA-1  (10.0.1.10)</text>
-    <rect x="428" y="100" width="218" height="80" rx="5" fill="#fff8e1" stroke="#ffa000" strokeWidth="2"/>
-    <text x="537" y="122" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#e65100">NIC — IP Forwarding: ?</text>
-    <text x="537" y="142" textAnchor="middle" fontSize="11" fill="#888">Packets arrive but are</text>
-    <text x="537" y="158" textAnchor="middle" fontSize="11" fill="#c62828">dropped — dst IP mismatch</text>
-    <rect x="416" y="210" width="242" height="130" rx="7" fill="white" stroke="#ef6c00" strokeWidth="2"/>
-    <text x="537" y="235" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#333">NVA-2  (10.0.1.11)</text>
-    <rect x="428" y="248" width="218" height="80" rx="5" fill="#fff8e1" stroke="#ffa000" strokeWidth="2"/>
-    <text x="537" y="270" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#e65100">NIC — IP Forwarding: ?</text>
-    <text x="537" y="290" textAnchor="middle" fontSize="11" fill="#888">Same issue on both</text>
-    <text x="537" y="306" textAnchor="middle" fontSize="11" fill="#c62828">NVA instances</text>
+    <text x="537" y="47" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#bf360c">NVA Subnet  10.0.1.0/24</text>
+    <rect x="416" y="62" width="242" height="120" rx="7" fill="white" stroke="#ef6c00" strokeWidth="1.5"/>
+    <text x="537" y="90" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#333">NVA-1</text>
+    <text x="537" y="108" textAnchor="middle" fontSize="11" fill="#777">10.0.1.10</text>
+    <text x="537" y="126" textAnchor="middle" fontSize="11" fill="#555">Network Virtual Appliance</text>
+    <text x="537" y="144" textAnchor="middle" fontSize="10" fill="#999">Firewall / Inspection VM</text>
+    <text x="537" y="162" textAnchor="middle" fontSize="10" fill="#999">NIC: eth0</text>
+    <rect x="416" y="202" width="242" height="120" rx="7" fill="white" stroke="#ef6c00" strokeWidth="1.5"/>
+    <text x="537" y="230" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#333">NVA-2</text>
+    <text x="537" y="248" textAnchor="middle" fontSize="11" fill="#777">10.0.1.11</text>
+    <text x="537" y="266" textAnchor="middle" fontSize="11" fill="#555">Network Virtual Appliance</text>
+    <text x="537" y="284" textAnchor="middle" fontSize="10" fill="#999">Firewall / Inspection VM</text>
+    <text x="537" y="302" textAnchor="middle" fontSize="10" fill="#999">NIC: eth0</text>
   </svg>
 );
 
 // ─── HS-108: Forced Tunnelling Route Table ────────────────────────────────────
 const ForcedTunnelDiagram = () => (
-  <svg viewBox="0 0 680 310" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
+  <svg viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
     <defs>
-      <marker id="ft1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#d32f2f"/></marker>
-      <marker id="ft2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#388e3c"/></marker>
-      <marker id="ft3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#555"/></marker>
+      <marker id="ft1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#555"/></marker>
     </defs>
-    <ellipse cx="340" cy="30" rx="80" ry="26" fill="#f0f0f0" stroke="#aaa" strokeWidth="1.5"/>
-    <text x="340" y="26" textAnchor="middle" fontSize="13" fill="#555">Internet</text>
-    <text x="340" y="43" textAnchor="middle" fontSize="10" fill="#888">(public)</text>
-    <rect x="10" y="88" width="175" height="188" rx="8" fill="#e8eaf6" stroke="#3949ab" strokeWidth="2"/>
-    <text x="97" y="114" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#283593">Spoke Subnet</text>
-    <text x="97" y="131" textAnchor="middle" fontSize="11" fill="#3949ab">10.1.0.0/24</text>
-    <rect x="22" y="144" width="150" height="52" rx="5" fill="white" stroke="#3949ab" strokeWidth="1.5"/>
-    <text x="97" y="166" textAnchor="middle" fontSize="18" fill="#555">🖥</text>
-    <text x="97" y="185" textAnchor="middle" fontSize="11" fill="#555">VM (internet-bound traffic)</text>
-    <rect x="22" y="208" width="150" height="58" rx="5" fill="#fff3e0" stroke="#ef6c00" strokeWidth="2"/>
-    <text x="97" y="228" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#e65100">Route Table</text>
-    <text x="97" y="244" textAnchor="middle" fontSize="10" fill="#555">0.0.0.0/0 → ?</text>
-    <text x="97" y="258" textAnchor="middle" fontSize="10" fill="#c62828">(UDR missing)</text>
-    <path d="M 175 152 Q 262 56 320 56" stroke="#d32f2f" strokeWidth="2.5" fill="none" strokeDasharray="8 4" markerEnd="url(#ft1)"/>
-    <text x="210" y="75" textAnchor="middle" fontSize="11" fill="#c62828" fontWeight="bold">Current: direct to internet ✗</text>
-    <rect x="260" y="120" width="155" height="120" rx="8" fill="#e3f2fd" stroke="#1565c0" strokeWidth="2.5"/>
-    <text x="337" y="147" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#0d47a1">VPN Gateway</text>
-    <text x="337" y="164" textAnchor="middle" fontSize="11" fill="#555">gw-hub</text>
-    <rect x="274" y="174" width="127" height="52" rx="5" fill="#1565c0"/>
-    <text x="337" y="196" textAnchor="middle" fontSize="11" fill="white">S2S Tunnel</text>
-    <text x="337" y="212" textAnchor="middle" fontSize="10" fill="#bbdefb">connected ✓</text>
-    <line x1="420" y1="180" x2="490" y2="180" stroke="#555" strokeWidth="2" markerEnd="url(#ft3)"/>
-    <rect x="492" y="120" width="175" height="120" rx="8" fill="#e8f5e9" stroke="#388e3c" strokeWidth="2"/>
-    <text x="579" y="147" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1b5e20">On-Premises</text>
-    <text x="579" y="164" textAnchor="middle" fontSize="11" fill="#388e3c">Firewall / Proxy</text>
-    <rect x="505" y="174" width="148" height="52" rx="5" fill="#388e3c"/>
-    <text x="579" y="196" textAnchor="middle" fontSize="11" fill="white">All outbound traffic</text>
-    <text x="579" y="212" textAnchor="middle" fontSize="10" fill="#c8e6c9">must be inspected here</text>
-    <path d="M 97 208 Q 97 280 337 280 Q 470 280 490 200" stroke="#388e3c" strokeWidth="2" fill="none" strokeDasharray="6 3" markerEnd="url(#ft2)"/>
-    <text x="290" y="298" textAnchor="middle" fontSize="11" fill="#388e3c" fontWeight="bold">Required: via VPN Gateway → on-premises ✓</text>
+    <ellipse cx="340" cy="28" rx="76" ry="24" fill="#f0f0f0" stroke="#aaa" strokeWidth="1.5"/>
+    <text x="340" y="24" textAnchor="middle" fontSize="13" fill="#555">Internet</text>
+    <text x="340" y="40" textAnchor="middle" fontSize="10" fill="#888">(public)</text>
+    <rect x="10" y="80" width="172" height="185" rx="8" fill="#e8eaf6" stroke="#3949ab" strokeWidth="2"/>
+    <text x="96" y="106" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#283593">Spoke Subnet</text>
+    <text x="96" y="123" textAnchor="middle" fontSize="11" fill="#3949ab">10.1.0.0/24</text>
+    <rect x="22" y="135" width="148" height="52" rx="5" fill="white" stroke="#3949ab" strokeWidth="1.5"/>
+    <text x="96" y="158" textAnchor="middle" fontSize="20" fill="#555">🖥</text>
+    <text x="96" y="178" textAnchor="middle" fontSize="11" fill="#555">VM</text>
+    <rect x="22" y="200" width="148" height="52" rx="5" fill="#fff3e0" stroke="#ef6c00" strokeWidth="2"/>
+    <text x="96" y="222" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#e65100">Route Table</text>
+    <text x="96" y="240" textAnchor="middle" fontSize="10" fill="#555">Associated with subnet</text>
+    <line x1="182" y1="155" x2="250" y2="118" stroke="#555" strokeWidth="2" markerEnd="url(#ft1)"/>
+    <rect x="253" y="110" width="155" height="120" rx="8" fill="#e3f2fd" stroke="#1565c0" strokeWidth="2.5"/>
+    <text x="330" y="138" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#0d47a1">VPN Gateway</text>
+    <text x="330" y="155" textAnchor="middle" fontSize="11" fill="#555">gw-hub</text>
+    <rect x="267" y="165" width="122" height="50" rx="5" fill="#1565c0"/>
+    <text x="328" y="185" textAnchor="middle" fontSize="11" fill="white">S2S Tunnel</text>
+    <text x="328" y="200" textAnchor="middle" fontSize="10" fill="#bbdefb">Status: Connected</text>
+    <line x1="408" y1="170" x2="470" y2="170" stroke="#555" strokeWidth="2" markerEnd="url(#ft1)"/>
+    <rect x="472" y="110" width="195" height="120" rx="8" fill="#e8f5e9" stroke="#388e3c" strokeWidth="2"/>
+    <text x="569" y="138" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1b5e20">On-Premises</text>
+    <text x="569" y="155" textAnchor="middle" fontSize="11" fill="#388e3c">Corporate Firewall</text>
+    <rect x="486" y="165" width="166" height="50" rx="5" fill="#388e3c"/>
+    <text x="569" y="186" textAnchor="middle" fontSize="11" fill="white">Outbound inspection</text>
+    <text x="569" y="201" textAnchor="middle" fontSize="10" fill="#c8e6c9">required for all traffic</text>
+    <line x1="280" y1="50" x2="316" y2="52" stroke="#aaa" strokeWidth="1.5" strokeDasharray="4 3" markerEnd="url(#ft1)"/>
+    <text x="230" y="62" textAnchor="middle" fontSize="10" fill="#777">internet-bound traffic</text>
   </svg>
 );
 
 // ─── HS-109: NSG Inbound Evaluation Order ─────────────────────────────────────
 const NsgEvalOrderDiagram = () => (
-  <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
+  <svg viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
     <defs>
       <marker id="ng1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#1565c0"/></marker>
+      <marker id="ng2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#555"/></marker>
     </defs>
-    <ellipse cx="55" cy="150" rx="48" ry="34" fill="#f0f4f8" stroke="#94a3b8" strokeWidth="1.5"/>
-    <text x="55" y="146" textAnchor="middle" fontSize="13" fill="#475569" fontWeight="600">Internet</text>
-    <text x="55" y="162" textAnchor="middle" fontSize="11" fill="#64748b">Port 80</text>
-    <line x1="103" y1="150" x2="148" y2="150" stroke="#1565c0" strokeWidth="2.5" markerEnd="url(#ng1)"/>
-    <text x="125" y="142" textAnchor="middle" fontSize="10" fill="#1565c0">inbound</text>
-    <rect x="150" y="50" width="175" height="200" rx="8" fill="#fff3e0" stroke="#e65100" strokeWidth="2.5"/>
-    <text x="237" y="80" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#bf360c">Subnet NSG</text>
-    <text x="237" y="97" textAnchor="middle" fontSize="11" fill="#e65100">Evaluated FIRST ①</text>
-    <text x="237" y="116" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#555">Inbound rules:</text>
-    <rect x="162" y="126" width="151" height="68" rx="5" fill="#ffccbc" stroke="#e64a19" strokeWidth="1.5"/>
-    <text x="237" y="148" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#bf360c">Priority 100</text>
-    <text x="237" y="166" textAnchor="middle" fontSize="12" fill="#333">Action: DENY</text>
-    <text x="237" y="182" textAnchor="middle" fontSize="11" fill="#555">Port 80 / Source: Any</text>
-    <text x="237" y="214" textAnchor="middle" fontSize="12" fill="#888">Default rules below…</text>
-    <rect x="380" y="50" width="175" height="200" rx="8" fill="#f5f5f5" stroke="#bbb" strokeWidth="1.5"/>
-    <text x="467" y="80" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#757575">NIC NSG</text>
-    <text x="467" y="97" textAnchor="middle" fontSize="11" fill="#9e9e9e">Evaluated SECOND ②</text>
-    <text x="467" y="116" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#bbb">Inbound rules:</text>
-    <rect x="392" y="126" width="151" height="68" rx="5" fill="#e8f5e9" stroke="#a5d6a7" strokeWidth="1"/>
-    <text x="467" y="148" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#388e3c">Priority 100</text>
-    <text x="467" y="166" textAnchor="middle" fontSize="12" fill="#555">Action: ALLOW</text>
-    <text x="467" y="182" textAnchor="middle" fontSize="11" fill="#555">Port 80 / Source: Internet</text>
-    <text x="467" y="214" textAnchor="middle" fontSize="11" fill="#9e9e9e">(never reached)</text>
-    <rect x="600" y="118" width="72" height="64" rx="7" fill="#f5f5f5" stroke="#bbb" strokeWidth="1.5"/>
-    <text x="636" y="147" textAnchor="middle" fontSize="20" fill="#bbb">🖥</text>
-    <text x="636" y="170" textAnchor="middle" fontSize="11" fill="#bbb">VM</text>
-    <line x1="325" y1="150" x2="375" y2="150" stroke="#bbb" strokeWidth="1.5" strokeDasharray="5 4"/>
-    <text x="350" y="142" textAnchor="middle" fontSize="10" fill="#bbb">blocked</text>
-    <line x1="555" y1="150" x2="598" y2="150" stroke="#ddd" strokeWidth="1.5" strokeDasharray="4 3"/>
-    <text x="249" y="270" textAnchor="middle" fontSize="12" fill="#333" fontWeight="bold">Question: which NSG is evaluated first for inbound traffic?</text>
+    <ellipse cx="55" cy="140" rx="48" ry="34" fill="#f0f4f8" stroke="#94a3b8" strokeWidth="1.5"/>
+    <text x="55" y="136" textAnchor="middle" fontSize="13" fill="#475569" fontWeight="600">Internet</text>
+    <text x="55" y="152" textAnchor="middle" fontSize="11" fill="#64748b">Port 80</text>
+    <line x1="103" y1="140" x2="145" y2="140" stroke="#1565c0" strokeWidth="2.5" markerEnd="url(#ng1)"/>
+    <text x="124" y="132" textAnchor="middle" fontSize="10" fill="#1565c0">inbound</text>
+    <rect x="148" y="46" width="188" height="188" rx="8" fill="#f8f9fa" stroke="#475569" strokeWidth="2"/>
+    <text x="242" y="74" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b">Subnet NSG</text>
+    <text x="242" y="92" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#555">Inbound rules:</text>
+    <rect x="160" y="102" width="164" height="68" rx="5" fill="#ffccbc" stroke="#e64a19" strokeWidth="1.5"/>
+    <text x="242" y="124" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#bf360c">Priority 100</text>
+    <text x="242" y="142" textAnchor="middle" fontSize="12" fill="#333">Action: DENY</text>
+    <text x="242" y="158" textAnchor="middle" fontSize="11" fill="#555">Port 80 / Source: Any</text>
+    <text x="242" y="196" textAnchor="middle" fontSize="10" fill="#94a3b8">Default rules omitted…</text>
+    <line x1="336" y1="140" x2="376" y2="140" stroke="#555" strokeWidth="2" markerEnd="url(#ng2)"/>
+    <rect x="378" y="46" width="188" height="188" rx="8" fill="#f8f9fa" stroke="#475569" strokeWidth="2"/>
+    <text x="472" y="74" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b">NIC NSG</text>
+    <text x="472" y="92" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#555">Inbound rules:</text>
+    <rect x="390" y="102" width="164" height="68" rx="5" fill="#e8f5e9" stroke="#66bb6a" strokeWidth="1.5"/>
+    <text x="472" y="124" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#2e7d32">Priority 100</text>
+    <text x="472" y="142" textAnchor="middle" fontSize="12" fill="#333">Action: ALLOW</text>
+    <text x="472" y="158" textAnchor="middle" fontSize="11" fill="#555">Port 80 / Source: Internet</text>
+    <text x="472" y="196" textAnchor="middle" fontSize="10" fill="#94a3b8">Default rules omitted…</text>
+    <line x1="566" y1="140" x2="604" y2="140" stroke="#555" strokeWidth="2" markerEnd="url(#ng2)"/>
+    <rect x="606" y="108" width="68" height="64" rx="7" fill="#f8f9fa" stroke="#475569" strokeWidth="1.5"/>
+    <text x="640" y="137" textAnchor="middle" fontSize="22" fill="#475569">🖥</text>
+    <text x="640" y="160" textAnchor="middle" fontSize="11" fill="#475569">VM</text>
   </svg>
 );
 
 // ─── HS-110: Virtual WAN Routing Intent ───────────────────────────────────────
 const VwanRoutingIntentDiagram = () => (
-  <svg viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
+  <svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
     <defs>
       <marker id="vw1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#555"/></marker>
-      <marker id="vw2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#d32f2f"/></marker>
     </defs>
-    <rect x="50" y="30" width="580" height="280" rx="12" fill="#e3f2fd" stroke="#1565c0" strokeWidth="2.5"/>
-    <text x="340" y="58" textAnchor="middle" fontSize="15" fontWeight="bold" fill="#0d47a1">Virtual WAN Hub (Secured Virtual Hub)</text>
-    <rect x="220" y="72" width="170" height="100" rx="8" fill="white" stroke="#ef6c00" strokeWidth="2"/>
-    <text x="305" y="96" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#bf360c">Azure Firewall</text>
-    <text x="305" y="113" textAnchor="middle" fontSize="11" fill="#e65100">fw-hub-prod</text>
-    <text x="305" y="130" textAnchor="middle" fontSize="11" fill="#388e3c">✓ Deployed</text>
-    <text x="305" y="147" textAnchor="middle" fontSize="11" fill="#388e3c">✓ Policy associated</text>
-    <rect x="140" y="200" width="195" height="80" rx="7" fill="#ffebee" stroke="#d32f2f" strokeWidth="2"/>
-    <text x="237" y="226" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#c62828">Routing Intent</text>
-    <text x="237" y="244" textAnchor="middle" fontSize="11" fill="#d32f2f">NOT CONFIGURED</text>
-    <text x="237" y="262" textAnchor="middle" fontSize="10" fill="#888">Private traffic policy: off</text>
-    <rect x="370" y="200" width="195" height="80" rx="7" fill="#fff9c4" stroke="#f9a825" strokeWidth="1.5"/>
-    <text x="467" y="226" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#e65100">Hub Route Tables</text>
-    <text x="467" y="244" textAnchor="middle" fontSize="11" fill="#555">Routes not programmed</text>
-    <text x="467" y="262" textAnchor="middle" fontSize="10" fill="#888">through firewall</text>
-    <rect x="10" y="130" width="130" height="80" rx="7" fill="#e8eaf6" stroke="#3949ab" strokeWidth="1.5"/>
-    <text x="75" y="157" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#283593">Spoke-App</text>
-    <text x="75" y="173" textAnchor="middle" fontSize="10" fill="#3949ab">10.1.0.0/16</text>
-    <text x="75" y="189" textAnchor="middle" fontSize="10" fill="#555">connected ✓</text>
-    <rect x="540" y="130" width="130" height="80" rx="7" fill="#e8eaf6" stroke="#3949ab" strokeWidth="1.5"/>
-    <text x="605" y="157" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#283593">Spoke-DB</text>
-    <text x="605" y="173" textAnchor="middle" fontSize="10" fill="#3949ab">10.2.0.0/16</text>
-    <text x="605" y="189" textAnchor="middle" fontSize="10" fill="#555">connected ✓</text>
-    <line x1="140" y1="170" x2="218" y2="130" stroke="#555" strokeWidth="1.5" markerEnd="url(#vw1)"/>
-    <line x1="540" y1="170" x2="392" y2="130" stroke="#555" strokeWidth="1.5" markerEnd="url(#vw1)"/>
-    <path d="M 75 130 Q 75 50 605 50 Q 635 50 605 130" stroke="#d32f2f" strokeWidth="2" fill="none" strokeDasharray="8 4" markerEnd="url(#vw2)"/>
-    <text x="340" y="38" textAnchor="middle" fontSize="11" fill="#c62828" fontWeight="bold">inter-spoke traffic bypasses firewall ✗</text>
-    <text x="340" y="346" textAnchor="middle" fontSize="12" fill="#333" fontWeight="bold">Firewall is deployed — what else must be configured to route spoke traffic through it?</text>
+    <rect x="50" y="20" width="580" height="278" rx="12" fill="#e3f2fd" stroke="#1565c0" strokeWidth="2.5"/>
+    <text x="340" y="46" textAnchor="middle" fontSize="15" fontWeight="bold" fill="#0d47a1">Virtual WAN Hub (Secured Virtual Hub)</text>
+    <rect x="220" y="62" width="170" height="90" rx="8" fill="white" stroke="#ef6c00" strokeWidth="2"/>
+    <text x="305" y="86" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#bf360c">Azure Firewall</text>
+    <text x="305" y="103" textAnchor="middle" fontSize="11" fill="#e65100">fw-hub-prod</text>
+    <text x="305" y="120" textAnchor="middle" fontSize="11" fill="#555">Firewall Policy: attached</text>
+    <text x="305" y="138" textAnchor="middle" fontSize="10" fill="#999">Standard SKU</text>
+    <rect x="140" y="182" width="185" height="88" rx="7" fill="white" stroke="#1565c0" strokeWidth="1.5"/>
+    <text x="232" y="208" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#0d47a1">Routing Intent</text>
+    <text x="232" y="226" textAnchor="middle" fontSize="11" fill="#555">Private traffic policy</text>
+    <text x="232" y="243" textAnchor="middle" fontSize="11" fill="#555">Internet traffic policy</text>
+    <text x="232" y="260" textAnchor="middle" fontSize="10" fill="#94a3b8">Hub-level configuration</text>
+    <rect x="360" y="182" width="185" height="88" rx="7" fill="white" stroke="#1565c0" strokeWidth="1.5"/>
+    <text x="452" y="208" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#0d47a1">Hub Route Tables</text>
+    <text x="452" y="226" textAnchor="middle" fontSize="11" fill="#555">Default route table</text>
+    <text x="452" y="243" textAnchor="middle" fontSize="11" fill="#555">None route table</text>
+    <text x="452" y="260" textAnchor="middle" fontSize="10" fill="#94a3b8">Controls spoke routing</text>
+    <rect x="10" y="118" width="130" height="72" rx="7" fill="#e8eaf6" stroke="#3949ab" strokeWidth="1.5"/>
+    <text x="75" y="143" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#283593">Spoke-App</text>
+    <text x="75" y="159" textAnchor="middle" fontSize="10" fill="#3949ab">10.1.0.0/16</text>
+    <text x="75" y="175" textAnchor="middle" fontSize="10" fill="#555">VNet connection</text>
+    <rect x="540" y="118" width="130" height="72" rx="7" fill="#e8eaf6" stroke="#3949ab" strokeWidth="1.5"/>
+    <text x="605" y="143" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#283593">Spoke-DB</text>
+    <text x="605" y="159" textAnchor="middle" fontSize="10" fill="#3949ab">10.2.0.0/16</text>
+    <text x="605" y="175" textAnchor="middle" fontSize="10" fill="#555">VNet connection</text>
+    <line x1="140" y1="154" x2="218" y2="120" stroke="#555" strokeWidth="1.5" markerEnd="url(#vw1)"/>
+    <line x1="540" y1="154" x2="392" y2="120" stroke="#555" strokeWidth="1.5" markerEnd="url(#vw1)"/>
   </svg>
 );
 
 // ─── HS-111: NAT Gateway vs LB Outbound Precedence ────────────────────────────
 const NatGatewayPrecedenceDiagram = () => (
-  <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
+  <svg viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
     <defs>
       <marker id="ng2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#555"/></marker>
-      <marker id="ng3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#1565c0"/></marker>
     </defs>
-    <rect x="10" y="80" width="155" height="148" rx="8" fill="#e8eaf6" stroke="#3949ab" strokeWidth="2"/>
-    <text x="87" y="106" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#283593">Subnet-App</text>
-    <text x="87" y="122" textAnchor="middle" fontSize="11" fill="#3949ab">10.1.1.0/24</text>
-    <rect x="22" y="132" width="130" height="50" rx="5" fill="white" stroke="#3949ab" strokeWidth="1.5"/>
-    <text x="87" y="154" textAnchor="middle" fontSize="18" fill="#555">🖥</text>
-    <text x="87" y="175" textAnchor="middle" fontSize="11" fill="#555">50 VMs</text>
-    <text x="87" y="202" textAnchor="middle" fontSize="11" fill="#555">Both attached to subnet:</text>
-    <rect x="190" y="50" width="180" height="110" rx="8" fill="#e8f5e9" stroke="#388e3c" strokeWidth="2.5"/>
-    <text x="280" y="78" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1b5e20">NAT Gateway</text>
-    <text x="280" y="96" textAnchor="middle" fontSize="11" fill="#388e3c">ngw-prod</text>
-    <rect x="202" y="106" width="156" height="40" rx="4" fill="#388e3c"/>
-    <text x="280" y="121" textAnchor="middle" fontSize="11" fill="white">pip-ngw (20.50.1.1)</text>
-    <text x="280" y="136" textAnchor="middle" fontSize="10" fill="#c8e6c9">64,512 SNAT ports/IP</text>
-    <rect x="190" y="178" width="180" height="100" rx="8" fill="#e3f2fd" stroke="#1565c0" strokeWidth="1.5"/>
-    <text x="280" y="205" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#0d47a1">Load Balancer</text>
-    <text x="280" y="222" textAnchor="middle" fontSize="11" fill="#1565c0">lb-prod (Standard)</text>
-    <rect x="202" y="233" width="156" height="35" rx="4" fill="#1565c0"/>
-    <text x="280" y="246" textAnchor="middle" fontSize="11" fill="white">Outbound rules configured</text>
-    <text x="280" y="259" textAnchor="middle" fontSize="10" fill="#bbdefb">(currently inactive)</text>
-    <line x1="165" y1="130" x2="188" y2="105" stroke="#555" strokeWidth="1.5" markerEnd="url(#ng2)"/>
-    <line x1="165" y1="155" x2="188" y2="220" stroke="#555" strokeWidth="1.5" markerEnd="url(#ng2)"/>
-    <ellipse cx="580" cy="150" rx="62" ry="40" fill="#f0f4f8" stroke="#94a3b8" strokeWidth="1.5"/>
-    <text x="580" y="146" textAnchor="middle" fontSize="13" fill="#475569" fontWeight="600">Internet</text>
-    <text x="580" y="163" textAnchor="middle" fontSize="10" fill="#64748b">outbound</text>
-    <line x1="372" y1="100" x2="510" y2="140" stroke="#388e3c" strokeWidth="2.5" markerEnd="url(#ng2)"/>
-    <text x="445" y="108" textAnchor="middle" fontSize="11" fill="#1b5e20" fontWeight="bold">active ✓</text>
-    <line x1="372" y1="228" x2="510" y2="165" stroke="#bbb" strokeWidth="1.5" strokeDasharray="6 3" markerEnd="url(#ng2)"/>
-    <text x="440" y="212" textAnchor="middle" fontSize="11" fill="#bbb">inactive</text>
-    <text x="340" y="288" textAnchor="middle" fontSize="12" fill="#333" fontWeight="bold">Both are on the same subnet — which component handles outbound SNAT?</text>
+    <rect x="10" y="70" width="155" height="148" rx="8" fill="#e8eaf6" stroke="#3949ab" strokeWidth="2"/>
+    <text x="87" y="96" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#283593">Subnet-App</text>
+    <text x="87" y="112" textAnchor="middle" fontSize="11" fill="#3949ab">10.1.1.0/24</text>
+    <rect x="22" y="122" width="130" height="50" rx="5" fill="white" stroke="#3949ab" strokeWidth="1.5"/>
+    <text x="87" y="144" textAnchor="middle" fontSize="20" fill="#555">🖥</text>
+    <text x="87" y="165" textAnchor="middle" fontSize="11" fill="#555">50 VMs</text>
+    <text x="87" y="193" textAnchor="middle" fontSize="10" fill="#94a3b8">Both resources below</text>
+    <text x="87" y="208" textAnchor="middle" fontSize="10" fill="#94a3b8">are on this subnet</text>
+    <rect x="190" y="40" width="178" height="100" rx="8" fill="#f8f9fa" stroke="#475569" strokeWidth="2"/>
+    <text x="279" y="67" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b">NAT Gateway</text>
+    <text x="279" y="84" textAnchor="middle" fontSize="11" fill="#555">ngw-prod</text>
+    <rect x="202" y="94" width="154" height="36" rx="4" fill="#475569"/>
+    <text x="279" y="108" textAnchor="middle" fontSize="11" fill="white">pip-ngw (20.50.1.1)</text>
+    <text x="279" y="123" textAnchor="middle" fontSize="10" fill="#cbd5e1">64,512 SNAT ports/IP</text>
+    <rect x="190" y="160" width="178" height="100" rx="8" fill="#f8f9fa" stroke="#475569" strokeWidth="2"/>
+    <text x="279" y="187" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b">Load Balancer</text>
+    <text x="279" y="204" textAnchor="middle" fontSize="11" fill="#555">lb-prod (Standard)</text>
+    <rect x="202" y="214" width="154" height="36" rx="4" fill="#475569"/>
+    <text x="279" y="228" textAnchor="middle" fontSize="11" fill="white">Outbound rules configured</text>
+    <text x="279" y="243" textAnchor="middle" fontSize="10" fill="#cbd5e1">Frontend: 20.50.2.1</text>
+    <line x1="165" y1="120" x2="188" y2="90" stroke="#555" strokeWidth="1.5" markerEnd="url(#ng2)"/>
+    <line x1="165" y1="155" x2="188" y2="200" stroke="#555" strokeWidth="1.5" markerEnd="url(#ng2)"/>
+    <ellipse cx="570" cy="140" rx="66" ry="42" fill="#f0f4f8" stroke="#94a3b8" strokeWidth="1.5"/>
+    <text x="570" y="136" textAnchor="middle" fontSize="13" fill="#475569" fontWeight="600">Internet</text>
+    <text x="570" y="153" textAnchor="middle" fontSize="10" fill="#64748b">outbound SNAT</text>
+    <line x1="370" y1="88" x2="496" y2="128" stroke="#555" strokeWidth="2" markerEnd="url(#ng2)"/>
+    <line x1="370" y1="210" x2="496" y2="158" stroke="#555" strokeWidth="2" markerEnd="url(#ng2)"/>
   </svg>
 );
 
