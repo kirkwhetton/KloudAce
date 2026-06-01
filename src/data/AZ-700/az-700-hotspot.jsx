@@ -516,85 +516,100 @@ const ForcedTunnelDiagram = () => (
 
 // ─── HS-109: NSG Inbound Evaluation Order ─────────────────────────────────────
 const NsgEvalOrderDiagram = () => (
-  <svg viewBox="0 0 680 342" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
+  <svg viewBox="0 0 680 356" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
+
     {/* Panel 1 — Subnet NSG */}
-    <rect x="10" y="26" width="318" height="144" rx="6" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5"/>
-    <rect x="10" y="26" width="318" height="28" rx="6" fill="#334155"/>
-    <rect x="10" y="44" width="318" height="10" fill="#334155"/>
-    <text x="169" y="46" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">Subnet NSG  —  Inbound rules</text>
-    <text x="22" y="70" fontSize="11" fill="#64748b" fontWeight="600">Priority</text>
-    <text x="105" y="70" fontSize="11" fill="#64748b" fontWeight="600">Port</text>
-    <text x="168" y="70" fontSize="11" fill="#64748b" fontWeight="600">Protocol</text>
-    <text x="268" y="70" fontSize="11" fill="#64748b" fontWeight="600">Action</text>
-    <line x1="14" y1="75" x2="324" y2="75" stroke="#e2e8f0" strokeWidth="1"/>
-    <text x="22" y="93" fontSize="12" fill="#1e293b">100</text>
-    <text x="105" y="93" fontSize="12" fill="#1e293b">80</text>
-    <text x="168" y="93" fontSize="12" fill="#1e293b">TCP</text>
-    <text x="268" y="93" fontSize="12" fontWeight="bold" fill="#1e293b">Allow</text>
-    <line x1="14" y1="100" x2="324" y2="100" stroke="#f1f5f9" strokeWidth="1"/>
-    <text x="22" y="117" fontSize="11" fill="#94a3b8">65000</text>
-    <text x="105" y="117" fontSize="11" fill="#94a3b8">Any</text>
-    <text x="168" y="117" fontSize="11" fill="#94a3b8">Any</text>
-    <text x="268" y="117" fontSize="11" fill="#94a3b8">Allow</text>
-    <line x1="14" y1="124" x2="324" y2="124" stroke="#f1f5f9" strokeWidth="1"/>
-    <text x="22" y="141" fontSize="11" fill="#94a3b8">65500</text>
-    <text x="105" y="141" fontSize="11" fill="#94a3b8">Any</text>
-    <text x="168" y="141" fontSize="11" fill="#94a3b8">Any</text>
-    <text x="268" y="141" fontSize="11" fill="#94a3b8">Deny</text>
-    <text x="169" y="162" textAnchor="middle" fontSize="11" fill="#94a3b8" fontStyle="italic">Applied to subnet containing vm-web-01</text>
+    <rect x="10" y="10" width="318" height="168" rx="6" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5"/>
+    <rect x="10" y="10" width="318" height="28" rx="6" fill="#334155"/>
+    <rect x="10" y="28" width="318" height="10" fill="#334155"/>
+    <text x="169" y="30" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">Subnet NSG  —  Inbound rules</text>
+    <text x="22" y="56" fontSize="11" fill="#64748b" fontWeight="600">Priority</text>
+    <text x="105" y="56" fontSize="11" fill="#64748b" fontWeight="600">Port</text>
+    <text x="168" y="56" fontSize="11" fill="#64748b" fontWeight="600">Protocol</text>
+    <text x="268" y="56" fontSize="11" fill="#64748b" fontWeight="600">Action</text>
+    <line x1="14" y1="61" x2="324" y2="61" stroke="#e2e8f0" strokeWidth="1"/>
+    <text x="22" y="78" fontSize="12" fill="#1e293b">100</text>
+    <text x="105" y="78" fontSize="12" fill="#1e293b">80</text>
+    <text x="168" y="78" fontSize="12" fill="#1e293b">TCP</text>
+    <text x="268" y="78" fontSize="12" fill="#1e293b">Allow</text>
+    <line x1="14" y1="84" x2="324" y2="84" stroke="#f1f5f9" strokeWidth="1"/>
+    <text x="22" y="101" fontSize="12" fill="#1e293b">200</text>
+    <text x="105" y="101" fontSize="12" fill="#1e293b">80</text>
+    <text x="168" y="101" fontSize="12" fill="#1e293b">TCP</text>
+    <text x="268" y="101" fontSize="12" fill="#1e293b">Deny</text>
+    <line x1="14" y1="107" x2="324" y2="107" stroke="#f1f5f9" strokeWidth="1"/>
+    <text x="22" y="123" fontSize="11" fill="#94a3b8">65000</text>
+    <text x="105" y="123" fontSize="11" fill="#94a3b8">Any</text>
+    <text x="168" y="123" fontSize="11" fill="#94a3b8">Any</text>
+    <text x="268" y="123" fontSize="11" fill="#94a3b8">Allow</text>
+    <line x1="14" y1="129" x2="324" y2="129" stroke="#f1f5f9" strokeWidth="1"/>
+    <text x="22" y="145" fontSize="11" fill="#94a3b8">65500</text>
+    <text x="105" y="145" fontSize="11" fill="#94a3b8">Any</text>
+    <text x="168" y="145" fontSize="11" fill="#94a3b8">Any</text>
+    <text x="268" y="145" fontSize="11" fill="#94a3b8">Deny</text>
+    <text x="169" y="168" textAnchor="middle" fontSize="11" fill="#94a3b8" fontStyle="italic">Applied to subnet containing vm-web-01</text>
+
     {/* Panel 2 — NIC NSG */}
-    <rect x="352" y="26" width="318" height="144" rx="6" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5"/>
-    <rect x="352" y="26" width="318" height="28" rx="6" fill="#334155"/>
-    <rect x="352" y="44" width="318" height="10" fill="#334155"/>
-    <text x="511" y="46" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">NIC NSG  —  Inbound rules</text>
-    <text x="364" y="70" fontSize="11" fill="#64748b" fontWeight="600">Priority</text>
-    <text x="447" y="70" fontSize="11" fill="#64748b" fontWeight="600">Port</text>
-    <text x="510" y="70" fontSize="11" fill="#64748b" fontWeight="600">Protocol</text>
-    <text x="610" y="70" fontSize="11" fill="#64748b" fontWeight="600">Action</text>
-    <line x1="356" y1="75" x2="666" y2="75" stroke="#e2e8f0" strokeWidth="1"/>
-    <text x="364" y="93" fontSize="12" fill="#1e293b">100</text>
-    <text x="447" y="93" fontSize="12" fill="#1e293b">80</text>
-    <text x="510" y="93" fontSize="12" fill="#1e293b">TCP</text>
-    <text x="610" y="93" fontSize="12" fontWeight="bold" fill="#1e293b">Deny</text>
-    <line x1="356" y1="100" x2="666" y2="100" stroke="#f1f5f9" strokeWidth="1"/>
-    <text x="364" y="117" fontSize="11" fill="#94a3b8">65000</text>
-    <text x="447" y="117" fontSize="11" fill="#94a3b8">Any</text>
-    <text x="510" y="117" fontSize="11" fill="#94a3b8">Any</text>
-    <text x="610" y="117" fontSize="11" fill="#94a3b8">Allow</text>
-    <line x1="356" y1="124" x2="666" y2="124" stroke="#f1f5f9" strokeWidth="1"/>
-    <text x="364" y="141" fontSize="11" fill="#94a3b8">65500</text>
-    <text x="447" y="141" fontSize="11" fill="#94a3b8">Any</text>
-    <text x="510" y="141" fontSize="11" fill="#94a3b8">Any</text>
-    <text x="610" y="141" fontSize="11" fill="#94a3b8">Deny</text>
-    <text x="511" y="162" textAnchor="middle" fontSize="11" fill="#94a3b8" fontStyle="italic">Applied to vm-web-01 NIC</text>
+    <rect x="352" y="10" width="318" height="168" rx="6" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5"/>
+    <rect x="352" y="10" width="318" height="28" rx="6" fill="#334155"/>
+    <rect x="352" y="28" width="318" height="10" fill="#334155"/>
+    <text x="511" y="30" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">NIC NSG  —  Inbound rules</text>
+    <text x="364" y="56" fontSize="11" fill="#64748b" fontWeight="600">Priority</text>
+    <text x="447" y="56" fontSize="11" fill="#64748b" fontWeight="600">Port</text>
+    <text x="510" y="56" fontSize="11" fill="#64748b" fontWeight="600">Protocol</text>
+    <text x="610" y="56" fontSize="11" fill="#64748b" fontWeight="600">Action</text>
+    <line x1="356" y1="61" x2="666" y2="61" stroke="#e2e8f0" strokeWidth="1"/>
+    <text x="364" y="78" fontSize="12" fill="#1e293b">100</text>
+    <text x="447" y="78" fontSize="12" fill="#1e293b">80</text>
+    <text x="510" y="78" fontSize="12" fill="#1e293b">TCP</text>
+    <text x="610" y="78" fontSize="12" fill="#1e293b">Deny</text>
+    <line x1="356" y1="84" x2="666" y2="84" stroke="#f1f5f9" strokeWidth="1"/>
+    <text x="364" y="101" fontSize="12" fill="#1e293b">200</text>
+    <text x="447" y="101" fontSize="12" fill="#1e293b">80</text>
+    <text x="510" y="101" fontSize="12" fill="#1e293b">TCP</text>
+    <text x="610" y="101" fontSize="12" fill="#1e293b">Allow</text>
+    <line x1="356" y1="107" x2="666" y2="107" stroke="#f1f5f9" strokeWidth="1"/>
+    <text x="364" y="123" fontSize="11" fill="#94a3b8">65000</text>
+    <text x="447" y="123" fontSize="11" fill="#94a3b8">Any</text>
+    <text x="510" y="123" fontSize="11" fill="#94a3b8">Any</text>
+    <text x="610" y="123" fontSize="11" fill="#94a3b8">Allow</text>
+    <line x1="356" y1="129" x2="666" y2="129" stroke="#f1f5f9" strokeWidth="1"/>
+    <text x="364" y="145" fontSize="11" fill="#94a3b8">65500</text>
+    <text x="447" y="145" fontSize="11" fill="#94a3b8">Any</text>
+    <text x="510" y="145" fontSize="11" fill="#94a3b8">Any</text>
+    <text x="610" y="145" fontSize="11" fill="#94a3b8">Deny</text>
+    <text x="511" y="168" textAnchor="middle" fontSize="11" fill="#94a3b8" fontStyle="italic">Applied to vm-web-01 NIC</text>
+
     {/* Panel 3 — Connection details */}
-    <rect x="10" y="184" width="318" height="150" rx="6" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5"/>
-    <rect x="10" y="184" width="318" height="28" rx="6" fill="#334155"/>
-    <rect x="10" y="202" width="318" height="10" fill="#334155"/>
-    <text x="169" y="204" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">Inbound connection attempt</text>
-    <text x="22" y="230" fontSize="11" fill="#64748b">Source</text>
-    <text x="110" y="230" fontSize="12" fill="#1e293b">203.0.113.1  (Internet)</text>
-    <text x="22" y="252" fontSize="11" fill="#64748b">Destination</text>
-    <text x="110" y="252" fontSize="12" fill="#1e293b">10.1.1.4 : 80</text>
-    <text x="22" y="274" fontSize="11" fill="#64748b">Protocol</text>
-    <text x="110" y="274" fontSize="12" fill="#1e293b">TCP</text>
-    <text x="22" y="296" fontSize="11" fill="#64748b">Result</text>
-    <text x="110" y="296" fontSize="12" fontWeight="bold" fill="#1e293b">Connection denied</text>
-    <text x="22" y="324" fontSize="11" fill="#94a3b8" fontStyle="italic">Both NSGs are applied to vm-web-01</text>
+    <rect x="10" y="190" width="318" height="158" rx="6" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5"/>
+    <rect x="10" y="190" width="318" height="28" rx="6" fill="#334155"/>
+    <rect x="10" y="208" width="318" height="10" fill="#334155"/>
+    <text x="169" y="210" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">Inbound connection attempt</text>
+    <text x="22" y="236" fontSize="11" fill="#64748b">Source</text>
+    <text x="110" y="236" fontSize="12" fill="#1e293b">203.0.113.1  (Internet)</text>
+    <text x="22" y="258" fontSize="11" fill="#64748b">Destination</text>
+    <text x="110" y="258" fontSize="12" fill="#1e293b">10.1.1.4 : 80</text>
+    <text x="22" y="280" fontSize="11" fill="#64748b">Protocol</text>
+    <text x="110" y="280" fontSize="12" fill="#1e293b">TCP</text>
+    <text x="22" y="302" fontSize="11" fill="#64748b">Result</text>
+    <text x="110" y="302" fontSize="12" fontWeight="bold" fill="#1e293b">Connection denied</text>
+    <text x="22" y="338" fontSize="11" fill="#94a3b8" fontStyle="italic">Both NSGs are applied to vm-web-01</text>
+
     {/* Panel 4 — VM */}
-    <rect x="352" y="184" width="318" height="150" rx="6" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5"/>
-    <rect x="352" y="184" width="318" height="28" rx="6" fill="#334155"/>
-    <rect x="352" y="202" width="318" height="10" fill="#334155"/>
-    <text x="511" y="204" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">Target VM</text>
-    <text x="364" y="230" fontSize="11" fill="#64748b">Name</text>
-    <text x="440" y="230" fontSize="12" fill="#1e293b">vm-web-01</text>
-    <text x="364" y="252" fontSize="11" fill="#64748b">NIC IP</text>
-    <text x="440" y="252" fontSize="12" fill="#1e293b">10.1.1.4</text>
-    <text x="364" y="274" fontSize="11" fill="#64748b">Status</text>
-    <text x="440" y="274" fontSize="12" fill="#1e293b">Running</text>
-    <text x="364" y="296" fontSize="11" fill="#64748b">Service</text>
-    <text x="440" y="296" fontSize="12" fill="#1e293b">Listening on port 80</text>
-    <text x="364" y="324" fontSize="11" fill="#94a3b8" fontStyle="italic">Application is healthy</text>
+    <rect x="352" y="190" width="318" height="158" rx="6" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5"/>
+    <rect x="352" y="190" width="318" height="28" rx="6" fill="#334155"/>
+    <rect x="352" y="208" width="318" height="10" fill="#334155"/>
+    <text x="511" y="210" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">Target VM</text>
+    <text x="364" y="236" fontSize="11" fill="#64748b">Name</text>
+    <text x="440" y="236" fontSize="12" fill="#1e293b">vm-web-01</text>
+    <text x="364" y="258" fontSize="11" fill="#64748b">NIC IP</text>
+    <text x="440" y="258" fontSize="12" fill="#1e293b">10.1.1.4</text>
+    <text x="364" y="280" fontSize="11" fill="#64748b">Status</text>
+    <text x="440" y="280" fontSize="12" fill="#1e293b">Running</text>
+    <text x="364" y="302" fontSize="11" fill="#64748b">Service</text>
+    <text x="440" y="302" fontSize="12" fill="#1e293b">Listening on port 80</text>
+    <text x="364" y="338" fontSize="11" fill="#94a3b8" fontStyle="italic">Application is healthy</text>
+
   </svg>
 );
 // ─── HS-110: Virtual WAN Routing Intent ───────────────────────────────────────
@@ -769,7 +784,7 @@ const az700hotspot = [
       "Spoke-A VMs can reach the internet and other Azure VNets normally but cannot reach any resource in the on-premises network (192.168.0.0/16). Hub VMs have no connectivity issues. The four diagnostic panels below show the relevant configuration. Click the panel that identifies the root cause.",
     imageAlt:
       "Four diagnostic configuration panels: Hub VNet peering to Spoke-A (Hub side), Spoke-A VNet peering to Hub (Spoke-A side), Spoke-A VM NIC effective routes table, and VPN Connection HubToOnPrem status.",
-    viewBox: "0 0 680 342",
+    viewBox: "0 0 680 356",
     diagram: HubSpokeTransitDiagram,
     zones: [
       { id: "hub-to-spoke",     label: "Hub VNet peering to Spoke-A",  x: 10,  y: 26, width: 318, height: 144 },
@@ -795,7 +810,7 @@ const az700hotspot = [
       "A junior engineer recently modified the Hub VNet peering configuration during a maintenance window. Since then, Spoke-A VMs have lost access to the on-premises corporate network (192.168.0.0/16), though all other connectivity remains working. Review the four panels and click the one containing the misconfigured setting.",
     imageAlt:
       "Four diagnostic configuration panels: Hub VNet peering to Spoke-A (Hub side), Spoke-A VNet peering to Hub (Spoke-A side), Spoke-A VM NIC effective routes table, and VPN Connection HubToOnPrem status.",
-    viewBox: "0 0 680 342",
+    viewBox: "0 0 680 356",
     diagram: HubFaultTransitDiagram,
     zones: [
       { id: "hub-to-spoke",     label: "Hub VNet peering to Spoke-A",  x: 10,  y: 26, width: 318, height: 144 },
@@ -863,17 +878,17 @@ const az700hotspot = [
     category: "Security & Monitoring",
     question: "HTTP traffic from the internet is being denied to vm-web-01, despite the VM being healthy and the application confirmed as listening on port 80. Review the four panels and click the NSG containing the rule that is blocking the traffic.",
     imageAlt: "Four diagnostic panels: Subnet NSG inbound rules showing Priority 100 Allow TCP port 80; NIC NSG inbound rules showing Priority 100 Deny TCP port 80; inbound connection attempt details showing 203.0.113.1 to 10.1.1.4:80 result Connection denied; and Target VM panel showing vm-web-01 running with service listening on port 80.",
-    viewBox: "0 0 680 342",
+    viewBox: "0 0 680 356",
     diagram: NsgEvalOrderDiagram,
     zones: [
-      { id: "subnet-nsg",  label: "Subnet NSG",          x: 10,  y: 26,  width: 318, height: 144 },
-      { id: "nic-nsg",     label: "NIC NSG",              x: 352, y: 26,  width: 318, height: 144 },
-      { id: "connection",  label: "Connection Details",   x: 10,  y: 184, width: 318, height: 150 },
-      { id: "vm",          label: "Target VM",            x: 352, y: 184, width: 318, height: 150 },
+      { id: "subnet-nsg",  label: "Subnet NSG",          x: 10,  y: 10,  width: 318, height: 168 },
+      { id: "nic-nsg",     label: "NIC NSG",              x: 352, y: 10,  width: 318, height: 168 },
+      { id: "connection",  label: "Connection Details",   x: 10,  y: 190, width: 318, height: 158 },
+      { id: "vm",          label: "Target VM",            x: 352, y: 190, width: 318, height: 158 },
     ],
     correctZone: "nic-nsg",
     answer: "The NIC NSG contains a Priority 100 DENY rule for TCP port 80. The Subnet NSG's Priority 100 ALLOW rule passes the traffic through — Azure then evaluates the NIC NSG where it is denied.",
-    explanation: "Inbound traffic evaluation order is always Subnet NSG first, then NIC NSG. The Subnet NSG has Priority 100 Allow for TCP port 80 — this permits the traffic and evaluation continues. The NIC NSG has Priority 100 Deny for TCP port 80 — this matches and drops the packet. There is no 'most permissive wins' override between NSG levels. The common mistake is clicking Subnet NSG because it is evaluated first — but here the Subnet NSG is correctly configured and the NIC NSG is the blocker. Both NSGs must permit traffic for it to reach the VM.",
+    explanation: "Inbound traffic: Subnet NSG first, then NIC NSG. Within each NSG, rules are evaluated in ascending priority order — lower numbers first. Subnet NSG Priority 100 Allow fires before Priority 200 Deny, so the traffic is permitted and evaluation continues to the NIC NSG. NIC NSG Priority 100 Deny fires before Priority 200 Allow, so the traffic is dropped. Both NSGs contain Deny rules for port 80 — the question requires applying priority order within each NSG and evaluation order between NSGs to determine which rule actually fires.",
     learnUrl: "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-group-how-it-works",
   },
   // ─── Hybrid Connectivity ─────────────────────────────────────────────────────
