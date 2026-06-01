@@ -462,18 +462,26 @@ const NvaIpForwardingDiagram = () => (
     <line x1="360" y1="230" x2="400" y2="262" stroke="#1565c0" strokeWidth="2" strokeDasharray="5 3" markerEnd="url(#nv2)"/>
     <rect x="402" y="20" width="270" height="340" rx="8" fill="#fff3e0" stroke="#ef6c00" strokeWidth="2"/>
     <text x="537" y="47" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#bf360c">NVA Subnet  10.0.1.0/24</text>
-    <rect x="416" y="62" width="242" height="120" rx="7" fill="white" stroke="#ef6c00" strokeWidth="1.5"/>
-    <text x="537" y="90" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#333">NVA-1</text>
-    <text x="537" y="108" textAnchor="middle" fontSize="11" fill="#777">10.0.1.10</text>
-    <text x="537" y="126" textAnchor="middle" fontSize="11" fill="#555">Network Virtual Appliance</text>
-    <text x="537" y="144" textAnchor="middle" fontSize="10" fill="#999">Firewall / Inspection VM</text>
-    <text x="537" y="162" textAnchor="middle" fontSize="10" fill="#999">NIC: eth0</text>
-    <rect x="416" y="202" width="242" height="120" rx="7" fill="white" stroke="#ef6c00" strokeWidth="1.5"/>
-    <text x="537" y="230" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#333">NVA-2</text>
-    <text x="537" y="248" textAnchor="middle" fontSize="11" fill="#777">10.0.1.11</text>
-    <text x="537" y="266" textAnchor="middle" fontSize="11" fill="#555">Network Virtual Appliance</text>
-    <text x="537" y="284" textAnchor="middle" fontSize="10" fill="#999">Firewall / Inspection VM</text>
-    <text x="537" y="302" textAnchor="middle" fontSize="10" fill="#999">NIC: eth0</text>
+    {/* NVA-1 — IP Forwarding disabled */}
+    <rect x="416" y="62" width="242" height="128" rx="7" fill="white" stroke="#ef6c00" strokeWidth="1.5"/>
+    <text x="537" y="88" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#333">NVA-1  (10.0.1.10)</text>
+    <rect x="428" y="100" width="218" height="36" rx="4" fill="#f8f9fa" stroke="#bdbdbd" strokeWidth="1"/>
+    <text x="498" y="116" textAnchor="middle" fontSize="11" fill="#555">NIC eth0</text>
+    <text x="498" y="129" textAnchor="middle" fontSize="10" fill="#9e9e9e">IP Forwarding:</text>
+    <rect x="558" y="104" width="80" height="28" rx="4" fill="#ffebee" stroke="#e53935" strokeWidth="1.5"/>
+    <text x="598" y="122" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#c62828">Disabled</text>
+    <text x="537" y="158" textAnchor="middle" fontSize="10" fill="#777">Firewall / Inspection VM</text>
+    <text x="537" y="173" textAnchor="middle" fontSize="10" fill="#9e9e9e">Standard_D2s_v3</text>
+    {/* NVA-2 — IP Forwarding enabled */}
+    <rect x="416" y="210" width="242" height="128" rx="7" fill="white" stroke="#ef6c00" strokeWidth="1.5"/>
+    <text x="537" y="236" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#333">NVA-2  (10.0.1.11)</text>
+    <rect x="428" y="248" width="218" height="36" rx="4" fill="#f8f9fa" stroke="#bdbdbd" strokeWidth="1"/>
+    <text x="498" y="264" textAnchor="middle" fontSize="11" fill="#555">NIC eth0</text>
+    <text x="498" y="277" textAnchor="middle" fontSize="10" fill="#9e9e9e">IP Forwarding:</text>
+    <rect x="558" y="252" width="80" height="28" rx="4" fill="#e8f5e9" stroke="#43a047" strokeWidth="1.5"/>
+    <text x="598" y="270" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#2e7d32">Enabled</text>
+    <text x="537" y="306" textAnchor="middle" fontSize="10" fill="#777">Firewall / Inspection VM</text>
+    <text x="537" y="321" textAnchor="middle" fontSize="10" fill="#9e9e9e">Standard_D2s_v3</text>
   </svg>
 );
 
@@ -771,19 +779,19 @@ const az700hotspot = [
     type: "hotspot",
     difficulty: "hard",
     category: "Core Networking Infrastructure",
-    question: "The diagram shows a Standard Internal Load Balancer with HA Ports distributing spoke traffic across two NVA VMs. Traffic from Spoke-A is reaching the NVA VMs via the load balancer but is being silently dropped. Click the component whose NIC requires an additional Azure-level setting to allow it to relay packets whose destination IP is not its own.",
-    imageAlt: "NVA high-availability diagram showing Spoke-A and Spoke-B subnets with VMs, a Standard Internal Load Balancer with HA Ports and Floating IP enabled, and an NVA subnet containing NVA-1 and NVA-2. Each NVA shows a NIC badge reading 'IP Forwarding: ?' indicating the missing setting.",
+    question: "An NVA high-availability cluster sits behind a Standard Internal Load Balancer with HA Ports and Floating IP enabled. One NVA is forwarding inspected traffic correctly; the other is silently dropping packets. Review the NIC settings shown on each NVA and click the one that is misconfigured.",
+    imageAlt: "NVA HA diagram with a Standard ILB (HA Ports, Floating IP ON) distributing traffic to NVA-1 and NVA-2. NVA-1 NIC eth0 shows IP Forwarding: Disabled in a red badge. NVA-2 NIC eth0 shows IP Forwarding: Enabled in a green badge.",
     viewBox: "0 0 680 380",
     diagram: NvaIpForwardingDiagram,
     zones: [
       { id: "ilb",     label: "Standard ILB",   x: 215, y: 80,  width: 145, height: 220 },
-      { id: "nva-1",   label: "NVA-1",          x: 416, y: 62,  width: 242, height: 120 },
-      { id: "nva-2",   label: "NVA-2",          x: 416, y: 202, width: 242, height: 120 },
+      { id: "nva-1",   label: "NVA-1",          x: 416, y: 62,  width: 242, height: 128 },
+      { id: "nva-2",   label: "NVA-2",          x: 416, y: 210, width: 242, height: 128 },
       { id: "spoke-a", label: "Spoke-A Subnet", x: 10,  y: 30,  width: 145, height: 130 },
     ],
     correctZone: "nva-1",
-    answer: "IP forwarding must be enabled on each NVA VM's NIC. Without it, Azure drops any packet whose destination IP does not match the NIC's own assigned IP — the NVA cannot relay traffic to its intended destination.",
-    explanation: "Both NVA-1 and NVA-2 require this setting — clicking either identifies the same component type as the answer. Azure's default NIC behaviour is to drop packets not addressed to the NIC's own IP. IP forwarding is an Azure platform setting (separate from OS-level forwarding inside the VM) that lifts this restriction. The ILB correctly distributes flows via HA Ports (Protocol: All, Port: 0), and Floating IP (DSR) preserves the original destination IP so the NVA sees the real target. Without NIC-level IP forwarding, the NVA receives the packet but drops it due to the IP mismatch. Every NVA in the backend pool must have this setting enabled.",
+    answer: "NVA-1 has IP Forwarding disabled on its NIC. Azure drops any packet whose destination IP does not match the NIC's own IP — the NVA receives the packet from the ILB but silently discards it instead of relaying it onward.",
+    explanation: "IP forwarding is an Azure platform setting on the VM's NIC that lifts the default restriction of dropping packets not addressed to the NIC's own IP. Without it, the NVA receives inspected traffic (because Floating IP/DSR preserves the original destination IP) but cannot forward it — Azure discards it at the NIC level. NVA-2 has IP forwarding enabled and works correctly. NVA-1 does not, so every flow the ILB distributes to NVA-1 is dropped. IP forwarding must be enabled on the NIC of every NVA VM in the backend pool, and OS-level forwarding (IP forwarding in the guest OS) must also be configured inside the VM.",
     learnUrl: "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-network-interface#enable-or-disable-ip-forwarding",
   },
   {
