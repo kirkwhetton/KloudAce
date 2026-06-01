@@ -1,5 +1,5 @@
 // AZ-700 — Hotspot (click-on-diagram) questions
-// Cards: AZ-700-HS-101 … AZ-700-HS-105
+// Cards: AZ-700-HS-101 … AZ-700-HS-111
 
 const TrafficManagerDiagram = () => (
   <svg viewBox="0 0 680 370" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
@@ -428,6 +428,213 @@ const HubFaultTransitDiagram = () => (
   </svg>
 );
 
+// ─── HS-107: NVA IP Forwarding ────────────────────────────────────────────────
+const NvaIpForwardingDiagram = () => (
+  <svg viewBox="0 0 680 380" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
+    <defs>
+      <marker id="nv1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#555"/></marker>
+      <marker id="nv2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#1565c0"/></marker>
+    </defs>
+    <rect x="10" y="30" width="145" height="130" rx="8" fill="#e8eaf6" stroke="#3949ab" strokeWidth="2"/>
+    <text x="82" y="57" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#283593">Spoke-A</text>
+    <text x="82" y="74" textAnchor="middle" fontSize="11" fill="#3949ab">10.1.0.0/24</text>
+    <rect x="26" y="86" width="113" height="56" rx="5" fill="white" stroke="#3949ab" strokeWidth="1.5"/>
+    <text x="82" y="110" textAnchor="middle" fontSize="20" fill="#555">🖥</text>
+    <text x="82" y="131" textAnchor="middle" fontSize="11" fill="#555">VM-A</text>
+    <rect x="10" y="220" width="145" height="130" rx="8" fill="#e8eaf6" stroke="#3949ab" strokeWidth="2"/>
+    <text x="82" y="247" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#283593">Spoke-B</text>
+    <text x="82" y="264" textAnchor="middle" fontSize="11" fill="#3949ab">10.2.0.0/24</text>
+    <rect x="26" y="276" width="113" height="56" rx="5" fill="white" stroke="#3949ab" strokeWidth="1.5"/>
+    <text x="82" y="300" textAnchor="middle" fontSize="20" fill="#555">🖥</text>
+    <text x="82" y="321" textAnchor="middle" fontSize="11" fill="#555">VM-B</text>
+    <line x1="155" y1="100" x2="212" y2="155" stroke="#555" strokeWidth="2" markerEnd="url(#nv1)"/>
+    <line x1="155" y1="280" x2="212" y2="225" stroke="#555" strokeWidth="2" markerEnd="url(#nv1)"/>
+    <rect x="215" y="80" width="145" height="220" rx="8" fill="#e3f2fd" stroke="#1565c0" strokeWidth="2.5"/>
+    <text x="287" y="108" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#0d47a1">Standard ILB</text>
+    <text x="287" y="124" textAnchor="middle" fontSize="11" fill="#555">Frontend: 10.0.1.4</text>
+    <rect x="230" y="134" width="115" height="50" rx="5" fill="#1565c0"/>
+    <text x="287" y="156" textAnchor="middle" fontSize="12" fill="white" fontWeight="bold">HA Ports Rule</text>
+    <text x="287" y="172" textAnchor="middle" fontSize="10" fill="#bbdefb">Protocol: All / Port: 0</text>
+    <rect x="230" y="196" width="115" height="40" rx="4" fill="#0288d1"/>
+    <text x="287" y="212" textAnchor="middle" fontSize="11" fill="white" fontWeight="bold">Floating IP: ON</text>
+    <text x="287" y="226" textAnchor="middle" fontSize="10" fill="#b3e5fc">DSR — preserves dst IP</text>
+    <line x1="360" y1="150" x2="400" y2="138" stroke="#1565c0" strokeWidth="2" strokeDasharray="5 3" markerEnd="url(#nv2)"/>
+    <line x1="360" y1="230" x2="400" y2="262" stroke="#1565c0" strokeWidth="2" strokeDasharray="5 3" markerEnd="url(#nv2)"/>
+    <text x="382" y="200" textAnchor="middle" fontSize="11" fill="#1565c0" fontStyle="italic">distributes</text>
+    <rect x="402" y="20" width="270" height="340" rx="8" fill="#fff3e0" stroke="#ef6c00" strokeWidth="2"/>
+    <text x="537" y="47" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#bf360c">NVA Subnet 10.0.1.0/24</text>
+    <rect x="416" y="62" width="242" height="130" rx="7" fill="white" stroke="#ef6c00" strokeWidth="2"/>
+    <text x="537" y="87" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#333">NVA-1  (10.0.1.10)</text>
+    <rect x="428" y="100" width="218" height="80" rx="5" fill="#fff8e1" stroke="#ffa000" strokeWidth="2"/>
+    <text x="537" y="122" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#e65100">NIC — IP Forwarding: ?</text>
+    <text x="537" y="142" textAnchor="middle" fontSize="11" fill="#888">Packets arrive but are</text>
+    <text x="537" y="158" textAnchor="middle" fontSize="11" fill="#c62828">dropped — dst IP mismatch</text>
+    <rect x="416" y="210" width="242" height="130" rx="7" fill="white" stroke="#ef6c00" strokeWidth="2"/>
+    <text x="537" y="235" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#333">NVA-2  (10.0.1.11)</text>
+    <rect x="428" y="248" width="218" height="80" rx="5" fill="#fff8e1" stroke="#ffa000" strokeWidth="2"/>
+    <text x="537" y="270" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#e65100">NIC — IP Forwarding: ?</text>
+    <text x="537" y="290" textAnchor="middle" fontSize="11" fill="#888">Same issue on both</text>
+    <text x="537" y="306" textAnchor="middle" fontSize="11" fill="#c62828">NVA instances</text>
+  </svg>
+);
+
+// ─── HS-108: Forced Tunnelling Route Table ────────────────────────────────────
+const ForcedTunnelDiagram = () => (
+  <svg viewBox="0 0 680 310" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
+    <defs>
+      <marker id="ft1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#d32f2f"/></marker>
+      <marker id="ft2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#388e3c"/></marker>
+      <marker id="ft3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#555"/></marker>
+    </defs>
+    <ellipse cx="340" cy="30" rx="80" ry="26" fill="#f0f0f0" stroke="#aaa" strokeWidth="1.5"/>
+    <text x="340" y="26" textAnchor="middle" fontSize="13" fill="#555">Internet</text>
+    <text x="340" y="43" textAnchor="middle" fontSize="10" fill="#888">(public)</text>
+    <rect x="10" y="88" width="175" height="188" rx="8" fill="#e8eaf6" stroke="#3949ab" strokeWidth="2"/>
+    <text x="97" y="114" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#283593">Spoke Subnet</text>
+    <text x="97" y="131" textAnchor="middle" fontSize="11" fill="#3949ab">10.1.0.0/24</text>
+    <rect x="22" y="144" width="150" height="52" rx="5" fill="white" stroke="#3949ab" strokeWidth="1.5"/>
+    <text x="97" y="166" textAnchor="middle" fontSize="18" fill="#555">🖥</text>
+    <text x="97" y="185" textAnchor="middle" fontSize="11" fill="#555">VM (internet-bound traffic)</text>
+    <rect x="22" y="208" width="150" height="58" rx="5" fill="#fff3e0" stroke="#ef6c00" strokeWidth="2"/>
+    <text x="97" y="228" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#e65100">Route Table</text>
+    <text x="97" y="244" textAnchor="middle" fontSize="10" fill="#555">0.0.0.0/0 → ?</text>
+    <text x="97" y="258" textAnchor="middle" fontSize="10" fill="#c62828">(UDR missing)</text>
+    <path d="M 175 152 Q 262 56 320 56" stroke="#d32f2f" strokeWidth="2.5" fill="none" strokeDasharray="8 4" markerEnd="url(#ft1)"/>
+    <text x="210" y="75" textAnchor="middle" fontSize="11" fill="#c62828" fontWeight="bold">Current: direct to internet ✗</text>
+    <rect x="260" y="120" width="155" height="120" rx="8" fill="#e3f2fd" stroke="#1565c0" strokeWidth="2.5"/>
+    <text x="337" y="147" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#0d47a1">VPN Gateway</text>
+    <text x="337" y="164" textAnchor="middle" fontSize="11" fill="#555">gw-hub</text>
+    <rect x="274" y="174" width="127" height="52" rx="5" fill="#1565c0"/>
+    <text x="337" y="196" textAnchor="middle" fontSize="11" fill="white">S2S Tunnel</text>
+    <text x="337" y="212" textAnchor="middle" fontSize="10" fill="#bbdefb">connected ✓</text>
+    <line x1="420" y1="180" x2="490" y2="180" stroke="#555" strokeWidth="2" markerEnd="url(#ft3)"/>
+    <rect x="492" y="120" width="175" height="120" rx="8" fill="#e8f5e9" stroke="#388e3c" strokeWidth="2"/>
+    <text x="579" y="147" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1b5e20">On-Premises</text>
+    <text x="579" y="164" textAnchor="middle" fontSize="11" fill="#388e3c">Firewall / Proxy</text>
+    <rect x="505" y="174" width="148" height="52" rx="5" fill="#388e3c"/>
+    <text x="579" y="196" textAnchor="middle" fontSize="11" fill="white">All outbound traffic</text>
+    <text x="579" y="212" textAnchor="middle" fontSize="10" fill="#c8e6c9">must be inspected here</text>
+    <path d="M 97 208 Q 97 280 337 280 Q 470 280 490 200" stroke="#388e3c" strokeWidth="2" fill="none" strokeDasharray="6 3" markerEnd="url(#ft2)"/>
+    <text x="290" y="298" textAnchor="middle" fontSize="11" fill="#388e3c" fontWeight="bold">Required: via VPN Gateway → on-premises ✓</text>
+  </svg>
+);
+
+// ─── HS-109: NSG Inbound Evaluation Order ─────────────────────────────────────
+const NsgEvalOrderDiagram = () => (
+  <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
+    <defs>
+      <marker id="ng1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#1565c0"/></marker>
+    </defs>
+    <ellipse cx="55" cy="150" rx="48" ry="34" fill="#f0f4f8" stroke="#94a3b8" strokeWidth="1.5"/>
+    <text x="55" y="146" textAnchor="middle" fontSize="13" fill="#475569" fontWeight="600">Internet</text>
+    <text x="55" y="162" textAnchor="middle" fontSize="11" fill="#64748b">Port 80</text>
+    <line x1="103" y1="150" x2="148" y2="150" stroke="#1565c0" strokeWidth="2.5" markerEnd="url(#ng1)"/>
+    <text x="125" y="142" textAnchor="middle" fontSize="10" fill="#1565c0">inbound</text>
+    <rect x="150" y="50" width="175" height="200" rx="8" fill="#fff3e0" stroke="#e65100" strokeWidth="2.5"/>
+    <text x="237" y="80" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#bf360c">Subnet NSG</text>
+    <text x="237" y="97" textAnchor="middle" fontSize="11" fill="#e65100">Evaluated FIRST ①</text>
+    <text x="237" y="116" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#555">Inbound rules:</text>
+    <rect x="162" y="126" width="151" height="68" rx="5" fill="#ffccbc" stroke="#e64a19" strokeWidth="1.5"/>
+    <text x="237" y="148" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#bf360c">Priority 100</text>
+    <text x="237" y="166" textAnchor="middle" fontSize="12" fill="#333">Action: DENY</text>
+    <text x="237" y="182" textAnchor="middle" fontSize="11" fill="#555">Port 80 / Source: Any</text>
+    <text x="237" y="214" textAnchor="middle" fontSize="12" fill="#888">Default rules below…</text>
+    <rect x="380" y="50" width="175" height="200" rx="8" fill="#f5f5f5" stroke="#bbb" strokeWidth="1.5"/>
+    <text x="467" y="80" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#757575">NIC NSG</text>
+    <text x="467" y="97" textAnchor="middle" fontSize="11" fill="#9e9e9e">Evaluated SECOND ②</text>
+    <text x="467" y="116" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#bbb">Inbound rules:</text>
+    <rect x="392" y="126" width="151" height="68" rx="5" fill="#e8f5e9" stroke="#a5d6a7" strokeWidth="1"/>
+    <text x="467" y="148" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#388e3c">Priority 100</text>
+    <text x="467" y="166" textAnchor="middle" fontSize="12" fill="#555">Action: ALLOW</text>
+    <text x="467" y="182" textAnchor="middle" fontSize="11" fill="#555">Port 80 / Source: Internet</text>
+    <text x="467" y="214" textAnchor="middle" fontSize="11" fill="#9e9e9e">(never reached)</text>
+    <rect x="600" y="118" width="72" height="64" rx="7" fill="#f5f5f5" stroke="#bbb" strokeWidth="1.5"/>
+    <text x="636" y="147" textAnchor="middle" fontSize="20" fill="#bbb">🖥</text>
+    <text x="636" y="170" textAnchor="middle" fontSize="11" fill="#bbb">VM</text>
+    <line x1="325" y1="150" x2="375" y2="150" stroke="#bbb" strokeWidth="1.5" strokeDasharray="5 4"/>
+    <text x="350" y="142" textAnchor="middle" fontSize="10" fill="#bbb">blocked</text>
+    <line x1="555" y1="150" x2="598" y2="150" stroke="#ddd" strokeWidth="1.5" strokeDasharray="4 3"/>
+    <text x="249" y="270" textAnchor="middle" fontSize="12" fill="#333" fontWeight="bold">Question: which NSG is evaluated first for inbound traffic?</text>
+  </svg>
+);
+
+// ─── HS-110: Virtual WAN Routing Intent ───────────────────────────────────────
+const VwanRoutingIntentDiagram = () => (
+  <svg viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
+    <defs>
+      <marker id="vw1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#555"/></marker>
+      <marker id="vw2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#d32f2f"/></marker>
+    </defs>
+    <rect x="50" y="30" width="580" height="280" rx="12" fill="#e3f2fd" stroke="#1565c0" strokeWidth="2.5"/>
+    <text x="340" y="58" textAnchor="middle" fontSize="15" fontWeight="bold" fill="#0d47a1">Virtual WAN Hub (Secured Virtual Hub)</text>
+    <rect x="220" y="72" width="170" height="100" rx="8" fill="white" stroke="#ef6c00" strokeWidth="2"/>
+    <text x="305" y="96" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#bf360c">Azure Firewall</text>
+    <text x="305" y="113" textAnchor="middle" fontSize="11" fill="#e65100">fw-hub-prod</text>
+    <text x="305" y="130" textAnchor="middle" fontSize="11" fill="#388e3c">✓ Deployed</text>
+    <text x="305" y="147" textAnchor="middle" fontSize="11" fill="#388e3c">✓ Policy associated</text>
+    <rect x="140" y="200" width="195" height="80" rx="7" fill="#ffebee" stroke="#d32f2f" strokeWidth="2"/>
+    <text x="237" y="226" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#c62828">Routing Intent</text>
+    <text x="237" y="244" textAnchor="middle" fontSize="11" fill="#d32f2f">NOT CONFIGURED</text>
+    <text x="237" y="262" textAnchor="middle" fontSize="10" fill="#888">Private traffic policy: off</text>
+    <rect x="370" y="200" width="195" height="80" rx="7" fill="#fff9c4" stroke="#f9a825" strokeWidth="1.5"/>
+    <text x="467" y="226" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#e65100">Hub Route Tables</text>
+    <text x="467" y="244" textAnchor="middle" fontSize="11" fill="#555">Routes not programmed</text>
+    <text x="467" y="262" textAnchor="middle" fontSize="10" fill="#888">through firewall</text>
+    <rect x="10" y="130" width="130" height="80" rx="7" fill="#e8eaf6" stroke="#3949ab" strokeWidth="1.5"/>
+    <text x="75" y="157" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#283593">Spoke-App</text>
+    <text x="75" y="173" textAnchor="middle" fontSize="10" fill="#3949ab">10.1.0.0/16</text>
+    <text x="75" y="189" textAnchor="middle" fontSize="10" fill="#555">connected ✓</text>
+    <rect x="540" y="130" width="130" height="80" rx="7" fill="#e8eaf6" stroke="#3949ab" strokeWidth="1.5"/>
+    <text x="605" y="157" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#283593">Spoke-DB</text>
+    <text x="605" y="173" textAnchor="middle" fontSize="10" fill="#3949ab">10.2.0.0/16</text>
+    <text x="605" y="189" textAnchor="middle" fontSize="10" fill="#555">connected ✓</text>
+    <line x1="140" y1="170" x2="218" y2="130" stroke="#555" strokeWidth="1.5" markerEnd="url(#vw1)"/>
+    <line x1="540" y1="170" x2="392" y2="130" stroke="#555" strokeWidth="1.5" markerEnd="url(#vw1)"/>
+    <path d="M 75 130 Q 75 50 605 50 Q 635 50 605 130" stroke="#d32f2f" strokeWidth="2" fill="none" strokeDasharray="8 4" markerEnd="url(#vw2)"/>
+    <text x="340" y="38" textAnchor="middle" fontSize="11" fill="#c62828" fontWeight="bold">inter-spoke traffic bypasses firewall ✗</text>
+    <text x="340" y="346" textAnchor="middle" fontSize="12" fill="#333" fontWeight="bold">Firewall is deployed — what else must be configured to route spoke traffic through it?</text>
+  </svg>
+);
+
+// ─── HS-111: NAT Gateway vs LB Outbound Precedence ────────────────────────────
+const NatGatewayPrecedenceDiagram = () => (
+  <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
+    <defs>
+      <marker id="ng2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#555"/></marker>
+      <marker id="ng3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#1565c0"/></marker>
+    </defs>
+    <rect x="10" y="80" width="155" height="148" rx="8" fill="#e8eaf6" stroke="#3949ab" strokeWidth="2"/>
+    <text x="87" y="106" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#283593">Subnet-App</text>
+    <text x="87" y="122" textAnchor="middle" fontSize="11" fill="#3949ab">10.1.1.0/24</text>
+    <rect x="22" y="132" width="130" height="50" rx="5" fill="white" stroke="#3949ab" strokeWidth="1.5"/>
+    <text x="87" y="154" textAnchor="middle" fontSize="18" fill="#555">🖥</text>
+    <text x="87" y="175" textAnchor="middle" fontSize="11" fill="#555">50 VMs</text>
+    <text x="87" y="202" textAnchor="middle" fontSize="11" fill="#555">Both attached to subnet:</text>
+    <rect x="190" y="50" width="180" height="110" rx="8" fill="#e8f5e9" stroke="#388e3c" strokeWidth="2.5"/>
+    <text x="280" y="78" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1b5e20">NAT Gateway</text>
+    <text x="280" y="96" textAnchor="middle" fontSize="11" fill="#388e3c">ngw-prod</text>
+    <rect x="202" y="106" width="156" height="40" rx="4" fill="#388e3c"/>
+    <text x="280" y="121" textAnchor="middle" fontSize="11" fill="white">pip-ngw (20.50.1.1)</text>
+    <text x="280" y="136" textAnchor="middle" fontSize="10" fill="#c8e6c9">64,512 SNAT ports/IP</text>
+    <rect x="190" y="178" width="180" height="100" rx="8" fill="#e3f2fd" stroke="#1565c0" strokeWidth="1.5"/>
+    <text x="280" y="205" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#0d47a1">Load Balancer</text>
+    <text x="280" y="222" textAnchor="middle" fontSize="11" fill="#1565c0">lb-prod (Standard)</text>
+    <rect x="202" y="233" width="156" height="35" rx="4" fill="#1565c0"/>
+    <text x="280" y="246" textAnchor="middle" fontSize="11" fill="white">Outbound rules configured</text>
+    <text x="280" y="259" textAnchor="middle" fontSize="10" fill="#bbdefb">(currently inactive)</text>
+    <line x1="165" y1="130" x2="188" y2="105" stroke="#555" strokeWidth="1.5" markerEnd="url(#ng2)"/>
+    <line x1="165" y1="155" x2="188" y2="220" stroke="#555" strokeWidth="1.5" markerEnd="url(#ng2)"/>
+    <ellipse cx="580" cy="150" rx="62" ry="40" fill="#f0f4f8" stroke="#94a3b8" strokeWidth="1.5"/>
+    <text x="580" y="146" textAnchor="middle" fontSize="13" fill="#475569" fontWeight="600">Internet</text>
+    <text x="580" y="163" textAnchor="middle" fontSize="10" fill="#64748b">outbound</text>
+    <line x1="372" y1="100" x2="510" y2="140" stroke="#388e3c" strokeWidth="2.5" markerEnd="url(#ng2)"/>
+    <text x="445" y="108" textAnchor="middle" fontSize="11" fill="#1b5e20" fontWeight="bold">active ✓</text>
+    <line x1="372" y1="228" x2="510" y2="165" stroke="#bbb" strokeWidth="1.5" strokeDasharray="6 3" markerEnd="url(#ng2)"/>
+    <text x="440" y="212" textAnchor="middle" fontSize="11" fill="#bbb">inactive</text>
+    <text x="340" y="288" textAnchor="middle" fontSize="12" fill="#333" fontWeight="bold">Both are on the same subnet — which component handles outbound SNAT?</text>
+  </svg>
+);
+
 const az700hotspot = [
   {
     id: "AZ-700-HS-101",
@@ -569,6 +776,115 @@ const az700hotspot = [
       "Gateway transit is a two-sided negotiation. Even though Spoke-A correctly has 'Use remote gateways: Enabled' (Panel 2), it receives nothing because the Hub side (Panel 1) has 'Allow gateway transit: Disabled' — the Hub is not advertising its gateway to this spoke. The result is the same symptom seen in Panel 3: no on-premises route in Spoke-A's effective routes. Panel 4 confirms the VPN tunnel is healthy and correctly defines 192.168.0.0/16 on the on-premises side. The fix is to enable 'Allow gateway transit' on the Hub-to-Spoke-A peering link.",
     learnUrl:
       "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview#gateways-and-on-premises-connectivity",
+  },
+  // ─── Core Networking Infrastructure ─────────────────────────────────────────
+  {
+    id: "AZ-700-HS-107",
+    exam: "AZ-700",
+    type: "hotspot",
+    difficulty: "hard",
+    category: "Core Networking Infrastructure",
+    question: "The diagram shows a Standard Internal Load Balancer with HA Ports distributing spoke traffic across two NVA VMs. Traffic from Spoke-A is reaching the NVA VMs via the load balancer but is being silently dropped. Click the component whose NIC requires an additional Azure-level setting to allow it to relay packets whose destination IP is not its own.",
+    imageAlt: "NVA high-availability diagram showing Spoke-A and Spoke-B subnets with VMs, a Standard Internal Load Balancer with HA Ports and Floating IP enabled, and an NVA subnet containing NVA-1 and NVA-2. Each NVA shows a NIC badge reading 'IP Forwarding: ?' indicating the missing setting.",
+    viewBox: "0 0 680 380",
+    diagram: NvaIpForwardingDiagram,
+    zones: [
+      { id: "ilb",      label: "Standard ILB",   x: 215, y: 80,  width: 145, height: 220 },
+      { id: "nva-1",    label: "NVA-1 VM",        x: 416, y: 62,  width: 242, height: 130 },
+      { id: "spoke-a",  label: "Spoke-A Subnet",  x: 10,  y: 30,  width: 145, height: 130 },
+      { id: "spoke-b",  label: "Spoke-B Subnet",  x: 10,  y: 220, width: 145, height: 130 },
+    ],
+    correctZone: "nva-1",
+    answer: "IP forwarding must be enabled on each NVA VM's NIC. Without it, Azure drops any packet whose destination IP does not match the NIC's own assigned IP — the NVA cannot relay traffic to its intended destination.",
+    explanation: "Azure's default behaviour for VM NICs is to drop packets not addressed to the NIC's own IP. For an NVA to inspect and forward traffic, IP forwarding must be enabled on the NIC — this is an Azure platform setting separate from IP forwarding at the OS level (which also needs to be enabled inside the VM). The ILB correctly receives all flows via HA Ports (Protocol: All, Port: 0) and distributes them, and Floating IP (DSR) preserves the original destination IP. But without NIC-level IP forwarding, the NVA VM receives packets destined for another IP and drops them. All NVAs in the backend pool need this setting.",
+    learnUrl: "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-network-interface#enable-or-disable-ip-forwarding",
+  },
+  {
+    id: "AZ-700-HS-108",
+    exam: "AZ-700",
+    type: "hotspot",
+    difficulty: "hard",
+    category: "Core Networking Infrastructure",
+    question: "The security team requires all internet-bound traffic from VMs in the Spoke Subnet to pass through the on-premises firewall for inspection. Currently traffic exits directly to the internet (red dashed path). A Site-to-Site VPN tunnel is connected and the on-premises firewall is ready. Click the component that must be updated to redirect 0.0.0.0/0 traffic through the VPN Gateway.",
+    imageAlt: "Forced tunnelling diagram showing a Spoke Subnet with VMs and a Route Table labelled '0.0.0.0/0 → ? (UDR missing)', a VPN Gateway showing the S2S tunnel as connected, an on-premises firewall, the Internet cloud at the top, and a red dashed arrow showing current traffic going directly to the internet. A green dashed arrow shows the required path through the VPN Gateway to on-premises.",
+    viewBox: "0 0 680 310",
+    diagram: ForcedTunnelDiagram,
+    zones: [
+      { id: "route-table",   label: "Route Table",      x: 22,  y: 208, width: 150, height: 58  },
+      { id: "vpn-gateway",   label: "VPN Gateway",      x: 260, y: 120, width: 155, height: 120 },
+      { id: "spoke-subnet",  label: "Spoke Subnet",     x: 10,  y: 88,  width: 175, height: 110 },
+      { id: "onprem-fw",     label: "On-Premises FW",   x: 492, y: 120, width: 175, height: 120 },
+    ],
+    correctZone: "route-table",
+    answer: "The Route Table associated with the Spoke Subnet must have a UDR added: destination 0.0.0.0/0, next hop type Virtual Network Gateway. This overrides the system route and forces all internet-bound traffic down the VPN tunnel to the on-premises firewall.",
+    explanation: "The VPN Gateway and on-premises firewall are already correctly configured — the tunnel is connected and the firewall is ready. The missing piece is a user-defined route in the Route Table associated with the Spoke Subnet. Without a 0.0.0.0/0 UDR pointing to Virtual Network Gateway, Azure uses the system route (0.0.0.0/0 → Internet) and traffic exits directly. Adding the UDR overrides the system route and sends all internet-bound traffic into the VPN tunnel. The Route Table should also have BGP propagation disabled to prevent on-premises BGP routes from creating conflicts.",
+    learnUrl: "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-configure-udr-overview",
+  },
+  // ─── Security & Monitoring ───────────────────────────────────────────────────
+  {
+    id: "AZ-700-HS-109",
+    exam: "AZ-700",
+    type: "hotspot",
+    difficulty: "medium",
+    category: "Security & Monitoring",
+    question: "Inbound HTTP traffic on port 80 is arriving from the internet destined for the VM. A Subnet NSG with a Priority 100 DENY rule for port 80 and a NIC NSG with a Priority 100 ALLOW rule for port 80 are both applied. The traffic is being denied. Click the NSG that Azure evaluates first for inbound traffic, causing the denial before the other NSG is consulted.",
+    imageAlt: "NSG inbound evaluation diagram showing Internet source with port 80 arrow, a Subnet NSG box showing Priority 100 DENY port 80 with an evaluation order label 'Evaluated FIRST', a NIC NSG box showing Priority 100 ALLOW port 80 labelled 'never reached', a dashed line between them showing the blocked path, and a greyed-out VM on the right.",
+    viewBox: "0 0 680 300",
+    diagram: NsgEvalOrderDiagram,
+    zones: [
+      { id: "subnet-nsg", label: "Subnet NSG", x: 150, y: 50,  width: 175, height: 200 },
+      { id: "nic-nsg",    label: "NIC NSG",    x: 380, y: 50,  width: 175, height: 200 },
+      { id: "vm",         label: "VM",         x: 600, y: 118, width: 72,  height: 64  },
+      { id: "internet",   label: "Internet",   x: 7,   y: 116, width: 96,  height: 68  },
+    ],
+    correctZone: "subnet-nsg",
+    answer: "For inbound traffic, Azure always evaluates the Subnet NSG before the NIC NSG. The Priority 100 DENY rule in the Subnet NSG matches port 80 and drops the packet — the NIC NSG is never reached.",
+    explanation: "NSG evaluation order for inbound traffic is fixed: Subnet NSG first, then NIC NSG. Evaluation stops at the first matching rule in each NSG. A DENY in the Subnet NSG terminates processing immediately — the NIC NSG's ALLOW rule is irrelevant because it is never consulted. There is no 'most permissive wins' logic between NSGs. For the ALLOW to take effect, the Subnet NSG must also permit port 80 (or the DENY rule must be removed). For outbound traffic the order reverses: NIC NSG is evaluated first.",
+    learnUrl: "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-group-how-it-works",
+  },
+  // ─── Hybrid Connectivity ─────────────────────────────────────────────────────
+  {
+    id: "AZ-700-HS-110",
+    exam: "AZ-700",
+    type: "hotspot",
+    difficulty: "hard",
+    category: "Hybrid Connectivity",
+    question: "Azure Firewall is deployed inside the Virtual WAN hub and a Firewall Policy is associated. Inter-spoke traffic still routes directly between Spoke-App and Spoke-DB without passing through the firewall (red dashed path). Click the component inside the hub that must be configured to redirect private traffic through the firewall.",
+    imageAlt: "Virtual WAN hub diagram showing Azure Firewall inside the hub labelled as 'Deployed' and 'Policy associated', a Routing Intent badge labelled 'NOT CONFIGURED', a Hub Route Tables badge showing routes not programmed, Spoke-App and Spoke-DB connected to the hub, and a red dashed arrow showing inter-spoke traffic bypassing the firewall.",
+    viewBox: "0 0 680 360",
+    diagram: VwanRoutingIntentDiagram,
+    zones: [
+      { id: "azure-firewall",    label: "Azure Firewall",    x: 220, y: 72,  width: 170, height: 100 },
+      { id: "routing-intent",    label: "Routing Intent",    x: 140, y: 200, width: 195, height: 80  },
+      { id: "hub-route-tables",  label: "Hub Route Tables",  x: 370, y: 200, width: 195, height: 80  },
+      { id: "spoke-app",         label: "Spoke-App",         x: 10,  y: 130, width: 130, height: 80  },
+    ],
+    correctZone: "routing-intent",
+    answer: "Routing Intent must be configured on the hub. Deploying Azure Firewall alone does not change how the hub routes traffic — Routing Intent is the explicit configuration that instructs the Virtual WAN control plane to program routes through the firewall across all connected spokes and branches.",
+    explanation: "A common misconception is that deploying Azure Firewall in the hub automatically redirects traffic. It does not. Routing Intent is a separate configuration step that sets traffic policies: Private traffic policy (routes inter-VNet, VNet-to-branch, and branch-to-branch traffic through the firewall) and/or Internet traffic policy (routes all outbound internet traffic through the firewall). Once Routing Intent is configured, the Virtual WAN control plane automatically programs the required routes in all connected spoke VNets — no manual UDRs are needed.",
+    learnUrl: "https://learn.microsoft.com/en-us/azure/virtual-wan/how-to-routing-policies",
+  },
+  // ─── Application Delivery Services ───────────────────────────────────────────
+  {
+    id: "AZ-700-HS-111",
+    exam: "AZ-700",
+    type: "hotspot",
+    difficulty: "medium",
+    category: "Application Delivery Services",
+    question: "A subnet has both a NAT Gateway and a Standard Load Balancer with outbound rules configured. All 50 VMs in the subnet need scalable outbound internet connectivity. Click the component that Azure uses as the active SNAT mechanism — the other is automatically inactive for this subnet.",
+    imageAlt: "Outbound SNAT precedence diagram showing Subnet-App with 50 VMs on the left, a NAT Gateway (ngw-prod) with a green arrow to the Internet labelled 'active', and a Standard Load Balancer with outbound rules connected by a grey dashed arrow labelled 'inactive'. Both are attached to the same subnet.",
+    viewBox: "0 0 680 300",
+    diagram: NatGatewayPrecedenceDiagram,
+    zones: [
+      { id: "nat-gateway",    label: "NAT Gateway",     x: 190, y: 50,  width: 180, height: 110 },
+      { id: "load-balancer",  label: "Load Balancer",   x: 190, y: 178, width: 180, height: 100 },
+      { id: "subnet",         label: "Subnet-App",      x: 10,  y: 80,  width: 155, height: 148 },
+      { id: "internet",       label: "Internet",        x: 518, y: 110, width: 124, height: 80  },
+    ],
+    correctZone: "nat-gateway",
+    answer: "NAT Gateway takes full and automatic precedence over Load Balancer outbound rules for any subnet it is associated with. The LB outbound rules are immediately inactive — there is no sharing, round-robin, or overflow between them.",
+    explanation: "When a NAT Gateway is associated with a subnet, it becomes the sole SNAT mechanism for all outbound internet traffic from that subnet. Load Balancer outbound rules are completely inactive — they do not act as overflow or fallback. This is intentional: NAT Gateway provides far more SNAT capacity (64,512 ports per public IP vs ~1,024 per VM with LB outbound rules) and is Azure's recommended solution for production outbound connectivity. The LB outbound rules remain configured but have no effect until the NAT Gateway association is removed.",
+    learnUrl: "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview#nat-gateway-and-load-balancer",
   },
 ];
 
