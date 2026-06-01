@@ -23,52 +23,52 @@ const TrafficManagerDiagram = () => (
     <circle cx="41" cy="168" r="1.5" fill="#0ea5e9"/>
     <circle cx="46" cy="168" r="1.5" fill="#0ea5e9"/>
     <text x="68" y="173" fontSize="11" fill="#0369a1" fontWeight="700">Client</text>
-    <text x="68" y="187" fontSize="9.5" fill="#0369a1">Browser</text>
-    <text x="68" y="201" fontSize="9.5" fill="#0369a1">London, UK</text>
+    <text x="68" y="187" fontSize="11" fill="#0369a1">Browser</text>
+    <text x="68" y="201" fontSize="11" fill="#0369a1">London, UK</text>
 
     {/* ── Traffic Manager box ── */}
     <rect x="255" y="138" width="178" height="100" rx="8" fill="#eef2ff" stroke="#6366f1" strokeWidth="1.8"/>
     <text x="344" y="160" textAnchor="middle" fontSize="12" fill="#4338ca" fontWeight="700">Traffic Manager</text>
-    <text x="344" y="174" textAnchor="middle" fontSize="9.5" fill="#6366f1">DNS-based routing</text>
+    <text x="344" y="174" textAnchor="middle" fontSize="11" fill="#6366f1">DNS-based routing</text>
     <rect x="279" y="181" width="130" height="20" rx="4" fill="#e0e7ff"/>
-    <text x="344" y="195" textAnchor="middle" fontSize="9.5" fill="#4338ca" fontWeight="600">Performance routing</text>
+    <text x="344" y="195" textAnchor="middle" fontSize="11" fill="#4338ca" fontWeight="600">Performance routing</text>
     <line x1="279" y1="206" x2="409" y2="206" stroke="#c7d2fe" strokeWidth="1"/>
-    <text x="313" y="219" textAnchor="middle" fontSize="9" fill="#818cf8">East US: 12 ms</text>
-    <text x="378" y="219" textAnchor="middle" fontSize="9" fill="#818cf8">W.Eu: 85 ms</text>
-    <text x="344" y="231" textAnchor="middle" fontSize="8.5" fill="#a5b4fc">↑ latency table</text>
+    <text x="313" y="219" textAnchor="middle" fontSize="11" fill="#818cf8">East US: 12 ms</text>
+    <text x="378" y="219" textAnchor="middle" fontSize="11" fill="#818cf8">W.Eu: 85 ms</text>
+    <text x="344" y="231" textAnchor="middle" fontSize="11" fill="#a5b4fc">↑ latency table</text>
 
     {/* ── East US endpoint box ── */}
     <rect x="505" y="55" width="152" height="70" rx="8" fill="#f0fdf4" stroke="#22c55e" strokeWidth="1.5"/>
     <text x="581" y="79" textAnchor="middle" fontSize="11" fill="#15803d" fontWeight="700">East US</text>
-    <text x="581" y="94" textAnchor="middle" fontSize="9.5" fill="#16a34a">Web App Endpoint</text>
-    <text x="581" y="112" textAnchor="middle" fontSize="9" fill="#15803d">● Healthy</text>
+    <text x="581" y="94" textAnchor="middle" fontSize="11" fill="#16a34a">Web App Endpoint</text>
+    <text x="581" y="112" textAnchor="middle" fontSize="11" fill="#15803d">● Healthy</text>
 
     {/* ── West Europe endpoint box ── */}
     <rect x="505" y="258" width="152" height="70" rx="8" fill="#f0fdf4" stroke="#22c55e" strokeWidth="1.5"/>
     <text x="581" y="282" textAnchor="middle" fontSize="11" fill="#15803d" fontWeight="700">West Europe</text>
-    <text x="581" y="297" textAnchor="middle" fontSize="9.5" fill="#16a34a">Web App Endpoint</text>
-    <text x="581" y="315" textAnchor="middle" fontSize="9" fill="#15803d">● Healthy</text>
+    <text x="581" y="297" textAnchor="middle" fontSize="11" fill="#16a34a">Web App Endpoint</text>
+    <text x="581" y="315" textAnchor="middle" fontSize="11" fill="#15803d">● Healthy</text>
 
     {/* ── Arrows ── */}
     {/* 1: Client → TM: DNS Query */}
     <line x1="142" y1="179" x2="253" y2="173" stroke="#0078d4" strokeWidth="1.5" markerEnd="url(#hs-ab)"/>
-    <text x="197" y="168" textAnchor="middle" fontSize="9" fill="#0078d4">① DNS Query</text>
+    <text x="197" y="168" textAnchor="middle" fontSize="11" fill="#0078d4">① DNS Query</text>
 
     {/* 2: TM → Client: DNS Response */}
     <line x1="253" y1="200" x2="142" y2="207" stroke="#6366f1" strokeWidth="1.5" markerEnd="url(#hs-ap)"/>
-    <text x="197" y="222" textAnchor="middle" fontSize="9" fill="#6366f1">② DNS Response (IP)</text>
+    <text x="197" y="222" textAnchor="middle" fontSize="11" fill="#6366f1">② DNS Response (IP)</text>
 
     {/* 3: TM → East US: health probe */}
     <line x1="433" y1="163" x2="503" y2="93" stroke="#94a3b8" strokeWidth="1" strokeDasharray="4 3" markerEnd="url(#hs-ag)"/>
-    <text x="477" y="121" textAnchor="middle" fontSize="8" fill="#94a3b8">probe</text>
+    <text x="477" y="121" textAnchor="middle" fontSize="11" fill="#94a3b8">probe</text>
 
     {/* 4: TM → West Europe: health probe */}
     <line x1="433" y1="218" x2="503" y2="275" stroke="#94a3b8" strokeWidth="1" strokeDasharray="4 3" markerEnd="url(#hs-ag)"/>
-    <text x="477" y="260" textAnchor="middle" fontSize="8" fill="#94a3b8">probe</text>
+    <text x="477" y="260" textAnchor="middle" fontSize="11" fill="#94a3b8">probe</text>
 
     {/* 5: Client → East US: direct HTTP after DNS resolution */}
     <path d="M 80 155 Q 280 18 505 72" fill="none" stroke="#0ea5e9" strokeWidth="1.2" strokeDasharray="5 3" markerEnd="url(#hs-ab)"/>
-    <text x="275" y="28" textAnchor="middle" fontSize="8.5" fill="#0ea5e9">③ Direct HTTP connection (bypasses TM)</text>
+    <text x="275" y="28" textAnchor="middle" fontSize="11" fill="#0ea5e9">③ Direct HTTP connection (bypasses TM)</text>
   </svg>
 );
 
@@ -86,8 +86,8 @@ const AzureFirewallDiagram = () => (
     {/* ── Route Table (UDR) ── */}
     <rect x="255" y="18" width="165" height="62" rx="8" fill="#eff6ff" stroke="#3b82f6" strokeWidth="1.5"/>
     <text x="337" y="38" textAnchor="middle" fontSize="10.5" fill="#1d4ed8" fontWeight="700">Route Table (UDR)</text>
-    <text x="337" y="53" textAnchor="middle" fontSize="9" fill="#3b82f6">0.0.0.0/0 → Azure Firewall</text>
-    <text x="337" y="67" textAnchor="middle" fontSize="8.5" fill="#93c5fd">Applied to Spoke-A subnet</text>
+    <text x="337" y="53" textAnchor="middle" fontSize="11" fill="#3b82f6">0.0.0.0/0 → Azure Firewall</text>
+    <text x="337" y="67" textAnchor="middle" fontSize="11" fill="#93c5fd">Applied to Spoke-A subnet</text>
 
     {/* ── Azure Firewall outer container ── */}
     <rect x="168" y="98" width="338" height="220" rx="10" fill="#fffbeb" stroke="#f59e0b" strokeWidth="1.8" strokeDasharray="6 3"/>
@@ -96,54 +96,54 @@ const AzureFirewallDiagram = () => (
     {/* ── DNAT Rules ── */}
     <rect x="182" y="128" width="95" height="176" rx="6" fill="#fef2f2" stroke="#fca5a5" strokeWidth="1.2"/>
     <rect x="182" y="128" width="95" height="28" rx="6" fill="#fee2e2"/>
-    <text x="229" y="147" textAnchor="middle" fontSize="9.5" fill="#b91c1c" fontWeight="700">DNAT Rules</text>
-    <text x="229" y="170" textAnchor="middle" fontSize="8.5" fill="#dc2626">Inbound only</text>
-    <text x="229" y="184" textAnchor="middle" fontSize="8.5" fill="#dc2626">Port forwarding</text>
-    <text x="229" y="198" textAnchor="middle" fontSize="8.5" fill="#dc2626">Public → Private IP</text>
-    <text x="229" y="214" textAnchor="middle" fontSize="8" fill="#f87171">e.g. expose RDP</text>
-    <text x="229" y="228" textAnchor="middle" fontSize="8" fill="#f87171">to backend VMs</text>
-    <text x="229" y="287" textAnchor="middle" fontSize="8" fill="#fca5a5" fontStyle="italic">No FQDN support</text>
+    <text x="229" y="147" textAnchor="middle" fontSize="11" fill="#b91c1c" fontWeight="700">DNAT Rules</text>
+    <text x="229" y="170" textAnchor="middle" fontSize="11" fill="#dc2626">Inbound only</text>
+    <text x="229" y="184" textAnchor="middle" fontSize="11" fill="#dc2626">Port forwarding</text>
+    <text x="229" y="198" textAnchor="middle" fontSize="11" fill="#dc2626">Public → Private IP</text>
+    <text x="229" y="214" textAnchor="middle" fontSize="11" fill="#f87171">e.g. expose RDP</text>
+    <text x="229" y="228" textAnchor="middle" fontSize="11" fill="#f87171">to backend VMs</text>
+    <text x="229" y="287" textAnchor="middle" fontSize="11" fill="#fca5a5" fontStyle="italic">No FQDN support</text>
 
     {/* ── Network Rules ── */}
     <rect x="285" y="128" width="95" height="176" rx="6" fill="#fff7ed" stroke="#fdba74" strokeWidth="1.2"/>
     <rect x="285" y="128" width="95" height="28" rx="6" fill="#ffedd5"/>
-    <text x="332" y="147" textAnchor="middle" fontSize="9.5" fill="#c2410c" fontWeight="700">Network Rules</text>
-    <text x="332" y="170" textAnchor="middle" fontSize="8.5" fill="#ea580c">Layer 4 (L4)</text>
-    <text x="332" y="184" textAnchor="middle" fontSize="8.5" fill="#ea580c">IP / Port / Protocol</text>
-    <text x="332" y="198" textAnchor="middle" fontSize="8.5" fill="#ea580c">Evaluated before</text>
-    <text x="332" y="212" textAnchor="middle" fontSize="8.5" fill="#ea580c">App Rules</text>
-    <text x="332" y="228" textAnchor="middle" fontSize="8" fill="#fb923c">Allow/deny by IP</text>
-    <text x="332" y="287" textAnchor="middle" fontSize="8" fill="#fdba74" fontStyle="italic">No FQDN support</text>
+    <text x="332" y="147" textAnchor="middle" fontSize="11" fill="#c2410c" fontWeight="700">Network Rules</text>
+    <text x="332" y="170" textAnchor="middle" fontSize="11" fill="#ea580c">Layer 4 (L4)</text>
+    <text x="332" y="184" textAnchor="middle" fontSize="11" fill="#ea580c">IP / Port / Protocol</text>
+    <text x="332" y="198" textAnchor="middle" fontSize="11" fill="#ea580c">Evaluated before</text>
+    <text x="332" y="212" textAnchor="middle" fontSize="11" fill="#ea580c">App Rules</text>
+    <text x="332" y="228" textAnchor="middle" fontSize="11" fill="#fb923c">Allow/deny by IP</text>
+    <text x="332" y="287" textAnchor="middle" fontSize="11" fill="#fdba74" fontStyle="italic">No FQDN support</text>
 
     {/* ── Application Rules ── */}
     <rect x="388" y="128" width="95" height="176" rx="6" fill="#f0fdf4" stroke="#86efac" strokeWidth="1.2"/>
     <rect x="388" y="128" width="95" height="28" rx="6" fill="#dcfce7"/>
-    <text x="435" y="147" textAnchor="middle" fontSize="9.5" fill="#15803d" fontWeight="700">App Rules</text>
-    <text x="435" y="170" textAnchor="middle" fontSize="8.5" fill="#16a34a">Layer 7 (L7)</text>
-    <text x="435" y="184" textAnchor="middle" fontSize="8.5" fill="#16a34a">FQDN filtering</text>
-    <text x="435" y="198" textAnchor="middle" fontSize="8.5" fill="#16a34a">URL categories</text>
-    <text x="435" y="212" textAnchor="middle" fontSize="8" fill="#22c55e">TLS inspection</text>
-    <text x="435" y="226" textAnchor="middle" fontSize="8" fill="#22c55e">*.microsoft.com</text>
-    <text x="435" y="287" textAnchor="middle" fontSize="8" fill="#86efac" fontStyle="italic">✓ FQDN support</text>
+    <text x="435" y="147" textAnchor="middle" fontSize="11" fill="#15803d" fontWeight="700">App Rules</text>
+    <text x="435" y="170" textAnchor="middle" fontSize="11" fill="#16a34a">Layer 7 (L7)</text>
+    <text x="435" y="184" textAnchor="middle" fontSize="11" fill="#16a34a">FQDN filtering</text>
+    <text x="435" y="198" textAnchor="middle" fontSize="11" fill="#16a34a">URL categories</text>
+    <text x="435" y="212" textAnchor="middle" fontSize="11" fill="#22c55e">TLS inspection</text>
+    <text x="435" y="226" textAnchor="middle" fontSize="11" fill="#22c55e">*.microsoft.com</text>
+    <text x="435" y="287" textAnchor="middle" fontSize="11" fill="#86efac" fontStyle="italic">✓ FQDN support</text>
 
     {/* ── Source VM (decorative) ── */}
     <rect x="18" y="180" width="118" height="68" rx="8" fill="#f0f9ff" stroke="#0ea5e9" strokeWidth="1.5"/>
-    <text x="77" y="201" textAnchor="middle" fontSize="10" fill="#0369a1" fontWeight="700">Spoke-A VM</text>
-    <text x="77" y="216" textAnchor="middle" fontSize="8.5" fill="#0369a1">Outbound HTTP/S</text>
-    <text x="77" y="230" textAnchor="middle" fontSize="8.5" fill="#7ea9c4">to *.microsoft.com</text>
+    <text x="77" y="201" textAnchor="middle" fontSize="12" fill="#0369a1" fontWeight="700">Spoke-A VM</text>
+    <text x="77" y="216" textAnchor="middle" fontSize="11" fill="#0369a1">Outbound HTTP/S</text>
+    <text x="77" y="230" textAnchor="middle" fontSize="11" fill="#7ea9c4">to *.microsoft.com</text>
 
     {/* ── Internet (decorative) ── */}
     <rect x="558" y="180" width="108" height="68" rx="8" fill="#f0fdf4" stroke="#22c55e" strokeWidth="1.5"/>
-    <text x="612" y="201" textAnchor="middle" fontSize="10" fill="#15803d" fontWeight="700">Internet</text>
-    <text x="612" y="216" textAnchor="middle" fontSize="8.5" fill="#16a34a">Allowed /</text>
-    <text x="612" y="230" textAnchor="middle" fontSize="8.5" fill="#16a34a">Blocked</text>
+    <text x="612" y="201" textAnchor="middle" fontSize="12" fill="#15803d" fontWeight="700">Internet</text>
+    <text x="612" y="216" textAnchor="middle" fontSize="11" fill="#16a34a">Allowed /</text>
+    <text x="612" y="230" textAnchor="middle" fontSize="11" fill="#16a34a">Blocked</text>
 
     {/* ── Arrows ── */}
     <line x1="337" y1="80" x2="337" y2="97" stroke="#3b82f6" strokeWidth="1.5" markerEnd="url(#fw-ab)"/>
     <line x1="136" y1="214" x2="167" y2="214" stroke="#3b82f6" strokeWidth="1.5" markerEnd="url(#fw-ab)"/>
-    <text x="152" y="207" textAnchor="middle" fontSize="8" fill="#3b82f6">UDR</text>
+    <text x="152" y="207" textAnchor="middle" fontSize="11" fill="#3b82f6">UDR</text>
     <line x1="506" y1="214" x2="557" y2="214" stroke="#f59e0b" strokeWidth="1.5" markerEnd="url(#fw-ao)"/>
-    <text x="531" y="207" textAnchor="middle" fontSize="8" fill="#b45309">filtered</text>
+    <text x="531" y="207" textAnchor="middle" fontSize="11" fill="#b45309">filtered</text>
   </svg>
 );
 
@@ -161,54 +161,54 @@ const PrivateAccessDiagram = () => (
     {/* ── Azure DNS (top-left) ── */}
     <rect x="15" y="20" width="160" height="92" rx="8" fill="#fff7ed" stroke="#fb923c" strokeWidth="1.5"/>
     <text x="95" y="43" textAnchor="middle" fontSize="11" fill="#c2410c" fontWeight="700">Azure DNS</text>
-    <text x="95" y="58" textAnchor="middle" fontSize="9" fill="#ea580c">168.63.129.16</text>
+    <text x="95" y="58" textAnchor="middle" fontSize="11" fill="#ea580c">168.63.129.16</text>
     <rect x="25" y="65" width="140" height="18" rx="3" fill="#ffedd5"/>
-    <text x="95" y="78" textAnchor="middle" fontSize="8.5" fill="#c2410c" fontWeight="600">⚠ VNet-only access</text>
-    <text x="95" y="99" textAnchor="middle" fontSize="8" fill="#fb923c">Not reachable from on-prem</text>
+    <text x="95" y="78" textAnchor="middle" fontSize="11" fill="#c2410c" fontWeight="600">⚠ VNet-only access</text>
+    <text x="95" y="99" textAnchor="middle" fontSize="11" fill="#fb923c">Not reachable from on-prem</text>
 
     {/* ── Private DNS Zone (top-right) ── */}
     <rect x="258" y="20" width="195" height="92" rx="8" fill="#fdf4ff" stroke="#a855f7" strokeWidth="1.8"/>
     <text x="355" y="43" textAnchor="middle" fontSize="11" fill="#7e22ce" fontWeight="700">Private DNS Zone</text>
-    <text x="355" y="58" textAnchor="middle" fontSize="8.5" fill="#9333ea">privatelink.blob.core.windows.net</text>
+    <text x="355" y="58" textAnchor="middle" fontSize="11" fill="#9333ea">privatelink.blob.core.windows.net</text>
     <rect x="276" y="65" width="159" height="18" rx="3" fill="#f3e8ff"/>
-    <text x="355" y="78" textAnchor="middle" fontSize="8.5" fill="#7e22ce" fontWeight="600">A: mystorageaccount → 10.1.1.10</text>
-    <text x="355" y="99" textAnchor="middle" fontSize="8" fill="#a855f7">Linked to VNet — not a resolver</text>
+    <text x="355" y="78" textAnchor="middle" fontSize="11" fill="#7e22ce" fontWeight="600">A: mystorageaccount → 10.1.1.10</text>
+    <text x="355" y="99" textAnchor="middle" fontSize="11" fill="#a855f7">Linked to VNet — not a resolver</text>
 
     {/* ── On-Premises DNS (bottom-left, decorative) ── */}
     <rect x="15" y="200" width="160" height="100" rx="8" fill="#f8fafc" stroke="#94a3b8" strokeWidth="1.5"/>
     <text x="95" y="224" textAnchor="middle" fontSize="11" fill="#475569" fontWeight="700">On-Premises DNS</text>
-    <text x="95" y="240" textAnchor="middle" fontSize="8.5" fill="#64748b">Conditional forwarder:</text>
-    <text x="95" y="255" textAnchor="middle" fontSize="8.5" fill="#475569" fontWeight="600">privatelink.* → ?</text>
-    <text x="95" y="272" textAnchor="middle" fontSize="8" fill="#94a3b8">Needs an Azure-reachable</text>
-    <text x="95" y="285" textAnchor="middle" fontSize="8" fill="#94a3b8">IP to forward queries to</text>
+    <text x="95" y="240" textAnchor="middle" fontSize="11" fill="#64748b">Conditional forwarder:</text>
+    <text x="95" y="255" textAnchor="middle" fontSize="11" fill="#475569" fontWeight="600">privatelink.* → ?</text>
+    <text x="95" y="272" textAnchor="middle" fontSize="11" fill="#94a3b8">Needs an Azure-reachable</text>
+    <text x="95" y="285" textAnchor="middle" fontSize="11" fill="#94a3b8">IP to forward queries to</text>
 
     {/* ── DNS Private Resolver (bottom-center) ── */}
     <rect x="258" y="200" width="195" height="100" rx="8" fill="#eef2ff" stroke="#6366f1" strokeWidth="1.8"/>
     <text x="355" y="224" textAnchor="middle" fontSize="11" fill="#4338ca" fontWeight="700">DNS Private Resolver</text>
-    <text x="355" y="239" textAnchor="middle" fontSize="9" fill="#6366f1">Inbound Endpoint</text>
+    <text x="355" y="239" textAnchor="middle" fontSize="11" fill="#6366f1">Inbound Endpoint</text>
     <rect x="276" y="247" width="159" height="18" rx="3" fill="#e0e7ff"/>
-    <text x="355" y="260" textAnchor="middle" fontSize="9" fill="#4338ca" fontWeight="600">IP: 10.0.0.4</text>
-    <text x="355" y="278" textAnchor="middle" fontSize="8" fill="#818cf8">Reachable from on-prem</text>
-    <text x="355" y="291" textAnchor="middle" fontSize="8" fill="#818cf8">via ExpressRoute / VPN</text>
+    <text x="355" y="260" textAnchor="middle" fontSize="11" fill="#4338ca" fontWeight="600">IP: 10.0.0.4</text>
+    <text x="355" y="278" textAnchor="middle" fontSize="11" fill="#818cf8">Reachable from on-prem</text>
+    <text x="355" y="291" textAnchor="middle" fontSize="11" fill="#818cf8">via ExpressRoute / VPN</text>
 
     {/* ── Private Endpoint (bottom-right) ── */}
     <rect x="520" y="200" width="145" height="100" rx="8" fill="#f0fdf4" stroke="#22c55e" strokeWidth="1.5"/>
     <text x="592" y="226" textAnchor="middle" fontSize="11" fill="#15803d" fontWeight="700">Private Endpoint</text>
-    <text x="592" y="242" textAnchor="middle" fontSize="9" fill="#16a34a">NIC: 10.1.1.10</text>
-    <text x="592" y="258" textAnchor="middle" fontSize="8.5" fill="#16a34a">Azure Storage</text>
-    <text x="592" y="276" textAnchor="middle" fontSize="8" fill="#86efac">Not a DNS component</text>
-    <text x="592" y="290" textAnchor="middle" fontSize="8" fill="#86efac">Provides the private IP</text>
+    <text x="592" y="242" textAnchor="middle" fontSize="11" fill="#16a34a">NIC: 10.1.1.10</text>
+    <text x="592" y="258" textAnchor="middle" fontSize="11" fill="#16a34a">Azure Storage</text>
+    <text x="592" y="276" textAnchor="middle" fontSize="11" fill="#86efac">Not a DNS component</text>
+    <text x="592" y="290" textAnchor="middle" fontSize="11" fill="#86efac">Provides the private IP</text>
 
     {/* ── Arrows ── */}
     <line x1="175" y1="244" x2="257" y2="244" stroke="#0078d4" strokeWidth="1.5" markerEnd="url(#pr-ab)"/>
-    <text x="216" y="237" textAnchor="middle" fontSize="8" fill="#0078d4">① forward query</text>
-    <text x="216" y="258" textAnchor="middle" fontSize="8" fill="#94a3b8">via ExpressRoute</text>
+    <text x="216" y="237" textAnchor="middle" fontSize="11" fill="#0078d4">① forward query</text>
+    <text x="216" y="258" textAnchor="middle" fontSize="11" fill="#94a3b8">via ExpressRoute</text>
     <line x1="355" y1="200" x2="355" y2="113" stroke="#a855f7" strokeWidth="1.5" markerEnd="url(#pr-ap)"/>
-    <text x="368" y="162" textAnchor="start" fontSize="8" fill="#a855f7">② queries</text>
-    <text x="368" y="174" textAnchor="start" fontSize="8" fill="#a855f7">private zone</text>
+    <text x="368" y="162" textAnchor="start" fontSize="11" fill="#a855f7">② queries</text>
+    <text x="368" y="174" textAnchor="start" fontSize="11" fill="#a855f7">private zone</text>
     <line x1="340" y1="113" x2="340" y2="200" stroke="#a855f7" strokeWidth="1.5" markerEnd="url(#pr-ap)"/>
-    <text x="328" y="162" textAnchor="end" fontSize="8" fill="#7e22ce">③ returns</text>
-    <text x="328" y="174" textAnchor="end" fontSize="8" fill="#7e22ce">10.1.1.10</text>
+    <text x="328" y="162" textAnchor="end" fontSize="11" fill="#7e22ce">③ returns</text>
+    <text x="328" y="174" textAnchor="end" fontSize="11" fill="#7e22ce">10.1.1.10</text>
   </svg>
 );
 
@@ -225,19 +225,19 @@ const S2SVPNDiagram = () => (
 
     {/* Azure context backdrop */}
     <rect x="8" y="38" width="507" height="200" rx="10" fill="#f0f9ff" stroke="#bae6fd" strokeWidth="1.5" strokeDasharray="6 3"/>
-    <text x="18" y="32" fontSize="9" fill="#0369a1" fontWeight="600">Azure</text>
+    <text x="18" y="32" fontSize="11" fill="#0369a1" fontWeight="600">Azure</text>
 
     {/* ── VPN Gateway box ── */}
     <rect x="20" y="52" width="148" height="172" rx="8" fill="#eff6ff" stroke="#3b82f6" strokeWidth="1.5"/>
     <rect x="20" y="52" width="148" height="26" rx="8" fill="#dbeafe"/>
     <text x="94" y="69" textAnchor="middle" fontSize="10.5" fill="#1d4ed8" fontWeight="700">VPN Gateway</text>
-    <text x="94" y="95" textAnchor="middle" fontSize="9" fill="#1e40af">HubVpnGw</text>
-    <text x="94" y="111" textAnchor="middle" fontSize="8.5" fill="#3b82f6">SKU: VpnGw1</text>
-    <text x="94" y="126" textAnchor="middle" fontSize="8.5" fill="#3b82f6">Type: RouteBased</text>
+    <text x="94" y="95" textAnchor="middle" fontSize="11" fill="#1e40af">HubVpnGw</text>
+    <text x="94" y="111" textAnchor="middle" fontSize="11" fill="#3b82f6">SKU: VpnGw1</text>
+    <text x="94" y="126" textAnchor="middle" fontSize="11" fill="#3b82f6">Type: RouteBased</text>
     <line x1="30" y1="136" x2="158" y2="136" stroke="#bfdbfe" strokeWidth="1"/>
-    <text x="94" y="150" textAnchor="middle" fontSize="8.5" fill="#6096c4">GatewaySubnet</text>
-    <text x="94" y="164" textAnchor="middle" fontSize="8" fill="#93c5fd">10.1.0.0/27</text>
-    <text x="94" y="200" textAnchor="middle" fontSize="8" fill="#3b82f6">● Active-Standby</text>
+    <text x="94" y="150" textAnchor="middle" fontSize="11" fill="#6096c4">GatewaySubnet</text>
+    <text x="94" y="164" textAnchor="middle" fontSize="11" fill="#93c5fd">10.1.0.0/27</text>
+    <text x="94" y="200" textAnchor="middle" fontSize="11" fill="#3b82f6">● Active-Standby</text>
 
     {/* Arrow VPN GW → Connection */}
     <line x1="168" y1="138" x2="196" y2="138" stroke="#6366f1" strokeWidth="1.5" markerEnd="url(#s2s-arr)"/>
@@ -245,11 +245,11 @@ const S2SVPNDiagram = () => (
     {/* ── VPN Connection box ── */}
     <rect x="198" y="90" width="120" height="100" rx="8" fill="#eef2ff" stroke="#6366f1" strokeWidth="1.5"/>
     <rect x="198" y="90" width="120" height="24" rx="8" fill="#e0e7ff"/>
-    <text x="258" y="107" textAnchor="middle" fontSize="10" fill="#4338ca" fontWeight="700">VPN Connection</text>
-    <text x="258" y="127" textAnchor="middle" fontSize="8.5" fill="#6366f1">HubToOnPrem</text>
-    <text x="258" y="142" textAnchor="middle" fontSize="8.5" fill="#6366f1">Type: IPsec / IKE</text>
-    <text x="258" y="157" textAnchor="middle" fontSize="8.5" fill="#22c55e">● Connected</text>
-    <text x="258" y="172" textAnchor="middle" fontSize="8" fill="#818cf8">Shared Key: ••••••</text>
+    <text x="258" y="107" textAnchor="middle" fontSize="12" fill="#4338ca" fontWeight="700">VPN Connection</text>
+    <text x="258" y="127" textAnchor="middle" fontSize="11" fill="#6366f1">HubToOnPrem</text>
+    <text x="258" y="142" textAnchor="middle" fontSize="11" fill="#6366f1">Type: IPsec / IKE</text>
+    <text x="258" y="157" textAnchor="middle" fontSize="11" fill="#22c55e">● Connected</text>
+    <text x="258" y="172" textAnchor="middle" fontSize="11" fill="#818cf8">Shared Key: ••••••</text>
 
     {/* Arrow Connection → LNG */}
     <line x1="318" y1="138" x2="346" y2="138" stroke="#6366f1" strokeWidth="1.5" markerEnd="url(#s2s-arr)"/>
@@ -258,97 +258,97 @@ const S2SVPNDiagram = () => (
     <rect x="348" y="52" width="160" height="172" rx="8" fill="#fffbeb" stroke="#f59e0b" strokeWidth="1.8"/>
     <rect x="348" y="52" width="160" height="26" rx="8" fill="#fef3c7"/>
     <text x="428" y="69" textAnchor="middle" fontSize="10.5" fill="#92400e" fontWeight="700">Local Network GW</text>
-    <text x="428" y="93" textAnchor="middle" fontSize="9" fill="#b45309">OnPremGW</text>
-    <text x="428" y="108" textAnchor="middle" fontSize="8.5" fill="#92400e">Public IP: 203.0.113.10</text>
+    <text x="428" y="93" textAnchor="middle" fontSize="11" fill="#b45309">OnPremGW</text>
+    <text x="428" y="108" textAnchor="middle" fontSize="11" fill="#92400e">Public IP: 203.0.113.10</text>
     <line x1="358" y1="117" x2="498" y2="117" stroke="#fde68a" strokeWidth="1"/>
-    <text x="428" y="132" textAnchor="middle" fontSize="8.5" fill="#78350f" fontWeight="600">Address Prefixes:</text>
-    <text x="428" y="150" textAnchor="middle" fontSize="8.5" fill="#b45309">192.168.0.0/16</text>
-    <text x="428" y="205" textAnchor="middle" fontSize="8" fill="#f59e0b">Azure Resource</text>
+    <text x="428" y="132" textAnchor="middle" fontSize="11" fill="#78350f" fontWeight="600">Address Prefixes:</text>
+    <text x="428" y="150" textAnchor="middle" fontSize="11" fill="#b45309">192.168.0.0/16</text>
+    <text x="428" y="205" textAnchor="middle" fontSize="11" fill="#f59e0b">Azure Resource</text>
 
     {/* Arrow LNG → On-Prem */}
     <line x1="508" y1="138" x2="535" y2="138" stroke="#94a3b8" strokeWidth="1.5" markerEnd="url(#s2s-gray)"/>
 
     {/* ── On-Premises Router box (decorative) ── */}
     <rect x="537" y="90" width="132" height="100" rx="8" fill="#f8fafc" stroke="#94a3b8" strokeWidth="1.5"/>
-    <text x="603" y="110" textAnchor="middle" fontSize="10" fill="#475569" fontWeight="700">On-Prem Router</text>
-    <text x="603" y="127" textAnchor="middle" fontSize="8.5" fill="#475569">203.0.113.10</text>
+    <text x="603" y="110" textAnchor="middle" fontSize="12" fill="#475569" fontWeight="700">On-Prem Router</text>
+    <text x="603" y="127" textAnchor="middle" fontSize="11" fill="#475569">203.0.113.10</text>
     <line x1="547" y1="135" x2="659" y2="135" stroke="#e2e8f0" strokeWidth="1"/>
-    <text x="603" y="151" textAnchor="middle" fontSize="8" fill="#64748b">192.168.0.0/16</text>
-    <text x="603" y="166" textAnchor="middle" fontSize="8" fill="#64748b">10.20.0.0/24</text>
+    <text x="603" y="151" textAnchor="middle" fontSize="11" fill="#64748b">192.168.0.0/16</text>
+    <text x="603" y="166" textAnchor="middle" fontSize="11" fill="#64748b">10.20.0.0/24</text>
   </svg>
 );
 
 const HubSpokeTransitDiagram = () => (
   <svg viewBox="0 0 680 342" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
 
-    <text x="340" y="17" textAnchor="middle" fontSize="9.5" fill="#475569" fontWeight="600">Spoke-A connectivity investigation — four diagnostic panels</text>
+    <text x="340" y="17" textAnchor="middle" fontSize="11" fill="#475569" fontWeight="600">Spoke-A connectivity investigation — four diagnostic panels</text>
 
     {/* ══════════ Panel 1: Hub VNet → Spoke-A peering (Hub side) ══════════ */}
     <rect x="10" y="26" width="318" height="144" rx="8" fill="#eff6ff" stroke="#3b82f6" strokeWidth="1.5"/>
     <rect x="10" y="26" width="318" height="26" rx="8" fill="#dbeafe"/>
-    <text x="169" y="43" textAnchor="middle" fontSize="10" fill="#1d4ed8" fontWeight="700">Hub VNet  ›  Peering to Spoke-A</text>
-    <text x="22"  y="66" fontSize="8.5" fill="#475569">Peering state</text>
-    <text x="185" y="66" fontSize="8.5" fill="#15803d" fontWeight="600">● Connected</text>
-    <text x="22"  y="82" fontSize="8.5" fill="#475569">Allow virtual network access</text>
-    <text x="185" y="82" fontSize="8.5" fill="#374151">Enabled</text>
-    <text x="22"  y="98" fontSize="8.5" fill="#475569">Allow forwarded traffic</text>
-    <text x="185" y="98" fontSize="8.5" fill="#374151">Enabled</text>
-    <text x="22"  y="114" fontSize="8.5" fill="#475569">Allow gateway transit</text>
-    <text x="185" y="114" fontSize="8.5" fill="#374151">Enabled</text>
-    <text x="22"  y="130" fontSize="8.5" fill="#475569">Use remote gateways</text>
-    <text x="185" y="130" fontSize="8.5" fill="#94a3b8">N/A — Hub has its own gateway</text>
+    <text x="169" y="43" textAnchor="middle" fontSize="12" fill="#1d4ed8" fontWeight="700">Hub VNet  ›  Peering to Spoke-A</text>
+    <text x="22"  y="66" fontSize="11" fill="#475569">Peering state</text>
+    <text x="185" y="66" fontSize="11" fill="#15803d" fontWeight="600">● Connected</text>
+    <text x="22"  y="82" fontSize="11" fill="#475569">Allow virtual network access</text>
+    <text x="185" y="82" fontSize="11" fill="#374151">Enabled</text>
+    <text x="22"  y="98" fontSize="11" fill="#475569">Allow forwarded traffic</text>
+    <text x="185" y="98" fontSize="11" fill="#374151">Enabled</text>
+    <text x="22"  y="114" fontSize="11" fill="#475569">Allow gateway transit</text>
+    <text x="185" y="114" fontSize="11" fill="#374151">Enabled</text>
+    <text x="22"  y="130" fontSize="11" fill="#475569">Use remote gateways</text>
+    <text x="185" y="130" fontSize="11" fill="#94a3b8">N/A — Hub has its own gateway</text>
     <text x="22"  y="160" fontSize="7.5" fill="#93c5fd" fontStyle="italic">Hub side — defines what Hub offers to this spoke</text>
 
     {/* ══════════ Panel 2: Spoke-A → Hub peering (Spoke-A side) ══════════ */}
     <rect x="352" y="26" width="318" height="144" rx="8" fill="#eef2ff" stroke="#6366f1" strokeWidth="1.5"/>
     <rect x="352" y="26" width="318" height="26" rx="8" fill="#e0e7ff"/>
-    <text x="511" y="43" textAnchor="middle" fontSize="10" fill="#4338ca" fontWeight="700">Spoke-A VNet  ›  Peering to Hub</text>
-    <text x="364" y="66" fontSize="8.5" fill="#475569">Peering state</text>
-    <text x="527" y="66" fontSize="8.5" fill="#15803d" fontWeight="600">● Connected</text>
-    <text x="364" y="82" fontSize="8.5" fill="#475569">Allow virtual network access</text>
-    <text x="527" y="82" fontSize="8.5" fill="#374151">Enabled</text>
-    <text x="364" y="98" fontSize="8.5" fill="#475569">Allow forwarded traffic</text>
-    <text x="527" y="98" fontSize="8.5" fill="#374151">Enabled</text>
-    <text x="364" y="114" fontSize="8.5" fill="#475569">Allow gateway transit</text>
-    <text x="527" y="114" fontSize="8.5" fill="#94a3b8">N/A — no gateway in Spoke-A</text>
-    <text x="364" y="130" fontSize="8.5" fill="#475569">Use remote gateways</text>
-    <text x="527" y="130" fontSize="8.5" fill="#374151">Disabled</text>
+    <text x="511" y="43" textAnchor="middle" fontSize="12" fill="#4338ca" fontWeight="700">Spoke-A VNet  ›  Peering to Hub</text>
+    <text x="364" y="66" fontSize="11" fill="#475569">Peering state</text>
+    <text x="527" y="66" fontSize="11" fill="#15803d" fontWeight="600">● Connected</text>
+    <text x="364" y="82" fontSize="11" fill="#475569">Allow virtual network access</text>
+    <text x="527" y="82" fontSize="11" fill="#374151">Enabled</text>
+    <text x="364" y="98" fontSize="11" fill="#475569">Allow forwarded traffic</text>
+    <text x="527" y="98" fontSize="11" fill="#374151">Enabled</text>
+    <text x="364" y="114" fontSize="11" fill="#475569">Allow gateway transit</text>
+    <text x="527" y="114" fontSize="11" fill="#94a3b8">N/A — no gateway in Spoke-A</text>
+    <text x="364" y="130" fontSize="11" fill="#475569">Use remote gateways</text>
+    <text x="527" y="130" fontSize="11" fill="#374151">Disabled</text>
     <text x="364" y="160" fontSize="7.5" fill="#a5b4fc" fontStyle="italic">Spoke-A side — defines what Spoke-A requests from Hub</text>
 
     {/* ══════════ Panel 3: Spoke-A VM NIC — Effective Routes ══════════ */}
     <rect x="10" y="184" width="318" height="150" rx="8" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5"/>
     <rect x="10" y="184" width="318" height="26" rx="8" fill="#e2e8f0"/>
-    <text x="169" y="201" textAnchor="middle" fontSize="10" fill="#334155" fontWeight="700">Spoke-A VM NIC  ›  Effective Routes</text>
+    <text x="169" y="201" textAnchor="middle" fontSize="12" fill="#334155" fontWeight="700">Spoke-A VM NIC  ›  Effective Routes</text>
     <line x1="20" y1="216" x2="318" y2="216" stroke="#cbd5e1" strokeWidth="0.8"/>
     <text x="22"  y="228" fontSize="7.5" fill="#475569" fontWeight="600">ADDRESS PREFIX</text>
     <text x="158" y="228" fontSize="7.5" fill="#475569" fontWeight="600">NEXT HOP TYPE</text>
     <text x="264" y="228" fontSize="7.5" fill="#475569" fontWeight="600">SOURCE</text>
     <line x1="20" y1="233" x2="318" y2="233" stroke="#cbd5e1" strokeWidth="0.8"/>
-    <text x="22"  y="247" fontSize="8.5" fill="#374151">10.0.0.0/16</text>
-    <text x="158" y="247" fontSize="8.5" fill="#374151">VNet peering</text>
-    <text x="264" y="247" fontSize="8"   fill="#64748b">Peering</text>
-    <text x="22"  y="262" fontSize="8.5" fill="#374151">10.3.0.0/16</text>
-    <text x="158" y="262" fontSize="8.5" fill="#374151">Virtual network</text>
-    <text x="264" y="262" fontSize="8"   fill="#64748b">Default</text>
-    <text x="22"  y="277" fontSize="8.5" fill="#374151">0.0.0.0/0</text>
-    <text x="158" y="277" fontSize="8.5" fill="#374151">Internet</text>
-    <text x="264" y="277" fontSize="8"   fill="#64748b">Default</text>
+    <text x="22"  y="247" fontSize="11" fill="#374151">10.0.0.0/16</text>
+    <text x="158" y="247" fontSize="11" fill="#374151">VNet peering</text>
+    <text x="264" y="247" fontSize="11"   fill="#64748b">Peering</text>
+    <text x="22"  y="262" fontSize="11" fill="#374151">10.3.0.0/16</text>
+    <text x="158" y="262" fontSize="11" fill="#374151">Virtual network</text>
+    <text x="264" y="262" fontSize="11"   fill="#64748b">Default</text>
+    <text x="22"  y="277" fontSize="11" fill="#374151">0.0.0.0/0</text>
+    <text x="158" y="277" fontSize="11" fill="#374151">Internet</text>
+    <text x="264" y="277" fontSize="11"   fill="#64748b">Default</text>
     <text x="22"  y="320" fontSize="7.5" fill="#94a3b8" fontStyle="italic">3 routes shown — on-premises prefix absent</text>
 
     {/* ══════════ Panel 4: VPN Connection status ══════════ */}
     <rect x="352" y="184" width="318" height="150" rx="8" fill="#f0fdf4" stroke="#22c55e" strokeWidth="1.5"/>
     <rect x="352" y="184" width="318" height="26" rx="8" fill="#dcfce7"/>
-    <text x="511" y="201" textAnchor="middle" fontSize="10" fill="#15803d" fontWeight="700">VPN Connection  ›  HubToOnPrem</text>
-    <text x="364" y="228" fontSize="8.5" fill="#475569">Connection type</text>
-    <text x="510" y="228" fontSize="8.5" fill="#374151">Site-to-Site (IPsec)</text>
-    <text x="364" y="245" fontSize="8.5" fill="#475569">Status</text>
-    <text x="510" y="245" fontSize="8.5" fill="#15803d" fontWeight="600">● Connected</text>
-    <text x="364" y="262" fontSize="8.5" fill="#475569">VPN type</text>
-    <text x="510" y="262" fontSize="8.5" fill="#374151">RouteBased</text>
-    <text x="364" y="279" fontSize="8.5" fill="#475569">BGP</text>
-    <text x="510" y="279" fontSize="8.5" fill="#374151">Not enabled</text>
-    <text x="364" y="296" fontSize="8.5" fill="#475569">On-prem address space</text>
-    <text x="510" y="296" fontSize="8.5" fill="#374151">192.168.0.0/16</text>
+    <text x="511" y="201" textAnchor="middle" fontSize="12" fill="#15803d" fontWeight="700">VPN Connection  ›  HubToOnPrem</text>
+    <text x="364" y="228" fontSize="11" fill="#475569">Connection type</text>
+    <text x="510" y="228" fontSize="11" fill="#374151">Site-to-Site (IPsec)</text>
+    <text x="364" y="245" fontSize="11" fill="#475569">Status</text>
+    <text x="510" y="245" fontSize="11" fill="#15803d" fontWeight="600">● Connected</text>
+    <text x="364" y="262" fontSize="11" fill="#475569">VPN type</text>
+    <text x="510" y="262" fontSize="11" fill="#374151">RouteBased</text>
+    <text x="364" y="279" fontSize="11" fill="#475569">BGP</text>
+    <text x="510" y="279" fontSize="11" fill="#374151">Not enabled</text>
+    <text x="364" y="296" fontSize="11" fill="#475569">On-prem address space</text>
+    <text x="510" y="296" fontSize="11" fill="#374151">192.168.0.0/16</text>
     <text x="364" y="320" fontSize="7.5" fill="#86efac" fontStyle="italic">Tunnel healthy — on-premises side correct</text>
   </svg>
 );
@@ -356,74 +356,74 @@ const HubSpokeTransitDiagram = () => (
 const HubFaultTransitDiagram = () => (
   <svg viewBox="0 0 680 342" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
 
-    <text x="340" y="17" textAnchor="middle" fontSize="9.5" fill="#475569" fontWeight="600">Spoke-A connectivity investigation — four diagnostic panels</text>
+    <text x="340" y="17" textAnchor="middle" fontSize="11" fill="#475569" fontWeight="600">Spoke-A connectivity investigation — four diagnostic panels</text>
 
     {/* ══════════ Panel 1: Hub VNet → Spoke-A peering (Hub side) ══════════ */}
     <rect x="10" y="26" width="318" height="144" rx="8" fill="#eff6ff" stroke="#3b82f6" strokeWidth="1.5"/>
     <rect x="10" y="26" width="318" height="26" rx="8" fill="#dbeafe"/>
-    <text x="169" y="43" textAnchor="middle" fontSize="10" fill="#1d4ed8" fontWeight="700">Hub VNet  ›  Peering to Spoke-A</text>
-    <text x="22"  y="66" fontSize="8.5" fill="#475569">Peering state</text>
-    <text x="185" y="66" fontSize="8.5" fill="#15803d" fontWeight="600">● Connected</text>
-    <text x="22"  y="82" fontSize="8.5" fill="#475569">Allow virtual network access</text>
-    <text x="185" y="82" fontSize="8.5" fill="#374151">Enabled</text>
-    <text x="22"  y="98" fontSize="8.5" fill="#475569">Allow forwarded traffic</text>
-    <text x="185" y="98" fontSize="8.5" fill="#374151">Enabled</text>
-    <text x="22"  y="114" fontSize="8.5" fill="#475569">Allow gateway transit</text>
-    <text x="185" y="114" fontSize="8.5" fill="#374151">Disabled</text>
-    <text x="22"  y="130" fontSize="8.5" fill="#475569">Use remote gateways</text>
-    <text x="185" y="130" fontSize="8.5" fill="#94a3b8">N/A — Hub has its own gateway</text>
+    <text x="169" y="43" textAnchor="middle" fontSize="12" fill="#1d4ed8" fontWeight="700">Hub VNet  ›  Peering to Spoke-A</text>
+    <text x="22"  y="66" fontSize="11" fill="#475569">Peering state</text>
+    <text x="185" y="66" fontSize="11" fill="#15803d" fontWeight="600">● Connected</text>
+    <text x="22"  y="82" fontSize="11" fill="#475569">Allow virtual network access</text>
+    <text x="185" y="82" fontSize="11" fill="#374151">Enabled</text>
+    <text x="22"  y="98" fontSize="11" fill="#475569">Allow forwarded traffic</text>
+    <text x="185" y="98" fontSize="11" fill="#374151">Enabled</text>
+    <text x="22"  y="114" fontSize="11" fill="#475569">Allow gateway transit</text>
+    <text x="185" y="114" fontSize="11" fill="#374151">Disabled</text>
+    <text x="22"  y="130" fontSize="11" fill="#475569">Use remote gateways</text>
+    <text x="185" y="130" fontSize="11" fill="#94a3b8">N/A — Hub has its own gateway</text>
     <text x="22"  y="160" fontSize="7.5" fill="#93c5fd" fontStyle="italic">Hub side — defines what Hub offers to this spoke</text>
 
     {/* ══════════ Panel 2: Spoke-A → Hub peering (Spoke-A side) ══════════ */}
     <rect x="352" y="26" width="318" height="144" rx="8" fill="#eef2ff" stroke="#6366f1" strokeWidth="1.5"/>
     <rect x="352" y="26" width="318" height="26" rx="8" fill="#e0e7ff"/>
-    <text x="511" y="43" textAnchor="middle" fontSize="10" fill="#4338ca" fontWeight="700">Spoke-A VNet  ›  Peering to Hub</text>
-    <text x="364" y="66" fontSize="8.5" fill="#475569">Peering state</text>
-    <text x="527" y="66" fontSize="8.5" fill="#15803d" fontWeight="600">● Connected</text>
-    <text x="364" y="82" fontSize="8.5" fill="#475569">Allow virtual network access</text>
-    <text x="527" y="82" fontSize="8.5" fill="#374151">Enabled</text>
-    <text x="364" y="98" fontSize="8.5" fill="#475569">Allow forwarded traffic</text>
-    <text x="527" y="98" fontSize="8.5" fill="#374151">Enabled</text>
-    <text x="364" y="114" fontSize="8.5" fill="#475569">Allow gateway transit</text>
-    <text x="527" y="114" fontSize="8.5" fill="#94a3b8">N/A — no gateway in Spoke-A</text>
-    <text x="364" y="130" fontSize="8.5" fill="#475569">Use remote gateways</text>
-    <text x="527" y="130" fontSize="8.5" fill="#374151">Enabled</text>
+    <text x="511" y="43" textAnchor="middle" fontSize="12" fill="#4338ca" fontWeight="700">Spoke-A VNet  ›  Peering to Hub</text>
+    <text x="364" y="66" fontSize="11" fill="#475569">Peering state</text>
+    <text x="527" y="66" fontSize="11" fill="#15803d" fontWeight="600">● Connected</text>
+    <text x="364" y="82" fontSize="11" fill="#475569">Allow virtual network access</text>
+    <text x="527" y="82" fontSize="11" fill="#374151">Enabled</text>
+    <text x="364" y="98" fontSize="11" fill="#475569">Allow forwarded traffic</text>
+    <text x="527" y="98" fontSize="11" fill="#374151">Enabled</text>
+    <text x="364" y="114" fontSize="11" fill="#475569">Allow gateway transit</text>
+    <text x="527" y="114" fontSize="11" fill="#94a3b8">N/A — no gateway in Spoke-A</text>
+    <text x="364" y="130" fontSize="11" fill="#475569">Use remote gateways</text>
+    <text x="527" y="130" fontSize="11" fill="#374151">Enabled</text>
     <text x="364" y="160" fontSize="7.5" fill="#a5b4fc" fontStyle="italic">Spoke-A side — defines what Spoke-A requests from Hub</text>
 
     {/* ══════════ Panel 3: Spoke-A VM NIC — Effective Routes ══════════ */}
     <rect x="10" y="184" width="318" height="150" rx="8" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5"/>
     <rect x="10" y="184" width="318" height="26" rx="8" fill="#e2e8f0"/>
-    <text x="169" y="201" textAnchor="middle" fontSize="10" fill="#334155" fontWeight="700">Spoke-A VM NIC  ›  Effective Routes</text>
+    <text x="169" y="201" textAnchor="middle" fontSize="12" fill="#334155" fontWeight="700">Spoke-A VM NIC  ›  Effective Routes</text>
     <line x1="20" y1="216" x2="318" y2="216" stroke="#cbd5e1" strokeWidth="0.8"/>
     <text x="22"  y="228" fontSize="7.5" fill="#475569" fontWeight="600">ADDRESS PREFIX</text>
     <text x="158" y="228" fontSize="7.5" fill="#475569" fontWeight="600">NEXT HOP TYPE</text>
     <text x="264" y="228" fontSize="7.5" fill="#475569" fontWeight="600">SOURCE</text>
     <line x1="20" y1="233" x2="318" y2="233" stroke="#cbd5e1" strokeWidth="0.8"/>
-    <text x="22"  y="247" fontSize="8.5" fill="#374151">10.0.0.0/16</text>
-    <text x="158" y="247" fontSize="8.5" fill="#374151">VNet peering</text>
-    <text x="264" y="247" fontSize="8"   fill="#64748b">Peering</text>
-    <text x="22"  y="262" fontSize="8.5" fill="#374151">10.3.0.0/16</text>
-    <text x="158" y="262" fontSize="8.5" fill="#374151">Virtual network</text>
-    <text x="264" y="262" fontSize="8"   fill="#64748b">Default</text>
-    <text x="22"  y="277" fontSize="8.5" fill="#374151">0.0.0.0/0</text>
-    <text x="158" y="277" fontSize="8.5" fill="#374151">Internet</text>
-    <text x="264" y="277" fontSize="8"   fill="#64748b">Default</text>
+    <text x="22"  y="247" fontSize="11" fill="#374151">10.0.0.0/16</text>
+    <text x="158" y="247" fontSize="11" fill="#374151">VNet peering</text>
+    <text x="264" y="247" fontSize="11"   fill="#64748b">Peering</text>
+    <text x="22"  y="262" fontSize="11" fill="#374151">10.3.0.0/16</text>
+    <text x="158" y="262" fontSize="11" fill="#374151">Virtual network</text>
+    <text x="264" y="262" fontSize="11"   fill="#64748b">Default</text>
+    <text x="22"  y="277" fontSize="11" fill="#374151">0.0.0.0/0</text>
+    <text x="158" y="277" fontSize="11" fill="#374151">Internet</text>
+    <text x="264" y="277" fontSize="11"   fill="#64748b">Default</text>
     <text x="22"  y="320" fontSize="7.5" fill="#94a3b8" fontStyle="italic">3 routes shown — on-premises prefix absent</text>
 
     {/* ══════════ Panel 4: VPN Connection status ══════════ */}
     <rect x="352" y="184" width="318" height="150" rx="8" fill="#f0fdf4" stroke="#22c55e" strokeWidth="1.5"/>
     <rect x="352" y="184" width="318" height="26" rx="8" fill="#dcfce7"/>
-    <text x="511" y="201" textAnchor="middle" fontSize="10" fill="#15803d" fontWeight="700">VPN Connection  ›  HubToOnPrem</text>
-    <text x="364" y="228" fontSize="8.5" fill="#475569">Connection type</text>
-    <text x="510" y="228" fontSize="8.5" fill="#374151">Site-to-Site (IPsec)</text>
-    <text x="364" y="245" fontSize="8.5" fill="#475569">Status</text>
-    <text x="510" y="245" fontSize="8.5" fill="#15803d" fontWeight="600">● Connected</text>
-    <text x="364" y="262" fontSize="8.5" fill="#475569">VPN type</text>
-    <text x="510" y="262" fontSize="8.5" fill="#374151">RouteBased</text>
-    <text x="364" y="279" fontSize="8.5" fill="#475569">BGP</text>
-    <text x="510" y="279" fontSize="8.5" fill="#374151">Not enabled</text>
-    <text x="364" y="296" fontSize="8.5" fill="#475569">On-prem address space</text>
-    <text x="510" y="296" fontSize="8.5" fill="#374151">192.168.0.0/16</text>
+    <text x="511" y="201" textAnchor="middle" fontSize="12" fill="#15803d" fontWeight="700">VPN Connection  ›  HubToOnPrem</text>
+    <text x="364" y="228" fontSize="11" fill="#475569">Connection type</text>
+    <text x="510" y="228" fontSize="11" fill="#374151">Site-to-Site (IPsec)</text>
+    <text x="364" y="245" fontSize="11" fill="#475569">Status</text>
+    <text x="510" y="245" fontSize="11" fill="#15803d" fontWeight="600">● Connected</text>
+    <text x="364" y="262" fontSize="11" fill="#475569">VPN type</text>
+    <text x="510" y="262" fontSize="11" fill="#374151">RouteBased</text>
+    <text x="364" y="279" fontSize="11" fill="#475569">BGP</text>
+    <text x="510" y="279" fontSize="11" fill="#374151">Not enabled</text>
+    <text x="364" y="296" fontSize="11" fill="#475569">On-prem address space</text>
+    <text x="510" y="296" fontSize="11" fill="#374151">192.168.0.0/16</text>
     <text x="364" y="320" fontSize="7.5" fill="#86efac" fontStyle="italic">Tunnel healthy — on-premises side correct</text>
   </svg>
 );
@@ -454,26 +454,26 @@ const NvaIpForwardingDiagram = () => (
     <text x="287" y="124" textAnchor="middle" fontSize="11" fill="#555">Frontend: 10.0.1.4</text>
     <rect x="230" y="134" width="115" height="50" rx="5" fill="#1565c0"/>
     <text x="287" y="156" textAnchor="middle" fontSize="12" fill="white" fontWeight="bold">HA Ports Rule</text>
-    <text x="287" y="172" textAnchor="middle" fontSize="10" fill="#bbdefb">Protocol: All / Port: 0</text>
+    <text x="287" y="172" textAnchor="middle" fontSize="12" fill="#bbdefb">Protocol: All / Port: 0</text>
     <rect x="230" y="196" width="115" height="40" rx="4" fill="#0288d1"/>
     <text x="287" y="214" textAnchor="middle" fontSize="11" fill="white" fontWeight="bold">Floating IP: ON</text>
-    <text x="287" y="228" textAnchor="middle" fontSize="10" fill="#b3e5fc">DSR enabled</text>
+    <text x="287" y="228" textAnchor="middle" fontSize="12" fill="#b3e5fc">DSR enabled</text>
     <line x1="360" y1="150" x2="400" y2="138" stroke="#1565c0" strokeWidth="2" strokeDasharray="5 3" markerEnd="url(#nv2)"/>
     <line x1="360" y1="230" x2="400" y2="262" stroke="#1565c0" strokeWidth="2" strokeDasharray="5 3" markerEnd="url(#nv2)"/>
-    <rect x="402" y="20" width="270" height="340" rx="8" fill="#fff3e0" stroke="#ef6c00" strokeWidth="2"/>
-    <text x="537" y="47" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#bf360c">NVA Subnet  10.0.1.0/24</text>
-    <rect x="416" y="62" width="242" height="120" rx="7" fill="white" stroke="#546e7a" strokeWidth="1.5"/>
-    <text x="537" y="86" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#263238">NVA-1  (10.0.1.10)</text>
-    <rect x="428" y="97" width="218" height="34" rx="4" fill="#eceff1" stroke="#90a4ae" strokeWidth="1"/>
-    <text x="488" y="110" textAnchor="start" fontSize="10" fill="#546e7a">NIC eth0  —  IP Forwarding:</text>
-    <text x="448" y="124" textAnchor="start" fontSize="11" fontWeight="bold" fill="#263238">Disabled</text>
-    <text x="537" y="160" textAnchor="middle" fontSize="10" fill="#78909c">Firewall / Inspection VM</text>
-    <rect x="416" y="204" width="242" height="120" rx="7" fill="white" stroke="#546e7a" strokeWidth="1.5"/>
-    <text x="537" y="228" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#263238">NVA-2  (10.0.1.11)</text>
-    <rect x="428" y="239" width="218" height="34" rx="4" fill="#eceff1" stroke="#90a4ae" strokeWidth="1"/>
-    <text x="488" y="252" textAnchor="start" fontSize="10" fill="#546e7a">NIC eth0  —  IP Forwarding:</text>
-    <text x="448" y="266" textAnchor="start" fontSize="11" fontWeight="bold" fill="#263238">Enabled</text>
-    <text x="537" y="302" textAnchor="middle" fontSize="10" fill="#78909c">Firewall / Inspection VM</text>
+    <rect x="402" y="20" width="270" height="340" rx="8" fill="#f5f7f8" stroke="#90a4ae" strokeWidth="1.5"/>
+    <text x="537" y="47" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#455a64">NVA Subnet  10.0.1.0/24</text>
+    <rect x="416" y="62" width="242" height="120" rx="7" fill="white" stroke="#90a4ae" strokeWidth="1.5"/>
+    <text x="537" y="86" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#37474f">NVA-1  (10.0.1.10)</text>
+    <rect x="428" y="97" width="218" height="34" rx="4" fill="#f5f7f8" stroke="#b0bec5" strokeWidth="1"/>
+    <text x="488" y="110" textAnchor="start" fontSize="12" fill="#607d8b">NIC eth0  —  IP Forwarding:</text>
+    <text x="448" y="124" textAnchor="start" fontSize="11" fontWeight="bold" fill="#37474f">Disabled</text>
+    <text x="537" y="160" textAnchor="middle" fontSize="12" fill="#90a4ae">Firewall / Inspection VM</text>
+    <rect x="416" y="204" width="242" height="120" rx="7" fill="white" stroke="#90a4ae" strokeWidth="1.5"/>
+    <text x="537" y="228" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#37474f">NVA-2  (10.0.1.11)</text>
+    <rect x="428" y="239" width="218" height="34" rx="4" fill="#f5f7f8" stroke="#b0bec5" strokeWidth="1"/>
+    <text x="488" y="252" textAnchor="start" fontSize="12" fill="#607d8b">NIC eth0  —  IP Forwarding:</text>
+    <text x="448" y="266" textAnchor="start" fontSize="11" fontWeight="bold" fill="#37474f">Enabled</text>
+    <text x="537" y="302" textAnchor="middle" fontSize="12" fill="#90a4ae">Firewall / Inspection VM</text>
   </svg>
 );
 
@@ -485,7 +485,7 @@ const ForcedTunnelDiagram = () => (
     </defs>
     <ellipse cx="340" cy="28" rx="76" ry="24" fill="#f0f0f0" stroke="#aaa" strokeWidth="1.5"/>
     <text x="340" y="24" textAnchor="middle" fontSize="13" fill="#555">Internet</text>
-    <text x="340" y="40" textAnchor="middle" fontSize="10" fill="#888">(public)</text>
+    <text x="340" y="40" textAnchor="middle" fontSize="12" fill="#888">(public)</text>
     <rect x="10" y="80" width="172" height="185" rx="8" fill="#e8eaf6" stroke="#3949ab" strokeWidth="2"/>
     <text x="96" y="106" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#283593">Spoke Subnet</text>
     <text x="96" y="123" textAnchor="middle" fontSize="11" fill="#3949ab">10.1.0.0/24</text>
@@ -494,23 +494,23 @@ const ForcedTunnelDiagram = () => (
     <text x="96" y="178" textAnchor="middle" fontSize="11" fill="#555">VM</text>
     <rect x="22" y="200" width="148" height="52" rx="5" fill="#fff3e0" stroke="#ef6c00" strokeWidth="2"/>
     <text x="96" y="222" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#e65100">Route Table</text>
-    <text x="96" y="240" textAnchor="middle" fontSize="10" fill="#555">Associated with subnet</text>
+    <text x="96" y="240" textAnchor="middle" fontSize="12" fill="#555">Associated with subnet</text>
     <line x1="182" y1="155" x2="250" y2="118" stroke="#555" strokeWidth="2" markerEnd="url(#ft1)"/>
     <rect x="253" y="110" width="155" height="120" rx="8" fill="#e3f2fd" stroke="#1565c0" strokeWidth="2.5"/>
     <text x="330" y="138" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#0d47a1">VPN Gateway</text>
     <text x="330" y="155" textAnchor="middle" fontSize="11" fill="#555">gw-hub</text>
     <rect x="267" y="165" width="122" height="50" rx="5" fill="#1565c0"/>
     <text x="328" y="185" textAnchor="middle" fontSize="11" fill="white">S2S Tunnel</text>
-    <text x="328" y="200" textAnchor="middle" fontSize="10" fill="#bbdefb">Status: Connected</text>
+    <text x="328" y="200" textAnchor="middle" fontSize="12" fill="#bbdefb">Status: Connected</text>
     <line x1="408" y1="170" x2="470" y2="170" stroke="#555" strokeWidth="2" markerEnd="url(#ft1)"/>
     <rect x="472" y="110" width="195" height="120" rx="8" fill="#e8f5e9" stroke="#388e3c" strokeWidth="2"/>
     <text x="569" y="138" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1b5e20">On-Premises</text>
     <text x="569" y="155" textAnchor="middle" fontSize="11" fill="#388e3c">Corporate Firewall</text>
     <rect x="486" y="165" width="166" height="50" rx="5" fill="#388e3c"/>
     <text x="569" y="186" textAnchor="middle" fontSize="11" fill="white">Outbound inspection</text>
-    <text x="569" y="201" textAnchor="middle" fontSize="10" fill="#c8e6c9">required for all traffic</text>
+    <text x="569" y="201" textAnchor="middle" fontSize="12" fill="#c8e6c9">required for all traffic</text>
     <line x1="280" y1="50" x2="316" y2="52" stroke="#aaa" strokeWidth="1.5" strokeDasharray="4 3" markerEnd="url(#ft1)"/>
-    <text x="230" y="62" textAnchor="middle" fontSize="10" fill="#777">internet-bound traffic</text>
+    <text x="230" y="62" textAnchor="middle" fontSize="12" fill="#777">internet-bound traffic</text>
   </svg>
 );
 
@@ -525,7 +525,7 @@ const NsgEvalOrderDiagram = () => (
     <text x="55" y="136" textAnchor="middle" fontSize="13" fill="#475569" fontWeight="600">Internet</text>
     <text x="55" y="152" textAnchor="middle" fontSize="11" fill="#64748b">Port 80</text>
     <line x1="103" y1="140" x2="145" y2="140" stroke="#1565c0" strokeWidth="2.5" markerEnd="url(#ng1)"/>
-    <text x="124" y="132" textAnchor="middle" fontSize="10" fill="#1565c0">inbound</text>
+    <text x="124" y="132" textAnchor="middle" fontSize="12" fill="#1565c0">inbound</text>
     <rect x="148" y="46" width="188" height="188" rx="8" fill="#f8f9fa" stroke="#475569" strokeWidth="2"/>
     <text x="242" y="74" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b">Subnet NSG</text>
     <text x="242" y="92" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#555">Inbound rules:</text>
@@ -533,7 +533,7 @@ const NsgEvalOrderDiagram = () => (
     <text x="242" y="124" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#bf360c">Priority 100</text>
     <text x="242" y="142" textAnchor="middle" fontSize="12" fill="#333">Action: DENY</text>
     <text x="242" y="158" textAnchor="middle" fontSize="11" fill="#555">Port 80 / Source: Any</text>
-    <text x="242" y="196" textAnchor="middle" fontSize="10" fill="#94a3b8">Default rules omitted…</text>
+    <text x="242" y="196" textAnchor="middle" fontSize="12" fill="#94a3b8">Default rules omitted…</text>
     <line x1="336" y1="140" x2="376" y2="140" stroke="#555" strokeWidth="2" markerEnd="url(#ng2)"/>
     <rect x="378" y="46" width="188" height="188" rx="8" fill="#f8f9fa" stroke="#475569" strokeWidth="2"/>
     <text x="472" y="74" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b">NIC NSG</text>
@@ -542,7 +542,7 @@ const NsgEvalOrderDiagram = () => (
     <text x="472" y="124" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#2e7d32">Priority 100</text>
     <text x="472" y="142" textAnchor="middle" fontSize="12" fill="#333">Action: ALLOW</text>
     <text x="472" y="158" textAnchor="middle" fontSize="11" fill="#555">Port 80 / Source: Internet</text>
-    <text x="472" y="196" textAnchor="middle" fontSize="10" fill="#94a3b8">Default rules omitted…</text>
+    <text x="472" y="196" textAnchor="middle" fontSize="12" fill="#94a3b8">Default rules omitted…</text>
     <line x1="566" y1="140" x2="604" y2="140" stroke="#555" strokeWidth="2" markerEnd="url(#ng2)"/>
     <rect x="606" y="108" width="68" height="64" rx="7" fill="#f8f9fa" stroke="#475569" strokeWidth="1.5"/>
     <text x="640" y="137" textAnchor="middle" fontSize="22" fill="#475569">🖥</text>
@@ -562,25 +562,25 @@ const VwanRoutingIntentDiagram = () => (
     <text x="305" y="86" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#bf360c">Azure Firewall</text>
     <text x="305" y="103" textAnchor="middle" fontSize="11" fill="#e65100">fw-hub-prod</text>
     <text x="305" y="120" textAnchor="middle" fontSize="11" fill="#555">Firewall Policy: attached</text>
-    <text x="305" y="138" textAnchor="middle" fontSize="10" fill="#999">Standard SKU</text>
+    <text x="305" y="138" textAnchor="middle" fontSize="12" fill="#999">Standard SKU</text>
     <rect x="140" y="182" width="185" height="88" rx="7" fill="white" stroke="#1565c0" strokeWidth="1.5"/>
     <text x="232" y="208" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#0d47a1">Routing Intent</text>
     <text x="232" y="226" textAnchor="middle" fontSize="11" fill="#555">Private traffic policy</text>
     <text x="232" y="243" textAnchor="middle" fontSize="11" fill="#555">Internet traffic policy</text>
-    <text x="232" y="260" textAnchor="middle" fontSize="10" fill="#94a3b8">Hub-level configuration</text>
+    <text x="232" y="260" textAnchor="middle" fontSize="12" fill="#94a3b8">Hub-level configuration</text>
     <rect x="360" y="182" width="185" height="88" rx="7" fill="white" stroke="#1565c0" strokeWidth="1.5"/>
     <text x="452" y="208" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#0d47a1">Hub Route Tables</text>
     <text x="452" y="226" textAnchor="middle" fontSize="11" fill="#555">Default route table</text>
     <text x="452" y="243" textAnchor="middle" fontSize="11" fill="#555">None route table</text>
-    <text x="452" y="260" textAnchor="middle" fontSize="10" fill="#94a3b8">Controls spoke routing</text>
+    <text x="452" y="260" textAnchor="middle" fontSize="12" fill="#94a3b8">Controls spoke routing</text>
     <rect x="10" y="118" width="130" height="72" rx="7" fill="#e8eaf6" stroke="#3949ab" strokeWidth="1.5"/>
     <text x="75" y="143" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#283593">Spoke-App</text>
-    <text x="75" y="159" textAnchor="middle" fontSize="10" fill="#3949ab">10.1.0.0/16</text>
-    <text x="75" y="175" textAnchor="middle" fontSize="10" fill="#555">VNet connection</text>
+    <text x="75" y="159" textAnchor="middle" fontSize="12" fill="#3949ab">10.1.0.0/16</text>
+    <text x="75" y="175" textAnchor="middle" fontSize="12" fill="#555">VNet connection</text>
     <rect x="540" y="118" width="130" height="72" rx="7" fill="#e8eaf6" stroke="#3949ab" strokeWidth="1.5"/>
     <text x="605" y="143" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#283593">Spoke-DB</text>
-    <text x="605" y="159" textAnchor="middle" fontSize="10" fill="#3949ab">10.2.0.0/16</text>
-    <text x="605" y="175" textAnchor="middle" fontSize="10" fill="#555">VNet connection</text>
+    <text x="605" y="159" textAnchor="middle" fontSize="12" fill="#3949ab">10.2.0.0/16</text>
+    <text x="605" y="175" textAnchor="middle" fontSize="12" fill="#555">VNet connection</text>
     <line x1="140" y1="154" x2="218" y2="120" stroke="#555" strokeWidth="1.5" markerEnd="url(#vw1)"/>
     <line x1="540" y1="154" x2="392" y2="120" stroke="#555" strokeWidth="1.5" markerEnd="url(#vw1)"/>
   </svg>
@@ -598,25 +598,25 @@ const NatGatewayPrecedenceDiagram = () => (
     <rect x="22" y="122" width="130" height="50" rx="5" fill="white" stroke="#3949ab" strokeWidth="1.5"/>
     <text x="87" y="144" textAnchor="middle" fontSize="20" fill="#555">🖥</text>
     <text x="87" y="165" textAnchor="middle" fontSize="11" fill="#555">50 VMs</text>
-    <text x="87" y="193" textAnchor="middle" fontSize="10" fill="#94a3b8">Both resources below</text>
-    <text x="87" y="208" textAnchor="middle" fontSize="10" fill="#94a3b8">are on this subnet</text>
+    <text x="87" y="193" textAnchor="middle" fontSize="12" fill="#94a3b8">Both resources below</text>
+    <text x="87" y="208" textAnchor="middle" fontSize="12" fill="#94a3b8">are on this subnet</text>
     <rect x="190" y="40" width="178" height="100" rx="8" fill="#f8f9fa" stroke="#475569" strokeWidth="2"/>
     <text x="279" y="67" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b">NAT Gateway</text>
     <text x="279" y="84" textAnchor="middle" fontSize="11" fill="#555">ngw-prod</text>
     <rect x="202" y="94" width="154" height="36" rx="4" fill="#475569"/>
     <text x="279" y="108" textAnchor="middle" fontSize="11" fill="white">pip-ngw (20.50.1.1)</text>
-    <text x="279" y="123" textAnchor="middle" fontSize="10" fill="#cbd5e1">64,512 SNAT ports/IP</text>
+    <text x="279" y="123" textAnchor="middle" fontSize="12" fill="#cbd5e1">64,512 SNAT ports/IP</text>
     <rect x="190" y="160" width="178" height="100" rx="8" fill="#f8f9fa" stroke="#475569" strokeWidth="2"/>
     <text x="279" y="187" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b">Load Balancer</text>
     <text x="279" y="204" textAnchor="middle" fontSize="11" fill="#555">lb-prod (Standard)</text>
     <rect x="202" y="214" width="154" height="36" rx="4" fill="#475569"/>
     <text x="279" y="228" textAnchor="middle" fontSize="11" fill="white">Outbound rules configured</text>
-    <text x="279" y="243" textAnchor="middle" fontSize="10" fill="#cbd5e1">Frontend: 20.50.2.1</text>
+    <text x="279" y="243" textAnchor="middle" fontSize="12" fill="#cbd5e1">Frontend: 20.50.2.1</text>
     <line x1="165" y1="120" x2="188" y2="90" stroke="#555" strokeWidth="1.5" markerEnd="url(#ng2)"/>
     <line x1="165" y1="155" x2="188" y2="200" stroke="#555" strokeWidth="1.5" markerEnd="url(#ng2)"/>
     <ellipse cx="570" cy="140" rx="66" ry="42" fill="#f0f4f8" stroke="#94a3b8" strokeWidth="1.5"/>
     <text x="570" y="136" textAnchor="middle" fontSize="13" fill="#475569" fontWeight="600">Internet</text>
-    <text x="570" y="153" textAnchor="middle" fontSize="10" fill="#64748b">outbound SNAT</text>
+    <text x="570" y="153" textAnchor="middle" fontSize="12" fill="#64748b">outbound SNAT</text>
     <line x1="370" y1="88" x2="496" y2="128" stroke="#555" strokeWidth="2" markerEnd="url(#ng2)"/>
     <line x1="370" y1="210" x2="496" y2="158" stroke="#555" strokeWidth="2" markerEnd="url(#ng2)"/>
   </svg>
