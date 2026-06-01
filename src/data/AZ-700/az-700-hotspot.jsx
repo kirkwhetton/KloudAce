@@ -296,8 +296,8 @@ const HubSpokeTransitDiagram = () => (
     <text x="22"  y="114" fontSize="11" fill="#475569">Allow gateway transit</text>
     <text x="185" y="114" fontSize="11" fill="#374151">Enabled</text>
     <text x="22"  y="130" fontSize="11" fill="#475569">Use remote gateways</text>
-    <text x="185" y="130" fontSize="11" fill="#94a3b8">N/A — Hub has its own gateway</text>
-    <text x="22"  y="160" fontSize="7.5" fill="#93c5fd" fontStyle="italic">Hub side — defines what Hub offers to this spoke</text>
+    <text x="185" y="130" fontSize="11" fill="#94a3b8">Not applicable</text>
+    <text x="22"  y="160" fontSize="11" fill="#93c5fd" fontStyle="italic">Hub side — defines what Hub offers to this spoke</text>
 
     {/* ══════════ Panel 2: Spoke-A → Hub peering (Spoke-A side) ══════════ */}
     <rect x="352" y="26" width="318" height="144" rx="8" fill="#eef2ff" stroke="#6366f1" strokeWidth="1.5"/>
@@ -310,19 +310,19 @@ const HubSpokeTransitDiagram = () => (
     <text x="364" y="98" fontSize="11" fill="#475569">Allow forwarded traffic</text>
     <text x="527" y="98" fontSize="11" fill="#374151">Enabled</text>
     <text x="364" y="114" fontSize="11" fill="#475569">Allow gateway transit</text>
-    <text x="527" y="114" fontSize="11" fill="#94a3b8">N/A — no gateway in Spoke-A</text>
+    <text x="527" y="114" fontSize="11" fill="#94a3b8">Not applicable</text>
     <text x="364" y="130" fontSize="11" fill="#475569">Use remote gateways</text>
     <text x="527" y="130" fontSize="11" fill="#374151">Disabled</text>
-    <text x="364" y="160" fontSize="7.5" fill="#a5b4fc" fontStyle="italic">Spoke-A side — defines what Spoke-A requests from Hub</text>
+    <text x="364" y="160" fontSize="11" fill="#a5b4fc" fontStyle="italic">Spoke-A side — defines what Spoke-A requests from Hub</text>
 
     {/* ══════════ Panel 3: Spoke-A VM NIC — Effective Routes ══════════ */}
     <rect x="10" y="184" width="318" height="150" rx="8" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5"/>
     <rect x="10" y="184" width="318" height="26" rx="8" fill="#e2e8f0"/>
     <text x="169" y="201" textAnchor="middle" fontSize="12" fill="#334155" fontWeight="700">Spoke-A VM NIC  ›  Effective Routes</text>
     <line x1="20" y1="216" x2="318" y2="216" stroke="#cbd5e1" strokeWidth="0.8"/>
-    <text x="22"  y="228" fontSize="7.5" fill="#475569" fontWeight="600">ADDRESS PREFIX</text>
-    <text x="158" y="228" fontSize="7.5" fill="#475569" fontWeight="600">NEXT HOP TYPE</text>
-    <text x="264" y="228" fontSize="7.5" fill="#475569" fontWeight="600">SOURCE</text>
+    <text x="22"  y="228" fontSize="11" fill="#475569" fontWeight="600">ADDRESS PREFIX</text>
+    <text x="158" y="228" fontSize="11" fill="#475569" fontWeight="600">NEXT HOP TYPE</text>
+    <text x="264" y="228" fontSize="11" fill="#475569" fontWeight="600">SOURCE</text>
     <line x1="20" y1="233" x2="318" y2="233" stroke="#cbd5e1" strokeWidth="0.8"/>
     <text x="22"  y="247" fontSize="11" fill="#374151">10.0.0.0/16</text>
     <text x="158" y="247" fontSize="11" fill="#374151">VNet peering</text>
@@ -333,7 +333,7 @@ const HubSpokeTransitDiagram = () => (
     <text x="22"  y="277" fontSize="11" fill="#374151">0.0.0.0/0</text>
     <text x="158" y="277" fontSize="11" fill="#374151">Internet</text>
     <text x="264" y="277" fontSize="11"   fill="#64748b">Default</text>
-    <text x="22"  y="320" fontSize="7.5" fill="#94a3b8" fontStyle="italic">3 routes shown — on-premises prefix absent</text>
+    <text x="22"  y="320" fontSize="11" fill="#94a3b8" fontStyle="italic">3 routes shown — on-premises prefix absent</text>
 
     {/* ══════════ Panel 4: VPN Connection status ══════════ */}
     <rect x="352" y="184" width="318" height="150" rx="8" fill="#f0fdf4" stroke="#22c55e" strokeWidth="1.5"/>
@@ -349,7 +349,7 @@ const HubSpokeTransitDiagram = () => (
     <text x="510" y="279" fontSize="11" fill="#374151">Not enabled</text>
     <text x="364" y="296" fontSize="11" fill="#475569">On-prem address space</text>
     <text x="510" y="296" fontSize="11" fill="#374151">192.168.0.0/16</text>
-    <text x="364" y="320" fontSize="7.5" fill="#86efac" fontStyle="italic">Tunnel healthy — on-premises side correct</text>
+    <text x="364" y="320" fontSize="11" fill="#86efac" fontStyle="italic">Tunnel healthy — on-premises side correct</text>
   </svg>
 );
 
@@ -371,8 +371,8 @@ const HubFaultTransitDiagram = () => (
     <text x="22"  y="114" fontSize="11" fill="#475569">Allow gateway transit</text>
     <text x="185" y="114" fontSize="11" fill="#374151">Disabled</text>
     <text x="22"  y="130" fontSize="11" fill="#475569">Use remote gateways</text>
-    <text x="185" y="130" fontSize="11" fill="#94a3b8">N/A — Hub has its own gateway</text>
-    <text x="22"  y="160" fontSize="7.5" fill="#93c5fd" fontStyle="italic">Hub side — defines what Hub offers to this spoke</text>
+    <text x="185" y="130" fontSize="11" fill="#94a3b8">Not applicable</text>
+    <text x="22"  y="160" fontSize="11" fill="#93c5fd" fontStyle="italic">Hub side — defines what Hub offers to this spoke</text>
 
     {/* ══════════ Panel 2: Spoke-A → Hub peering (Spoke-A side) ══════════ */}
     <rect x="352" y="26" width="318" height="144" rx="8" fill="#eef2ff" stroke="#6366f1" strokeWidth="1.5"/>
@@ -385,19 +385,19 @@ const HubFaultTransitDiagram = () => (
     <text x="364" y="98" fontSize="11" fill="#475569">Allow forwarded traffic</text>
     <text x="527" y="98" fontSize="11" fill="#374151">Enabled</text>
     <text x="364" y="114" fontSize="11" fill="#475569">Allow gateway transit</text>
-    <text x="527" y="114" fontSize="11" fill="#94a3b8">N/A — no gateway in Spoke-A</text>
+    <text x="527" y="114" fontSize="11" fill="#94a3b8">Not applicable</text>
     <text x="364" y="130" fontSize="11" fill="#475569">Use remote gateways</text>
     <text x="527" y="130" fontSize="11" fill="#374151">Enabled</text>
-    <text x="364" y="160" fontSize="7.5" fill="#a5b4fc" fontStyle="italic">Spoke-A side — defines what Spoke-A requests from Hub</text>
+    <text x="364" y="160" fontSize="11" fill="#a5b4fc" fontStyle="italic">Spoke-A side — defines what Spoke-A requests from Hub</text>
 
     {/* ══════════ Panel 3: Spoke-A VM NIC — Effective Routes ══════════ */}
     <rect x="10" y="184" width="318" height="150" rx="8" fill="#f8fafc" stroke="#64748b" strokeWidth="1.5"/>
     <rect x="10" y="184" width="318" height="26" rx="8" fill="#e2e8f0"/>
     <text x="169" y="201" textAnchor="middle" fontSize="12" fill="#334155" fontWeight="700">Spoke-A VM NIC  ›  Effective Routes</text>
     <line x1="20" y1="216" x2="318" y2="216" stroke="#cbd5e1" strokeWidth="0.8"/>
-    <text x="22"  y="228" fontSize="7.5" fill="#475569" fontWeight="600">ADDRESS PREFIX</text>
-    <text x="158" y="228" fontSize="7.5" fill="#475569" fontWeight="600">NEXT HOP TYPE</text>
-    <text x="264" y="228" fontSize="7.5" fill="#475569" fontWeight="600">SOURCE</text>
+    <text x="22"  y="228" fontSize="11" fill="#475569" fontWeight="600">ADDRESS PREFIX</text>
+    <text x="158" y="228" fontSize="11" fill="#475569" fontWeight="600">NEXT HOP TYPE</text>
+    <text x="264" y="228" fontSize="11" fill="#475569" fontWeight="600">SOURCE</text>
     <line x1="20" y1="233" x2="318" y2="233" stroke="#cbd5e1" strokeWidth="0.8"/>
     <text x="22"  y="247" fontSize="11" fill="#374151">10.0.0.0/16</text>
     <text x="158" y="247" fontSize="11" fill="#374151">VNet peering</text>
@@ -408,7 +408,7 @@ const HubFaultTransitDiagram = () => (
     <text x="22"  y="277" fontSize="11" fill="#374151">0.0.0.0/0</text>
     <text x="158" y="277" fontSize="11" fill="#374151">Internet</text>
     <text x="264" y="277" fontSize="11"   fill="#64748b">Default</text>
-    <text x="22"  y="320" fontSize="7.5" fill="#94a3b8" fontStyle="italic">3 routes shown — on-premises prefix absent</text>
+    <text x="22"  y="320" fontSize="11" fill="#94a3b8" fontStyle="italic">3 routes shown — on-premises prefix absent</text>
 
     {/* ══════════ Panel 4: VPN Connection status ══════════ */}
     <rect x="352" y="184" width="318" height="150" rx="8" fill="#f0fdf4" stroke="#22c55e" strokeWidth="1.5"/>
@@ -424,7 +424,7 @@ const HubFaultTransitDiagram = () => (
     <text x="510" y="279" fontSize="11" fill="#374151">Not enabled</text>
     <text x="364" y="296" fontSize="11" fill="#475569">On-prem address space</text>
     <text x="510" y="296" fontSize="11" fill="#374151">192.168.0.0/16</text>
-    <text x="364" y="320" fontSize="7.5" fill="#86efac" fontStyle="italic">Tunnel healthy — on-premises side correct</text>
+    <text x="364" y="320" fontSize="11" fill="#86efac" fontStyle="italic">Tunnel healthy — on-premises side correct</text>
   </svg>
 );
 
