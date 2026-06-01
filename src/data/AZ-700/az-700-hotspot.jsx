@@ -462,26 +462,18 @@ const NvaIpForwardingDiagram = () => (
     <line x1="360" y1="230" x2="400" y2="262" stroke="#1565c0" strokeWidth="2" strokeDasharray="5 3" markerEnd="url(#nv2)"/>
     <rect x="402" y="20" width="270" height="340" rx="8" fill="#fff3e0" stroke="#ef6c00" strokeWidth="2"/>
     <text x="537" y="47" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#bf360c">NVA Subnet  10.0.1.0/24</text>
-    {/* NVA-1 — IP Forwarding disabled */}
-    <rect x="416" y="62" width="242" height="128" rx="7" fill="white" stroke="#ef6c00" strokeWidth="1.5"/>
-    <text x="537" y="88" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#333">NVA-1  (10.0.1.10)</text>
-    <rect x="428" y="100" width="218" height="36" rx="4" fill="#f8f9fa" stroke="#bdbdbd" strokeWidth="1"/>
-    <text x="498" y="116" textAnchor="middle" fontSize="11" fill="#555">NIC eth0</text>
-    <text x="498" y="129" textAnchor="middle" fontSize="10" fill="#9e9e9e">IP Forwarding:</text>
-    <rect x="558" y="104" width="80" height="28" rx="4" fill="#ffebee" stroke="#e53935" strokeWidth="1.5"/>
-    <text x="598" y="122" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#c62828">Disabled</text>
-    <text x="537" y="158" textAnchor="middle" fontSize="10" fill="#777">Firewall / Inspection VM</text>
-    <text x="537" y="173" textAnchor="middle" fontSize="10" fill="#9e9e9e">Standard_D2s_v3</text>
-    {/* NVA-2 — IP Forwarding enabled */}
-    <rect x="416" y="210" width="242" height="128" rx="7" fill="white" stroke="#ef6c00" strokeWidth="1.5"/>
-    <text x="537" y="236" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#333">NVA-2  (10.0.1.11)</text>
-    <rect x="428" y="248" width="218" height="36" rx="4" fill="#f8f9fa" stroke="#bdbdbd" strokeWidth="1"/>
-    <text x="498" y="264" textAnchor="middle" fontSize="11" fill="#555">NIC eth0</text>
-    <text x="498" y="277" textAnchor="middle" fontSize="10" fill="#9e9e9e">IP Forwarding:</text>
-    <rect x="558" y="252" width="80" height="28" rx="4" fill="#e8f5e9" stroke="#43a047" strokeWidth="1.5"/>
-    <text x="598" y="270" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#2e7d32">Enabled</text>
-    <text x="537" y="306" textAnchor="middle" fontSize="10" fill="#777">Firewall / Inspection VM</text>
-    <text x="537" y="321" textAnchor="middle" fontSize="10" fill="#9e9e9e">Standard_D2s_v3</text>
+    <rect x="416" y="62" width="242" height="120" rx="7" fill="white" stroke="#546e7a" strokeWidth="1.5"/>
+    <text x="537" y="86" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#263238">NVA-1  (10.0.1.10)</text>
+    <rect x="428" y="97" width="218" height="34" rx="4" fill="#eceff1" stroke="#90a4ae" strokeWidth="1"/>
+    <text x="488" y="110" textAnchor="start" fontSize="10" fill="#546e7a">NIC eth0  —  IP Forwarding:</text>
+    <text x="448" y="124" textAnchor="start" fontSize="11" fontWeight="bold" fill="#263238">Disabled</text>
+    <text x="537" y="160" textAnchor="middle" fontSize="10" fill="#78909c">Firewall / Inspection VM</text>
+    <rect x="416" y="204" width="242" height="120" rx="7" fill="white" stroke="#546e7a" strokeWidth="1.5"/>
+    <text x="537" y="228" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#263238">NVA-2  (10.0.1.11)</text>
+    <rect x="428" y="239" width="218" height="34" rx="4" fill="#eceff1" stroke="#90a4ae" strokeWidth="1"/>
+    <text x="488" y="252" textAnchor="start" fontSize="10" fill="#546e7a">NIC eth0  —  IP Forwarding:</text>
+    <text x="448" y="266" textAnchor="start" fontSize="11" fontWeight="bold" fill="#263238">Enabled</text>
+    <text x="537" y="302" textAnchor="middle" fontSize="10" fill="#78909c">Firewall / Inspection VM</text>
   </svg>
 );
 
