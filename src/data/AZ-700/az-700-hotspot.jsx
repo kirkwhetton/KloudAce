@@ -771,7 +771,7 @@ const az700hotspot = [
     type: "hotspot",
     difficulty: "hard",
     category: "Core Networking Infrastructure",
-    question: "An NVA high-availability cluster sits behind a Standard Internal Load Balancer with HA Ports and Floating IP enabled. One NVA is forwarding inspected traffic correctly; the other is silently dropping packets. Review the NIC settings shown on each NVA and click the one that is misconfigured.",
+    question: "Users report that connections through the NVA cluster are dropping randomly — roughly half of all sessions fail while the other half work normally. The ILB and both NVAs are running. Review the NIC configuration shown on each NVA and click the one causing the drops.",
     imageAlt: "NVA HA diagram with a Standard ILB (HA Ports, Floating IP ON) distributing traffic to NVA-1 and NVA-2. NVA-1 NIC eth0 shows IP Forwarding: Disabled in a red badge. NVA-2 NIC eth0 shows IP Forwarding: Enabled in a green badge.",
     viewBox: "0 0 680 380",
     diagram: NvaIpForwardingDiagram,
