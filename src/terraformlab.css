@@ -1,0 +1,315 @@
+/* ── Terraform Lab ──────────────────────────────────────────── */
+
+:root {
+  --tf-purple:        #7b42bc;
+  --tf-purple-dark:   #5c2d9a;
+  --tf-purple-light:  rgba(123, 66, 188, 0.1);
+  --tf-purple-border: rgba(123, 66, 188, 0.3);
+}
+
+/* ── Root: horizontal split filling lab-page-body ───────────── */
+.tf-lab-root {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 13px;
+}
+
+/* ── Left: scrollable main area ─────────────────────────────── */
+.tf-lab-main {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 1.5rem 1.75rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-card) transparent;
+}
+.tf-lab-main::-webkit-scrollbar { width: 4px; }
+.tf-lab-main::-webkit-scrollbar-thumb { background: var(--border-card); border-radius: 2px; }
+
+/* ── Header row ─────────────────────────────────────────────── */
+.tf-lab-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.tf-lab-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.75rem 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: var(--tf-purple-light);
+  color: var(--tf-purple);
+  border: 1px solid var(--tf-purple-border);
+  letter-spacing: 0.03em;
+}
+
+/* ── Scaffold (read-only HCL context) ───────────────────────── */
+.tf-scaffold {
+  flex-shrink: 0;
+  border: 1px solid var(--tf-purple-border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #1a1a2e;
+}
+
+.tf-scaffold-bar,
+.tf-editor-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  background: rgba(0, 0, 0, 0.3);
+  font-size: 0.72rem;
+}
+
+.tf-filename {
+  font-family: "Consolas", "Fira Code", monospace;
+  font-weight: 600;
+  color: #c9a0f0;
+}
+
+.tf-scaffold-label,
+.tf-editor-label {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-left: auto;
+  font-style: italic;
+}
+
+.tf-file-icon {
+  font-size: 0.75rem;
+}
+
+.tf-scaffold-body {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  font-family: "Consolas", "Fira Code", monospace;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: #c9d1d9;
+  white-space: pre;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 220px;
+  background: #1a1a2e;
+}
+
+/* ── Editor (user input) ────────────────────────────────────── */
+.tf-editor-wrap {
+  flex-shrink: 0;
+  border: 2px solid var(--tf-purple-border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+  background: #1a1a2e;
+}
+
+.tf-editor-wrap:focus-within {
+  border-color: var(--tf-purple);
+}
+
+.tf-editor-wrap .tf-editor-bar {
+  border-bottom: 1px solid rgba(123, 66, 188, 0.2);
+}
+
+.tf-editor-wrap.tf-editor--correct { border-color: var(--correct, #16a34a); }
+.tf-editor-wrap.tf-editor--wrong   { border-color: var(--wrong, #dc2626); }
+
+.tf-editor {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: #1a1a2e;
+  color: #c9d1d9;
+  font-family: "Consolas", "Fira Code", monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  border: none;
+  outline: none;
+  resize: vertical;
+  min-height: 220px;
+  box-sizing: border-box;
+}
+
+.tf-editor::placeholder { color: rgba(201, 209, 217, 0.35); }
+.tf-editor:disabled     { opacity: 0.75; cursor: default; resize: none; }
+
+/* ── Apply button ───────────────────────────────────────────── */
+.tf-apply-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.5rem;
+  background: var(--tf-purple);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: "Consolas", "Fira Code", monospace;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background 0.15s, transform 0.1s;
+  letter-spacing: 0.02em;
+}
+.tf-apply-btn:hover:not(:disabled) { background: var(--tf-purple-dark); transform: translateY(-1px); }
+.tf-apply-btn:active:not(:disabled) { transform: translateY(0); }
+.tf-apply-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ── Simulated terminal output ──────────────────────────────── */
+.tf-terminal {
+  flex-shrink: 0;
+  border: 1px solid rgba(123, 66, 188, 0.25);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #0d0d1a;
+}
+.tf-terminal--pass { border-color: var(--correct, #16a34a); }
+.tf-terminal--fail { border-color: var(--wrong, #dc2626); }
+
+.tf-terminal-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.4rem 0.75rem;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.tf-terminal-output {
+  padding: 0.75rem 1rem;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.tf-term-line {
+  font-family: "Consolas", "Fira Code", monospace;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: rgba(201, 209, 217, 0.75);
+}
+.tf-term-cmd  { color: #c9a0f0; font-weight: 600; }
+.tf-term-ok   { color: #4ade80; }
+.tf-term-err  { color: #f87171; }
+.tf-term-warn { color: #fbbf24; }
+
+/* ── Model answer ───────────────────────────────────────────── */
+.tf-model-answer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.tf-model-answer pre {
+  margin: 0;
+  background: #1a1a2e;
+  border: 1px solid var(--tf-purple-border);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+  overflow-x: auto;
+}
+.tf-model-answer code {
+  font-family: "Consolas", "Fira Code", monospace;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: #c9d1d9;
+}
+
+/* ── Resize handle ──────────────────────────────────────────── */
+.tf-resize-handle {
+  width: 4px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  background: var(--border-card);
+  transition: background 0.15s;
+  position: relative;
+}
+
+.tf-resize-handle:hover,
+.tf-resize-handle--dragging {
+  background: var(--tf-purple);
+}
+
+.tf-resize-handle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto -6px;
+}
+
+/* ── Right: help panel ──────────────────────────────────────── */
+.tf-lab-help {
+  flex-shrink: 0;
+  border-left: 1px solid var(--border-card);
+  background: var(--bg-card);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tf-lab-help-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 0.9rem;
+  background: #1a0a2e;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  flex-shrink: 0;
+}
+
+.tf-help-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  user-select: none;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.tf-help-toggle input[type="checkbox"] {
+  accent-color: #c9a0f0;
+  width: 13px;
+  height: 13px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.tf-lab-help-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.9rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-card) transparent;
+}
+.tf-lab-help-body::-webkit-scrollbar { width: 4px; }
+.tf-lab-help-body::-webkit-scrollbar-thumb { background: var(--border-card); border-radius: 2px; }
+
+.tf-help-panel {
+  margin: 0;
+  padding: 0;
+  font-family: "Consolas", "Fira Code", monospace;
+  font-size: 0.78rem;
+  line-height: 1.65;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: transparent;
+  border: none;
+}

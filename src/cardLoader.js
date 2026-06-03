@@ -119,6 +119,21 @@ export async function loadWordleCards() {
   return cards;
 }
 
+export async function loadTerraformLabCards() {
+  const key = "__terraform__";
+  const cached = getCached(key);
+  if (cached) return cached;
+  const { data, error } = await supabase
+    .from("cards")
+    .select("id, exam, category, type, difficulty, is_free, created_at, data")
+    .eq("type", "terraform-lab")
+    .order("id");
+  if (error || !data) return null;
+  const cards = data.map(reconstruct);
+  setCached(key, cards);
+  return cards;
+}
+
 export async function loadPortalCards() {
   const key = "__portal__";
   const cached = getCached(key);

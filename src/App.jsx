@@ -13,6 +13,7 @@ import LandingPage from "./LandingPage";
 import Crossword from "./Crossword";
 import Wordle from "./Wordle";
 import PortalSim from "./PortalSim";
+import TerraformLab from "./TerraformLab";
 import flashcards, { EXAM_META, FREE_CARD_IDS } from "./flashcards";
 import { useAuthContext } from "./auth/AuthProvider";
 import Login from "./auth/Login";
@@ -20,7 +21,7 @@ import ExamSelect from "./ExamSelect";
 import UserProfile from "./auth/UserProfile";
 import AdminPanel from "./admin/AdminPanel";
 import { loadCardStatesRemote, saveCardStatesRemote } from "./cardStates";
-import { loadExamCardsRemote, loadCardsByCategory, loadConnectionsCards, loadCrosswordCards, loadWordleCards, loadPortalCards, SUPABASE_EXAMS, wakeSupabase } from "./cardLoader";
+import { loadExamCardsRemote, loadCardsByCategory, loadConnectionsCards, loadCrosswordCards, loadWordleCards, loadPortalCards, loadTerraformLabCards, SUPABASE_EXAMS, wakeSupabase } from "./cardLoader";
 import {
   loadSrsData, saveSrsData, loadSrsDataRemote, saveSrsDataRemote,
   updateSrsRecord, createSrsRecord, sortBySrs, isDue, getSrsStats,
@@ -345,6 +346,8 @@ function App() {
       ? (remoteCards ?? [])
       : selectedExam?.startsWith("LAB:")
         ? (remoteCards ?? [])
+      : selectedExam?.startsWith("TERRAFORM:")
+        ? (remoteCards ?? [])
       : selectedExam?.startsWith("GAMES:")
         ? (() => {
             const [gameType, examFilter] = selectedExam.slice("GAMES:".length).split(":");
@@ -353,10 +356,10 @@ function App() {
             );
           })()
         : baseCards.filter((c) => c.exam === selectedExam && c.type !== "connections" && c.type !== "crossword" && c.type !== "portal")
-  ).filter((c) => isPremium || c.exam === "AZ-900" || FREE_CARD_IDS.has(c.id) || selectedExam?.startsWith("CUSTOM:") || selectedExam?.startsWith("GAMES:") || selectedExam?.startsWith("LAB:"))
-  .slice(0, isGuest && selectedExam !== "AZ-900" && !selectedExam?.startsWith("CUSTOM:") && !selectedExam?.startsWith("GAMES:") && !selectedExam?.startsWith("LAB:") ? 30 : Infinity);
+  ).filter((c) => isPremium || c.exam === "AZ-900" || FREE_CARD_IDS.has(c.id) || selectedExam?.startsWith("CUSTOM:") || selectedExam?.startsWith("GAMES:") || selectedExam?.startsWith("LAB:") || selectedExam?.startsWith("TERRAFORM:"))
+  .slice(0, isGuest && selectedExam !== "AZ-900" && !selectedExam?.startsWith("CUSTOM:") && !selectedExam?.startsWith("GAMES:") && !selectedExam?.startsWith("LAB:") && !selectedExam?.startsWith("TERRAFORM:") ? 30 : Infinity);
 
-  const isGameMode = !!selectedExam?.startsWith("GAMES:") || !!selectedExam?.startsWith("LAB:");
+  const isGameMode = !!selectedExam?.startsWith("GAMES:") || !!selectedExam?.startsWith("LAB:") || !!selectedExam?.startsWith("TERRAFORM:");
 
   // Step 2: filter by selected categories — "🚩 Flagged" and "All" are virtual
   const filteredDeck = examDeck.filter((c) => {
@@ -389,6 +392,7 @@ function App() {
     if (c.type === "multi")       return "multi";
     if (!!c.choices && !c.scenario) return "mcq";
     if (c.type === "portal") return "portal";
+    if (c.type === "terraform-lab") return "terraform-lab";
     return "flashcard";
   };
   const afterTypeFilter = disabledTypes.size === 0
@@ -501,6 +505,7 @@ function App() {
 
   const handleExam = async (exam) => {
     setCategories(new Set(["All"])); setIndex(0); setKnown(new Set()); setFinished(false); setDisabledTypes(new Set(defaultDisabledTypes));
+    setDifficultyFilter(new Set());
     setCustomDeckCards([]);
     setCardLoadError(null);
 
@@ -532,6 +537,13 @@ function App() {
       setLoadingExam(null);
       if (!cards) { setCardLoadError(exam); return; }
       const cardId = exam.slice("LAB:".length);
+      setRemoteCards(cards.filter(c => c.id === cardId));
+    } else if (exam.startsWith("TERRAFORM:")) {
+      setLoadingExam(exam);
+      const cards = await fetchWithTimeout(loadTerraformLabCards());
+      setLoadingExam(null);
+      if (!cards) { setCardLoadError(exam); return; }
+      const cardId = exam.slice("TERRAFORM:".length);
       setRemoteCards(cards.filter(c => c.id === cardId));
     } else {
       setRemoteCards(null);
@@ -898,6 +910,78 @@ function App() {
     );
   }
 
+  // ── Full-screen Terraform lab layout ──────────────────────────
+  if (selectedExam?.startsWith("TERRAFORM:")) {
+    const tfHeader = (
+      <header className="lab-page-header" style={{ "--lab-accent": "#7b42bc" }}>
+        <button className="lab-back-btn" onClick={goToExams}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="13" height="13" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+          Labs
+        </button>
+        <div className="lab-page-logo">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#7b42bc" aria-hidden="true">
+            <polygon points="8.5,2 3,5.5 3,12.5 8.5,9"/>
+            <polygon points="9.5,9.5 9.5,16.5 15,13 15,6"/>
+            <polygon points="3,14 8.5,17.5 8.5,10.5"/>
+            <polygon points="16,5.5 21,9 21,9 16,12.5"/>
+          </svg>
+          <span className="lab-page-brand" style={{ color: "#7b42bc" }}>Terraform</span>
+          <span className="lab-page-subtitle">Lab</span>
+        </div>
+        {current && (
+          <div className="lab-page-meta">
+            <span className="lab-page-exam-pill">{current.exam}</span>
+            <span className="lab-page-diff-pill" data-diff={current.difficulty}>{current.difficulty}</span>
+          </div>
+        )}
+      </header>
+    );
+
+    if (loadingCards) {
+      return (
+        <div className="lab-page">
+          {tfHeader}
+          <div className="lab-page-body lab-page-body--loading">
+            <div className="deck-loading-spinner" aria-label="Loading lab" />
+            <p className="lab-page-loading-text">Loading lab…</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (current?.type === "terraform-lab") {
+      return (
+        <div className="lab-page">
+          {tfHeader}
+          <div className="lab-page-body">
+            <TerraformLab
+              key={`${sessionKey}-${current.id}`}
+              card={current}
+              onKnow={() => { advance(true); goToExams(); }}
+              onSrsRate={srsMode ? (score) => { handleSrsRate(score); goToExams(); } : undefined}
+              hideAnswers={hideAnswers}
+              examMode={false}
+              onExamAnswer={() => {}}
+              onAnswer={() => {}}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="lab-page">
+        {tfHeader}
+        <div className="lab-page-body lab-page-body--loading">
+          <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>Lab not found.</p>
+          <button className="lab-back-btn" onClick={goToExams} style={{ marginTop: "0.75rem" }}>← Back to Labs</button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`app${isExiting ? " app--exiting" : ""}${isEntering ? " app--entering" : ""}`} data-exam={selectedExam}>
 
@@ -992,7 +1076,7 @@ function App() {
               { value: "task",       label: "Task",           color: "#d97706", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg> },
               { value: "script",     label: "Script",         color: "#059669", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> },
               { value: "fault",       label: "Find the Fault", color: "#e11d48", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> },
-              { value: "case-study", label: "Case Study",     color: "#4f46e5", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> },
+              { value: "case-study",    label: "Case Study",     color: "#4f46e5", icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> },
             ].map(({ value, label, color, icon }) => {
               const isAll = value === "both";
               const isDisabled = !isAll && disabledTypes.has(value);
@@ -1327,7 +1411,7 @@ function App() {
       {/* Category pills — multi-select */}
       <nav className="category-nav" data-tour="category-nav">
         <button className="cat-btn" onClick={goToExams}>
-          {selectedExam?.startsWith("LAB:") ? "← Labs" : selectedExam?.startsWith("GAMES:") ? "← Games" : "← Exams"}
+          {selectedExam?.startsWith("LAB:") || selectedExam?.startsWith("TERRAFORM:") ? "← Labs" : selectedExam?.startsWith("GAMES:") ? "← Games" : "← Exams"}
         </button>
         {!isGameMode && CATEGORIES.map((cat) => (
           <button

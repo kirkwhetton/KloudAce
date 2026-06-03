@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import flashcards, { EXAM_META } from "./flashcards";
-import { loadAllTopics, loadExamCardCounts, loadPortalCards, SUPABASE_EXAMS } from "./cardLoader";
+import { loadAllTopics, loadExamCardCounts, loadPortalCards, loadTerraformLabCards, SUPABASE_EXAMS } from "./cardLoader";
 
 const DECK_COLOURS = [
   { from: "#f59e0b", to: "#b45309", icon: "#fcd34d" },
@@ -128,6 +128,7 @@ export default function ExamSelect({ user, isGuest, isPremium, onSelect, onLogou
   const [showLabUpgradeModal, setShowLabUpgradeModal] = useState(false);
   const [gameExam, setGameExam] = useState("ALL");
   const [portalCards, setPortalCards] = useState(null);
+  const [terraformCards, setTerraformCards] = useState(null);
   const [labExam, setLabExam] = useState("ALL");
   const [customDecks, setCustomDecks] = useState([]);
   const [topicSearch, setTopicSearch] = useState("");
@@ -188,10 +189,11 @@ const [remoteTopics, setRemoteTopics] = useState(null);
       loadAllTopics().then(t => { if (t) setRemoteTopics(t); });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Load portal cards when Labs view is opened
+  // Load portal + terraform cards when Labs view is opened
   useEffect(() => {
-    if (view === "labs" && !portalCards)
-      loadPortalCards().then(c => { if (c) setPortalCards(c); });
+    if (view !== "labs") return;
+    if (!portalCards) loadPortalCards().then(c => { if (c) setPortalCards(c); });
+    if (!terraformCards) loadTerraformLabCards().then(c => { setTerraformCards(c ?? []); });
   }, [view]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Animated navigation: drill in (forward) or back to chooser
@@ -686,6 +688,73 @@ const topicMap = flashcards.reduce((acc, c) => {
                       <span className="splash-lab-diff">{DIFF_LABELS[card.difficulty] ?? card.difficulty}</span>
                     </div>
                     <p className="splash-lab-task">{card.task}</p>
+                    <span className="splash-lab-cta">
+                      {isLocked ? (
+                        <>
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="11" height="11">
+                            <rect x="3" y="11" width="18" height="11" rx="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                          </svg>
+                          Premium
+                        </>
+                      ) : (
+                        <>
+                          Start lab
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="12" height="12">
+                            <polyline points="9 18 15 12 9 6"/>
+                          </svg>
+                        </>
+                      )}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* ── Terraform Labs section ── */}
+          <div className="splash-labs-section-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#7b42bc" aria-hidden="true" style={{ flexShrink: 0 }}>
+              <polygon points="8.5,2 3,5.5 3,12.5 8.5,9"/>
+              <polygon points="9.5,9.5 9.5,16.5 15,13 15,6"/>
+              <polygon points="3,14 8.5,17.5 8.5,10.5"/>
+              <polygon points="16,5.5 21,9 21,9 16,12.5"/>
+            </svg>
+            <span style={{ color: "#7b42bc", fontWeight: 700 }}>Terraform Labs</span>
+            <span className="splash-labs-section-tag">IaC</span>
+          </div>
+
+          {terraformCards === null ? (
+            <div className="splash-mydecks-empty">
+              <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>Loading Terraform labs…</p>
+            </div>
+          ) : terraformCards.length === 0 ? (
+            <div className="splash-tf-coming-soon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="#7b42bc" aria-hidden="true" style={{ opacity: 0.4 }}>
+                <polygon points="8.5,2 3,5.5 3,12.5 8.5,9"/>
+                <polygon points="9.5,9.5 9.5,16.5 15,13 15,6"/>
+                <polygon points="3,14 8.5,17.5 8.5,10.5"/>
+                <polygon points="16,5.5 21,9 21,9 16,12.5"/>
+              </svg>
+              <p style={{ color: "var(--text-muted)", fontSize: "0.88rem", margin: 0 }}>
+                Terraform labs coming soon — write real HCL to deploy Azure infrastructure
+              </p>
+            </div>
+          ) : (
+            <div className="splash-labs-grid">
+              {terraformCards.filter(c => labExam === "ALL" || c.exam === labExam).map(card => {
+                const isLocked = !isPremium && !card.is_free;
+                return (
+                  <button
+                    key={card.id}
+                    className={`splash-lab-card splash-lab-card--terraform${isLocked ? " splash-lab-card--locked" : ""}`}
+                    onClick={() => isLocked ? setShowLabUpgradeModal(true) : onSelect(`TERRAFORM:${card.id}`)}
+                  >
+                    <div className="splash-lab-badge" style={{ background: "linear-gradient(135deg, #7b42bc, #4c1d95)" }}>
+                      <span className="splash-lab-exam">{card.exam}</span>
+                      <span className="splash-lab-diff">{card.difficulty}</span>
+                    </div>
+                    <p className="splash-lab-task">{card.description ?? card.question ?? card.task}</p>
                     <span className="splash-lab-cta">
                       {isLocked ? (
                         <>

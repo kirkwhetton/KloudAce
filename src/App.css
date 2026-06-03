@@ -3659,3 +3659,40 @@ button .known-check {
   color: var(--text-muted, #6b7280);
   gap: 0.3rem;
 }
+
+.splash-labs-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(123, 66, 188, 0.2);
+  font-size: 0.88rem;
+}
+
+.splash-labs-section-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(123, 66, 188, 0.12);
+  color: #7b42bc;
+  border: 1px solid rgba(123, 66, 188, 0.25);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.splash-tf-coming-soon {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1rem;
+  border: 1px dashed rgba(123, 66, 188, 0.3);
+  border-radius: 10px;
+  background: rgba(123, 66, 188, 0.04);
+}
+
+.splash-lab-card--terraform:hover {
+  border-color: rgba(123, 66, 188, 0.5);
+  box-shadow: 0 4px 16px rgba(123, 66, 188, 0.15);
+}
