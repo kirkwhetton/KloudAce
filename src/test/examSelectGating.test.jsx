@@ -11,12 +11,13 @@ vi.mock('../flashcards', () => ({
 }))
 
 vi.mock('../cardLoader', () => ({
-  loadAllTopics:       vi.fn().mockResolvedValue([]),
-  loadExamCardCounts:  vi.fn().mockResolvedValue({}),
-  loadPortalCards:     vi.fn().mockResolvedValue([
+  loadAllTopics:          vi.fn().mockResolvedValue([]),
+  loadExamCardCounts:     vi.fn().mockResolvedValue({}),
+  loadPortalCards:        vi.fn().mockResolvedValue([
     { id: 'AZ-900-PS-001', exam: 'AZ-900', difficulty: 'easy', is_free: true,  task: 'Free lab: Create a resource group' },
     { id: 'AZ-700-PS-001', exam: 'AZ-700', difficulty: 'easy', is_free: false, task: 'Premium lab: Create a virtual network' },
   ]),
+  loadTerraformLabCards:  vi.fn().mockResolvedValue([]),
   SUPABASE_EXAMS: new Set(['AZ-900', 'AZ-104', 'AZ-305', 'AZ-700']),
 }))
 
