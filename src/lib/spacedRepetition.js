@@ -116,7 +116,7 @@ export function saveSrsData(userId, exam, data) {
  */
 export async function loadSrsDataRemote(userId, exam) {
   try {
-    const { supabase } = await import("./auth/supabase.js");
+    const { supabase } = await import("../auth/supabase.js");
     const { data, error } = await supabase
       .from("srs_data")
       .select("records")
@@ -135,7 +135,7 @@ export async function loadSrsDataRemote(userId, exam) {
  */
 export async function saveSrsDataRemote(userId, exam, data) {
   try {
-    const { supabase } = await import("./auth/supabase.js");
+    const { supabase } = await import("../auth/supabase.js");
     await supabase
       .from("srs_data")
       .upsert(

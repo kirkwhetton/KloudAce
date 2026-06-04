@@ -6,14 +6,14 @@ vi.mock('../auth/AuthProvider', () => ({
   useAuthContext: vi.fn(),
 }))
 
-vi.mock('../useTheme', () => ({
+vi.mock('../hooks/useTheme', () => ({
   useTheme: () => ({ theme: 'default', setTheme: vi.fn() }),
   THEMES: [{ value: 'default', label: 'Default' }],
 }))
 
 vi.mock('../flashcards', () => ({ default: [] }))
 
-vi.mock('../spacedRepetition', () => ({
+vi.mock('../lib/spacedRepetition', () => ({
   clearSrsDataForExam: vi.fn(),
   clearSrsDataForCards: vi.fn(),
 }))

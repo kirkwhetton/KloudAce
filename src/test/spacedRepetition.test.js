@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createSrsRecord, updateSrsRecord, isDue } from '../spacedRepetition'
+import { createSrsRecord, updateSrsRecord, isDue } from '../lib/spacedRepetition'
 
 describe('createSrsRecord', () => {
   it('creates a record with default ease and zero repetitions', () => {

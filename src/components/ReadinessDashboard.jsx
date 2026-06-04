@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import flashcards, { EXAM_META } from "./flashcards";
-import { loadSrsData, isDue } from "./spacedRepetition";
+import flashcards, { EXAM_META } from "../flashcards";
+import { loadSrsData, isDue } from "../lib/spacedRepetition";
 import "./ReadinessDashboard.css";
 
 const EXAM_ICONS = {

@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from "react";
 import { useAuthContext } from "./AuthProvider";
-import ConfirmDialog from "../ConfirmDialog";
+import ConfirmDialog from "../components/ConfirmDialog";
 import flashcards from "../flashcards";
-import { clearSrsDataForExam, clearSrsDataForCards } from "../spacedRepetition";
-import { useTheme, THEMES } from "../useTheme";
+import { clearSrsDataForExam, clearSrsDataForCards } from "../lib/spacedRepetition";
+import { useTheme, THEMES } from "../hooks/useTheme";
 import "./UserProfile.css";
 
 function StreakCalendar({ activeDates = [], streak = 0, longestStreak = 0 }) {

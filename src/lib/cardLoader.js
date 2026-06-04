@@ -1,4 +1,4 @@
-import { supabase } from "./auth/supabase.js";
+import { supabase } from "../auth/supabase.js";
 
 const SUPABASE_EXAMS = new Set(["AZ-900", "AZ-305", "AZ-700", "AZ-104"]);
 

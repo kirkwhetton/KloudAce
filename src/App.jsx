@@ -1,40 +1,40 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import react from "react";
-import CustomDecks from "./CustomDecks";
-import Flashcard from "./Flashcard";
-import MultipleChoice from "./multichoice";
-import MultiSelect from "./MultiSelect";
-import TrueFalse from "./TrueFalse";
-import ImageMCQ from "./ImageMCQ";
-import TaskSimulator from "./TaskSimulator";
-import Hotspot from "./Hotspot";
-import Connections from "./Connections";
-import LandingPage from "./LandingPage";
-import Crossword from "./Crossword";
-import Wordle from "./Wordle";
-import PortalSim from "./PortalSim";
-import TerraformLab from "./TerraformLab";
+import CustomDecks from "./components/CustomDecks";
+import Flashcard from "./cards/Flashcard";
+import MultipleChoice from "./cards/multichoice";
+import MultiSelect from "./cards/MultiSelect";
+import TrueFalse from "./cards/TrueFalse";
+import ImageMCQ from "./cards/ImageMCQ";
+import TaskSimulator from "./cards/TaskSimulator";
+import Hotspot from "./cards/Hotspot";
+import Connections from "./games/Connections";
+import LandingPage from "./navigation/LandingPage";
+import Crossword from "./games/Crossword";
+import Wordle from "./games/Wordle";
+import PortalSim from "./labs/PortalSim";
+import TerraformLab from "./labs/TerraformLab";
 import flashcards, { EXAM_META, FREE_CARD_IDS } from "./flashcards";
 import { useAuthContext } from "./auth/AuthProvider";
 import Login from "./auth/Login";
-import ExamSelect from "./ExamSelect";
+import ExamSelect from "./navigation/ExamSelect";
 import UserProfile from "./auth/UserProfile";
 import AdminPanel from "./admin/AdminPanel";
-import { loadCardStatesRemote, saveCardStatesRemote } from "./cardStates";
-import { loadExamCardsRemote, loadCardsByCategory, loadConnectionsCards, loadCrosswordCards, loadWordleCards, loadPortalCards, loadTerraformLabCards, SUPABASE_EXAMS, wakeSupabase } from "./cardLoader";
+import { loadCardStatesRemote, saveCardStatesRemote } from "./lib/cardStates";
+import { loadExamCardsRemote, loadCardsByCategory, loadConnectionsCards, loadCrosswordCards, loadWordleCards, loadPortalCards, loadTerraformLabCards, SUPABASE_EXAMS, wakeSupabase } from "./lib/cardLoader";
 import {
   loadSrsData, saveSrsData, loadSrsDataRemote, saveSrsDataRemote,
   updateSrsRecord, createSrsRecord, sortBySrs, isDue, getSrsStats,
-} from "./spacedRepetition";
-import ConfirmDialog from "./ConfirmDialog";
-import ReadinessDashboard from "./ReadinessDashboard";
-import GuidedTour from "./GuidedTour";
-import PlatformSelect from "./PlatformSelect";
-import { useStreak } from "./useStreak";
-import { useSounds } from "./useSounds";
-import { useDailyGoal } from "./useDailyGoal";
-import { useTheme, THEMES } from "./useTheme";
-import DevTools from "./DevTools";
+} from "./lib/spacedRepetition";
+import ConfirmDialog from "./components/ConfirmDialog";
+import ReadinessDashboard from "./components/ReadinessDashboard";
+import GuidedTour from "./components/GuidedTour";
+import PlatformSelect from "./navigation/PlatformSelect";
+import { useStreak } from "./hooks/useStreak";
+import { useSounds } from "./hooks/useSounds";
+import { useDailyGoal } from "./hooks/useDailyGoal";
+import { useTheme, THEMES } from "./hooks/useTheme";
+import DevTools from "./components/DevTools";
 import "./App.css";
 
 // Fisher-Yates shuffle — returns a new shuffled array, never mutates original

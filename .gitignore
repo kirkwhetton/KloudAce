@@ -30,3 +30,6 @@ PROJECT_CONTEXT.md
 
 # Vite cache
 .vite/
+
+# Migration / seed scripts
+scripts/

@@ -10,7 +10,7 @@ vi.mock('../flashcards', () => ({
   FREE_CARD_IDS: new Set(),
 }))
 
-vi.mock('../cardLoader', () => ({
+vi.mock('../lib/cardLoader', () => ({
   loadAllTopics:          vi.fn().mockResolvedValue([]),
   loadExamCardCounts:     vi.fn().mockResolvedValue({}),
   loadPortalCards:        vi.fn().mockResolvedValue([
@@ -21,7 +21,7 @@ vi.mock('../cardLoader', () => ({
   SUPABASE_EXAMS: new Set(['AZ-900', 'AZ-104', 'AZ-305', 'AZ-700']),
 }))
 
-import ExamSelect from '../ExamSelect'
+import ExamSelect from '../navigation/ExamSelect'
 
 const BASE_USER = { id: 'user-1', name: 'Kirk' }
 

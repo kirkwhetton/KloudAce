@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import { useStreak } from '../useStreak'
+import { useStreak } from '../hooks/useStreak'
 
 beforeEach(() => {
   localStorage.clear()

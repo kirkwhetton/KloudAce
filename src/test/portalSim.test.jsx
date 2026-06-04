@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 
 // ── Stub every blade so we control what gets submitted ──────────
-vi.mock('../PortalSim/blades/ResourceGroupList', () => ({
+vi.mock('../labs/PortalSim/blades/ResourceGroupList', () => ({
   default: ({ onOpen, onSubmit, completed }) => (
     <div data-testid="blade-rg-list">
       <button data-testid="btn-open-create" onClick={() => onOpen('rg-create')}>Open create</button>
@@ -13,18 +13,18 @@ vi.mock('../PortalSim/blades/ResourceGroupList', () => ({
     </div>
   ),
 }))
-vi.mock('../PortalSim/blades/ResourceGroupCreate', () => ({
+vi.mock('../labs/PortalSim/blades/ResourceGroupCreate', () => ({
   default: ({ onClose }) => (
     <div data-testid="blade-rg-create">
       <button data-testid="btn-close-create" onClick={onClose}>Close</button>
     </div>
   ),
 }))
-vi.mock('../PortalSim/blades/VNetList',      () => ({ default: () => <div data-testid="blade-vnet-list" /> }))
-vi.mock('../PortalSim/blades/VNetCreate',    () => ({ default: () => <div /> }))
-vi.mock('../PortalSim/blades/VNetSubnetAdd', () => ({ default: () => <div /> }))
+vi.mock('../labs/PortalSim/blades/VNetList',      () => ({ default: () => <div data-testid="blade-vnet-list" /> }))
+vi.mock('../labs/PortalSim/blades/VNetCreate',    () => ({ default: () => <div /> }))
+vi.mock('../labs/PortalSim/blades/VNetSubnetAdd', () => ({ default: () => <div /> }))
 
-import PortalSim from '../PortalSim'
+import PortalSim from '../labs/PortalSim'
 
 const BASE_CARD = {
   initialBlade: 'rg-list',

@@ -8,7 +8,7 @@ vi.mock('../auth/supabase.js', () => ({
 }))
 
 import { supabase } from '../auth/supabase.js'
-import { loadExamCardsRemote, loadCardsByCategory, loadPortalCards, SUPABASE_EXAMS, bustCardCache } from '../cardLoader'
+import { loadExamCardsRemote, loadCardsByCategory, loadPortalCards, SUPABASE_EXAMS, bustCardCache } from '../lib/cardLoader'
 
 const mockCard = {
   id: 'AZ-900-101',

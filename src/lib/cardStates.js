@@ -1,4 +1,4 @@
-import { supabase } from "./auth/supabase.js";
+import { supabase } from "../auth/supabase.js";
 
 /**
  * Load flagged and mastered card ID arrays from Supabase.

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import MultipleChoice from '../multichoice'
+import MultipleChoice from '../cards/multichoice'
 
 const card = {
   id: 'AZ-900-101',

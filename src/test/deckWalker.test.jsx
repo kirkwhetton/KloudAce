@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render } from '@testing-library/react'
-import ImageMCQ from '../ImageMCQ'
-import Hotspot from '../Hotspot'
+import ImageMCQ from '../cards/ImageMCQ'
+import Hotspot from '../cards/Hotspot'
 
 // Serialised React element — exactly what Supabase returns for AZ-104-028.
 // The $$typeof Symbol is lost when JSX is stored as JSON, making it a plain

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import flashcards, { EXAM_META } from "./flashcards";
-import { loadAllTopics, loadExamCardCounts, loadPortalCards, loadTerraformLabCards, SUPABASE_EXAMS } from "./cardLoader";
+import flashcards, { EXAM_META } from "../flashcards";
+import { loadAllTopics, loadExamCardCounts, loadPortalCards, loadTerraformLabCards, SUPABASE_EXAMS } from "../lib/cardLoader";
 
 const DECK_COLOURS = [
   { from: "#f59e0b", to: "#b45309", icon: "#fcd34d" },

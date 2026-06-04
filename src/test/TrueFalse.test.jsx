@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import TrueFalse from '../TrueFalse'
+import TrueFalse from '../cards/TrueFalse'
 
 const cardTrue  = { id: 'tf-1', exam: 'AZ-900', question: 'Azure is a cloud platform.', answer: true,  explanation: 'Yes it is.' }
 const cardFalse = { id: 'tf-2', exam: 'AZ-900', question: 'Azure is a database engine.', answer: false, explanation: 'No it is not.' }
