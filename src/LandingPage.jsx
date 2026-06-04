@@ -184,8 +184,46 @@ export default function LandingPage({ onGetStarted }) {
         </div>
       </section>
 
-      {/* ── Exams ── */}
+      {/* ── Who it's for ── */}
       <section className="lp-section">
+        <div className="lp-section-inner">
+          <div className="lp-section-label">Who it's for</div>
+          <h2 className="lp-section-h2">Not just for exam takers</h2>
+          <p className="lp-audience-intro">Whether you're chasing a certification, exploring cloud for the first time, or keeping your Azure knowledge sharp at work — KloudAce is built for you.</p>
+          <div className="lp-audience-grid">
+            <div className="lp-audience-card">
+              <div className="lp-audience-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                </svg>
+              </div>
+              <h3 className="lp-audience-title">Certification candidates</h3>
+              <p className="lp-audience-desc">Structured study with timed exam mode, spaced repetition, and a readiness dashboard that tells you exactly where to focus. AZ-900 through AZ-305 covered.</p>
+            </div>
+            <div className="lp-audience-card">
+              <div className="lp-audience-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+              </div>
+              <h3 className="lp-audience-title">Cloud learners</h3>
+              <p className="lp-audience-desc">Explore Azure concepts at your own pace through scenario questions, hands-on portal simulations, Terraform labs, and learning games. No exam required.</p>
+            </div>
+            <div className="lp-audience-card">
+              <div className="lp-audience-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
+                </svg>
+              </div>
+              <h3 className="lp-audience-title">Working professionals</h3>
+              <p className="lp-audience-desc">Stay sharp on the services you use every day, or branch into a new specialisation. Spaced repetition keeps knowledge fresh without cramming sessions.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Exams ── */}
+      <section className="lp-section lp-section--light">
         <div className="lp-section-inner">
           <div className="lp-section-label">Supported certifications</div>
           <h2 className="lp-section-h2">Start with Azure.<br />Expand to any cloud.</h2>
@@ -225,7 +263,7 @@ export default function LandingPage({ onGetStarted }) {
       </section>
 
       {/* ── Free vs Premium ── */}
-      <section className="lp-section lp-section--light">
+      <section className="lp-section">
         <div className="lp-section-inner">
           <div className="lp-section-label">Pricing</div>
           <h2 className="lp-section-h2">Free to start, powerful to finish</h2>

@@ -311,6 +311,69 @@
   margin: 0;
 }
 
+/* ── Audience (who it's for) ── */
+.lp-audience-intro {
+  text-align: center;
+  color: var(--lp-text-secondary, #6b7280);
+  font-size: 1.05rem;
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.65;
+}
+
+.lp-audience-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.lp-audience-card {
+  background: var(--lp-card-bg, #f9fafb);
+  border: 1px solid var(--lp-border, #e5e7eb);
+  border-radius: 16px;
+  padding: 2rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.lp-audience-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 114, 198, 0.1);
+  transform: translateY(-2px);
+}
+
+.lp-audience-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0078d4, #004e8c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.lp-audience-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.lp-audience-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--lp-text-primary, #111827);
+  margin: 0;
+}
+
+.lp-audience-desc {
+  font-size: 0.9rem;
+  color: var(--lp-text-secondary, #6b7280);
+  line-height: 1.6;
+  margin: 0;
+}
+
 /* ── Exams grid ── */
 .lp-exams-grid {
   display: grid;
@@ -559,6 +622,7 @@
   .lp-hero-stats { gap: 1rem; }
   .lp-stat-div { display: none; }
   .lp-features-grid { grid-template-columns: 1fr; }
+  .lp-audience-grid { grid-template-columns: 1fr; }
   .lp-exams-grid { grid-template-columns: 1fr; }
   .lp-pricing-grid { grid-template-columns: 1fr; }
   .lp-footer-cta { padding: 3.5rem 1.25rem; }
