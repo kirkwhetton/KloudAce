@@ -24,9 +24,11 @@ export function bustCardCache(key) {
   else _cache.clear();
 }
 
+// Supabase default page size is 1000 rows — override with a safe upper bound
+// so the deck never silently truncates as content grows.
+const ALL_ROWS = { from: 0, to: 9999 };
+
 // ─── Wake ping ───────────────────────────────────────────────────
-// Call once on app mount to open a connection and wake the Supabase
-// instance before the user tries to load an exam.
 export function wakeSupabase() {
   (async () => {
     try { await supabase.from("cards").select("id", { count: "exact", head: true }); } catch {}
@@ -41,7 +43,8 @@ export async function loadExamCardsRemote(exam) {
   const { data, error } = await supabase
     .from("cards")
     .select("id, exam, category, type, difficulty, is_free, created_at, data")
-    .eq("exam", exam);
+    .eq("exam", exam)
+    .range(ALL_ROWS.from, ALL_ROWS.to);
   if (error || !data) return null;
   const cards = data.map(reconstruct);
   setCached(exam, cards);
@@ -55,7 +58,8 @@ export async function loadCardsByCategory(category) {
   const { data, error } = await supabase
     .from("cards")
     .select("id, exam, category, type, difficulty, is_free, created_at, data")
-    .eq("category", category);
+    .eq("category", category)
+    .range(ALL_ROWS.from, ALL_ROWS.to);
   if (error || !data) return null;
   const cards = data.map(reconstruct);
   setCached(key, cards);
@@ -65,7 +69,10 @@ export async function loadCardsByCategory(category) {
 export async function loadAllTopics() {
   const cached = getCached("__topics__");
   if (cached) return cached;
-  const { data, error } = await supabase.from("cards").select("category");
+  const { data, error } = await supabase
+    .from("cards")
+    .select("category")
+    .range(ALL_ROWS.from, ALL_ROWS.to);
   if (error || !data) return null;
   const topicMap = {};
   for (const { category } of data) {
@@ -152,7 +159,10 @@ export async function loadPortalCards() {
 export async function loadExamCardCounts() {
   const cached = getCached("__exam_counts__");
   if (cached) return cached;
-  const { data, error } = await supabase.from("cards").select("exam");
+  const { data, error } = await supabase
+    .from("cards")
+    .select("exam")
+    .range(ALL_ROWS.from, ALL_ROWS.to);
   if (error || !data) return null;
   const counts = {};
   for (const { exam } of data) counts[exam] = (counts[exam] || 0) + 1;

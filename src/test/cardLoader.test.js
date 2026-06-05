@@ -23,7 +23,9 @@ const mockCard = {
 function mockSelect(rows) {
   const chain = {
     select: vi.fn().mockReturnThis(),
-    eq: vi.fn().mockResolvedValue({ data: rows, error: null }),
+    eq:     vi.fn().mockReturnThis(),
+    range:  vi.fn().mockResolvedValue({ data: rows, error: null }),
+    order:  vi.fn().mockResolvedValue({ data: rows, error: null }),
   }
   supabase.from.mockReturnValue(chain)
   return chain
@@ -32,7 +34,9 @@ function mockSelect(rows) {
 function mockSelectError() {
   const chain = {
     select: vi.fn().mockReturnThis(),
-    eq: vi.fn().mockResolvedValue({ data: null, error: { message: 'DB error' } }),
+    eq:     vi.fn().mockReturnThis(),
+    range:  vi.fn().mockResolvedValue({ data: null, error: { message: 'DB error' } }),
+    order:  vi.fn().mockResolvedValue({ data: null, error: { message: 'DB error' } }),
   }
   supabase.from.mockReturnValue(chain)
 }
