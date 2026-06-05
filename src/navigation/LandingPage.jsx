@@ -156,7 +156,7 @@ export default function LandingPage({ onGetStarted }) {
             <button className="lp-cta-secondary" onClick={onGetStarted}>Log in to existing account</button>
           </div>
           <div className="lp-hero-stats">
-            <div className="lp-stat"><span className="lp-stat-n">900+</span><span className="lp-stat-l">Questions</span></div>
+            <div className="lp-stat"><span className="lp-stat-n">1000+</span><span className="lp-stat-l">Questions</span></div>
             <div className="lp-stat-div"/>
             <div className="lp-stat"><span className="lp-stat-n">4</span><span className="lp-stat-l">Certifications</span></div>
             <div className="lp-stat-div"/>
