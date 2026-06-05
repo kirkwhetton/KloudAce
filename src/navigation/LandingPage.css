@@ -614,6 +614,34 @@
   line-height: 1.6;
 }
 
+.lp-footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.lp-footer-link {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.45);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.lp-footer-link:hover {
+  color: rgba(255,255,255,0.8);
+}
+
+.lp-footer-sep {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.2);
+}
+
 /* ── Responsive ── */
 @media (max-width: 560px) {
   .lp-nav { padding: 1rem 1.25rem; }

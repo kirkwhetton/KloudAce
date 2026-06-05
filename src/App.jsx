@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import react from "react";
 import CustomDecks from "./components/CustomDecks";
+import UpgradeModal from "./components/UpgradeModal";
 import Flashcard from "./cards/Flashcard";
 import MultipleChoice from "./cards/multichoice";
 import MultiSelect from "./cards/MultiSelect";
@@ -98,6 +99,7 @@ function App() {
   const [srsMode, setSrsMode] = useState(false);
   const [srsData, setSrsData] = useState({});
   const [showProfile, setShowProfile] = useState(false);
+  const [showUpgrade, setShowUpgrade] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState(null); // { title, message, onConfirm }
   const [showDashboard, setShowDashboard] = useState(false);
   const [showCustomDecks, setShowCustomDecks] = useState(false);
@@ -839,7 +841,7 @@ function App() {
     if (isPremium) return content;
     return (
       <div className="premium-gate-wrapper">
-        <div className="premium-gate" onClick={() => setShowProfile(true)}>
+        <div className="premium-gate" onClick={() => setShowUpgrade(true)}>
           <div className="premium-gate-inner">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" style={{width:12,height:12}}>
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
@@ -1004,6 +1006,13 @@ function App() {
       )}
 
       {showTour && <GuidedTour onDone={handleTourDone} />}
+
+      {showUpgrade && (
+        <UpgradeModal
+          userEmail={user?.email}
+          onClose={() => setShowUpgrade(false)}
+        />
+      )}
 
       {showProfile && <UserProfile onClose={() => {
         setShowProfile(false);
@@ -1652,7 +1661,7 @@ function App() {
                 <p className="unlock-premium-desc">
                   You've completed your free deck. Upgrade to Premium to unlock the full question bank — hundreds more cards, exam mode, spaced repetition, and readiness tracking.
                 </p>
-                <button className="unlock-premium-btn" onClick={() => setShowProfile(true)}>
+                <button className="unlock-premium-btn" onClick={() => setShowUpgrade(true)}>
                   Upgrade to Premium
                 </button>
               </div>

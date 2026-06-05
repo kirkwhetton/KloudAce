@@ -1,0 +1,154 @@
+.upgrade-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  backdrop-filter: blur(3px);
+}
+
+.upgrade-modal {
+  background: var(--bg-card, #fff);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.3);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.upgrade-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-card-hover, #f3f4f6);
+  color: var(--text-muted, #6b7280);
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.upgrade-close:hover {
+  background: var(--border-card, #e5e7eb);
+}
+
+.upgrade-header {
+  text-align: center;
+}
+
+.upgrade-crown {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.upgrade-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-primary, #111827);
+  margin: 0 0 0.3rem;
+}
+
+.upgrade-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted, #6b7280);
+  margin: 0;
+}
+
+.upgrade-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #0078d4, #004e8c);
+  border-radius: 12px;
+  color: #fff;
+}
+
+.upgrade-amount {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.upgrade-period {
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+.upgrade-tax {
+  font-size: 0.72rem;
+  opacity: 0.65;
+  margin-left: 0.2rem;
+}
+
+.upgrade-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.upgrade-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.87rem;
+  color: var(--text-secondary, #374151);
+  line-height: 1.45;
+}
+
+.upgrade-feature-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+
+.upgrade-cta {
+  width: 100%;
+  padding: 0.85rem;
+  background: linear-gradient(135deg, #0078d4, #004e8c);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  letter-spacing: 0.01em;
+}
+
+.upgrade-cta:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.upgrade-cta--soon {
+  background: var(--bg-card-hover, #f3f4f6);
+  color: var(--text-muted, #6b7280);
+  cursor: not-allowed;
+}
+
+.upgrade-terms {
+  font-size: 0.72rem;
+  color: var(--text-muted, #6b7280);
+  text-align: center;
+  margin: 0;
+  line-height: 1.5;
+}

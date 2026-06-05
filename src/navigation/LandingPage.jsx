@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { loadExamCardCounts } from "../lib/cardLoader";
+import LegalModal from "../components/LegalModal";
+import UpgradeModal from "../components/UpgradeModal";
 import "./LandingPage.css";
 
 const FEATURES = [
@@ -115,6 +117,8 @@ const PREMIUM_FEATURES = [
 
 export default function LandingPage({ onGetStarted }) {
   const [examCounts, setExamCounts] = useState(null);
+  const [legal, setLegal] = useState(null); // "terms" | "privacy" | null
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   useEffect(() => {
     loadExamCardCounts().then(c => { if (c) setExamCounts(c); });
@@ -315,7 +319,7 @@ export default function LandingPage({ onGetStarted }) {
                   </li>
                 ))}
               </ul>
-              <button className="lp-plan-cta lp-plan-cta--premium" disabled>Notify me when live</button>
+              <button className="lp-plan-cta lp-plan-cta--premium" onClick={() => setShowUpgrade(true)}>Get Premium →</button>
             </div>
 
           </div>
@@ -339,7 +343,17 @@ export default function LandingPage({ onGetStarted }) {
       {/* ── Footer ── */}
       <footer className="lp-footer">
         <p>© {new Date().getFullYear()} KloudAce. Microsoft Azure, Amazon Web Services, and Google Cloud are trademarks of their respective owners. KloudAce is not affiliated with or endorsed by Microsoft, Amazon, or Google.</p>
+        <div className="lp-footer-links">
+          <button className="lp-footer-link" onClick={() => setLegal("terms")}>Terms of Service</button>
+          <span className="lp-footer-sep">·</span>
+          <button className="lp-footer-link" onClick={() => setLegal("privacy")}>Privacy Policy</button>
+          <span className="lp-footer-sep">·</span>
+          <a className="lp-footer-link" href="mailto:hello@kloudace.com">Contact</a>
+        </div>
       </footer>
+
+      {legal && <LegalModal initialTab={legal} onClose={() => setLegal(null)} />}
+      {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
     </div>
   );
 }

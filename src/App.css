@@ -1160,7 +1160,9 @@ button .known-check {
 .card-body-wrapper {
   position: relative;
   width: 100%;
-  min-height: 300px;
+  /* Viewport-relative minimum keeps the card-nav in a stable position
+     regardless of whether a short flashcard or a long match task is shown. */
+  min-height: max(300px, calc(100vh - 440px));
   display: flex;
   flex-direction: column;
   justify-content: center;
