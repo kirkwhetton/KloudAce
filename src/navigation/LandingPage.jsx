@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import { loadExamCardCounts } from "../lib/cardLoader";
 import "./LandingPage.css";
 
 const FEATURES = [
@@ -72,28 +74,24 @@ const EXAMS = [
     name: "Azure Fundamentals",
     desc: "The foundation cert. Cloud concepts, Azure services, pricing, and governance — the entry point to the Azure certification path.",
     from: "#0ea5e9", to: "#0369a1",
-    cards: "175",
   },
   {
     code: "AZ-104",
     name: "Azure Administrator",
     desc: "The hands-on administrator exam. VMs, networking, storage, identity, monitoring, and backup across real-world scenarios.",
     from: "#6366f1", to: "#3730a3",
-    cards: "238",
   },
   {
     code: "AZ-700",
     name: "Network Engineer Associate",
     desc: "Deep networking. Virtual networks, VPN gateways, ExpressRoute, load balancers, firewalls, and hybrid connectivity.",
     from: "#0891b2", to: "#155e75",
-    cards: "314",
   },
   {
     code: "AZ-305",
     name: "Solutions Architect Expert",
     desc: "Design-level thinking. Architecture patterns, business continuity, data storage solutions, and governance at scale.",
     from: "#8b5cf6", to: "#5b21b6",
-    cards: "290",
   },
 ];
 
@@ -116,6 +114,20 @@ const PREMIUM_FEATURES = [
 ];
 
 export default function LandingPage({ onGetStarted }) {
+  const [examCounts, setExamCounts] = useState(null);
+
+  useEffect(() => {
+    loadExamCardCounts().then(c => { if (c) setExamCounts(c); });
+  }, []);
+
+  const totalCards = examCounts
+    ? Object.values(examCounts).reduce((s, n) => s + n, 0)
+    : null;
+
+  const totalLabel = totalCards
+    ? `${Math.floor(totalCards / 100) * 100}+`
+    : "1000+";
+
   return (
     <div className="lp-root">
       {/* ── Nav ── */}
@@ -156,7 +168,7 @@ export default function LandingPage({ onGetStarted }) {
             <button className="lp-cta-secondary" onClick={onGetStarted}>Log in to existing account</button>
           </div>
           <div className="lp-hero-stats">
-            <div className="lp-stat"><span className="lp-stat-n">1000+</span><span className="lp-stat-l">Questions</span></div>
+            <div className="lp-stat"><span className="lp-stat-n">{totalLabel}</span><span className="lp-stat-l">Questions</span></div>
             <div className="lp-stat-div"/>
             <div className="lp-stat"><span className="lp-stat-n">4</span><span className="lp-stat-l">Certifications</span></div>
             <div className="lp-stat-div"/>
@@ -238,7 +250,9 @@ export default function LandingPage({ onGetStarted }) {
               >
                 <div className="lp-exam-top">
                   <span className="lp-exam-code">{e.code}</span>
-                  <span className="lp-exam-cards">{e.cards} cards</span>
+                  <span className="lp-exam-cards">
+                    {examCounts ? `${examCounts[e.code] ?? 0} cards` : "… cards"}
+                  </span>
                 </div>
                 <div className="lp-exam-name">{e.name}</div>
                 <p className="lp-exam-desc">{e.desc}</p>
