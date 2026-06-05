@@ -72,7 +72,7 @@ const EXAMS = [
     name: "Azure Fundamentals",
     desc: "The foundation cert. Cloud concepts, Azure services, pricing, and governance — the entry point to the Azure certification path.",
     from: "#0ea5e9", to: "#0369a1",
-    cards: "500+",
+    cards: "175",
   },
   {
     code: "AZ-104",
@@ -86,14 +86,14 @@ const EXAMS = [
     name: "Network Engineer Associate",
     desc: "Deep networking. Virtual networks, VPN gateways, ExpressRoute, load balancers, firewalls, and hybrid connectivity.",
     from: "#0891b2", to: "#155e75",
-    cards: "49",
+    cards: "314",
   },
   {
     code: "AZ-305",
     name: "Solutions Architect Expert",
     desc: "Design-level thinking. Architecture patterns, business continuity, data storage solutions, and governance at scale.",
     from: "#8b5cf6", to: "#5b21b6",
-    cards: "10",
+    cards: "290",
   },
 ];
 
@@ -156,13 +156,15 @@ export default function LandingPage({ onGetStarted }) {
             <button className="lp-cta-secondary" onClick={onGetStarted}>Log in to existing account</button>
           </div>
           <div className="lp-hero-stats">
-            <div className="lp-stat"><span className="lp-stat-n">500+</span><span className="lp-stat-l">Questions</span></div>
+            <div className="lp-stat"><span className="lp-stat-n">900+</span><span className="lp-stat-l">Questions</span></div>
             <div className="lp-stat-div"/>
             <div className="lp-stat"><span className="lp-stat-n">4</span><span className="lp-stat-l">Certifications</span></div>
             <div className="lp-stat-div"/>
             <div className="lp-stat"><span className="lp-stat-n">9</span><span className="lp-stat-l">Card types</span></div>
             <div className="lp-stat-div"/>
             <div className="lp-stat"><span className="lp-stat-n">3</span><span className="lp-stat-l">Learning games</span></div>
+            <div className="lp-stat-div"/>
+            <div className="lp-stat"><span className="lp-stat-n">6</span><span className="lp-stat-l">Labs</span></div>
           </div>
         </div>
       </section>
