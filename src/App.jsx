@@ -459,7 +459,7 @@ function App() {
   // ── Keyboard shortcuts ─────────────────────────────────────────
   // ←/→ navigate, F = flag, M = master. Stable effect — reads via refs.
   useEffect(() => {
-    if (!selectedExam || finished || examMode || showProfile || showDashboard || showCustomDecks || confirmDialog) return;
+    if (!selectedExam || finished || examMode || isGameMode || showProfile || showDashboard || showCustomDecks || confirmDialog) return;
     const handler = (e) => {
       if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.isContentEditable) return;
       if (e.key === "ArrowRight") {
