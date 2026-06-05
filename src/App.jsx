@@ -500,8 +500,19 @@ function App() {
     [index, deck.length, current, recordActivity, incrementGoal]
   );
 
-  const fetchWithTimeout = (promise, ms = 25_000) =>
-    Promise.race([promise, new Promise(resolve => setTimeout(() => resolve(null), ms))]);
+  // Retry up to `attempts` times, each with its own timeout.
+  // Supabase cold-starts can take 30-50 s — this gives up to 90 s total.
+  const fetchWithRetry = async (fn, { attempts = 3, timeoutMs = 30_000 } = {}) => {
+    for (let i = 0; i < attempts; i++) {
+      const result = await Promise.race([
+        fn(),
+        new Promise(resolve => setTimeout(() => resolve(null), timeoutMs)),
+      ]);
+      if (result !== null) return result;
+      if (i < attempts - 1) await new Promise(r => setTimeout(r, 1_000));
+    }
+    return null;
+  };
 
   const handleExam = async (exam) => {
     setCategories(new Set(["All"])); setIndex(0); setKnown(new Set()); setFinished(false); setDisabledTypes(new Set(defaultDisabledTypes));
@@ -511,36 +522,36 @@ function App() {
 
     if (SUPABASE_EXAMS.has(exam)) {
       setLoadingExam(exam);
-      const cards = await fetchWithTimeout(loadExamCardsRemote(exam));
+      const cards = await fetchWithRetry(() => loadExamCardsRemote(exam));
       setLoadingExam(null);
       if (!cards) { setCardLoadError(exam); return; }
       setRemoteCards(cards);
     } else if (exam.startsWith("TOPIC:")) {
       setLoadingExam(exam);
-      const cards = await fetchWithTimeout(loadCardsByCategory(exam.slice("TOPIC:".length)));
+      const cards = await fetchWithRetry(() => loadCardsByCategory(exam.slice("TOPIC:".length)));
       setLoadingExam(null);
       if (!cards) { setCardLoadError(exam); return; }
       setRemoteCards(cards);
     } else if (exam.startsWith("GAMES:")) {
       setLoadingExam(exam);
       const gameType = exam.slice("GAMES:".length).split(":")[0];
-      const loader = gameType === "crossword" ? loadCrosswordCards()
-                   : gameType === "wordle"    ? loadWordleCards()
-                   : loadConnectionsCards();
-      const cards = await fetchWithTimeout(loader);
+      const loader = gameType === "crossword" ? loadCrosswordCards
+                   : gameType === "wordle"    ? loadWordleCards
+                   : loadConnectionsCards;
+      const cards = await fetchWithRetry(loader);
       setLoadingExam(null);
       if (!cards) { setCardLoadError(exam); return; }
       setRemoteCards(cards);
     } else if (exam.startsWith("LAB:")) {
       setLoadingExam(exam);
-      const cards = await fetchWithTimeout(loadPortalCards());
+      const cards = await fetchWithRetry(() => loadPortalCards());
       setLoadingExam(null);
       if (!cards) { setCardLoadError(exam); return; }
       const cardId = exam.slice("LAB:".length);
       setRemoteCards(cards.filter(c => c.id === cardId));
     } else if (exam.startsWith("TERRAFORM:")) {
       setLoadingExam(exam);
-      const cards = await fetchWithTimeout(loadTerraformLabCards());
+      const cards = await fetchWithRetry(() => loadTerraformLabCards());
       setLoadingExam(null);
       if (!cards) { setCardLoadError(exam); return; }
       const cardId = exam.slice("TERRAFORM:".length);

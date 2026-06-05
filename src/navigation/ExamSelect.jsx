@@ -420,7 +420,7 @@ const topicMap = flashcards.reduce((acc, c) => {
                   <span className="splash-exam-code">{meta.exam}</span>
                   <span className="splash-exam-name">{meta.fullName}</span>
                   {loadingExam === meta.exam
-                    ? <span className="splash-exam-count">Loading…</span>
+                    ? <span className="splash-exam-count">Loading… (may take 30s)</span>
                     : cardLoadError === meta.exam
                       ? <span className="splash-exam-count" style={{ color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>Failed to load — tap to retry</span>
                       : <span className="splash-exam-count">{count === null ? "…" : `${count} cards`}</span>

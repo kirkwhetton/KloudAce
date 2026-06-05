@@ -29,9 +29,18 @@ export function bustCardCache(key) {
 const ALL_ROWS = { from: 0, to: 9999 };
 
 // ─── Wake ping ───────────────────────────────────────────────────
+// Retries with backoff so a cold-start Supabase instance is warmed
+// before the first real card load arrives.
 export function wakeSupabase() {
   (async () => {
-    try { await supabase.from("cards").select("id", { count: "exact", head: true }); } catch {}
+    for (let i = 0; i < 5; i++) {
+      try {
+        await supabase.from("cards").select("id", { count: "exact", head: true });
+        return; // success — instance is awake
+      } catch {
+        await new Promise(r => setTimeout(r, 4_000 * (i + 1))); // 4s 8s 12s 16s 20s
+      }
+    }
   })();
 }
 
