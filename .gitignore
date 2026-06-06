@@ -33,3 +33,6 @@ PROJECT_CONTEXT.md
 
 # Migration / seed scripts
 scripts/
+
+# Supabase CLI temp files
+supabase/.temp/

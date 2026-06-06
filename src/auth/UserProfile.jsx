@@ -58,7 +58,7 @@ function StreakCalendar({ activeDates = [], streak = 0, longestStreak = 0 }) {
   );
 }
 
-export default function UserProfile({ onClose, onOpenDashboard, streak = 0, longestStreak = 0, activeDates = [], dailyGoal = 20, onSetGoal }) {
+export default function UserProfile({ onClose, onOpenDashboard, onUpgrade, streak = 0, longestStreak = 0, activeDates = [], dailyGoal = 20, onSetGoal }) {
   const { user, updateProfile, changePassword, error, setError } = useAuthContext();
   const { theme, setTheme } = useTheme(user?.id);
 
@@ -351,7 +351,7 @@ export default function UserProfile({ onClose, onOpenDashboard, streak = 0, long
                   <p className="premium-profile-desc">
                     Upgrade to unlock spaced repetition, exam mode, readiness dashboard, difficulty filters, and full card access.
                   </p>
-                  <button className="premium-profile-cta">
+                  <button className="premium-profile-cta" onClick={onUpgrade}>
                     Upgrade to Premium
                   </button>
                 </>

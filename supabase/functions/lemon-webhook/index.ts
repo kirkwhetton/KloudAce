@@ -7,19 +7,21 @@
 //   SUPABASE_URL                  — auto-injected by Supabase
 //
 // LemonSqueezy events handled:
-//   order_created      → set is_premium = true  (one-time purchase)
-//   subscription_created → set is_premium = true
-//   subscription_resumed → set is_premium = true  (after pause/un-cancel)
-//   subscription_cancelled → leave is_premium = true until period ends
-//                            (LemonSqueezy stops charging; access continues)
+//   GRANT  — order_created, subscription_created, subscription_resumed, subscription_unpaused
+//   REVOKE — subscription_expired
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const RELEVANT_EVENTS = new Set([
+const GRANT_EVENTS = new Set([
   "order_created",
   "subscription_created",
   "subscription_resumed",
+  "subscription_unpaused",
+]);
+
+const REVOKE_EVENTS = new Set([
+  "subscription_expired",
 ]);
 
 async function verifySignature(
@@ -35,8 +37,7 @@ async function verifySignature(
     false,
     ["verify"]
   );
-  const sigBytes = hexToBytes(signature);
-  return crypto.subtle.verify("HMAC", key, sigBytes, encoder.encode(body));
+  return crypto.subtle.verify("HMAC", key, hexToBytes(signature), encoder.encode(body));
 }
 
 function hexToBytes(hex: string): Uint8Array {
@@ -76,44 +77,41 @@ serve(async (req) => {
 
   const eventName = (payload.meta as Record<string, unknown>)?.event_name as string;
 
-  if (!RELEVANT_EVENTS.has(eventName)) {
-    // Acknowledge unhandled events without error
+  if (!GRANT_EVENTS.has(eventName) && !REVOKE_EVENTS.has(eventName)) {
     return new Response(JSON.stringify({ received: true, handled: false }), {
       headers: { "Content-Type": "application/json" },
     });
   }
 
-  // Extract buyer email from the payload
-  const data = payload.data as Record<string, unknown>;
-  const attributes = data?.attributes as Record<string, unknown>;
-  const email = (attributes?.user_email ?? attributes?.customer_email) as string | undefined;
+  const attributes = (payload.data as Record<string, unknown>)?.attributes as Record<string, unknown>;
+  const email = ((attributes?.user_email ?? attributes?.customer_email) as string | undefined)
+    ?.toLowerCase();
 
   if (!email) {
     console.error("No email found in webhook payload", JSON.stringify(payload));
     return new Response("No email in payload", { status: 422 });
   }
 
-  // Update profiles table — set is_premium = true for this user
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
   );
 
-  // Find the user by email in auth.users, then update their profile
-  const { data: authUser, error: authError } = await supabase.auth.admin
-    .listUsers();
+  const isPremium = GRANT_EVENTS.has(eventName);
 
-  if (authError) {
-    console.error("Error listing users:", authError.message);
-    return new Response("Error fetching users", { status: 500 });
+  // Look up and update by email directly — avoids listUsers() pagination limit
+  const { data, error } = await supabase
+    .from("profiles")
+    .update({ is_premium: isPremium })
+    .ilike("email", email)
+    .select("id");
+
+  if (error) {
+    console.error("Error updating profile:", error.message);
+    return new Response("Error updating profile", { status: 500 });
   }
 
-  const user = authUser.users.find(
-    (u) => u.email?.toLowerCase() === email.toLowerCase()
-  );
-
-  if (!user) {
-    // User may not have signed up yet — store the order for manual follow-up
+  if (!data || data.length === 0) {
     console.warn(`Webhook received for unknown email: ${email}`);
     return new Response(
       JSON.stringify({ received: true, note: "user not found" }),
@@ -121,20 +119,10 @@ serve(async (req) => {
     );
   }
 
-  const { error: updateError } = await supabase
-    .from("profiles")
-    .update({ is_premium: true })
-    .eq("id", user.id);
-
-  if (updateError) {
-    console.error("Error updating profile:", updateError.message);
-    return new Response("Error updating profile", { status: 500 });
-  }
-
-  console.log(`✓ Granted premium to ${email} (${user.id}) via ${eventName}`);
+  console.log(`✓ Set is_premium=${isPremium} for ${email} via ${eventName}`);
 
   return new Response(
-    JSON.stringify({ received: true, handled: true, email }),
+    JSON.stringify({ received: true, handled: true, email, isPremium }),
     { headers: { "Content-Type": "application/json" } }
   );
 });

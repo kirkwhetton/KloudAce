@@ -1028,6 +1028,7 @@ function App() {
           setDisabledTypes(new Set(ddt));
         } catch { /* ignore */ }
       }} onOpenDashboard={() => setShowDashboard(true)}
+      onUpgrade={() => { setShowProfile(false); setShowUpgrade(true); }}
       streak={streak} longestStreak={longestStreak} activeDates={activeDates ?? []}
       dailyGoal={dailyGoal} onSetGoal={setGoal} />}
 
