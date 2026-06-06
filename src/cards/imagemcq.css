@@ -32,6 +32,26 @@
   max-height: 299px;
 }
 
+.imcq-question-footer {
+  color: var(--text-primary);
+}
+
+/* SVG diagrams often have hardcoded dark fills — invert text in dark mode */
+[data-theme="dark"] .image-mcq-diagram svg text,
+[data-theme="dark"] .image-mcq-diagram svg tspan,
+[data-theme="dark"] .image-mcq-diagram text,
+[data-theme="dark"] .image-mcq-diagram tspan {
+  fill: var(--text-primary);
+}
+
+[data-theme="dark"] .image-mcq-diagram svg line,
+[data-theme="dark"] .image-mcq-diagram svg path[stroke="#000"],
+[data-theme="dark"] .image-mcq-diagram svg path[stroke="black"],
+[data-theme="dark"] .image-mcq-diagram svg rect[stroke="#000"],
+[data-theme="dark"] .image-mcq-diagram svg rect[stroke="black"] {
+  stroke: var(--text-secondary);
+}
+
 [data-theme="dark"] .image-mcq-card {
   box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.375), 0 8px 32px rgba(0, 0, 0, 0.4);
 }
