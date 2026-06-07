@@ -54,7 +54,7 @@ export async function loadExamCardsRemote(exam) {
     .select("id, exam, category, type, difficulty, is_free, created_at, data")
     .eq("exam", exam)
     .range(ALL_ROWS.from, ALL_ROWS.to);
-  if (error || !data) return null;
+  if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
   const cards = data.map(reconstruct);
   setCached(exam, cards);
   return cards;
@@ -69,7 +69,7 @@ export async function loadCardsByCategory(category) {
     .select("id, exam, category, type, difficulty, is_free, created_at, data")
     .eq("category", category)
     .range(ALL_ROWS.from, ALL_ROWS.to);
-  if (error || !data) return null;
+  if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
   const cards = data.map(reconstruct);
   setCached(key, cards);
   return cards;
@@ -82,7 +82,7 @@ export async function loadAllTopics() {
     .from("cards")
     .select("category")
     .range(ALL_ROWS.from, ALL_ROWS.to);
-  if (error || !data) return null;
+  if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
   const topicMap = {};
   for (const { category } of data) {
     const t = (category || "Uncategorised").trim();
@@ -101,7 +101,7 @@ export async function loadConnectionsCards() {
     .from("cards")
     .select("id, exam, category, type, difficulty, is_free, created_at, data")
     .eq("type", "connections");
-  if (error || !data) return null;
+  if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
   const cards = data.map(reconstruct);
   setCached(key, cards);
   return cards;
@@ -115,7 +115,7 @@ export async function loadCrosswordCards() {
     .from("cards")
     .select("id, exam, category, type, difficulty, is_free, created_at, data")
     .eq("type", "crossword");
-  if (error || !data) return null;
+  if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
   const cards = data.map(reconstruct);
   setCached(key, cards);
   return cards;
@@ -129,7 +129,7 @@ export async function loadWordleCards() {
     .from("cards")
     .select("id, exam, category, type, difficulty, is_free, created_at, data")
     .eq("type", "wordle");
-  if (error || !data) return null;
+  if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
   const cards = data.map(reconstruct);
   setCached(key, cards);
   return cards;
@@ -144,7 +144,7 @@ export async function loadTerraformLabCards() {
     .select("id, exam, category, type, difficulty, is_free, created_at, data")
     .eq("type", "terraform-lab")
     .order("id");
-  if (error || !data) return null;
+  if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
   const cards = data.map(reconstruct);
   setCached(key, cards);
   return cards;
@@ -159,7 +159,7 @@ export async function loadPortalCards() {
     .select("id, exam, category, type, difficulty, is_free, created_at, data")
     .eq("type", "portal")
     .order("id");
-  if (error || !data) return null;
+  if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
   const cards = data.map(reconstruct);
   setCached(key, cards);
   return cards;
@@ -172,7 +172,7 @@ export async function loadExamCardCounts() {
     .from("cards")
     .select("exam")
     .range(ALL_ROWS.from, ALL_ROWS.to);
-  if (error || !data) return null;
+  if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
   const counts = {};
   for (const { exam } of data) counts[exam] = (counts[exam] || 0) + 1;
   setCached("__exam_counts__", counts);

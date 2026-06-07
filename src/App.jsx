@@ -504,14 +504,14 @@ function App() {
 
   // Retry up to `attempts` times, each with its own timeout.
   // Supabase cold-starts can take 30-50 s — this gives up to 90 s total.
-  const fetchWithRetry = async (fn, { attempts = 3, timeoutMs = 30_000 } = {}) => {
+  const fetchWithRetry = async (fn, { attempts = 5, timeoutMs = 30_000 } = {}) => {
     for (let i = 0; i < attempts; i++) {
       const result = await Promise.race([
         fn(),
         new Promise(resolve => setTimeout(() => resolve(null), timeoutMs)),
       ]);
       if (result !== null) return result;
-      if (i < attempts - 1) await new Promise(r => setTimeout(r, 1_000));
+      if (i < attempts - 1) await new Promise(r => setTimeout(r, 2_000 * (i + 1))); // 2s 4s 6s 8s
     }
     return null;
   };
