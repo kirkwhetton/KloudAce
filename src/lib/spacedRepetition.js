@@ -122,7 +122,7 @@ export async function loadSrsDataRemote(userId, exam) {
       .select("records")
       .eq("user_id", userId)
       .eq("exam", exam)
-      .single();
+      .maybeSingle();
     if (error || !data) return null;
     return data.records;
   } catch {
