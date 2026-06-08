@@ -197,6 +197,19 @@
   background: var(--brand-dark, #005a9e);
 }
 
+.cw-btn--skip {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.cw-btn--skip:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
 /* ── Completed ── */
 .cw-complete {
   display: flex;
@@ -206,8 +219,19 @@
 }
 
 .cw-complete-icon {
-  font-size: 2rem;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+}
+
+.cw-complete-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .cw-complete-msg {

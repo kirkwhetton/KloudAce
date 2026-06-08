@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { loadExamCardCounts } from "../lib/cardLoader";
 import LegalModal from "../components/LegalModal";
 import UpgradeModal from "../components/UpgradeModal";
+import AboutModal from "../components/AboutModal";
 import "./LandingPage.css";
 
 const FEATURES = [
@@ -119,6 +120,7 @@ export default function LandingPage({ onGetStarted }) {
   const [examCounts, setExamCounts] = useState(null);
   const [legal, setLegal] = useState(null); // "terms" | "privacy" | null
   const [showUpgrade, setShowUpgrade] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
 
   useEffect(() => {
     loadExamCardCounts().then(c => { if (c) setExamCounts(c); });
@@ -181,6 +183,43 @@ export default function LandingPage({ onGetStarted }) {
             <div className="lp-stat"><span className="lp-stat-n">3</span><span className="lp-stat-l">Learning games</span></div>
             <div className="lp-stat-div"/>
             <div className="lp-stat"><span className="lp-stat-n">6</span><span className="lp-stat-l">Labs</span></div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Mission ── */}
+      <section className="lp-section lp-section--mission">
+        <div className="lp-section-inner lp-mission-inner">
+          <div className="lp-mission-text">
+            <div className="lp-section-label">Our mission</div>
+            <h2 className="lp-section-h2">Add KloudAce to your study arsenal</h2>
+            <p className="lp-mission-body">
+              KloudAce is designed to work alongside your existing study tools — not replace them. Keep watching your video courses, reading the docs, and using your favourite question banks. Add KloudAce to reinforce what you're learning through spaced repetition, exam-realistic scenarios, hands-on labs, and games that make terminology actually stick.
+            </p>
+            <button className="lp-mission-link" onClick={() => setShowAbout(true)}>
+              Read more about our approach
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </div>
+          <div className="lp-mission-stats">
+            <div className="lp-mission-stat">
+              <span className="lp-mission-stat-n">SM-2</span>
+              <span className="lp-mission-stat-l">Spaced repetition algorithm</span>
+            </div>
+            <div className="lp-mission-stat">
+              <span className="lp-mission-stat-n">9</span>
+              <span className="lp-mission-stat-l">Question types matched to real exams</span>
+            </div>
+            <div className="lp-mission-stat">
+              <span className="lp-mission-stat-n">4</span>
+              <span className="lp-mission-stat-l">Learning games for vocabulary recall</span>
+            </div>
+            <div className="lp-mission-stat">
+              <span className="lp-mission-stat-n">£0</span>
+              <span className="lp-mission-stat-l">To get started — no card required</span>
+            </div>
           </div>
         </div>
       </section>
@@ -344,6 +383,8 @@ export default function LandingPage({ onGetStarted }) {
       <footer className="lp-footer">
         <p>© {new Date().getFullYear()} KloudAce. Microsoft Azure, Amazon Web Services, and Google Cloud are trademarks of their respective owners. KloudAce is not affiliated with or endorsed by Microsoft, Amazon, or Google.</p>
         <div className="lp-footer-links">
+          <button className="lp-footer-link" onClick={() => setShowAbout(true)}>About</button>
+          <span className="lp-footer-sep">·</span>
           <button className="lp-footer-link" onClick={() => setLegal("terms")}>Terms of Service</button>
           <span className="lp-footer-sep">·</span>
           <button className="lp-footer-link" onClick={() => setLegal("privacy")}>Privacy Policy</button>
@@ -354,6 +395,7 @@ export default function LandingPage({ onGetStarted }) {
 
       {legal && <LegalModal initialTab={legal} onClose={() => setLegal(null)} />}
       {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
+      {showAbout && <AboutModal onClose={() => setShowAbout(false)} />}
     </div>
   );
 }

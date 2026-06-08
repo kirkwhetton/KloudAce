@@ -1,0 +1,255 @@
+/* ─── Word Search Game ────────────────────────────────────────── */
+
+.ws-root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.75rem 1rem 1.5rem;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.ws-game-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.ws-subtitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ── Reveal banner ── */
+.ws-reveal {
+  width: 100%;
+  max-width: 420px;
+  background: var(--brand);
+  color: #fff;
+  border-radius: 0.6rem;
+  padding: 0.55rem 0.9rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  animation: ws-pop 0.2s ease;
+}
+
+@keyframes ws-pop {
+  from { transform: scale(0.94); opacity: 0.5; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+.ws-reveal-word {
+  font-weight: 800;
+  font-size: 0.8rem;
+  background: rgba(255,255,255,0.2);
+  border-radius: 0.25rem;
+  padding: 0.1rem 0.4rem;
+  flex-shrink: 0;
+}
+
+.ws-reveal-clue {
+  flex: 1;
+}
+
+/* ── Grid ── */
+.ws-grid {
+  display: grid;
+  gap: 2px;
+  width: min(95vw, 420px);
+  aspect-ratio: 1;
+}
+
+.ws-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(0.55rem, 2.8vw, 0.9rem);
+  font-weight: 700;
+  font-family: inherit;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  background: var(--bg-card, #f8fafc);
+  color: var(--text-primary);
+  transition: background 0.08s, color 0.08s, transform 0.08s;
+  padding: 0;
+  line-height: 1;
+  user-select: none;
+}
+
+.ws-cell:hover {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.ws-cell--selected {
+  background: #2563eb;
+  color: #fff;
+  transform: scale(1.08);
+}
+
+.ws-cell--found {
+  background: #bbf7d0;
+  color: #15803d;
+  cursor: default;
+}
+
+.ws-cell--found:hover {
+  background: #bbf7d0;
+  color: #15803d;
+}
+
+.ws-cell--wrong {
+  background: #fecaca;
+  color: #dc2626;
+}
+
+/* ── Word list ── */
+.ws-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.6rem;
+  justify-content: center;
+  max-width: 420px;
+}
+
+.ws-word {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.35rem;
+  border: 1.5px solid var(--border);
+  color: var(--text-primary);
+  transition: all 0.2s;
+}
+
+.ws-word--found {
+  text-decoration: line-through;
+  color: var(--text-muted);
+  border-color: transparent;
+  background: var(--bg-card-hover, #f1f5f9);
+}
+
+/* ── Buttons ── */
+.ws-btn {
+  padding: 0.4rem 1.1rem;
+  border-radius: 0.5rem;
+  border: 1.5px solid transparent;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+
+.ws-btn--next {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.95rem;
+}
+
+.ws-btn--next:hover {
+  background: var(--brand-dark, #005a9e);
+}
+
+.ws-btn--skip {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+
+.ws-btn--skip:hover {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+/* ── Complete ── */
+.ws-complete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ws-complete-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+}
+
+.ws-complete-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.ws-complete-msg {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* ── Dark theme ── */
+[data-theme="dark"] .ws-cell {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .ws-cell:hover {
+  background: #1e3a5f;
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .ws-cell--selected {
+  background: #2563eb;
+  color: #fff;
+}
+
+[data-theme="dark"] .ws-cell--found {
+  background: #14532d;
+  color: #86efac;
+}
+
+[data-theme="dark"] .ws-cell--found:hover {
+  background: #14532d;
+  color: #86efac;
+}
+
+[data-theme="dark"] .ws-cell--wrong {
+  background: #7f1d1d;
+  color: #fca5a5;
+}
+
+[data-theme="dark"] .ws-reveal {
+  background: var(--brand, #0078d4);
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .ws-grid {
+    width: min(98vw, 360px);
+  }
+}

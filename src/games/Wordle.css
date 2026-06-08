@@ -1,5 +1,14 @@
 /* ─── Azure Wordle ───────────────────────────────────────────── */
 
+.wl-game-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin: 0;
+}
+
 .wl-root {
   display: flex;
   flex-direction: column;

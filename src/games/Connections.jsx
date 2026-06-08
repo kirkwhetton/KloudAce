@@ -98,11 +98,7 @@ export default function Connections({ card, onKnow, onSrsRate }) {
 
   return (
     <div className="connections-card">
-      <div className="card-meta">
-        <span className="mcq-category">{card.category}</span>
-        <span className={`difficulty-badge difficulty-badge--${card.difficulty}`}>{card.difficulty}</span>
-      </div>
-
+      {card.title && <p className="connections-game-title">{card.title}</p>}
       <p className="connections-instruction">Create four groups of four!</p>
 
       {/* Solved category rows */}

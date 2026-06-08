@@ -1,3 +1,12 @@
+.connections-game-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin: 0 0 0.5rem;
+}
+
 .connections-card {
   position: relative;
   background: var(--bg-card);

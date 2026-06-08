@@ -12,6 +12,8 @@ import Hotspot from "./cards/Hotspot";
 import Connections from "./games/Connections";
 import LandingPage from "./navigation/LandingPage";
 import Crossword from "./games/Crossword";
+import WordSearch from "./games/WordSearch";
+import AboutModal from "./components/AboutModal";
 import Wordle from "./games/Wordle";
 import PortalSim from "./labs/PortalSim";
 import TerraformLab from "./labs/TerraformLab";
@@ -22,7 +24,7 @@ import ExamSelect from "./navigation/ExamSelect";
 import UserProfile from "./auth/UserProfile";
 import AdminPanel from "./admin/AdminPanel";
 import { loadCardStatesRemote, saveCardStatesRemote } from "./lib/cardStates";
-import { loadExamCardsRemote, loadCardsByCategory, loadConnectionsCards, loadCrosswordCards, loadWordleCards, loadPortalCards, loadTerraformLabCards, SUPABASE_EXAMS, wakeSupabase } from "./lib/cardLoader";
+import { loadExamCardsRemote, loadCardsByCategory, loadConnectionsCards, loadCrosswordCards, loadWordleCards, loadWordSearchCards, loadPortalCards, loadTerraformLabCards, SUPABASE_EXAMS, wakeSupabase } from "./lib/cardLoader";
 import {
   loadSrsData, saveSrsData, loadSrsDataRemote, saveSrsDataRemote,
   updateSrsRecord, createSrsRecord, sortBySrs, isDue, getSrsStats,
@@ -110,6 +112,7 @@ function App() {
   });
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [showDevTools, setShowDevTools] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
   const [shuffleKey, setShuffleKey] = useState(0); // increment to force re-shuffle
   const [isExiting, setIsExiting] = useState(false); // true during exit animation
   const [isEntering, setIsEntering] = useState(false); // true during deck enter animation
@@ -537,8 +540,9 @@ function App() {
     } else if (exam.startsWith("GAMES:")) {
       setLoadingExam(exam);
       const gameType = exam.slice("GAMES:".length).split(":")[0];
-      const loader = gameType === "crossword" ? loadCrosswordCards
-                   : gameType === "wordle"    ? loadWordleCards
+      const loader = gameType === "crossword"  ? loadCrosswordCards
+                   : gameType === "wordle"     ? loadWordleCards
+                   : gameType === "wordsearch" ? loadWordSearchCards
                    : loadConnectionsCards;
       const cards = await fetchWithRetry(loader);
       setLoadingExam(null);
@@ -1812,6 +1816,13 @@ function App() {
                     onKnow={() => advance(true)}
                     onSrsRate={srsMode ? handleSrsRate : undefined}
                   />
+                ) : current.type === "wordsearch" ? (
+                  <WordSearch
+                    key={`${sessionKey}-${current.id}`}
+                    card={current}
+                    onKnow={() => advance(true)}
+                    onSrsRate={srsMode ? handleSrsRate : undefined}
+                  />
                 ) : current.type === "wordle" ? (
                   <Wordle
                     key={`${sessionKey}-${current.id}`}
@@ -1893,8 +1904,11 @@ function App() {
       )}
 
       <footer className="app-footer">
-        Built with React + Vite &nbsp;·&nbsp; KloudAce
+        Built with React + Vite &nbsp;·&nbsp; KloudAce &nbsp;·&nbsp;
+        <button className="app-footer-link" onClick={() => setShowAbout(true)}>About</button>
       </footer>
+
+      {showAbout && <AboutModal onClose={() => setShowAbout(false)} />}
     </div>
   );
 }

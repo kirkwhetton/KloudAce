@@ -121,6 +121,20 @@ export async function loadCrosswordCards() {
   return cards;
 }
 
+export async function loadWordSearchCards() {
+  const key = "__wordsearch__";
+  const cached = getCached(key);
+  if (cached) return cached;
+  const { data, error } = await supabase
+    .from("cards")
+    .select("id, exam, category, type, difficulty, is_free, created_at, data")
+    .eq("type", "wordsearch");
+  if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
+  const cards = data.map(reconstruct);
+  setCached(key, cards);
+  return cards;
+}
+
 export async function loadWordleCards() {
   const key = "__wordle__";
   const cached = getCached(key);

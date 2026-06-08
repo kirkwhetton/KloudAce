@@ -1342,6 +1342,23 @@ button .known-check {
   border-top: 1px solid var(--border-subtle);
 }
 
+.app-footer-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--text-muted);
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s;
+}
+
+.app-footer-link:hover {
+  color: var(--brand);
+}
+
 /* ── Sidebar ──────────────────────────────────────────────────── */
 .header-actions {
   display: flex;

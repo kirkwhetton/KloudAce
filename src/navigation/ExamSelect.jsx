@@ -272,8 +272,8 @@ const topicMap = flashcards.reduce((acc, c) => {
                 <div className="splash-choice-cta">Start exam study →</div>
               </button>
 
-              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #0369a1, #0c4a6e)" }} onClick={() => isGuest ? setShowGuestLabsModal(true) : navigateTo("labs")}>
-                <span className="splash-choice-icon" style={{ color: "#7dd3fc", background: "rgba(255,255,255,0.15)", borderColor: "rgba(125,211,252,0.4)" }}>
+              <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #7c3aed, #4c1d95)" }} onClick={() => isGuest ? setShowGuestLabsModal(true) : navigateTo("labs")}>
+                <span className="splash-choice-icon" style={{ color: "#ddd6fe", background: "rgba(255,255,255,0.15)", borderColor: "rgba(221,214,254,0.4)" }}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
                     <path d="M7 8h10M7 11h6"/>
@@ -572,6 +572,22 @@ const topicMap = flashcards.reduce((acc, c) => {
             <rect x="7" y="17" width="4" height="4" rx="0.5" fill="currentColor" opacity="0.5"/>
             <rect x="12" y="17" width="4" height="4" rx="0.5"/>
             <rect x="17" y="17" width="4" height="4" rx="0.5" fill="currentColor"/>
+          </svg>
+        ),
+      },
+      {
+        key: "GAMES:wordsearch",
+        title: "Word Search",
+        desc: "Find Azure terms hidden in the grid — words run in any direction. Click the first and last letter to mark a word.",
+        cta: "Play Word Search →",
+        from: "#0369a1", to: "#0c4a6e", icon: "#7dd3fc",
+        onPlay: () => onSelect(gameKey("GAMES:wordsearch")),
+        iconSvg: (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            <line x1="8" y1="11" x2="14" y2="11"/>
+            <line x1="11" y1="8" x2="11" y2="14"/>
           </svg>
         ),
       },

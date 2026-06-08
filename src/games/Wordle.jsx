@@ -170,6 +170,7 @@ export default function Wordle({ card, onKnow, onSrsRate }) {
 
   return (
     <div className="wl-root">
+      {card.title && <p className="wl-game-title">{card.title}</p>}
       {/* Clue */}
       <div className="wl-clue">
         <span className="wl-clue-label">Clue</span>
