@@ -50,10 +50,6 @@
   border-radius: 999px;
 }
 
-.lp-nav-beta--left {
-  margin-right: auto;
-}
-
 .lp-nav-pricing {
   color: rgba(255,255,255,0.85);
   font-size: 0.85rem;
@@ -131,6 +127,22 @@
   top: 79%;
   left: 57%;
   transform: translate(-50%, -50%);
+}
+
+.lp-beta-badge {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 1.5rem;
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.85);
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.5rem 1.4rem;
+  border-radius: 999px;
 }
 
 .lp-hero-brand {

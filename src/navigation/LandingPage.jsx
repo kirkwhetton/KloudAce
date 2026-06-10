@@ -146,7 +146,6 @@ export default function LandingPage({ onGetStarted }) {
     <div className="lp-root">
       {/* ── Nav ── */}
       <nav className="lp-nav">
-        <span className="lp-nav-beta lp-nav-beta--left">Beta</span>
         <Link className="lp-nav-pricing" to="/pricing">Pricing</Link>
         <button className="lp-nav-login" onClick={onGetStarted}>Log in</button>
       </nav>
@@ -167,6 +166,7 @@ export default function LandingPage({ onGetStarted }) {
             <div className="lp-hero-logo-text">
               <span className="lp-hero-brand">Kloud<span className="lp-hero-ace">Ace</span></span>
             </div>
+            <span className="lp-beta-badge">Beta</span>
           </div>
 
           <h1 className="lp-hero-h1">The smartest way<br />to pass your cloud exam</h1>
