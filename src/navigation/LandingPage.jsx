@@ -67,7 +67,7 @@ const FEATURES = [
       </svg>
     ),
     title: "Free to Start",
-    desc: "Core AZ-900 cards, all three games, exam mode, and streak tracking are free — no card required, no time limit.",
+    desc: "Core AZ-900 cards, all four games, exam mode, and streak tracking are free — no card required, no time limit.",
   },
 ];
 
