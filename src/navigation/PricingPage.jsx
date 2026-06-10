@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loadExamCardCounts } from "../lib/cardLoader";
-import LegalModal from "../components/LegalModal";
 import UpgradeModal from "../components/UpgradeModal";
 import "./LandingPage.css";
 
@@ -35,7 +34,6 @@ const BUSINESS_FEATURES = [
 export default function PricingPage() {
   const navigate = useNavigate();
   const [examCounts, setExamCounts] = useState(null);
-  const [legal, setLegal] = useState(null); // "terms" | "privacy" | null
   const [showUpgrade, setShowUpgrade] = useState(false);
 
   useEffect(() => {
@@ -130,15 +128,14 @@ export default function PricingPage() {
         <div className="lp-footer-links">
           <Link className="lp-footer-link" to="/">Home</Link>
           <span className="lp-footer-sep">·</span>
-          <button className="lp-footer-link" onClick={() => setLegal("terms")}>Terms of Service</button>
+          <Link className="lp-footer-link" to="/terms">Terms of Service</Link>
           <span className="lp-footer-sep">·</span>
-          <button className="lp-footer-link" onClick={() => setLegal("privacy")}>Privacy Policy</button>
+          <Link className="lp-footer-link" to="/privacy">Privacy Policy</Link>
           <span className="lp-footer-sep">·</span>
           <a className="lp-footer-link" href="mailto:hello@kloudace.com">Contact</a>
         </div>
       </footer>
 
-      {legal && <LegalModal initialTab={legal} onClose={() => setLegal(null)} />}
       {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
     </div>
   );

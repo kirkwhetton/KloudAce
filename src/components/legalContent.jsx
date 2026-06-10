@@ -1,11 +1,8 @@
-import { useState } from "react";
-import "./LegalModal.css";
+export const LAST_UPDATED = "10 June 2026";
+export const CONTACT_EMAIL = "hello@kloudace.com";
+export const COMPANY = "KloudAce";
 
-const LAST_UPDATED = "5 June 2026";
-const CONTACT_EMAIL = "hello@kloudace.com";
-const COMPANY = "KloudAce";
-
-function TermsContent() {
+export function TermsContent() {
   return (
     <div className="legal-body">
       <p className="legal-updated">Last updated: {LAST_UPDATED}</p>
@@ -46,7 +43,7 @@ function TermsContent() {
   );
 }
 
-function PrivacyContent() {
+export function PrivacyContent() {
   return (
     <div className="legal-body">
       <p className="legal-updated">Last updated: {LAST_UPDATED}</p>
@@ -59,7 +56,7 @@ function PrivacyContent() {
         <li><strong>Account data:</strong> email address and display name provided at registration.</li>
         <li><strong>Study progress:</strong> which cards you have studied, flagged, or mastered — stored in your browser's localStorage and linked to your account in our database.</li>
         <li><strong>Usage data:</strong> exam selections, streak activity, and daily goal completions, used to power your readiness dashboard.</li>
-        <li><strong>Payment data:</strong> we do not store card details. Payments are handled entirely by LemonSqueezy; we receive only an order confirmation and your email address from them.</li>
+        <li><strong>Payment data:</strong> we do not store card details. If you subscribe to a paid plan, payments are handled entirely by our payment processor; we receive only an order confirmation and your email address from them.</li>
       </ul>
 
       <h3>3. How we use your data</h3>
@@ -77,7 +74,7 @@ function PrivacyContent() {
       <ul>
         <li><strong>Supabase</strong> — authentication and database (EU data centres).</li>
         <li><strong>Microsoft Azure</strong> — static web app hosting (UK South region).</li>
-        <li><strong>LemonSqueezy</strong> — payment processing (Merchant of Record).</li>
+        <li><strong>Payment processor</strong> — used for Premium/Business subscriptions (Merchant of Record), once available.</li>
       </ul>
       <p>We do not sell or share your personal data with any third party for marketing purposes.</p>
 
@@ -98,37 +95,6 @@ function PrivacyContent() {
 
       <h3>11. Changes to this policy</h3>
       <p>We will notify registered users by email of material changes at least 14 days before they take effect.</p>
-    </div>
-  );
-}
-
-export default function LegalModal({ initialTab = "terms", onClose }) {
-  const [tab, setTab] = useState(initialTab);
-
-  return (
-    <div className="legal-overlay" onClick={onClose}>
-      <div className="legal-modal" onClick={e => e.stopPropagation()}>
-        <div className="legal-header">
-          <div className="legal-tabs">
-            <button
-              className={`legal-tab${tab === "terms" ? " active" : ""}`}
-              onClick={() => setTab("terms")}
-            >
-              Terms of Service
-            </button>
-            <button
-              className={`legal-tab${tab === "privacy" ? " active" : ""}`}
-              onClick={() => setTab("privacy")}
-            >
-              Privacy Policy
-            </button>
-          </div>
-          <button className="legal-close" onClick={onClose} aria-label="Close">✕</button>
-        </div>
-        <div className="legal-content">
-          {tab === "terms" ? <TermsContent /> : <PrivacyContent />}
-        </div>
-      </div>
     </div>
   );
 }

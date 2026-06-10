@@ -614,6 +614,43 @@
   cursor: not-allowed;
 }
 
+/* ── Legal pages (Terms / Privacy) ── */
+.legal-page-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+}
+
+.legal-page-tab {
+  padding: 0.55rem 1.1rem;
+  border-radius: 0.65rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.08);
+  border: 1.5px solid rgba(255,255,255,0.2);
+  transition: background 0.15s, color 0.15s;
+}
+
+.legal-page-tab:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.15);
+}
+
+.legal-page-tab.active {
+  color: #003f6e;
+  background: #fff;
+  border-color: #fff;
+}
+
+.legal-page-content {
+  background: #fff;
+  border-radius: 1.25rem;
+  padding: 2rem;
+  max-width: 760px;
+}
+
 /* ── Footer CTA ── */
 .lp-footer-cta {
   background: linear-gradient(135deg, #0078d4, #003f6e);
