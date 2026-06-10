@@ -21,7 +21,7 @@ const FEATURES = [
         <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
       </svg>
     ),
-    title: "9 Card Types",
+    title: "10 Card Types",
     desc: "Flashcards, MCQ, multi-select, true/false, hotspot diagrams, scenario tasks, script simulators, and more — matched to the real exam format.",
   },
   {
@@ -40,7 +40,7 @@ const FEATURES = [
       </svg>
     ),
     title: "Learning Games",
-    desc: "Connections puzzles, Azure Wordle, and themed crosswords turn revision into something you actually want to do.",
+    desc: "Connections puzzles, Azure Wordle, themed crosswords, and word searches turn revision into something you actually want to do.",
   },
   {
     icon: (

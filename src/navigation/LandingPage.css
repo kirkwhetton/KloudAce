@@ -371,11 +371,11 @@
 
 /* ── Audience (who it's for) ── */
 .lp-audience-intro {
-  text-align: center;
+  text-align: left;
   color: var(--lp-text-secondary, #6b7280);
   font-size: 1.05rem;
   max-width: 600px;
-  margin: 0 auto 2.5rem;
+  margin: 0 0 2.5rem;
   line-height: 1.65;
 }
 
