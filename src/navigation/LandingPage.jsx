@@ -314,6 +314,30 @@ export default function LandingPage({ onGetStarted }) {
             ))}
             <div className="lp-exam-card lp-exam-card--soon">
               <div className="lp-exam-top">
+                <span className="lp-exam-code">AZ-400</span>
+                <span className="lp-exam-soon-badge">In development</span>
+              </div>
+              <div className="lp-exam-name">DevOps Engineer Expert</div>
+              <p className="lp-exam-desc">CI/CD pipelines, source control strategy, infrastructure as code, and dependency management.</p>
+            </div>
+            <div className="lp-exam-card lp-exam-card--soon">
+              <div className="lp-exam-top">
+                <span className="lp-exam-code">AZ-800</span>
+                <span className="lp-exam-soon-badge">In development</span>
+              </div>
+              <div className="lp-exam-name">Windows Server Hybrid Admin</div>
+              <p className="lp-exam-desc">Core infrastructure — AD DS, storage, compute, and on-premises to Azure connectivity.</p>
+            </div>
+            <div className="lp-exam-card lp-exam-card--soon">
+              <div className="lp-exam-top">
+                <span className="lp-exam-code">AZ-801</span>
+                <span className="lp-exam-soon-badge">In development</span>
+              </div>
+              <div className="lp-exam-name">Windows Server Hybrid Advanced</div>
+              <p className="lp-exam-desc">Secure, monitor, and disaster-recover hybrid Windows Server infrastructure.</p>
+            </div>
+            <div className="lp-exam-card lp-exam-card--soon">
+              <div className="lp-exam-top">
                 <span className="lp-exam-code">AWS</span>
                 <span className="lp-exam-soon-badge">Coming soon</span>
               </div>
