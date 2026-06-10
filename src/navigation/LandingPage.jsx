@@ -188,7 +188,7 @@ export default function LandingPage({ onGetStarted }) {
             <div className="lp-stat-div"/>
             <div className="lp-stat"><span className="lp-stat-n">4</span><span className="lp-stat-l">Certifications</span></div>
             <div className="lp-stat-div"/>
-            <div className="lp-stat"><span className="lp-stat-n">9</span><span className="lp-stat-l">Card types</span></div>
+            <div className="lp-stat"><span className="lp-stat-n">10</span><span className="lp-stat-l">Card types</span></div>
             <div className="lp-stat-div"/>
             <div className="lp-stat"><span className="lp-stat-n">4</span><span className="lp-stat-l">Learning games</span></div>
             <div className="lp-stat-div"/>

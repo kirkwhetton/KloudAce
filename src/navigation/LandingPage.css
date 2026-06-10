@@ -682,6 +682,85 @@
   max-width: 760px;
 }
 
+/* ── Contact page ── */
+.lp-contact-inner {
+  max-width: 900px;
+}
+
+.lp-contact-intro {
+  max-width: 620px;
+  font-size: 1.05rem;
+}
+
+.lp-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  margin: 2rem 0 2.5rem;
+}
+
+.lp-contact-card {
+  background: rgba(255,255,255,0.08);
+  border: 1.5px solid rgba(255,255,255,0.18);
+  border-radius: 1.1rem;
+  padding: 1.5rem;
+}
+
+.lp-contact-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  background: rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.lp-contact-icon svg {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.lp-contact-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.4rem;
+}
+
+.lp-contact-card-desc {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.7);
+  margin: 0;
+}
+
+.lp-contact-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #fff;
+  color: #003f6e;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.85rem 1.75rem;
+  border-radius: 0.75rem;
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.lp-contact-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.lp-contact-cta svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
 /* ── Footer CTA ── */
 .lp-footer-cta {
   background: linear-gradient(135deg, #0078d4, #003f6e);
