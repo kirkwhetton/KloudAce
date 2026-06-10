@@ -203,7 +203,7 @@ export default function LandingPage({ onGetStarted }) {
             <div className="lp-section-label">Our mission</div>
             <h2 className="lp-section-h2">Add KloudAce to your study arsenal</h2>
             <p className="lp-mission-body">
-              KloudAce is designed to work alongside your existing study tools — not replace them. Keep watching your video courses, reading the docs, and using your favourite question banks. Add KloudAce to reinforce what you're learning through spaced repetition, exam-realistic scenarios, hands-on labs, and games that make terminology actually stick.
+              KloudAce fits into your study routine however you like to learn — whether that's video courses or official docs. Use it to reinforce what you're learning through spaced repetition, exam-realistic scenarios, hands-on labs, and games that make terminology actually stick.
             </p>
             <button className="lp-mission-link" onClick={() => setShowAbout(true)}>
               Read more about our approach
