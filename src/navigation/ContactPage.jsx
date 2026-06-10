@@ -21,13 +21,21 @@ export default function ContactPage() {
         <div className="lp-section-inner">
           <div className="lp-section-label">Contact</div>
           <h2 className="lp-section-h2">Get in touch</h2>
-          <div className="legal-body">
-            <p>
-              Got a question, found a bug, or want to suggest a feature? We'd love to hear from you.
-            </p>
-            <p>
-              Email us at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> and we'll get back to you as soon as we can.
-            </p>
+          <div className="legal-page-content">
+            <div className="legal-body">
+              <p>
+                Got a question, found a bug, or want to suggest a feature? We'd love to hear from you.
+              </p>
+              <ul>
+                <li>Account or billing issues</li>
+                <li>Bug reports and technical problems</li>
+                <li>Feature requests and feedback</li>
+                <li>Anything else on your mind</li>
+              </ul>
+              <p>
+                Email us at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> and we'll get back to you as soon as we can.
+              </p>
+            </div>
           </div>
         </div>
       </section>
