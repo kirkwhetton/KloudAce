@@ -14,8 +14,39 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  gap: 1.25rem;
   padding: 1.25rem 2rem;
   z-index: 10;
+}
+
+.lp-nav-brand {
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-decoration: none;
+}
+
+.lp-nav-brand .lp-nav-brand-ace {
+  font-weight: 800;
+  margin-left: 0.1em;
+  color: #bfe3ff;
+}
+
+.lp-nav-pricing {
+  color: rgba(255,255,255,0.85);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.lp-nav-pricing:hover {
+  color: #fff;
 }
 
 .lp-nav-login {

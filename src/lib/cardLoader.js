@@ -28,6 +28,22 @@ export function bustCardCache(key) {
 // so the deck never silently truncates as content grows.
 const ALL_ROWS = { from: 0, to: 9999 };
 
+// PostgREST caps each response at its server-side max-rows setting (1000 by
+// default) regardless of the requested range, so queries spanning more than
+// that many rows must be paginated in batches.
+const PAGE_SIZE = 1000;
+
+async function selectAllRows(buildQuery) {
+  const rows = [];
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const { data, error } = await buildQuery().range(from, from + PAGE_SIZE - 1);
+    if (error) return { data: null, error };
+    rows.push(...data);
+    if (data.length < PAGE_SIZE) break;
+  }
+  return { data: rows, error: null };
+}
+
 // ─── Wake ping ───────────────────────────────────────────────────
 // Retries with backoff so a cold-start Supabase instance is warmed
 // before the first real card load arrives.
@@ -78,10 +94,9 @@ export async function loadCardsByCategory(category) {
 export async function loadAllTopics() {
   const cached = getCached("__topics__");
   if (cached) return cached;
-  const { data, error } = await supabase
-    .from("cards")
-    .select("category")
-    .range(ALL_ROWS.from, ALL_ROWS.to);
+  const { data, error } = await selectAllRows(() =>
+    supabase.from("cards").select("category")
+  );
   if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
   const topicMap = {};
   for (const { category } of data) {
@@ -182,10 +197,9 @@ export async function loadPortalCards() {
 export async function loadExamCardCounts() {
   const cached = getCached("__exam_counts__");
   if (cached) return cached;
-  const { data, error } = await supabase
-    .from("cards")
-    .select("exam")
-    .range(ALL_ROWS.from, ALL_ROWS.to);
+  const { data, error } = await selectAllRows(() =>
+    supabase.from("cards").select("exam")
+  );
   if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
   const counts = {};
   for (const { exam } of data) counts[exam] = (counts[exam] || 0) + 1;

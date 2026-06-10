@@ -20,7 +20,7 @@ function TermsContent() {
       <p>A Free tier is available with no payment required. It includes a subset of content as described on the pricing page. A Premium subscription unlocks all content across all exams. Premium features are clearly labelled in the application.</p>
 
       <h3>4. Payment and subscriptions</h3>
-      <p>Premium subscriptions are billed monthly or annually as selected at checkout. Payments are processed by LemonSqueezy, our Merchant of Record, who handles all applicable taxes including UK VAT and EU VAT. Prices displayed include tax where applicable. You may cancel your subscription at any time through your account settings; access continues until the end of the paid billing period. No partial refunds are provided except where required by applicable law.</p>
+      <p>Premium subscriptions are not currently available for purchase. When Premium launches, subscriptions will be billed monthly or annually as selected at checkout, with payments processed by a third-party Merchant of Record who will handle all applicable taxes including UK VAT and EU VAT. You will be able to cancel at any time through your account settings, with access continuing until the end of the paid billing period. No partial refunds will be provided except where required by applicable law.</p>
 
       <h3>5. Acceptable use</h3>
       <p>You may not: scrape, copy, or redistribute our content; share account credentials; attempt to circumvent premium access controls; use the service for any unlawful purpose; or interfere with the service's infrastructure. Violation may result in immediate account termination.</p>

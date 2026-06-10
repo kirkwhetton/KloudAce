@@ -1,5 +1,7 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import react from "react";
+import { Routes, Route } from "react-router-dom";
+import PricingPage from "./navigation/PricingPage";
 import CustomDecks from "./components/CustomDecks";
 import UpgradeModal from "./components/UpgradeModal";
 import Flashcard from "./cards/Flashcard";
@@ -50,7 +52,7 @@ function shuffle(arr) {
   return a;
 }
 
-function App() {
+function AppContent() {
   const { isAuthenticated, user, logout, loading, isGuest } = useAuthContext();
 
   // ── Per-user storage keys ──────────────────────────────────────
@@ -1860,7 +1862,7 @@ function App() {
                     hideDifficulty={hideDifficulty}
                     onSaveCard={selectedExam?.startsWith("CUSTOM:") ? (updated) => handleInlineCardSave(current, updated) : undefined}
                     decks={selectedExam?.startsWith("CUSTOM:") ? customDecks : undefined}
-                    displayId={current.displayId || undefined}
+                    displayId={current.displayId || current.id || undefined}
                   />
                 )}
                 {!isGameMode && srsMode && (() => {
@@ -1910,6 +1912,15 @@ function App() {
 
       {showAbout && <AboutModal onClose={() => setShowAbout(false)} />}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/pricing" element={<PricingPage />} />
+      <Route path="/*" element={<AppContent />} />
+    </Routes>
   );
 }
 

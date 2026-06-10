@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { loadExamCardCounts } from "../lib/cardLoader";
 import LegalModal from "../components/LegalModal";
 import UpgradeModal from "../components/UpgradeModal";
@@ -138,6 +139,7 @@ export default function LandingPage({ onGetStarted }) {
     <div className="lp-root">
       {/* ── Nav ── */}
       <nav className="lp-nav">
+        <Link className="lp-nav-pricing" to="/pricing">Pricing</Link>
         <button className="lp-nav-login" onClick={onGetStarted}>Log in</button>
       </nav>
 
@@ -384,6 +386,8 @@ export default function LandingPage({ onGetStarted }) {
         <p>© {new Date().getFullYear()} KloudAce. Microsoft Azure, Amazon Web Services, and Google Cloud are trademarks of their respective owners. KloudAce is not affiliated with or endorsed by Microsoft, Amazon, or Google.</p>
         <div className="lp-footer-links">
           <button className="lp-footer-link" onClick={() => setShowAbout(true)}>About</button>
+          <span className="lp-footer-sep">·</span>
+          <Link className="lp-footer-link" to="/pricing">Pricing</Link>
           <span className="lp-footer-sep">·</span>
           <button className="lp-footer-link" onClick={() => setLegal("terms")}>Terms of Service</button>
           <span className="lp-footer-sep">·</span>
