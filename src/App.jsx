@@ -363,7 +363,7 @@ function AppContent() {
               (c) => c.type === gameType && (!examFilter || c.exam === examFilter)
             );
           })()
-        : baseCards.filter((c) => c.exam === selectedExam && c.type !== "connections" && c.type !== "crossword" && c.type !== "portal")
+        : baseCards.filter((c) => c.exam === selectedExam && c.type !== "connections" && c.type !== "crossword" && c.type !== "portal" && c.type !== "wordle" && c.type !== "wordsearch")
   ).filter((c) => isPremium || c.exam === "AZ-900" || FREE_CARD_IDS.has(c.id) || selectedExam?.startsWith("CUSTOM:") || selectedExam?.startsWith("GAMES:") || selectedExam?.startsWith("LAB:") || selectedExam?.startsWith("TERRAFORM:"))
   .slice(0, isGuest && selectedExam !== "AZ-900" && !selectedExam?.startsWith("CUSTOM:") && !selectedExam?.startsWith("GAMES:") && !selectedExam?.startsWith("LAB:") && !selectedExam?.startsWith("TERRAFORM:") ? 30 : Infinity);
 
@@ -445,7 +445,7 @@ function AppContent() {
   const CATEGORIES = [
     ...(examDeck.some((c) => flagged.has(c.id)) ? ["🚩 Flagged"] : []),
     "All",
-    ...new Set(examDeck.map((c) => c.category)),
+    ...new Set(examDeck.map((c) => c.category).filter((cat) => cat !== "Games")),
   ];
   const current = deck[index];
 
