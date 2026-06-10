@@ -6,6 +6,14 @@ import VNetList            from './blades/VNetList';
 import VNetCreate          from './blades/VNetCreate';
 import VNetSubnetAdd       from './blades/VNetSubnetAdd';
 import TmProfile           from './blades/TmProfile';
+import LoadBalancerList    from './blades/LoadBalancerList';
+import LbCreate            from './blades/LbCreate';
+import PublicIpCreate      from './blades/PublicIpCreate';
+import ResourceOverview    from './blades/ResourceOverview';
+import {
+  HomeIcon, ResourceGroupIcon, VirtualNetworkIcon, LoadBalancerIcon,
+  TrafficManagerIcon, CostManagementIcon, MonitorIcon, SettingsIcon,
+} from './AzureIcons';
 
 const BLADE_REGISTRY = {
   'rg-list':         ResourceGroupList,
@@ -14,6 +22,10 @@ const BLADE_REGISTRY = {
   'vnet-create':     VNetCreate,
   'vnet-subnet-add': VNetSubnetAdd,
   'tm-profile':      TmProfile,
+  'lb-list':         LoadBalancerList,
+  'lb-create':       LbCreate,
+  'public-ip-create': PublicIpCreate,
+  'resource-overview': ResourceOverview,
 };
 
 // Which nav item lights up for each initial blade
@@ -21,65 +33,18 @@ const BLADE_NAV_MAP = {
   'rg-list':    'rg',
   'vnet-list':  'network',
   'tm-profile': 'tm',
+  'lb-list':    'lb',
 };
 
 const NAV_ITEMS = [
-  {
-    id: 'home', label: 'Home',
-    icon: (
-      <svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18" aria-hidden="true">
-        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
-      </svg>
-    ),
-  },
-  {
-    id: 'rg', label: 'Resource groups',
-    icon: (
-      <svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18" aria-hidden="true">
-        <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
-      </svg>
-    ),
-  },
-  {
-    id: 'network', label: 'Virtual networks',
-    icon: (
-      <svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18" aria-hidden="true">
-        <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"/>
-      </svg>
-    ),
-  },
-  {
-    id: 'tm', label: 'Traffic Manager',
-    icon: (
-      <svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18" aria-hidden="true">
-        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clipRule="evenodd"/>
-      </svg>
-    ),
-  },
-  {
-    id: 'costs', label: 'Cost Management + Billing',
-    icon: (
-      <svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18" aria-hidden="true">
-        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd"/>
-      </svg>
-    ),
-  },
-  {
-    id: 'monitor', label: 'Monitor',
-    icon: (
-      <svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18" aria-hidden="true">
-        <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11 4a1 1 0 10-2 0v4a1 1 0 102 0V7zm-3 1a1 1 0 10-2 0v3a1 1 0 102 0V8zM8 9a1 1 0 00-2 0v2a1 1 0 102 0V9z" clipRule="evenodd"/>
-      </svg>
-    ),
-  },
-  {
-    id: 'settings', label: 'Settings',
-    icon: (
-      <svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18" aria-hidden="true">
-        <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd"/>
-      </svg>
-    ),
-  },
+  { id: 'home',     label: 'Home',                       icon: <HomeIcon /> },
+  { id: 'rg',       label: 'Resource groups',            icon: <ResourceGroupIcon /> },
+  { id: 'network',  label: 'Virtual networks',           icon: <VirtualNetworkIcon /> },
+  { id: 'lb',       label: 'Load balancers',             icon: <LoadBalancerIcon /> },
+  { id: 'tm',       label: 'Traffic Manager',            icon: <TrafficManagerIcon /> },
+  { id: 'costs',    label: 'Cost Management + Billing',  icon: <CostManagementIcon /> },
+  { id: 'monitor',  label: 'Monitor',                    icon: <MonitorIcon /> },
+  { id: 'settings', label: 'Settings',                   icon: <SettingsIcon /> },
 ];
 
 // Parses **bold** and `code` within step text
@@ -102,7 +67,35 @@ export default function PortalSim({ card, onKnow, onSrsRate }) {
   const [result,    setResult]    = useState(null);
   const [hintsUsed, setHintsUsed] = useState(false);
   const [showHint,  setShowHint]  = useState(false);
+  const [helpWidth, setHelpWidth] = useState(() => {
+    const stored = Number(localStorage.getItem('psim-help-width'));
+    return stored >= 220 && stored <= 640 ? stored : 290;
+  });
   const bladeAreaRef = useRef(null);
+  const rootRef = useRef(null);
+
+  const handleResizeStart = useCallback((e) => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startWidth = helpWidth;
+    const rootRect = rootRef.current?.getBoundingClientRect();
+    const maxWidth = rootRect ? Math.min(640, rootRect.width - 200) : 640;
+
+    const handleMove = (moveEvent) => {
+      const next = Math.min(maxWidth, Math.max(220, startWidth - (moveEvent.clientX - startX)));
+      setHelpWidth(next);
+    };
+    const handleUp = () => {
+      document.removeEventListener('mousemove', handleMove);
+      document.removeEventListener('mouseup', handleUp);
+      setHelpWidth(current => {
+        localStorage.setItem('psim-help-width', String(current));
+        return current;
+      });
+    };
+    document.addEventListener('mousemove', handleMove);
+    document.addEventListener('mouseup', handleUp);
+  }, [helpWidth]);
 
   useEffect(() => {
     if (bladeAreaRef.current) {
@@ -141,7 +134,7 @@ export default function PortalSim({ card, onKnow, onSrsRate }) {
   };
 
   return (
-    <div className="psim-root">
+    <div className="psim-root" ref={rootRef}>
 
       {/* ── Left: Azure portal shell ───────────────────────── */}
       <div className="psim-portal">
@@ -256,8 +249,17 @@ export default function PortalSim({ card, onKnow, onSrsRate }) {
         </div>
       </div>
 
+      {/* ── Resize handle ───────────────────────────────────── */}
+      <div
+        className="psim-resize-handle"
+        onMouseDown={handleResizeStart}
+        role="separator"
+        aria-orientation="vertical"
+        aria-label="Resize lab guide panel"
+      />
+
       {/* ── Right: lab instructions panel ──────────────────── */}
-      <aside className="psim-instructions" aria-label="Lab instructions">
+      <aside className="psim-instructions" style={{ width: helpWidth }} aria-label="Lab instructions">
         <div className="psim-instructions-header">
           <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14" aria-hidden="true">
             <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd"/>

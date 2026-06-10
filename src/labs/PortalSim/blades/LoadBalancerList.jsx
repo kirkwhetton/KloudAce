@@ -1,34 +1,31 @@
 import BladeShell from '../BladeShell';
-import { ResourceGroupIcon } from '../AzureIcons';
+import { LoadBalancerIcon } from '../AzureIcons';
 
-const EXISTING_RGS = [
-  { name: 'rg-dev-westus2',    subscription: 'Dev / Test',   location: 'West US 2', resources: 4 },
-  { name: 'rg-infra-eastus',   subscription: 'Production',   location: 'East US',   resources: 11 },
-  { name: 'rg-monitoring',     subscription: 'Production',   location: 'East US 2', resources: 6 },
+const EXISTING_LBS = [
+  { name: 'lb-hub-westus2',  rg: 'rg-networking',     location: 'West US 2', sku: 'Standard', type: 'Public',   frontendIp: '20.55.112.40',   backendPools: 1, rules: 2 },
+  { name: 'lb-mgmt-eastus',  rg: 'rg-management',     location: 'East US',   sku: 'Basic',    type: 'Internal', frontendIp: '10.20.0.10',     backendPools: 1, rules: 1 },
 ];
 
-export default function ResourceGroupList({ onOpen, onClose, completed }) {
-  const openOverview = (rg) => onOpen('resource-overview', {
-    title: rg.name,
-    subtitle: 'Resource group',
-    icon: <ResourceGroupIcon size={22} />,
+export default function LoadBalancerList({ onOpen, onClose, completed }) {
+  const openOverview = (lb) => onOpen('resource-overview', {
+    title: lb.name,
+    subtitle: 'Load balancer',
+    icon: <LoadBalancerIcon size={22} />,
     essentials: [
-      { key: 'Subscription',  value: rg.subscription },
-      { key: 'Location',      value: rg.location },
-      { key: 'Resources',     value: rg.resources },
-      { key: 'Deployments',   value: '3 succeeded' },
+      { key: 'Resource group',   value: lb.rg },
+      { key: 'Location',         value: lb.location },
+      { key: 'SKU',              value: lb.sku },
+      { key: 'Type',             value: lb.type },
+      { key: 'Frontend IP address', value: lb.frontendIp },
+      { key: 'Backend pools',    value: lb.backendPools },
+      { key: 'Load balancing rules', value: lb.rules },
     ],
   });
 
   return (
-    <BladeShell title="Resource groups" icon={<ResourceGroupIcon size={22} />} width={700} onClose={onClose}>
-      {/* Command bar */}
+    <BladeShell title="Load balancers" icon={<LoadBalancerIcon size={22} />} width={780} onClose={onClose}>
       <div className="psb-commandbar">
-        <button
-          className="psb-cmd psb-cmd--primary"
-          onClick={() => onOpen('rg-create')}
-          disabled={completed}
-        >
+        <button className="psb-cmd psb-cmd--primary" onClick={() => onOpen('lb-create')} disabled={completed}>
           <svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13" aria-hidden="true">
             <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd"/>
           </svg>
@@ -46,45 +43,41 @@ export default function ResourceGroupList({ onOpen, onClose, completed }) {
           </svg>
           Refresh
         </button>
-        <button className="psb-cmd">
-          <svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13" aria-hidden="true">
-            <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
-          </svg>
-          Manage view
-        </button>
       </div>
 
-      {/* Filter row */}
       <div className="psb-filterbar">
-        <input className="psb-filter-input" placeholder="Filter by name…" />
+        <input className="psb-filter-input" placeholder="Filter by name…" readOnly />
         <select className="psb-filter-select"><option>Subscription == all</option></select>
+        <select className="psb-filter-select"><option>Resource group == all</option></select>
         <select className="psb-filter-select"><option>Location == all</option></select>
         <button className="psb-cmd psb-cmd--sm">⊕ Add filter</button>
       </div>
 
-      {/* Table */}
       <table className="psb-table">
         <thead>
           <tr>
             <th style={{ width: 24 }}><input type="checkbox" /></th>
             <th>Name ↑</th>
-            <th>Subscription</th>
+            <th>Resource group</th>
             <th>Location</th>
+            <th>SKU</th>
+            <th>Type</th>
           </tr>
         </thead>
         <tbody>
-          {EXISTING_RGS.map(rg => (
-            <tr key={rg.name}>
+          {EXISTING_LBS.map(lb => (
+            <tr key={lb.name}>
               <td><input type="checkbox" /></td>
-              <td><button className="psb-link" onClick={() => openOverview(rg)}>{rg.name}</button></td>
-              <td>{rg.subscription}</td>
-              <td>{rg.location}</td>
+              <td><button className="psb-link" onClick={() => openOverview(lb)}>{lb.name}</button></td>
+              <td>{lb.rg}</td>
+              <td>{lb.location}</td>
+              <td>{lb.sku}</td>
+              <td>{lb.type}</td>
             </tr>
           ))}
         </tbody>
       </table>
-
-      <p className="psb-table-footer">Showing 1 to {EXISTING_RGS.length} of {EXISTING_RGS.length} records</p>
+      <p className="psb-table-footer">Showing 1 to {EXISTING_LBS.length} of {EXISTING_LBS.length} records</p>
     </BladeShell>
   );
 }

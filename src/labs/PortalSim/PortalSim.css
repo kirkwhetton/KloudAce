@@ -22,12 +22,33 @@
   overflow: hidden;
 }
 
+/* ── Drag handle between portal and lab guide ── */
+.psim-resize-handle {
+  width: 6px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  background: transparent;
+  position: relative;
+}
+.psim-resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 2px;
+  width: 2px;
+  background: var(--border-card);
+}
+.psim-resize-handle:hover::after,
+.psim-resize-handle:active::after {
+  background: var(--accent, #0078d4);
+}
+
 /* ── Right: lab instructions panel ── */
 .psim-instructions {
   width: 290px;
   flex-shrink: 0;
   background: var(--bg-card, #fff);
-  border-left: 1px solid var(--border-card);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1221,6 +1242,44 @@
   min-width: 18px;
   height: 16px;
   margin-left: 0.3rem;
+}
+
+/* ── Generic read-only resource overview blade ── */
+.psb-essentials {
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.psb-essential-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.psb-essential-key {
+  color: var(--text-muted);
+  min-width: 150px;
+  flex-shrink: 0;
+}
+
+.psb-essential-val {
+  color: var(--text-primary);
+  font-weight: 400;
+}
+
+.psb-overview-section {
+  padding: 1rem;
+}
+
+.psb-overview-section-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem;
 }
 
 /* ── Fault-cell — clickable potential fault indicator ── */

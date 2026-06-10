@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { TrafficManagerIcon } from '../AzureIcons';
 
 // ── Hard-coded scenario: priority routing fault ──────────────────
 // East US should be Priority 1 (primary) but is misconfigured as
@@ -26,7 +27,7 @@ const MonitorDot = ({ status }) => {
   );
 };
 
-export default function TmProfile({ onSubmit, completed }) {
+export default function TmProfile({ onOpen, onSubmit, completed }) {
   const [selected, setSelected]   = useState(null);
   const [activeTab, setActiveTab] = useState('endpoints');
 
@@ -35,6 +36,20 @@ export default function TmProfile({ onSubmit, completed }) {
     setSelected(faultId);
     onSubmit({ faultId });
   };
+
+  const openEndpointOverview = (ep) => onOpen('resource-overview', {
+    title: ep.name,
+    subtitle: 'Traffic Manager endpoint',
+    icon: <TrafficManagerIcon size={22} />,
+    essentials: [
+      { key: 'Type',           value: ep.type },
+      { key: 'Status',         value: ep.status },
+      { key: 'Monitor status', value: ep.monitorStatus },
+      { key: 'Target resource', value: ep.target },
+      { key: 'Priority',       value: ep.priority },
+      { key: 'Weight',         value: ep.weight },
+    ],
+  });
 
   const faultCell = (faultId, children) => (
     <span
@@ -55,9 +70,7 @@ export default function TmProfile({ onSubmit, completed }) {
       {/* Blade header */}
       <div className="ps-blade-header" style={{ paddingBottom: '0.6rem' }}>
         <span className="ps-blade-header-icon">
-          <svg viewBox="0 0 20 20" fill="#0078d4" width="22" height="22" aria-hidden="true">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clipRule="evenodd"/>
-          </svg>
+          <TrafficManagerIcon size={22} />
         </span>
         <div className="ps-blade-header-text">
           <h2 className="ps-blade-title">{PROFILE.name}</h2>
@@ -151,7 +164,7 @@ export default function TmProfile({ onSubmit, completed }) {
                 {ENDPOINTS.map(ep => (
                   <tr key={ep.id}>
                     <td><input type="checkbox" /></td>
-                    <td><button className="psb-link">{ep.name}</button></td>
+                    <td><button className="psb-link" onClick={() => openEndpointOverview(ep)}>{ep.name}</button></td>
                     <td>
                       {faultCell(`${ep.id}-status`,
                         <span style={{ color: ep.status === 'Enabled' ? '#107c10' : '#797979' }}>{ep.status}</span>

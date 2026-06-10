@@ -1,14 +1,51 @@
 import BladeShell from '../BladeShell';
+import { VirtualNetworkIcon } from '../AzureIcons';
 
 const EXISTING_VNETS = [
-  { name: 'vnet-hub-westus2',  rg: 'rg-networking',      location: 'West US 2', space: '10.0.0.0/16' },
-  { name: 'vnet-spoke-eastus', rg: 'rg-workloads-prod',  location: 'East US',   space: '10.10.0.0/16' },
-  { name: 'vnet-mgmt-westus2', rg: 'rg-management',      location: 'West US 2', space: '10.20.0.0/16' },
+  {
+    name: 'vnet-hub-westus2', rg: 'rg-networking', location: 'West US 2', space: '10.0.0.0/16',
+    subnets: [
+      ['GatewaySubnet', '10.0.0.0/27', '27'],
+      ['AzureBastionSubnet', '10.0.1.0/26', '59'],
+      ['snet-shared', '10.0.2.0/24', '251'],
+    ],
+  },
+  {
+    name: 'vnet-spoke-eastus', rg: 'rg-workloads-prod', location: 'East US', space: '10.10.0.0/16',
+    subnets: [
+      ['snet-app', '10.10.0.0/24', '251'],
+      ['snet-data', '10.10.1.0/24', '251'],
+    ],
+  },
+  {
+    name: 'vnet-mgmt-westus2', rg: 'rg-management', location: 'West US 2', space: '10.20.0.0/16',
+    subnets: [
+      ['snet-mgmt', '10.20.0.0/24', '251'],
+    ],
+  },
 ];
 
 export default function VNetList({ onOpen, onClose, completed }) {
+  const openOverview = (vnet) => onOpen('resource-overview', {
+    title: vnet.name,
+    subtitle: 'Virtual network',
+    icon: <VirtualNetworkIcon size={22} />,
+    essentials: [
+      { key: 'Resource group', value: vnet.rg },
+      { key: 'Location',       value: vnet.location },
+      { key: 'Address space',  value: vnet.space },
+      { key: 'Connected devices', value: vnet.subnets.reduce((n, s) => n + Number(s[2]), 0) },
+    ],
+    table: {
+      tabLabel: 'Subnets',
+      description: `Address space ${vnet.space} divided into ${vnet.subnets.length} subnet${vnet.subnets.length === 1 ? '' : 's'}.`,
+      columns: ['Name', 'Address range', 'Available addresses'],
+      rows: vnet.subnets,
+    },
+  });
+
   return (
-    <BladeShell title="Virtual networks" width={780} onClose={onClose}>
+    <BladeShell title="Virtual networks" icon={<VirtualNetworkIcon size={22} />} width={780} onClose={onClose}>
       <div className="psb-commandbar">
         <button className="psb-cmd psb-cmd--primary" onClick={() => onOpen('vnet-create')} disabled={completed}>
           <svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13" aria-hidden="true">
@@ -59,7 +96,7 @@ export default function VNetList({ onOpen, onClose, completed }) {
           {EXISTING_VNETS.map(v => (
             <tr key={v.name}>
               <td><input type="checkbox" /></td>
-              <td><button className="psb-link">{v.name}</button></td>
+              <td><button className="psb-link" onClick={() => openOverview(v)}>{v.name}</button></td>
               <td>{v.rg}</td>
               <td>{v.location}</td>
               <td>{v.space}</td>
