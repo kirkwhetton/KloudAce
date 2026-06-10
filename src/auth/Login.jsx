@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuthContext } from "./AuthProvider";
+import { wakeSupabase } from "../lib/cardLoader";
 import "./Login.css";
 
 export default function Login({ onBack }) {
@@ -12,6 +13,10 @@ export default function Login({ onBack }) {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
 
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
+
+  // Warm up Supabase as soon as the login screen appears, so the first
+  // sign-in attempt doesn't hit a cold-starting instance.
+  useEffect(() => { wakeSupabase(); }, []);
 
   const update = (e) => {
     setError(null);

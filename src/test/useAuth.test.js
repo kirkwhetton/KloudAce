@@ -124,6 +124,44 @@ describe('login', () => {
     })
     expect(result.current.error).toBe('Password must be at least 10 characters.')
   })
+
+  // ── Cold-start "Load failed" retry ─────────────────────────────
+  // Supabase free-tier instances can take 30-50s to wake up, during
+  // which fetch throws "Load failed" (Safari) / "Failed to fetch"
+  // (Chrome). Login must retry transparently rather than surfacing
+  // the raw network error.
+  it('retries and succeeds after a transient "Load failed" error', async () => {
+    let callCount = 0
+    supabase.auth.signInWithPassword.mockImplementation(() => {
+      callCount++
+      if (callCount === 1) return Promise.reject(new Error('Load failed'))
+      return Promise.resolve({ error: null })
+    })
+
+    const { result } = await renderAuth()
+    let success
+    await act(async () => {
+      success = await result.current.login({ email: 'test@example.com', password: 'pass123' })
+    })
+
+    expect(success).toBe(true)
+    expect(result.current.error).toBeNull()
+    expect(callCount).toBe(2)
+  }, 10_000)
+
+  it('shows a friendly message instead of raw "Load failed" if every retry fails', async () => {
+    supabase.auth.signInWithPassword.mockImplementation(() => Promise.reject(new Error('Load failed')))
+
+    const { result } = await renderAuth()
+    let success
+    await act(async () => {
+      success = await result.current.login({ email: 'test@example.com', password: 'pass123' })
+    })
+
+    expect(success).toBe(false)
+    expect(result.current.error).not.toMatch(/load failed/i)
+    expect(result.current.error).toMatch(/couldn't reach the server/i)
+  }, 10_000)
 })
 
 describe('register', () => {

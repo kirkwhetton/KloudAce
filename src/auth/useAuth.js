@@ -9,6 +9,32 @@ import { supabase } from "./supabase";
 const withTimeout = (promise, ms, msg) =>
   Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new Error(msg)), ms))]);
 
+// Network-level errors thrown by a cold-starting Supabase instance —
+// these are transient and worth retrying rather than showing to the user.
+const isRetryableNetworkError = (err) => {
+  const msg = (err?.message ?? "").toLowerCase();
+  return msg.includes("load failed") || msg.includes("failed to fetch") || msg.includes("network");
+};
+
+// Retry an auth call up to `attempts` times with backoff, to ride out
+// Supabase cold-starts (which can take 30-50 s on the free tier).
+async function withAuthRetry(fn, { attempts = 3, timeoutMs = 15_000 } = {}) {
+  let lastErr;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await withTimeout(fn(), timeoutMs, "timeout");
+    } catch (err) {
+      lastErr = err;
+      if (err.message === "timeout" || isRetryableNetworkError(err)) {
+        if (i < attempts - 1) await new Promise(r => setTimeout(r, 1_500 * (i + 1)));
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw lastErr;
+}
+
 async function fetchProfile(supabaseUser) {
   const { data } = await withTimeout(
     supabase.from("profiles").select("name, email, is_premium, is_developer").eq("id", supabaseUser.id).single(),
@@ -38,6 +64,8 @@ function friendlyError(err) {
     return "Please confirm your email address before signing in.";
   if (msg.includes("password"))
     return "Password must be at least 10 characters.";
+  if (isRetryableNetworkError(err) || msg === "timeout")
+    return "Couldn't reach the server — please check your connection and try again.";
   return err.message || "Something went wrong. Please try again.";
 }
 
@@ -93,15 +121,19 @@ export function useAuth() {
 
   const register = useCallback(async ({ name, email, password }) => {
     setError(null);
-    const { data, error: err } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { name } },
-    });
-    if (err) { setError(friendlyError(err)); return { success: false }; }
-    // If session is null, Supabase requires email confirmation before login
-    const needsConfirmation = !data.session;
-    return { success: true, needsConfirmation };
+    try {
+      const { data, error: err } = await withAuthRetry(
+        () => supabase.auth.signUp({ email, password, options: { data: { name } } }),
+        { attempts: 3, timeoutMs: 15_000 }
+      );
+      if (err) { setError(friendlyError(err)); return { success: false }; }
+      // If session is null, Supabase requires email confirmation before login
+      const needsConfirmation = !data.session;
+      return { success: true, needsConfirmation };
+    } catch {
+      setError("Couldn't reach the server — please check your connection and try again.");
+      return { success: false };
+    }
   }, []);
 
   const verifyOtp = useCallback(async ({ email, token }) => {
@@ -114,15 +146,14 @@ export function useAuth() {
   const login = useCallback(async ({ email, password }) => {
     setError(null);
     try {
-      const { error: err } = await withTimeout(
-        supabase.auth.signInWithPassword({ email, password }),
-        20_000,
-        "timeout"
+      const { error: err } = await withAuthRetry(
+        () => supabase.auth.signInWithPassword({ email, password }),
+        { attempts: 3, timeoutMs: 15_000 }
       );
       if (err) { setError(friendlyError(err)); return false; }
       return true;
     } catch {
-      setError("Sign in is taking too long — check your connection and try again.");
+      setError("Couldn't reach the server — please check your connection and try again.");
       return false;
     }
   }, []);
