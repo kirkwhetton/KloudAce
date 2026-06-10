@@ -117,6 +117,15 @@ const PREMIUM_FEATURES = [
   "Everything in Free, always",
 ];
 
+const BUSINESS_FEATURES = [
+  "Everything in Premium, for every team member",
+  "Centralised billing — one invoice for the whole team",
+  "Admin dashboard with team-wide readiness tracking",
+  "Add or remove seats at any time",
+  "Priority support",
+  "Minimum 5 seats",
+];
+
 export default function LandingPage({ onGetStarted }) {
   const [examCounts, setExamCounts] = useState(null);
   const [legal, setLegal] = useState(null); // "terms" | "privacy" | null
@@ -361,6 +370,23 @@ export default function LandingPage({ onGetStarted }) {
                 ))}
               </ul>
               <button className="lp-plan-cta lp-plan-cta--premium" onClick={() => setShowUpgrade(true)}>Get Premium →</button>
+            </div>
+
+            <div className="lp-plan lp-plan--business">
+              <div className="lp-plan-badge">Coming soon</div>
+              <div className="lp-plan-header">
+                <div className="lp-plan-name">Business</div>
+                <div className="lp-plan-price">£4.99<span>/user/month</span></div>
+              </div>
+              <ul className="lp-plan-features">
+                {BUSINESS_FEATURES.map(f => (
+                  <li key={f}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <button className="lp-plan-cta lp-plan-cta--business" disabled>Coming soon</button>
             </div>
 
           </div>

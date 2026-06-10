@@ -482,7 +482,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
-  max-width: 720px;
+  max-width: 1080px;
 }
 
 .lp-plan {
@@ -499,6 +499,11 @@
 
 .lp-plan--premium {
   background: linear-gradient(135deg, #0078d4, #003f6e);
+  color: #fff;
+}
+
+.lp-plan--business {
+  background: linear-gradient(135deg, #334155, #0f172a);
   color: #fff;
 }
 
@@ -562,7 +567,8 @@
   color: #374151;
 }
 
-.lp-plan--premium .lp-plan-features li {
+.lp-plan--premium .lp-plan-features li,
+.lp-plan--business .lp-plan-features li {
   color: rgba(255,255,255,0.85);
 }
 
@@ -574,7 +580,8 @@
   color: #16a34a;
 }
 
-.lp-plan--premium .lp-plan-features li svg {
+.lp-plan--premium .lp-plan-features li svg,
+.lp-plan--business .lp-plan-features li svg {
   color: #86efac;
 }
 
@@ -599,7 +606,8 @@
   background: #005a9e;
 }
 
-.lp-plan-cta--premium {
+.lp-plan-cta--premium,
+.lp-plan-cta--business {
   background: rgba(255,255,255,0.15);
   border: 1.5px solid rgba(255,255,255,0.35);
   color: rgba(255,255,255,0.8);
