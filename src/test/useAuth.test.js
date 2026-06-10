@@ -71,7 +71,8 @@ describe('session restoration', () => {
     mockProfileFetch()
     const { result } = await renderAuth()
     expect(result.current.isAuthenticated).toBe(true)
-    expect(result.current.user).toMatchObject({ id: 'user-1', email: 'test@example.com', isPremium: false })
+    // BETA_ALL_PREMIUM is on, so registered users get isPremium: true regardless of profile data
+    expect(result.current.user).toMatchObject({ id: 'user-1', email: 'test@example.com', isPremium: true })
   })
 })
 
@@ -356,7 +357,8 @@ describe('profile fetch failure — flag preservation', () => {
 
     expect(result.current.user).not.toBeNull()
     expect(result.current.user?.email).toBe(TEST_USER.email)
-    expect(result.current.user?.isPremium).toBe(false)
+    // BETA_ALL_PREMIUM is on, so registered users get isPremium: true even on fallback
+    expect(result.current.user?.isPremium).toBe(true)
     expect(result.current.user?.isDeveloper).toBe(false)
   })
 })

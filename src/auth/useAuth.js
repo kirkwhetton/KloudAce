@@ -9,6 +9,10 @@ import { supabase } from "./supabase";
 const withTimeout = (promise, ms, msg) =>
   Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new Error(msg)), ms))]);
 
+// While in beta, every registered account gets premium access regardless of
+// their actual subscription status. Set to false to restore normal billing.
+const BETA_ALL_PREMIUM = true;
+
 // Network-level errors thrown by a cold-starting Supabase instance —
 // these are transient and worth retrying rather than showing to the user.
 const isRetryableNetworkError = (err) => {
@@ -45,7 +49,7 @@ async function fetchProfile(supabaseUser) {
     id:          supabaseUser.id,
     name:        data?.name        ?? supabaseUser.user_metadata?.name ?? "",
     email:       data?.email       ?? supabaseUser.email,
-    isPremium:   data?.is_premium  ?? false,
+    isPremium:   BETA_ALL_PREMIUM || (data?.is_premium  ?? false),
     isDeveloper: data?.is_developer ?? false,
   };
 }
@@ -102,7 +106,7 @@ export function useAuth() {
                 id:          session.user.id,
                 name:        prev?.name        ?? session.user.user_metadata?.name ?? "",
                 email:       prev?.email       ?? session.user.email ?? "",
-                isPremium:   prev?.isPremium   ?? false,
+                isPremium:   BETA_ALL_PREMIUM || (prev?.isPremium   ?? false),
                 isDeveloper: prev?.isDeveloper ?? false,
               }));
             }
