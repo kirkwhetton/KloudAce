@@ -18,6 +18,7 @@ export default function LegalPage({ tab }) {
       {/* ── Nav ── */}
       <nav className="lp-nav">
         <Link to="/" className="lp-nav-brand">Kloud<span className="lp-nav-brand-ace">Ace</span></Link>
+        <span className="lp-nav-beta">Beta</span>
         <button className="lp-nav-login" onClick={goToApp}>Log in</button>
       </nav>
 
