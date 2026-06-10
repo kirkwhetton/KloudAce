@@ -98,3 +98,38 @@ export function PrivacyContent() {
     </div>
   );
 }
+
+export function RefundContent() {
+  return (
+    <div className="legal-body">
+      <p className="legal-updated">Last updated: {LAST_UPDATED}</p>
+
+      <h3>1. Free tier</h3>
+      <p>{COMPANY}'s Free tier requires no payment, so no refund is applicable.</p>
+
+      <h3>2. Premium and Business subscriptions</h3>
+      <p>Premium and Business subscriptions are not currently available for purchase. This policy describes how refunds will work once they launch.</p>
+
+      <h3>3. Cooling-off period</h3>
+      <p>If you are a consumer in the UK or EU, you have the right to cancel a new subscription within 14 days of purchase for a full refund, in line with the Consumer Contracts Regulations. By starting to use Premium or Business features immediately, you acknowledge that this may affect your right to a full refund for the period already used.</p>
+
+      <h3>4. Cancellations after the cooling-off period</h3>
+      <p>You may cancel your subscription at any time through your account settings. Cancelling stops future renewals, but we do not provide partial refunds for the remaining days of a billing period that has already started — your access continues until the end of that period.</p>
+
+      <h3>5. Billing errors and duplicate charges</h3>
+      <p>If you believe you have been charged in error — for example, a duplicate charge or a charge after you cancelled — contact us at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> with your account email and order details. We will investigate and refund any confirmed billing error in full.</p>
+
+      <h3>6. Exceptional circumstances</h3>
+      <p>Outside of the above, refunds are issued at our discretion — for example, where a fault in the service prevented you from using the content you paid for. Requests should be sent to <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> and will be reviewed individually.</p>
+
+      <h3>7. How refunds are processed</h3>
+      <p>Approved refunds will be issued to your original payment method via our payment processor (Merchant of Record). Processing times depend on your bank or card provider and are typically 5–10 business days.</p>
+
+      <h3>8. Statutory rights</h3>
+      <p>Nothing in this policy affects your statutory rights as a consumer under applicable law.</p>
+
+      <h3>9. Contact</h3>
+      <p>Questions about refunds: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
+    </div>
+  );
+}

@@ -441,6 +441,8 @@ export default function LandingPage({ onGetStarted }) {
           <span className="lp-footer-sep">·</span>
           <Link className="lp-footer-link" to="/privacy">Privacy Policy</Link>
           <span className="lp-footer-sep">·</span>
+          <Link className="lp-footer-link" to="/refunds">Refund Policy</Link>
+          <span className="lp-footer-sep">·</span>
           <a className="lp-footer-link" href="mailto:hello@kloudace.com">Contact</a>
         </div>
       </footer>

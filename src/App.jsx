@@ -1932,6 +1932,7 @@ function App() {
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/terms" element={<LegalPage tab="terms" />} />
         <Route path="/privacy" element={<LegalPage tab="privacy" />} />
+        <Route path="/refunds" element={<LegalPage tab="refunds" />} />
         <Route path="/*" element={<AppContent />} />
       </Routes>
     </>
