@@ -165,8 +165,8 @@ export default function LandingPage({ onGetStarted }) {
             </svg>
             <div className="lp-hero-logo-text">
               <span className="lp-hero-brand">Kloud<span className="lp-hero-ace">Ace</span></span>
+              <span className="lp-beta-badge">Beta</span>
             </div>
-            <span className="lp-beta-badge">Beta</span>
           </div>
 
           <h1 className="lp-hero-h1">The smartest way<br />to pass your cloud exam</h1>
