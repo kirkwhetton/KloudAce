@@ -3,6 +3,7 @@ import react from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import PricingPage from "./navigation/PricingPage";
 import LegalPage from "./navigation/LegalPage";
+import ContactPage from "./navigation/ContactPage";
 import CustomDecks from "./components/CustomDecks";
 import UpgradeModal from "./components/UpgradeModal";
 import Flashcard from "./cards/Flashcard";
@@ -1933,6 +1934,7 @@ function App() {
         <Route path="/terms" element={<LegalPage tab="terms" />} />
         <Route path="/privacy" element={<LegalPage tab="privacy" />} />
         <Route path="/refunds" element={<LegalPage tab="refunds" />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/*" element={<AppContent />} />
       </Routes>
     </>

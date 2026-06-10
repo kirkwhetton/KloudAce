@@ -135,7 +135,7 @@ export default function PricingPage() {
           <span className="lp-footer-sep">·</span>
           <Link className="lp-footer-link" to="/refunds">Refund Policy</Link>
           <span className="lp-footer-sep">·</span>
-          <a className="lp-footer-link" href="mailto:hello@kloudace.com">Contact</a>
+          <Link className="lp-footer-link" to="/contact">Contact</Link>
         </div>
       </footer>
 

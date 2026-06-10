@@ -1,15 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
-import { TermsContent, PrivacyContent, RefundContent } from "../components/legalContent";
+import { CONTACT_EMAIL } from "../components/legalContent";
 import "../components/LegalModal.css";
 import "./LandingPage.css";
 
-const TITLES = {
-  terms: "Terms of Service",
-  privacy: "Privacy Policy",
-  refunds: "Refund Policy",
-};
-
-export default function LegalPage({ tab }) {
+export default function ContactPage() {
   const navigate = useNavigate();
   const goToApp = () => navigate("/");
 
@@ -22,18 +16,18 @@ export default function LegalPage({ tab }) {
         <button className="lp-nav-login" onClick={goToApp}>Log in</button>
       </nav>
 
-      {/* ── Legal content ── */}
+      {/* ── Contact content ── */}
       <section className="lp-section lp-section--mission">
         <div className="lp-section-inner">
-          <div className="lp-section-label">Legal</div>
-          <h2 className="lp-section-h2">{TITLES[tab]}</h2>
-          <div className="legal-page-tabs">
-            <Link className={`legal-page-tab${tab === "terms" ? " active" : ""}`} to="/terms">Terms of Service</Link>
-            <Link className={`legal-page-tab${tab === "privacy" ? " active" : ""}`} to="/privacy">Privacy Policy</Link>
-            <Link className={`legal-page-tab${tab === "refunds" ? " active" : ""}`} to="/refunds">Refund Policy</Link>
-          </div>
-          <div className="legal-page-content">
-            {tab === "terms" ? <TermsContent /> : tab === "privacy" ? <PrivacyContent /> : <RefundContent />}
+          <div className="lp-section-label">Contact</div>
+          <h2 className="lp-section-h2">Get in touch</h2>
+          <div className="legal-body">
+            <p>
+              Got a question, found a bug, or want to suggest a feature? We'd love to hear from you.
+            </p>
+            <p>
+              Email us at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> and we'll get back to you as soon as we can.
+            </p>
           </div>
         </div>
       </section>

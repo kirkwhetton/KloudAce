@@ -1,5 +1,5 @@
 export const LAST_UPDATED = "10 June 2026";
-export const CONTACT_EMAIL = "hello@kloudace.com";
+export const CONTACT_EMAIL = "kirkwhetton@gmail.com";
 export const COMPANY = "KloudAce";
 
 export function TermsContent() {
