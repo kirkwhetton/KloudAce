@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import react from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import PricingPage from "./navigation/PricingPage";
 import LegalPage from "./navigation/LegalPage";
 import CustomDecks from "./components/CustomDecks";
@@ -1916,14 +1916,25 @@ function AppContent() {
   );
 }
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
+
 function App() {
   return (
-    <Routes>
-      <Route path="/pricing" element={<PricingPage />} />
-      <Route path="/terms" element={<LegalPage tab="terms" />} />
-      <Route path="/privacy" element={<LegalPage tab="privacy" />} />
-      <Route path="/*" element={<AppContent />} />
-    </Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/terms" element={<LegalPage tab="terms" />} />
+        <Route path="/privacy" element={<LegalPage tab="privacy" />} />
+        <Route path="/*" element={<AppContent />} />
+      </Routes>
+    </>
   );
 }
 
