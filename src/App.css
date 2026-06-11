@@ -3311,7 +3311,24 @@ button .known-check {
 .guest-games-modal-btn--ghost:hover { background: var(--border-subtle); }
 
 /* Back button used in exams/topics subviews */
-.splash-back,
+.splash-back {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  align-self: flex-start;
+  background: var(--bg-card-hover, #f8fafc);
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.35rem 0.85rem 0.35rem 0.65rem;
+  margin-bottom: 0.5rem;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  letter-spacing: 0.01em;
+}
+
 .splash-header-row {
   display: flex;
   align-items: center;

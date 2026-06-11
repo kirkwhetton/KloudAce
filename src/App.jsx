@@ -257,31 +257,16 @@ function AppContent() {
     }
   }, [isAuthenticated]);
 
-  // ── Sync the provider-select screen with the URL ───────────────
-  // Visiting /providers directly clears the chosen platform so the
-  // gate below renders PlatformSelect; visiting /azure (etc.) selects
-  // that platform; choosing a platform navigates to /<platform>.
+  // ── Read initial platform from the URL once on mount ───────────
+  // Visiting /azure (etc.) directly pre-selects that platform.
+  // Beyond this, the URL is only updated explicitly from the
+  // onSelect/onBack handlers below — no reactive navigate() loops.
   useEffect(() => {
     if (!isAuthenticated) return;
     const path = location.pathname.slice(1); // strip leading "/"
-    if (location.pathname === "/providers") {
-      if (selectedPlatform) setSelectedPlatform(null);
-    } else if (LIVE_PLATFORM_IDS.has(path)) {
-      if (selectedPlatform !== path) setSelectedPlatform(path);
-    }
+    if (LIVE_PLATFORM_IDS.has(path)) setSelectedPlatform(path);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated, location.pathname]);
-
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    const path = location.pathname.slice(1);
-    if (!selectedPlatform && location.pathname !== "/providers") {
-      navigate("/providers", { replace: true });
-    } else if (selectedPlatform && path !== selectedPlatform) {
-      navigate(`/${selectedPlatform}`, { replace: true });
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated, selectedPlatform, location.pathname]);
+  }, [isAuthenticated]);
 
   // ── Reload settings once user.id is known ─────────────────────
   // useState initialisers run before auth resolves so they always
@@ -725,7 +710,7 @@ function AppContent() {
     return (
       <PlatformSelect
         user={user}
-        onSelect={(platform) => setSelectedPlatform(platform)}
+        onSelect={(platform) => { setSelectedPlatform(platform); navigate(`/${platform}`, { replace: true }); }}
         onLogout={logout}
       />
     );
@@ -744,7 +729,7 @@ function AppContent() {
           onOpenDecks={() => setShowCustomDecks(true)}
           onSelectCustomDeck={handleCustomDeck}
           onSelectByTopic={(topic) => handleExam(`TOPIC:${topic}`)}
-          onBack={() => setSelectedPlatform(null)}
+          onBack={() => { setSelectedPlatform(null); navigate("/providers", { replace: true }); }}
           loadingExam={loadingExam}
           cardLoadError={cardLoadError}
         />
