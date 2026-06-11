@@ -95,6 +95,13 @@ const ProvidersButton = ({ onBack }) => onBack ? (
   <button type="button" className="splash-providers-btn" onClick={onBack}><Chevron /> Providers</button>
 ) : null;
 
+const ProviderBadge = () => (
+  <span className="splash-provider-badge">
+    <img src="/azure-logo.svg" alt="" className="splash-provider-badge-icon" aria-hidden="true" />
+    Azure
+  </span>
+);
+
 const SignOutButton = ({ onSignOut }) => (
   <button className="splash-signout" onClick={onSignOut}>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden="true">
@@ -248,7 +255,10 @@ const topicMap = flashcards.reduce((acc, c) => {
       <>
       <div className="splash-page">
         <div className={`splash-card ${animClass}`}>
-          <ProvidersButton onBack={onBack} />
+          <div className="splash-header-row">
+            <ProvidersButton onBack={onBack} />
+            <ProviderBadge />
+          </div>
           <Logo />
           <div className="splash-greeting-block">
             <h2 className="splash-greeting">
