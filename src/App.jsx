@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import react from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import PricingPage from "./navigation/PricingPage";
 import LegalPage from "./navigation/LegalPage";
 import ContactPage from "./navigation/ContactPage";
@@ -36,13 +36,15 @@ import {
 import ConfirmDialog from "./components/ConfirmDialog";
 import ReadinessDashboard from "./components/ReadinessDashboard";
 import GuidedTour from "./components/GuidedTour";
-import PlatformSelect from "./navigation/PlatformSelect";
+import PlatformSelect, { PLATFORMS } from "./navigation/PlatformSelect";
 import { useStreak } from "./hooks/useStreak";
 import { useSounds } from "./hooks/useSounds";
 import { useDailyGoal } from "./hooks/useDailyGoal";
 import { useTheme, THEMES } from "./hooks/useTheme";
 import DevTools from "./components/DevTools";
 import "./App.css";
+
+const LIVE_PLATFORM_IDS = new Set(PLATFORMS.filter((p) => p.live).map((p) => p.id));
 
 // Fisher-Yates shuffle — returns a new shuffled array, never mutates original
 function shuffle(arr) {
@@ -56,6 +58,8 @@ function shuffle(arr) {
 
 function AppContent() {
   const { isAuthenticated, user, logout, loading, isGuest } = useAuthContext();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // ── Per-user storage keys ──────────────────────────────────────
   // Scoped to user.id so each account has its own flags & progress.
@@ -252,6 +256,32 @@ function AppContent() {
       setSelectedExam(null);
     }
   }, [isAuthenticated]);
+
+  // ── Sync the provider-select screen with the URL ───────────────
+  // Visiting /providers directly clears the chosen platform so the
+  // gate below renders PlatformSelect; visiting /azure (etc.) selects
+  // that platform; choosing a platform navigates to /<platform>.
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const path = location.pathname.slice(1); // strip leading "/"
+    if (location.pathname === "/providers") {
+      if (selectedPlatform) setSelectedPlatform(null);
+    } else if (LIVE_PLATFORM_IDS.has(path)) {
+      if (selectedPlatform !== path) setSelectedPlatform(path);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, location.pathname]);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const path = location.pathname.slice(1);
+    if (!selectedPlatform && location.pathname !== "/providers") {
+      navigate("/providers", { replace: true });
+    } else if (selectedPlatform && path !== selectedPlatform) {
+      navigate(`/${selectedPlatform}`, { replace: true });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, selectedPlatform, location.pathname]);
 
   // ── Reload settings once user.id is known ─────────────────────
   // useState initialisers run before auth resolves so they always

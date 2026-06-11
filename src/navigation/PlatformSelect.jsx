@@ -1,6 +1,6 @@
 import "./PlatformSelect.css";
 
-const PLATFORMS = [
+export const PLATFORMS = [
   {
     id: "azure",
     name: "Microsoft Azure",
