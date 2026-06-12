@@ -508,7 +508,7 @@ const az104hotspot = [
     exam: "AZ-104",
     type: "hotspot",
     difficulty: "extreme",
-    category: "Identity",
+    category: "Identity & Governance",
     question:
       "A cost-reporting managed identity must have Reader access to ALL current Contoso subscriptions AND any new subscriptions added to the organisation in the future — with a single role assignment. Click the correct scope.",
     imageAlt:
@@ -534,7 +534,7 @@ const az104hotspot = [
     exam: "AZ-104",
     type: "hotspot",
     difficulty: "hard",
-    category: "Networking",
+    category: "Virtual Networks",
     question:
       "An HTTP request (port 80, TCP) arrives from a public internet IP address at a VM attached to nsg-web-tier. NSG inbound rules are evaluated in ascending priority order and processing stops at the first match. Click the rule that determines the final outcome for this traffic.",
     imageAlt:
@@ -562,7 +562,7 @@ const az104hotspot = [
     exam: "AZ-104",
     type: "hotspot",
     difficulty: "hard",
-    category: "Networking",
+    category: "Virtual Networks",
     question:
       "A VM sends a packet to destination IP 10.1.2.15. Click the route that will forward this packet.",
     imageAlt:
@@ -589,7 +589,7 @@ const az104hotspot = [
     exam: "AZ-104",
     type: "hotspot",
     difficulty: "medium",
-    category: "Identity",
+    category: "Identity & Governance",
     question:
       "An Entra ID administrator account needs SSPR configured. One of these authentication methods is NOT available for accounts with administrator roles regardless of the SSPR policy settings. Click it.",
     imageAlt:
@@ -617,7 +617,7 @@ const az104hotspot = [
     exam: "AZ-104",
     type: "hotspot",
     difficulty: "medium",
-    category: "Identity",
+    category: "Identity & Governance",
     question:
       "A device management team needs a group where corporate Windows devices are automatically added or removed based on device attribute rules. Click the membership type that supports this.",
     imageAlt:
@@ -645,7 +645,7 @@ const az104hotspot = [
     exam: "AZ-104",
     type: "hotspot",
     difficulty: "medium",
-    category: "Networking",
+    category: "Virtual Networks",
     devAdded: "2026-05-18T00:00:00Z",
     question:
       "A client sends a request: GET /api/users/42. The Application Gateway evaluates its path-based routing rules in priority order and forwards the request to the first matching backend pool. Click the pool that receives this request.",
@@ -671,7 +671,7 @@ const az104hotspot = [
     exam: "AZ-104",
     type: "hotspot",
     difficulty: "hard",
-    category: "Networking",
+    category: "Virtual Networks",
     devAdded: "2026-05-18T00:00:00Z",
     question:
       "An engineer cannot SSH (TCP/22) to vm-prod01 from their on-premises workstation. Before sending any real traffic, they want to check whether an NSG rule would block this specific connection. Click the Network Watcher tool that answers this without generating actual network packets.",
@@ -700,7 +700,7 @@ const az104hotspot = [
     exam: "AZ-104",
     type: "hotspot",
     difficulty: "hard",
-    category: "Networking",
+    category: "Virtual Networks",
     devAdded: "2026-05-18T00:00:00Z",
     question:
       "A client sends a request: GET /api/v2/stats/daily. The Application Gateway evaluates its path-based routing rules in priority order and stops at the first match. Both /api/v2/* and /api/* are present. Click the backend pool that receives this request.",

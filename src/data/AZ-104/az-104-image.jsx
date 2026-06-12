@@ -8,7 +8,7 @@ const az104image = [
     type: "image-mcq",
     difficulty: "medium",
     exam: "AZ-104",
-    category: "Networking",
+    category: "Virtual Networks",
     diagram: VNetNsgDiagram,
     imageAlt:
       "VNet diagram with two subnets, VM-A in Subnet-A with NSG-A blocking port 22, VM-B in Subnet-B with a question mark",
