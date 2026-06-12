@@ -708,11 +708,45 @@ function AppContent() {
   // ── Platform gate ──────────────────────────────────────────────
   if (!selectedPlatform) {
     return (
-      <PlatformSelect
-        user={user}
-        onSelect={(platform) => { setSelectedPlatform(platform); navigate(`/${platform}`, { replace: true }); }}
-        onLogout={logout}
-      />
+      <>
+        <PlatformSelect
+          user={user}
+          onSelect={(platform) => { setSelectedPlatform(platform); navigate(`/${platform}`, { replace: true }); }}
+          onLogout={logout}
+          onOpenProfile={() => setShowProfile(true)}
+        />
+        {showProfile && <UserProfile onClose={() => {
+          setShowProfile(false);
+          try {
+            const s = JSON.parse(localStorage.getItem(settingsKey) || "{}");
+            setHideAnswers(s.hideAnswers ?? false);
+            setHideDifficulty(s.hideDifficulty ?? false);
+            setSoundEnabled(s.soundEnabled ?? true);
+            setShowDevRecent(s.showDevRecent ?? false);
+            setRandomised(s.randomised ?? false);
+            const ddt = new Set(s.defaultDisabledTypes ?? []);
+            setDefaultDisabledTypes(ddt);
+            setDisabledTypes(new Set(ddt));
+          } catch { /* ignore */ }
+        }} onOpenDashboard={() => setShowDashboard(true)}
+        onUpgrade={() => { setShowProfile(false); setShowUpgrade(true); }}
+        streak={streak} longestStreak={longestStreak} activeDates={activeDates ?? []}
+        dailyGoal={dailyGoal} onSetGoal={setGoal} />}
+        {showDashboard && (
+          <ReadinessDashboard
+            user={user}
+            initialExam={selectedExam}
+            onClose={() => setShowDashboard(false)}
+            onLaunchDeck={handleDashboardLaunch}
+          />
+        )}
+        {showUpgrade && (
+          <UpgradeModal
+            userEmail={user?.email}
+            onClose={() => setShowUpgrade(false)}
+          />
+        )}
+      </>
     );
   }
 
@@ -730,6 +764,7 @@ function AppContent() {
           onSelectCustomDeck={handleCustomDeck}
           onSelectByTopic={(topic) => handleExam(`TOPIC:${topic}`)}
           onBack={() => { setSelectedPlatform(null); navigate("/providers", { replace: true }); }}
+          onOpenProfile={() => setShowProfile(true)}
           loadingExam={loadingExam}
           cardLoadError={cardLoadError}
         />
@@ -737,6 +772,37 @@ function AppContent() {
           <CustomDecks
             onClose={() => setShowCustomDecks(false)}
             onStudy={handleCustomDeck}
+          />
+        )}
+        {showProfile && <UserProfile onClose={() => {
+          setShowProfile(false);
+          try {
+            const s = JSON.parse(localStorage.getItem(settingsKey) || "{}");
+            setHideAnswers(s.hideAnswers ?? false);
+            setHideDifficulty(s.hideDifficulty ?? false);
+            setSoundEnabled(s.soundEnabled ?? true);
+            setShowDevRecent(s.showDevRecent ?? false);
+            setRandomised(s.randomised ?? false);
+            const ddt = new Set(s.defaultDisabledTypes ?? []);
+            setDefaultDisabledTypes(ddt);
+            setDisabledTypes(new Set(ddt));
+          } catch { /* ignore */ }
+        }} onOpenDashboard={() => setShowDashboard(true)}
+        onUpgrade={() => { setShowProfile(false); setShowUpgrade(true); }}
+        streak={streak} longestStreak={longestStreak} activeDates={activeDates ?? []}
+        dailyGoal={dailyGoal} onSetGoal={setGoal} />}
+        {showDashboard && (
+          <ReadinessDashboard
+            user={user}
+            initialExam={selectedExam}
+            onClose={() => setShowDashboard(false)}
+            onLaunchDeck={handleDashboardLaunch}
+          />
+        )}
+        {showUpgrade && (
+          <UpgradeModal
+            userEmail={user?.email}
+            onClose={() => setShowUpgrade(false)}
           />
         )}
       </>

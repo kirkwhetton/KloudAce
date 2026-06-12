@@ -102,6 +102,15 @@ const ProviderBadge = () => (
   </span>
 );
 
+const ProfileButton = ({ user, isGuest, onClick }) => (
+  <button type="button" className="splash-profile-btn" onClick={onClick} title={isGuest ? "Sign up for a free account" : "Edit profile"}>
+    <svg className="user-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+    </svg>
+    {user?.name}
+  </button>
+);
+
 const SignOutButton = ({ onSignOut }) => (
   <button className="splash-signout" onClick={onSignOut}>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden="true">
@@ -113,7 +122,7 @@ const SignOutButton = ({ onSignOut }) => (
   </button>
 );
 
-export default function ExamSelect({ user, isGuest, isPremium, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack, loadingExam, cardLoadError }) {
+export default function ExamSelect({ user, isGuest, isPremium, onSelect, onLogout, onOpenDecks, onSelectByTopic, onSelectCustomDeck, onBack, onOpenProfile, loadingExam, cardLoadError }) {
   const exams = Object.values(EXAM_META);
   const handleSignOut = () => onLogout();
   const [view, setView] = useState(() => {
@@ -256,8 +265,11 @@ const topicMap = flashcards.reduce((acc, c) => {
       <div className="splash-page">
         <div className={`splash-card ${animClass}`}>
           <div className="splash-header-row">
-            <ProvidersButton onBack={onBack} />
-            <ProviderBadge />
+            <div className="splash-header-left">
+              <ProvidersButton onBack={onBack} />
+              <ProviderBadge />
+            </div>
+            <ProfileButton user={user} isGuest={isGuest} onClick={() => isGuest ? handleSignOut() : onOpenProfile?.()} />
           </div>
           <Logo />
           <div className="splash-greeting-block">
