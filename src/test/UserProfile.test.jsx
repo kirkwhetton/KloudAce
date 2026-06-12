@@ -29,6 +29,7 @@ function renderPasswordTab() {
 
 beforeEach(() => {
   vi.clearAllMocks()
+  localStorage.clear()
   useAuthContext.mockReturnValue({
     user: TEST_USER,
     updateProfile: vi.fn(),

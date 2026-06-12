@@ -15,6 +15,7 @@
 
 /* ── Left: portal shell container ── */
 .psim-portal {
+  position: relative;
   flex: 1;
   min-width: 0;
   display: flex;
@@ -75,6 +76,27 @@
 }
 .psim-instructions-status--correct  { color: #6ee7b7; }
 .psim-instructions-status--incorrect { color: #fca5a5; }
+
+.psim-guide-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  user-select: none;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.psim-guide-toggle input[type="checkbox"] {
+  accent-color: #60a5fa;
+  width: 13px;
+  height: 13px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
 
 .psim-instructions-body {
   flex: 1;
@@ -443,6 +465,17 @@
 .psb-toggle-row {
   display: flex;
   gap: 1.5rem;
+}
+
+/* Rows pairing a select with an action link/button (e.g. "+ Add" a VM):
+   let the select shrink to fit and keep the button from being clipped. */
+.psb-toggle-row > .psb-select {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto;
+}
+.psb-toggle-row > .psb-add-subnet-link {
+  flex-shrink: 0;
 }
 
 .psb-toggle-option {

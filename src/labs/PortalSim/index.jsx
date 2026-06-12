@@ -67,6 +67,7 @@ export default function PortalSim({ card, onKnow, onSrsRate }) {
   const [result,    setResult]    = useState(null);
   const [hintsUsed, setHintsUsed] = useState(false);
   const [showHint,  setShowHint]  = useState(false);
+  const [showGuide, setShowGuide] = useState(true);
   const [helpWidth, setHelpWidth] = useState(() => {
     const stored = Number(localStorage.getItem('psim-help-width'));
     return stored >= 220 && stored <= 640 ? stored : 290;
@@ -250,13 +251,15 @@ export default function PortalSim({ card, onKnow, onSrsRate }) {
       </div>
 
       {/* ── Resize handle ───────────────────────────────────── */}
-      <div
-        className="psim-resize-handle"
-        onMouseDown={handleResizeStart}
-        role="separator"
-        aria-orientation="vertical"
-        aria-label="Resize lab guide panel"
-      />
+      {showGuide && (
+        <div
+          className="psim-resize-handle"
+          onMouseDown={handleResizeStart}
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize lab guide panel"
+        />
+      )}
 
       {/* ── Right: lab instructions panel ──────────────────── */}
       <aside className="psim-instructions" style={{ width: helpWidth }} aria-label="Lab instructions">
@@ -270,8 +273,17 @@ export default function PortalSim({ card, onKnow, onSrsRate }) {
               {result === 'correct' ? '✓' : '✗'}
             </span>
           )}
+          <label className="psim-guide-toggle" title={showGuide ? "Hide help" : "Show help"}>
+            <input
+              type="checkbox"
+              checked={showGuide}
+              onChange={e => setShowGuide(e.target.checked)}
+            />
+            {showGuide ? "Hide" : "Show"}
+          </label>
         </div>
 
+        {showGuide && (
         <div className="psim-instructions-body">
 
           {card.guide ? (
@@ -317,6 +329,7 @@ export default function PortalSim({ card, onKnow, onSrsRate }) {
           )}
 
         </div>
+        )}
       </aside>
 
     </div>
