@@ -10,63 +10,53 @@ const ResourceHierarchyDiagram = () => (
     </defs>
 
     <rect x="0" y="0" width="680" height="320" fill="#f8fafc" rx="12"/>
-    <text x="340" y="13" textAnchor="middle" fontSize="9" fill="#64748b" fontWeight="600">Azure resource hierarchy</text>
 
-    {/* Management Group */}
-    <rect x="230" y="20" width="220" height="55" rx="8" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.5"/>
-    <rect x="230" y="20" width="220" height="22" rx="8" fill="#e2e8f0"/>
-    <text x="340" y="35" textAnchor="middle" fontSize="11" fill="#334155" fontWeight="700">Management Group</text>
-    <text x="340" y="52" textAnchor="middle" fontSize="8.5" fill="#475569">Organises multiple subscriptions</text>
-    <text x="340" y="66" textAnchor="middle" fontSize="7.5" fill="#94a3b8">Top level of the hierarchy</text>
+    {/* Root Management Group */}
+    <rect x="240" y="10" width="200" height="40" rx="8" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.5"/>
+    <text x="340" y="34" textAnchor="middle" fontSize="11" fill="#334155" fontWeight="700">Contoso (root)</text>
 
-    <line x1="295" y1="75" x2="215" y2="112" stroke="#94a3b8" strokeWidth="1.5" markerEnd="url(#h900-a)"/>
-    <line x1="385" y1="75" x2="462" y2="112" stroke="#94a3b8" strokeWidth="1.5" markerEnd="url(#h900-a)"/>
+    <line x1="300" y1="50" x2="180" y2="83" stroke="#94a3b8" strokeWidth="1.5" markerEnd="url(#h900-a)"/>
+    <line x1="380" y1="50" x2="500" y2="83" stroke="#94a3b8" strokeWidth="1.5" markerEnd="url(#h900-a)"/>
 
-    {/* Subscription A */}
-    <rect x="60" y="115" width="215" height="55" rx="8" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.5"/>
-    <rect x="60" y="115" width="215" height="22" rx="8" fill="#e2e8f0"/>
-    <text x="167" y="130" textAnchor="middle" fontSize="11" fill="#334155" fontWeight="700">Subscription</text>
-    <text x="167" y="147" textAnchor="middle" fontSize="8.5" fill="#475569">Billing boundary</text>
-    <text x="167" y="161" textAnchor="middle" fontSize="7.5" fill="#94a3b8">Sets usage limits and policies</text>
+    {/* Management Group: Online Services (spans Web-Prod + Web-Dev below) */}
+    <rect x="20" y="86" width="314" height="40" rx="8" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.5"/>
+    <text x="177" y="110" textAnchor="middle" fontSize="11" fill="#334155" fontWeight="700">Online Services</text>
 
-    <line x1="120" y1="170" x2="90" y2="208" stroke="#94a3b8" strokeWidth="1.2" markerEnd="url(#h900-a)"/>
-    <line x1="200" y1="170" x2="225" y2="208" stroke="#94a3b8" strokeWidth="1.2" markerEnd="url(#h900-a)"/>
+    {/* Management Group: Corp IT (spans Finance + HR below) */}
+    <rect x="346" y="86" width="314" height="40" rx="8" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.5"/>
+    <text x="503" y="110" textAnchor="middle" fontSize="11" fill="#334155" fontWeight="700">Corp IT</text>
 
-    {/* Subscription B */}
-    <rect x="405" y="115" width="215" height="55" rx="8" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.5"/>
-    <rect x="405" y="115" width="215" height="22" rx="8" fill="#e2e8f0"/>
-    <text x="512" y="130" textAnchor="middle" fontSize="11" fill="#334155" fontWeight="700">Subscription</text>
-    <text x="512" y="147" textAnchor="middle" fontSize="8.5" fill="#475569">Billing boundary</text>
-    <text x="512" y="161" textAnchor="middle" fontSize="7.5" fill="#94a3b8">Sets usage limits and policies</text>
+    <line x1="96"  y1="126" x2="96"  y2="159" stroke="#94a3b8" strokeWidth="1.2" markerEnd="url(#h900-a)"/>
+    <line x1="258" y1="126" x2="258" y2="159" stroke="#94a3b8" strokeWidth="1.2" markerEnd="url(#h900-a)"/>
+    <line x1="422" y1="126" x2="422" y2="159" stroke="#94a3b8" strokeWidth="1.2" markerEnd="url(#h900-a)"/>
+    <line x1="584" y1="126" x2="584" y2="159" stroke="#94a3b8" strokeWidth="1.2" markerEnd="url(#h900-a)"/>
 
-    {/* Resource Group 1 */}
-    <rect x="20" y="211" width="150" height="55" rx="8" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.2"/>
-    <text x="95" y="230" textAnchor="middle" fontSize="10" fill="#334155" fontWeight="700">Resource Group</text>
-    <text x="95" y="246" textAnchor="middle" fontSize="8" fill="#475569">Logical container</text>
-    <text x="95" y="259" textAnchor="middle" fontSize="7.5" fill="#94a3b8">for related resources</text>
+    {/* Subscription: Web-Prod */}
+    <rect x="20" y="162" width="152" height="40" rx="8" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.5"/>
+    <text x="96" y="186" textAnchor="middle" fontSize="10.5" fill="#334155" fontWeight="700">Sub: Web-Prod</text>
 
-    <line x1="55"  y1="266" x2="35"  y2="296" stroke="#94a3b8" strokeWidth="1" markerEnd="url(#h900-a)"/>
-    <line x1="135" y1="266" x2="155" y2="296" stroke="#94a3b8" strokeWidth="1" markerEnd="url(#h900-a)"/>
+    {/* Subscription: Web-Dev */}
+    <rect x="182" y="162" width="152" height="40" rx="8" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.5"/>
+    <text x="258" y="186" textAnchor="middle" fontSize="10.5" fill="#334155" fontWeight="700">Sub: Web-Dev</text>
 
-    {/* Resources inside RG1 */}
-    <rect x="10"  y="298" width="80" height="20" rx="4" fill="#dbeafe" stroke="#93c5fd" strokeWidth="1"/>
-    <text x="50" y="312" textAnchor="middle" fontSize="7.5" fill="#1e40af">VM</text>
-    <rect x="120" y="298" width="80" height="20" rx="4" fill="#dbeafe" stroke="#93c5fd" strokeWidth="1"/>
-    <text x="160" y="312" textAnchor="middle" fontSize="7.5" fill="#1e40af">Storage account</text>
+    {/* Subscription: Finance */}
+    <rect x="346" y="162" width="152" height="40" rx="8" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.5"/>
+    <text x="422" y="186" textAnchor="middle" fontSize="10.5" fill="#334155" fontWeight="700">Sub: Finance</text>
 
-    {/* Resource Group 2 */}
-    <rect x="185" y="211" width="150" height="55" rx="8" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.2"/>
-    <text x="260" y="230" textAnchor="middle" fontSize="10" fill="#334155" fontWeight="700">Resource Group</text>
-    <text x="260" y="246" textAnchor="middle" fontSize="8" fill="#475569">Logical container</text>
-    <text x="260" y="259" textAnchor="middle" fontSize="7.5" fill="#94a3b8">for related resources</text>
+    {/* Subscription: HR */}
+    <rect x="508" y="162" width="152" height="40" rx="8" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.5"/>
+    <text x="584" y="186" textAnchor="middle" fontSize="10.5" fill="#334155" fontWeight="700">Sub: HR</text>
 
-    {/* Resource Group 3 (under Subscription B) */}
-    <rect x="430" y="211" width="220" height="55" rx="8" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.2"/>
-    <text x="540" y="230" textAnchor="middle" fontSize="10" fill="#334155" fontWeight="700">Resource Group</text>
-    <text x="540" y="246" textAnchor="middle" fontSize="8" fill="#475569">Logical container</text>
-    <text x="540" y="259" textAnchor="middle" fontSize="7.5" fill="#94a3b8">for related resources</text>
+    <line x1="56"  y1="202" x2="56"  y2="235" stroke="#94a3b8" strokeWidth="1" markerEnd="url(#h900-a)"/>
+    <line x1="136" y1="202" x2="136" y2="235" stroke="#94a3b8" strokeWidth="1" markerEnd="url(#h900-a)"/>
 
-    <text x="340" y="312" textAnchor="middle" fontSize="7.5" fill="#94a3b8" fontStyle="italic">Click the scope described in the question</text>
+    {/* Resource Group: rg-web-prod */}
+    <rect x="20" y="238" width="70" height="40" rx="8" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.2"/>
+    <text x="55" y="262" textAnchor="middle" fontSize="9" fill="#334155" fontWeight="700">RG: rg-web-prod</text>
+
+    {/* Resource Group: rg-data */}
+    <rect x="102" y="238" width="70" height="40" rx="8" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.2"/>
+    <text x="137" y="262" textAnchor="middle" fontSize="9" fill="#334155" fontWeight="700">RG: rg-data</text>
   </svg>
 );
 
@@ -127,45 +117,34 @@ const SharedResponsibilityDiagram = () => (
 
 const RegionPairDiagram = () => (
   <svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", fontFamily: "sans-serif" }}>
-    <defs>
-      <marker id="h900-b" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
-        <path d="M0,0 L0,7 L8,3.5 z" fill="#60a5fa"/>
-      </marker>
-    </defs>
-
     <rect x="0" y="0" width="680" height="260" fill="#f8fafc" rx="12"/>
-    <text x="340" y="14" textAnchor="middle" fontSize="9" fill="#64748b" fontWeight="600">Geo-redundant storage (GRS) — paired regions</text>
 
-    {/* Primary region */}
-    <rect x="60" y="40" width="260" height="180" rx="10" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.5"/>
-    <rect x="60" y="40" width="260" height="28" rx="10" fill="#e2e8f0"/>
-    <text x="190" y="59" textAnchor="middle" fontSize="11" fill="#334155" fontWeight="700">Primary region — UK South</text>
+    {/* UK South region */}
+    <rect x="40" y="20" width="340" height="220" rx="10" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.5"/>
+    <rect x="40" y="20" width="340" height="28" rx="10" fill="#e2e8f0"/>
+    <text x="210" y="39" textAnchor="middle" fontSize="11" fill="#334155" fontWeight="700">Region: UK South</text>
+    <text x="210" y="62" textAnchor="middle" fontSize="9" fill="#475569" fontWeight="600">Resource group: rg-app</text>
 
-    <rect x="90" y="85" width="200" height="50" rx="6" fill="#dbeafe" stroke="#93c5fd" strokeWidth="1.2"/>
-    <text x="190" y="105" textAnchor="middle" fontSize="9.5" fill="#1e40af" fontWeight="600">Storage account</text>
-    <text x="190" y="121" textAnchor="middle" fontSize="8" fill="#3b5b8c">Primary, synchronous copies</text>
+    <rect x="60"  y="75" width="145" height="50" rx="6" fill="#f1f5f9" stroke="#94a3b8" strokeWidth="1.2"/>
+    <text x="132" y="105" textAnchor="middle" fontSize="9.5" fill="#334155" fontWeight="600">Storage account</text>
 
-    <rect x="90" y="150" width="200" height="50" rx="6" fill="#dbeafe" stroke="#93c5fd" strokeWidth="1.2"/>
-    <text x="190" y="170" textAnchor="middle" fontSize="9.5" fill="#1e40af" fontWeight="600">Application / VMs</text>
-    <text x="190" y="186" textAnchor="middle" fontSize="8" fill="#3b5b8c">Active read/write</text>
+    <rect x="215" y="75" width="145" height="50" rx="6" fill="#f1f5f9" stroke="#94a3b8" strokeWidth="1.2"/>
+    <text x="287" y="105" textAnchor="middle" fontSize="9.5" fill="#334155" fontWeight="600">Virtual machine</text>
 
-    {/* Secondary region */}
-    <rect x="360" y="40" width="260" height="180" rx="10" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.5"/>
-    <rect x="360" y="40" width="260" height="28" rx="10" fill="#e2e8f0"/>
-    <text x="490" y="59" textAnchor="middle" fontSize="11" fill="#334155" fontWeight="700">Secondary region — UK West</text>
+    <rect x="60"  y="135" width="145" height="50" rx="6" fill="#f1f5f9" stroke="#94a3b8" strokeWidth="1.2"/>
+    <text x="132" y="165" textAnchor="middle" fontSize="9.5" fill="#334155" fontWeight="600">Virtual network</text>
 
-    <rect x="390" y="85" width="200" height="50" rx="6" fill="#dcfce7" stroke="#86efac" strokeWidth="1.2"/>
-    <text x="490" y="105" textAnchor="middle" fontSize="9.5" fill="#166534" fontWeight="600">Replicated storage copy</text>
-    <text x="490" y="121" textAnchor="middle" fontSize="8" fill="#3f6b4f">Asynchronous, read-only*</text>
+    <rect x="215" y="135" width="145" height="50" rx="6" fill="#f1f5f9" stroke="#94a3b8" strokeWidth="1.2"/>
+    <text x="287" y="165" textAnchor="middle" fontSize="9.5" fill="#334155" fontWeight="600">SQL database</text>
 
-    <rect x="390" y="150" width="200" height="50" rx="6" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1" strokeDasharray="5 3"/>
-    <text x="490" y="170" textAnchor="middle" fontSize="9.5" fill="#94a3b8" fontStyle="italic">Failover target</text>
-    <text x="490" y="186" textAnchor="middle" fontSize="8" fill="#cbd5e1">Used only if primary region fails</text>
+    <rect x="60" y="195" width="300" height="34" rx="6" fill="#f1f5f9" stroke="#94a3b8" strokeWidth="1.2"/>
+    <text x="210" y="216" textAnchor="middle" fontSize="9.5" fill="#334155" fontWeight="600">Network security group</text>
 
-    <line x1="320" y1="110" x2="360" y2="110" stroke="#60a5fa" strokeWidth="2" markerEnd="url(#h900-b)"/>
-    <text x="340" y="102" textAnchor="middle" fontSize="7.5" fill="#3b82f6">replicates</text>
-
-    <text x="340" y="244" textAnchor="middle" fontSize="7.5" fill="#94a3b8" fontStyle="italic">*Read-only access to the secondary copy requires RA-GRS. Click the element described in the question.</text>
+    {/* UK West region */}
+    <rect x="420" y="20" width="220" height="220" rx="10" fill="#f1f5f9" stroke="#64748b" strokeWidth="1.5"/>
+    <rect x="420" y="20" width="220" height="28" rx="10" fill="#e2e8f0"/>
+    <text x="530" y="39" textAnchor="middle" fontSize="11" fill="#334155" fontWeight="700">Region: UK West</text>
+    <text x="530" y="140" textAnchor="middle" fontSize="9" fill="#94a3b8" fontStyle="italic">No resources deployed here</text>
   </svg>
 );
 
@@ -174,25 +153,30 @@ const az900hotspot = [
     id: "AZ-900-HS-001",
     exam: "AZ-900",
     type: "hotspot",
-    difficulty: "medium",
+    difficulty: "hard",
     category: "Describe Azure Management & Governance",
     question:
-      "A company wants to apply a single Azure Policy that enforces a tagging standard across every subscription they currently have, AND any new subscriptions they create in the future, using one assignment. Click the scope where this policy should be assigned.",
+      "Contoso's online services team (running Sub: Web-Prod and Sub: Web-Dev) must have a cost-centre tagging policy enforced on everything they own — including any subscriptions added to their part of the org later. The Corp IT team (Sub: Finance and Sub: HR) must NOT be affected by this policy. Click the single scope where the policy should be assigned.",
     imageAlt:
-      "Azure resource hierarchy diagram showing a Management Group at the top, two Subscriptions below it, and Resource Groups containing resources (VM, Storage account) below the subscriptions.",
+      "Azure resource hierarchy diagram. At the top is a root management group 'Contoso (root)'. Below it are two management groups: 'Online Services' and 'Corp IT'. Under Online Services are two subscriptions, Web-Prod and Web-Dev. Under Corp IT are two subscriptions, Finance and HR. Under Web-Prod are two resource groups, rg-web-prod and rg-data.",
     viewBox: "0 0 680 320",
     diagram: ResourceHierarchyDiagram,
     zones: [
-      { id: "management-group", label: "Management Group", x: 230, y: 20,  width: 220, height: 55 },
-      { id: "subscription-a",   label: "Subscription (A)",  x: 60,  y: 115, width: 215, height: 55 },
-      { id: "resource-group-1", label: "Resource Group (1)", x: 20, y: 211, width: 150, height: 55 },
-      { id: "vm-resource",      label: "VM resource",        x: 10, y: 298, width: 80,  height: 20 },
+      { id: "root-mg",        label: "Contoso (root) management group",  x: 240, y: 10,  width: 200, height: 40 },
+      { id: "online-mg",      label: "Online Services management group", x: 20,  y: 86,  width: 314, height: 40 },
+      { id: "corpit-mg",      label: "Corp IT management group",         x: 346, y: 86,  width: 314, height: 40 },
+      { id: "sub-web-prod",   label: "Sub: Web-Prod",                    x: 20,  y: 162, width: 152, height: 40 },
+      { id: "sub-web-dev",    label: "Sub: Web-Dev",                     x: 182, y: 162, width: 152, height: 40 },
+      { id: "sub-finance",    label: "Sub: Finance",                     x: 346, y: 162, width: 152, height: 40 },
+      { id: "sub-hr",         label: "Sub: HR",                          x: 508, y: 162, width: 152, height: 40 },
+      { id: "rg-web-prod",    label: "RG: rg-web-prod",                  x: 20,  y: 238, width: 70,  height: 40 },
+      { id: "rg-data",        label: "RG: rg-data",                      x: 102, y: 238, width: 70,  height: 40 },
     ],
-    correctZone: "management-group",
+    correctZone: "online-mg",
     answer:
-      "Management Group is correct. It sits above subscriptions in the hierarchy, so a policy assigned at this scope is inherited by every subscription underneath it — including subscriptions added to the management group later — without needing a new assignment each time.",
+      "The 'Online Services' management group is correct. Assigning the policy here applies it to every subscription nested underneath — Web-Prod and Web-Dev today, and any future subscription moved into 'Online Services' — without ever touching Finance or HR under the separate 'Corp IT' management group.",
     explanation:
-      "A Subscription-scoped assignment only applies to that one subscription; a new subscription would need its own assignment. Resource Group and resource scopes are even narrower. Management groups exist specifically to let organisations apply governance (policies, RBAC, budgets) consistently across many subscriptions, including ones created in the future, from a single assignment at the top of the hierarchy.",
+      "The root 'Contoso' management group is too broad — a policy there would also apply to Corp IT's Finance and HR subscriptions, which the question explicitly rules out. Assigning it separately to Web-Prod or Web-Dev alone would miss the other one, and wouldn't automatically cover a future subscription added under Online Services — you'd have to remember to assign it again each time. Picking Corp IT, Finance, or HR applies the policy to the wrong team entirely. A resource-group-level assignment (rg-web-prod or rg-data) is narrower still and wouldn't even cover Web-Dev. Management group nesting exists precisely so you can scope governance to one branch of the org without affecting sibling branches.",
     learnUrl:
       "https://learn.microsoft.com/en-us/azure/governance/management-groups/overview",
   },
@@ -229,22 +213,23 @@ const az900hotspot = [
     difficulty: "medium",
     category: "Describe Cloud Concepts",
     question:
-      "A storage account in UK South is configured for geo-redundant storage (GRS). Click the element that represents where data is asynchronously copied to for disaster recovery.",
+      "Resource group rg-app sits in the UK South region and contains five resources. One of them is reconfigured to use geo-redundant storage (GRS), so its data is automatically given a copy in the UK West region. Click the resource that this change applies to.",
     imageAlt:
-      "Diagram showing two regions side by side: 'Primary region — UK South' containing a storage account and application/VMs, and 'Secondary region — UK West' containing a replicated storage copy and a failover target, with an arrow labelled 'replicates' pointing from the primary storage account to the secondary region.",
+      "Diagram showing resource group rg-app in the UK South region containing five resources arranged in a grid: storage account, virtual machine, virtual network, SQL database, and network security group. The UK West region is shown alongside, empty, labelled 'No resources deployed here'.",
     viewBox: "0 0 680 260",
     diagram: RegionPairDiagram,
     zones: [
-      { id: "primary-storage",   label: "Primary storage account (UK South)", x: 90,  y: 85,  width: 200, height: 50 },
-      { id: "primary-app",       label: "Application / VMs (UK South)",       x: 90,  y: 150, width: 200, height: 50 },
-      { id: "secondary-copy",    label: "Replicated storage copy (UK West)",  x: 390, y: 85,  width: 200, height: 50 },
-      { id: "failover-target",   label: "Failover target (UK West)",          x: 390, y: 150, width: 200, height: 50 },
+      { id: "storage-account",     label: "Storage account",      x: 60,  y: 75,  width: 145, height: 50 },
+      { id: "virtual-machine",     label: "Virtual machine",       x: 215, y: 75,  width: 145, height: 50 },
+      { id: "virtual-network",     label: "Virtual network",       x: 60,  y: 135, width: 145, height: 50 },
+      { id: "sql-database",        label: "SQL database",          x: 215, y: 135, width: 145, height: 50 },
+      { id: "network-security-group", label: "Network security group", x: 60, y: 195, width: 300, height: 34 },
     ],
-    correctZone: "secondary-copy",
+    correctZone: "storage-account",
     answer:
-      "The replicated storage copy in the secondary, paired region (UK West) is correct. GRS first writes data synchronously to the primary region (like LRS), then asynchronously copies it to a secondary region hundreds of miles away — protecting against a complete regional outage.",
+      "The storage account is correct. GRS is a storage redundancy option that applies to Azure Storage accounts — it automatically maintains an asynchronous copy of the account's data in a paired region (UK West). It has no effect on the other resources in the resource group.",
     explanation:
-      "The primary storage account and application/VMs remain in UK South and are not the replication target. The 'failover target' box represents the overall secondary region becoming active during a failover, but the actual replicated DATA lands in the secondary storage copy. With standard GRS, this secondary copy isn't directly readable by applications — read access to it requires RA-GRS (read-access geo-redundant storage).",
+      "Virtual machines, virtual networks, SQL databases, and network security groups are not affected by a storage account's redundancy setting — GRS is configured per storage account, not at the resource-group or region level. A VM's disks, a SQL database, and network configuration each have their own separate options for redundancy or backup, none of which are switched on just by enabling GRS on an unrelated storage account.",
     learnUrl:
       "https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy",
   },
