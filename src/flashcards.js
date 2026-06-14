@@ -5,7 +5,7 @@
 // ─────────────────────────────────────────────────────────────────
 import az104, { meta as meta104 } from "./data/AZ-104/index.jsx";
 import az700, { meta as meta700 } from "./data/AZ-700/index.js";
-import az900, { meta as meta900 } from "./data/AZ-900/index.js";
+import az900, { meta as meta900 } from "./data/AZ-900/index.jsx";
 import az305, { meta as meta305 } from "./data/AZ-305/index.js";
 
 import az104FreeIds from "./data/AZ-104/az-104-free.js";
