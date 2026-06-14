@@ -194,15 +194,22 @@ export async function loadPortalCards() {
   return cards;
 }
 
+// Card types excluded from the main study deck (App.jsx examDeck filter) —
+// games, labs, and portal sims are studied via their own dedicated decks.
+const NON_DECK_TYPES = new Set(["connections", "crossword", "portal", "wordle", "wordsearch", "terraform-lab"]);
+
 export async function loadExamCardCounts() {
   const cached = getCached("__exam_counts__");
   if (cached) return cached;
   const { data, error } = await selectAllRows(() =>
-    supabase.from("cards").select("exam")
+    supabase.from("cards").select("exam, type")
   );
   if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
   const counts = {};
-  for (const { exam } of data) counts[exam] = (counts[exam] || 0) + 1;
+  for (const { exam, type } of data) {
+    if (NON_DECK_TYPES.has(type)) continue;
+    counts[exam] = (counts[exam] || 0) + 1;
+  }
   setCached("__exam_counts__", counts);
   return counts;
 }
