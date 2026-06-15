@@ -1,4 +1,9 @@
 import { useState, useRef, useEffect } from "react";
+import {
+  CheckIcon, CrossIcon, LightbulbIcon, BookIcon, EyeOffIcon, SettingsIcon,
+  RefreshIcon, ArrowRightIcon, WrenchIcon, HashIcon, LinkIcon, SearchIcon,
+  TerminalIcon, KeyboardIcon, PlayIcon,
+} from "../components/Icons";
 import "./tasksimulator.css";
 
 /**
@@ -87,7 +92,7 @@ function FillInTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnsw
           <span className="task-category">{card.category}</span>
           <span className={`difficulty-badge difficulty-badge--${card.difficulty}`}>{card.difficulty}</span>
         </div>
-        <span className="task-type-badge">⌨️ Fill In</span>
+        <span className="task-type-badge"><KeyboardIcon /> Fill In</span>
       </div>
 
       <p className="task-question">{card.question}</p>
@@ -114,7 +119,7 @@ function FillInTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnsw
               />
               {submitted && (
                 <span className={`input-icon ${results[i] ? "icon-correct" : "icon-wrong"}`}>
-                  {results[i] ? "✓" : "✕"}
+                  {results[i] ? <CheckIcon /> : <CrossIcon />}
                 </span>
               )}
             </div>
@@ -131,33 +136,33 @@ function FillInTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnsw
           onClick={handleSubmit}
           disabled={values.some(v => v.trim() === "")}
         >
-          ✔ Check Answers
+          <CheckIcon /> Check Answers
         </button>
       ) : (
         <div className={`task-feedback ${allCorrect ? "feedback-correct" : "feedback-wrong"}`}>
           <p className="task-feedback-text">
-            {allCorrect ? <><span className="known-check">✓</span> All correct!</> : `❌ ${results.filter(Boolean).length} / ${card.blanks.length} correct`}
+            {allCorrect ? <><span className="known-check"><CheckIcon /></span> All correct!</> : <><CrossIcon /> {results.filter(Boolean).length} / {card.blanks.length} correct</>}
           </p>
           {!hideAnswers && card.explanation && !revealed && (
-            <button className="task-reveal-btn" onClick={handleReveal}>💡 Show explanation</button>
+            <button className="task-reveal-btn" onClick={handleReveal}><LightbulbIcon /> Show explanation</button>
           )}          {!hideAnswers && revealed && card.explanation && (
             <div className="task-explanation">
-              <span className="explanation-label">💡 Explanation</span>
+              <span className="explanation-label"><LightbulbIcon /> Explanation</span>
               <p>{card.explanation}</p>
             </div>
           )}
           {!hideAnswers && card.learnUrl && (
             <a className="learn-more-link" href={card.learnUrl} target="_blank" rel="noopener noreferrer">
-              📖 Learn more on Microsoft Learn
+              <BookIcon /> Learn more on Microsoft Learn
             </a>
           )}
           {hideAnswers && (
-            <p className="hide-answers-notice">🙈 Answer hidden — toggle off in ⚙️ Settings to see explanations</p>
+            <p className="hide-answers-notice"><EyeOffIcon /> Answer hidden — toggle off in <SettingsIcon /> Settings to see explanations</p>
           )}
           {!examMode && (
             <div className="task-actions">
-              <button className="btn btn-review" onClick={handleRetry}>🔁 Try Again</button>              <button className="btn btn-know" onClick={handleNext}>
-                {onSrsRate ? "Continue →" : <><span className="known-check">✓</span> Next Card</>}
+              <button className="btn btn-review" onClick={handleRetry}><RefreshIcon /> Try Again</button>              <button className="btn btn-know" onClick={handleNext}>
+                {onSrsRate ? <>Continue <ArrowRightIcon /></> : <><span className="known-check"><CheckIcon /></span> Next Card</>}
               </button>
             </div>
           )}
@@ -216,7 +221,7 @@ function OrderTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswe
           <span className="task-category">{card.category}</span>
           <span className={`difficulty-badge difficulty-badge--${card.difficulty}`}>{card.difficulty}</span>
         </div>
-        <span className="task-type-badge">🔢 Order Steps</span>
+        <span className="task-type-badge"><HashIcon /> Order Steps</span>
       </div>
 
       <p className="task-question">{card.question}</p>
@@ -231,7 +236,7 @@ function OrderTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswe
               <span className="order-seq-num">{pos + 1}</span>
               <span>{options[optIdx]}</span>
               {!submitted && (
-                <button className="order-seq-remove" onClick={() => handleClick(optIdx)}>✕</button>
+                <button className="order-seq-remove" onClick={() => handleClick(optIdx)}><CrossIcon size={11} /></button>
               )}
             </div>
           ))
@@ -258,12 +263,12 @@ function OrderTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswe
           onClick={handleSubmit}
           disabled={sequence.length !== card.steps.length}
         >
-          ✔ Check Order
+          <CheckIcon /> Check Order
         </button>
       ) : (
         <div className={`task-feedback ${allCorrect ? "feedback-correct" : "feedback-wrong"}`}>
           <p className="task-feedback-text">
-            {allCorrect ? <><span className="known-check">✓</span> Perfect order!</> : "❌ Not quite — see correct order below"}
+            {allCorrect ? <><span className="known-check"><CheckIcon /></span> Perfect order!</> : <><CrossIcon /> Not quite — see correct order below</>}
           </p>
           {!hideAnswers && !allCorrect && (
             <ol className="order-correct-list">
@@ -271,25 +276,25 @@ function OrderTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswe
             </ol>
           )}
           {!hideAnswers && card.explanation && !revealed && (
-            <button className="task-reveal-btn" onClick={() => setRevealed(true)}>💡 Show explanation</button>
+            <button className="task-reveal-btn" onClick={() => setRevealed(true)}><LightbulbIcon /> Show explanation</button>
           )}          {!hideAnswers && revealed && card.explanation && (
             <div className="task-explanation">
-              <span className="explanation-label">💡 Explanation</span>
+              <span className="explanation-label"><LightbulbIcon /> Explanation</span>
               <p>{card.explanation}</p>
             </div>
           )}
           {!hideAnswers && card.learnUrl && (
             <a className="learn-more-link" href={card.learnUrl} target="_blank" rel="noopener noreferrer">
-              📖 Learn more on Microsoft Learn
+              <BookIcon /> Learn more on Microsoft Learn
             </a>
           )}
           {hideAnswers && (
-            <p className="hide-answers-notice">🙈 Answer hidden — toggle off in ⚙️ Settings to see explanations</p>
+            <p className="hide-answers-notice"><EyeOffIcon /> Answer hidden — toggle off in <SettingsIcon /> Settings to see explanations</p>
           )}
           {!examMode && (
             <div className="task-actions">
-              <button className="btn btn-review" onClick={handleRetry}>🔁 Try Again</button>              <button className="btn btn-know" onClick={handleNext}>
-                {onSrsRate ? "Continue →" : <><span className="known-check">✓</span> Next Card</>}
+              <button className="btn btn-review" onClick={handleRetry}><RefreshIcon /> Try Again</button>              <button className="btn btn-know" onClick={handleNext}>
+                {onSrsRate ? <>Continue <ArrowRightIcon /></> : <><span className="known-check"><CheckIcon /></span> Next Card</>}
               </button>
             </div>
           )}
@@ -359,7 +364,7 @@ function MatchTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswe
           <span className="task-category">{card.category}</span>
           <span className={`difficulty-badge difficulty-badge--${card.difficulty}`}>{card.difficulty}</span>
         </div>
-        <span className="task-type-badge">🔗 Match</span>
+        <span className="task-type-badge"><LinkIcon /> Match</span>
       </div>
 
       <p className="task-question">{card.question}</p>
@@ -381,7 +386,7 @@ function MatchTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswe
             >
               {left}
               {selections[i] !== undefined && (
-                <span className="match-paired-arrow">→ {rights[selections[i]]}</span>
+                <span className="match-paired-arrow"><ArrowRightIcon size={12} /> {rights[selections[i]]}</span>
               )}
             </button>
           ))}
@@ -411,42 +416,42 @@ function MatchTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswe
           onClick={handleSubmit}
           disabled={!allAnswered}
         >
-          ✔ Check Matches
+          <CheckIcon /> Check Matches
         </button>
       ) : (
         <div className={`task-feedback ${allCorrect ? "feedback-correct" : "feedback-wrong"}`}>
           <p className="task-feedback-text">
-            {allCorrect ? <><span className="known-check">✓</span> All matched!</> : `❌ ${results.filter(Boolean).length} / ${lefts.length} correct`}
+            {allCorrect ? <><span className="known-check"><CheckIcon /></span> All matched!</> : <><CrossIcon /> {results.filter(Boolean).length} / {lefts.length} correct</>}
           </p>
           {!hideAnswers && !allCorrect && (
             <ul className="match-correct-list">
               {card.pairs.map((p, i) => (
                 <li key={i} className={results[i] ? "match-ans-ok" : "match-ans-bad"}>
-                  {results[i] ? "✓" : "✕"} <strong>{p.left}</strong> → {p.right}
+                  {results[i] ? <CheckIcon /> : <CrossIcon />} <strong>{p.left}</strong> <ArrowRightIcon size={12} /> {p.right}
                 </li>
               ))}
             </ul>
           )}
           {!hideAnswers && card.explanation && !revealed && (
-            <button className="task-reveal-btn" onClick={() => setRevealed(true)}>💡 Show explanation</button>
+            <button className="task-reveal-btn" onClick={() => setRevealed(true)}><LightbulbIcon /> Show explanation</button>
           )}          {!hideAnswers && revealed && card.explanation && (
             <div className="task-explanation">
-              <span className="explanation-label">💡 Explanation</span>
+              <span className="explanation-label"><LightbulbIcon /> Explanation</span>
               <p>{card.explanation}</p>
             </div>
           )}
           {!hideAnswers && card.learnUrl && (
             <a className="learn-more-link" href={card.learnUrl} target="_blank" rel="noopener noreferrer">
-              📖 Learn more on Microsoft Learn
+              <BookIcon /> Learn more on Microsoft Learn
             </a>
           )}
           {hideAnswers && (
-            <p className="hide-answers-notice">🙈 Answer hidden — toggle off in ⚙️ Settings to see explanations</p>
+            <p className="hide-answers-notice"><EyeOffIcon /> Answer hidden — toggle off in <SettingsIcon /> Settings to see explanations</p>
           )}
           {!examMode && (
             <div className="task-actions">
-              <button className="btn btn-review" onClick={handleRetry}>🔁 Try Again</button>              <button className="btn btn-know" onClick={handleNext}>
-                {onSrsRate ? "Continue →" : <><span className="known-check">✓</span> Next Card</>}
+              <button className="btn btn-review" onClick={handleRetry}><RefreshIcon /> Try Again</button>              <button className="btn btn-know" onClick={handleNext}>
+                {onSrsRate ? <>Continue <ArrowRightIcon /></> : <><span className="known-check"><CheckIcon /></span> Next Card</>}
               </button>
             </div>
           )}
@@ -492,7 +497,7 @@ function FaultTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswe
           <span className="task-category">{card.category}</span>
           <span className={`difficulty-badge difficulty-badge--${card.difficulty}`}>{card.difficulty}</span>
         </div>
-        <span className="task-type-badge">🔍 Find the Fault</span>
+        <span className="task-type-badge"><SearchIcon /> Find the Fault</span>
       </div>
 
       <p className="task-question">{card.question}</p>
@@ -521,41 +526,41 @@ function FaultTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswe
 
       {!submitted ? (
         <button className="task-submit-btn" onClick={handleSubmit} disabled={selected === null}>
-          ✔ Identify Fault
+          <CheckIcon /> Identify Fault
         </button>
       ) : (
         <div className={`task-feedback ${isCorrect ? "feedback-correct" : "feedback-wrong"}`}>
           <p className="task-feedback-text">
-            {isCorrect ? <><span className="known-check">✓</span> Correct — fault identified!</> : "❌ Not quite — the correct fault is highlighted above"}
+            {isCorrect ? <><span className="known-check"><CheckIcon /></span> Correct — fault identified!</> : <><CrossIcon /> Not quite — the correct fault is highlighted above</>}
           </p>
           {!hideAnswers && card.fix && (
             <div className="fault-fix">
-              <span className="explanation-label">🔧 Fix</span>
+              <span className="explanation-label"><WrenchIcon /> Fix</span>
               <p>{card.fix}</p>
             </div>
           )}
           {!hideAnswers && card.explanation && !revealed && (
-            <button className="task-reveal-btn" onClick={() => setRevealed(true)}>💡 Show explanation</button>
+            <button className="task-reveal-btn" onClick={() => setRevealed(true)}><LightbulbIcon /> Show explanation</button>
           )}
           {!hideAnswers && revealed && card.explanation && (
             <div className="task-explanation">
-              <span className="explanation-label">💡 Explanation</span>
+              <span className="explanation-label"><LightbulbIcon /> Explanation</span>
               <p>{card.explanation}</p>
             </div>
           )}
           {!hideAnswers && card.learnUrl && (
             <a className="learn-more-link" href={card.learnUrl} target="_blank" rel="noopener noreferrer">
-              📖 Learn more on Microsoft Learn
+              <BookIcon /> Learn more on Microsoft Learn
             </a>
           )}
           {hideAnswers && (
-            <p className="hide-answers-notice">🙈 Answer hidden — toggle off in ⚙️ Settings to see explanations</p>
+            <p className="hide-answers-notice"><EyeOffIcon /> Answer hidden — toggle off in <SettingsIcon /> Settings to see explanations</p>
           )}
           {!examMode && (
             <div className="task-actions">
-              <button className="btn btn-review" onClick={handleRetry}>🔁 Try Again</button>
+              <button className="btn btn-review" onClick={handleRetry}><RefreshIcon /> Try Again</button>
               <button className="btn btn-know" onClick={handleNext}>
-                {onSrsRate ? "Continue →" : <><span className="known-check">✓</span> Next Card</>}
+                {onSrsRate ? <>Continue <ArrowRightIcon /></> : <><span className="known-check"><CheckIcon /></span> Next Card</>}
               </button>
             </div>
           )}
@@ -589,7 +594,7 @@ function ScriptTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnsw
 
   const shell      = card.shell || "bash";
   const prompt     = shell === "powershell" ? "PS > " : "$ ";
-  const badgeLabel = shell === "powershell" ? "ᴾˢ PowerShell" : "🐧 Bash / CLI";
+  const badgeLabel = shell === "powershell" ? "PowerShell" : <><TerminalIcon /> Bash / CLI</>;
 
   // Scroll to bottom whenever history grows
   useEffect(() => {
@@ -690,7 +695,7 @@ function ScriptTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnsw
       <p className="task-question">{card.question}</p>
       {card.helpText && !submitted && (
         <p className="script-help-tip">
-          💡 Tip: type <code>{shell === "powershell" ? "Get-Help <command>" : "command --help"}</code> or just <code>{shell === "powershell" ? "-?" : "--help"}</code> in the terminal for usage info.
+          <LightbulbIcon /> Tip: type <code>{shell === "powershell" ? "Get-Help <command>" : "command --help"}</code> or just <code>{shell === "powershell" ? "-?" : "--help"}</code> in the terminal for usage info.
         </p>
       )}
 
@@ -751,7 +756,7 @@ function ScriptTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnsw
             }
           </p>
           <button className="task-submit-btn" onClick={runLine} disabled={value.trim() === ""}>
-            {examMode ? "▶ Submit Answer" : "▶ Run Command"}
+            <PlayIcon /> {examMode ? "Submit Answer" : "Run Command"}
           </button>
         </>
       )}
@@ -759,43 +764,43 @@ function ScriptTask({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnsw
       {submitted && (
         <div className={`task-feedback ${finalCorrect ? "feedback-correct" : "feedback-wrong"}`}>
           <p className="task-feedback-text">
-            {finalCorrect ? <><span className="known-check">✓</span> Correct!</> : `❌ ${finalTokenResults.filter(t => t.ok).length} / ${finalTokenResults.length} tokens matched`}
+            {finalCorrect ? <><span className="known-check"><CheckIcon /></span> Correct!</> : <><CrossIcon /> {finalTokenResults.filter(t => t.ok).length} / {finalTokenResults.length} tokens matched</>}
           </p>          {!hideAnswers && (
             <ul className="token-check-list">
               {finalTokenResults.map(({ label, ok }) => (
                 <li key={label} className={ok ? "token-ok" : "token-missing"}>
-                  {ok ? "✓" : "✕"} {label}
+                  {ok ? <CheckIcon /> : <CrossIcon />} {label}
                 </li>
               ))}
             </ul>
           )}
           {!hideAnswers && !finalCorrect && card.modelAnswer && (
             <div className="script-model-answer">
-              <span className="explanation-label">✅ Model answer</span>
+              <span className="explanation-label"><CheckIcon /> Model answer</span>
               <pre><code>{card.modelAnswer}</code></pre>
             </div>
           )}
           {!hideAnswers && card.explanation && !revealed && (
-            <button className="task-reveal-btn" onClick={() => setRevealed(true)}>💡 Show explanation</button>
+            <button className="task-reveal-btn" onClick={() => setRevealed(true)}><LightbulbIcon /> Show explanation</button>
           )}
           {!hideAnswers && revealed && card.explanation && (
             <div className="task-explanation">
-              <span className="explanation-label">💡 Explanation</span>
+              <span className="explanation-label"><LightbulbIcon /> Explanation</span>
               <p>{card.explanation}</p>
             </div>
           )}
           {!hideAnswers && card.learnUrl && (
             <a className="learn-more-link" href={card.learnUrl} target="_blank" rel="noopener noreferrer">
-              📖 Learn more on Microsoft Learn
+              <BookIcon /> Learn more on Microsoft Learn
             </a>
           )}
           {hideAnswers && (
-            <p className="hide-answers-notice">🙈 Answer hidden — toggle off in ⚙️ Settings to see explanations</p>
+            <p className="hide-answers-notice"><EyeOffIcon /> Answer hidden — toggle off in <SettingsIcon /> Settings to see explanations</p>
           )}          {!examMode && (
             <div className="task-actions">
-              <button className="btn btn-review" onClick={handleRetry}>🔁 Try Again</button>
+              <button className="btn btn-review" onClick={handleRetry}><RefreshIcon /> Try Again</button>
               <button className="btn btn-know" onClick={handleNext}>
-                {onSrsRate ? "Continue →" : <><span className="known-check">✓</span> Next Card</>}
+                {onSrsRate ? <>Continue <ArrowRightIcon /></> : <><span className="known-check"><CheckIcon /></span> Next Card</>}
               </button>
             </div>
           )}

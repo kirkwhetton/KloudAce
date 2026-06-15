@@ -151,6 +151,11 @@
   color: var(--text-secondary);
 }
 
+.feedback-text svg {
+  vertical-align: middle;
+  margin-right: 0.2rem;
+}
+
 .mcq-explanation {
   background: var(--explain-bg);
   border: 1px solid var(--explain-border);
@@ -162,6 +167,9 @@
 }
 
 .explanation-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -183,6 +191,9 @@
 
 /* Reuse the same .btn styles from Flashcard.css */
 .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   padding: 0.5rem 1.25rem;
   border: none;
   border-radius: 8px;

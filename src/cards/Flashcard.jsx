@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BookIcon, RefreshIcon, CheckIcon, EyeOffIcon, NeutralFaceIcon } from "../components/Icons";
 import "./Flashcard.css";
 
 function Flashcard({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer, hideDifficulty, onSaveCard, decks, displayId, onAnswer }) {
@@ -56,10 +57,10 @@ function Flashcard({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswe
             {difficultyBadge}
             <span className="category-badge">{card.category}</span>
             <p className="card-text answer">{card.answer}</p>
-            {card.learnUrl && <span className="learn-more-link">📖 Learn more on Microsoft Learn</span>}
+            {card.learnUrl && <span className="learn-more-link"><BookIcon /> Learn more on Microsoft Learn</span>}
             <div className="action-buttons">
-              <button className="btn btn-review">🔁 Review Again</button>
-              <button className="btn btn-know">✓ Next Card</button>
+              <button className="btn btn-review"><RefreshIcon /> Review Again</button>
+              <button className="btn btn-know"><CheckIcon /> Next Card</button>
             </div>
             {displayId && <span className="card-id-badge">#{displayId}</span>}
           </div>
@@ -74,7 +75,7 @@ function Flashcard({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswe
           {examMode
             ? <span className="flip-hint">Click to move to next card</span>
             : hideAnswers
-            ? <span className="flip-hint" style={{ opacity: 0.5 }}>🙈 Hide answers is on</span>
+            ? <span className="flip-hint" style={{ opacity: 0.5 }}><EyeOffIcon /> Hide answers is on</span>
             : <span className="flip-hint">Click to reveal answer</span>
           }
           {displayId && <span className="card-id-badge">#{displayId}</span>}
@@ -88,7 +89,7 @@ function Flashcard({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswe
           {card.tag && <span className="card-tag-badge">{card.tag}</span>}
           {card.learnUrl && (
             <a className="learn-more-link" href={card.learnUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}>
-              📖 Learn more on Microsoft Learn
+              <BookIcon /> Learn more on Microsoft Learn
             </a>
           )}
           <div
@@ -101,19 +102,19 @@ function Flashcard({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswe
                 <p className="srs-rating-label">Did you know this?</p>
                 <div className="srs-rating-btns">
                   <button className="srs-btn srs-1" onClick={() => onSrsRate(1)}>
-                    <span className="srs-emoji">😶</span>
+                    <span className="srs-emoji"><NeutralFaceIcon /></span>
                     <span className="srs-label">Didn't Know</span>
                   </button>
                   <button className="srs-btn srs-3" onClick={() => { handleReview(); onSrsRate(3); }}>
-                    <span className="srs-emoji known-check">✓</span>
+                    <span className="srs-emoji known-check"><CheckIcon /></span>
                     <span className="srs-label">Got It</span>
                   </button>
                 </div>
               </div>
             ) : (
               <>
-                <button className="btn btn-review" onClick={handleReview}>🔁 Review Again</button>
-                <button className="btn btn-know" onClick={onKnow}><span className="known-check">✓</span> Next Card</button>
+                <button className="btn btn-review" onClick={handleReview}><RefreshIcon /> Review Again</button>
+                <button className="btn btn-know" onClick={onKnow}><span className="known-check"><CheckIcon /></span> Next Card</button>
               </>
             )}
           </div>

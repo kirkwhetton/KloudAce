@@ -36,8 +36,14 @@
 }
 
 .tf-icon {
-  font-size: 1.2rem;
+  display: inline-flex;
+  align-items: center;
   font-weight: 900;
+}
+
+.tf-icon svg {
+  width: 18px;
+  height: 18px;
 }
 
 .tf-btn-true {
@@ -84,6 +90,9 @@
 
 /* ── Action buttons ─────────────────────────────────────────── */
 .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   padding: 0.55rem 1.2rem;
   border-radius: 8px;
   font-size: 0.9rem;

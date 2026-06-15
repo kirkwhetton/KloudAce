@@ -1,4 +1,5 @@
 import { useState, useMemo, createElement } from "react";
+import { CheckIcon, CrossIcon, LightbulbIcon, BookIcon, EyeOffIcon, SettingsIcon, RefreshIcon, ArrowRightIcon } from "../components/Icons";
 import "./multichoice.css";
 import "./imagemcq.css";
 
@@ -78,29 +79,29 @@ export default function ImageMCQ({ card, onKnow, onSrsRate, hideAnswers, examMod
       </div>      {hasAnswered && !examMode && (
         <div className={`mcq-feedback ${isCorrect ? "feedback-correct" : "feedback-wrong"}`}>
           <p className="feedback-text">
-            {isCorrect ? <><span className="known-check">✓</span> Correct!</> : "❌ Not quite"}
+            {isCorrect ? <><span className="known-check"><CheckIcon /></span> Correct!</> : <><CrossIcon /> Not quite</>}
             {!hideAnswers && <> — {card.answer}</>}
           </p>          {!hideAnswers && card.explanation && (
             <div className="mcq-explanation">
-              <span className="explanation-label">💡 Explanation</span>
+              <span className="explanation-label"><LightbulbIcon /> Explanation</span>
               <p>{card.explanation}</p>
             </div>
           )}
           {!hideAnswers && card.learnUrl && (
             <a className="learn-more-link" href={card.learnUrl} target="_blank" rel="noopener noreferrer">
-              📖 Learn more on Microsoft Learn
+              <BookIcon /> Learn more on Microsoft Learn
             </a>
           )}
           {hideAnswers && (
-            <p className="hide-answers-notice">🙈 Answer hidden — toggle off in ⚙️ Settings to see explanations</p>
+            <p className="hide-answers-notice"><EyeOffIcon /> Answer hidden — toggle off in <SettingsIcon /> Settings to see explanations</p>
           )}          <div className="mcq-actions">
-            <button className="btn btn-review" onClick={handleReview}>🔁 Review Again</button>
+            <button className="btn btn-review" onClick={handleReview}><RefreshIcon /> Review Again</button>
             {onSrsRate ? (
               <button className="btn btn-know" onClick={() => onSrsRate(isCorrect ? 3 : 1)}>
-                Continue →
+                Continue <ArrowRightIcon />
               </button>
             ) : (
-              <button className="btn btn-know" onClick={onKnow}><span className="known-check">✓</span> Next Card</button>
+              <button className="btn btn-know" onClick={onKnow}><span className="known-check"><CheckIcon /></span> Next Card</button>
             )}
           </div>
         </div>

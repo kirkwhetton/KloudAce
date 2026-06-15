@@ -57,6 +57,9 @@
 }
 
 .task-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
   font-size: 0.72rem;
   font-weight: 600;
   padding: 0.2rem 0.65rem;
@@ -68,6 +71,9 @@
 
 /* PowerShell badge — blue pill matching the real PS brand colour */
 .task-type-badge-ps {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
   font-size: 0.72rem;
   font-weight: 700;
   padding: 0.2rem 0.75rem;
@@ -145,8 +151,9 @@
 .input-icon {
   position: absolute;
   right: 0.75rem;
+  display: inline-flex;
+  align-items: center;
   font-weight: 700;
-  font-size: 1rem;
 }
 .icon-correct { color: var(--correct); }
 .icon-wrong   { color: var(--wrong); }
@@ -166,6 +173,9 @@
 /* ── Submit button ─────────────────────────────────────── */
 
 .task-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   align-self: flex-start;
   padding: 0.6rem 1.4rem;
   border-radius: 8px;
@@ -199,6 +209,10 @@
 .task-feedback.feedback-wrong   { background: var(--wrong-bg); border: 1px solid var(--wrong-bg); }
 
 .task-feedback-text {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
   font-weight: 600;
   font-size: 1rem;
   margin: 0;
@@ -207,6 +221,9 @@
 .feedback-wrong   .task-feedback-text { color: var(--wrong); }
 
 .task-reveal-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   align-self: flex-start;
   background: none;
   border: 1px solid var(--brand);
@@ -231,6 +248,9 @@
 .task-explanation p { margin: 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.55; }
 
 .explanation-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
   font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -377,7 +397,9 @@
 .match-item.match-wrong   { border-color: var(--wrong); background: var(--wrong-bg); color: var(--wrong); }
 
 .match-paired-arrow {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
   font-size: 0.78rem;
   color: var(--text-muted);
   margin-top: 0.2rem;
@@ -393,12 +415,21 @@
   gap: 0.35rem;
   font-size: 0.88rem;
 }
+.match-correct-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
 .match-ans-ok  { color: var(--correct); }
 .match-ans-bad { color: var(--wrong); }
 
 /* ── Shared with other card types ──────────────────────── */
 
 .hide-answers-notice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
   font-size: 0.85rem;
   color: var(--text-muted);
   font-style: italic;
@@ -406,6 +437,9 @@
 }
 
 .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
   border: none;
@@ -579,6 +613,10 @@
   background: var(--brand-light);
   border-left: 3px solid var(--brand);
   border-radius: 4px;
+}
+.script-help-tip svg {
+  vertical-align: middle;
+  margin-right: 0.2rem;
 }
 .script-help-tip code {
   font-family: "Courier New", monospace;

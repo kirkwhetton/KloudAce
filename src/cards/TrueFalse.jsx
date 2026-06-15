@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { CheckIcon, CrossIcon, BookIcon, EyeOffIcon, SettingsIcon, RefreshIcon, ArrowRightIcon } from "../components/Icons";
 import "./truefalse.css";
 
 export default function TrueFalse({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer, onAnswer }) {
@@ -36,31 +37,31 @@ export default function TrueFalse({ card, onKnow, onSrsRate, hideAnswers, examMo
 
       <div className="tf-choices">
         <button className={getClass(true)}  onClick={() => handlePick(true)}>
-          <span className="tf-icon">✓</span> True
+          <span className="tf-icon"><CheckIcon /></span> True
         </button>
         <button className={getClass(false)} onClick={() => handlePick(false)}>
-          <span className="tf-icon">✕</span> False
+          <span className="tf-icon"><CrossIcon /></span> False
         </button>
       </div>      {hasAnswered && !examMode && (
         <div className={`mcq-feedback ${isCorrect ? "feedback-correct" : "feedback-wrong"}`}>          <p className="feedback-text">
-            {isCorrect ? <><span className="known-check">✓</span> Correct!</> : `❌ The answer is ${card.answer ? "True" : "False"}`}
+            {isCorrect ? <><span className="known-check"><CheckIcon /></span> Correct!</> : <><CrossIcon /> The answer is {card.answer ? "True" : "False"}</>}
             {!hideAnswers && <> — {card.answer ? "True." : "False."} {card.explanation}</>}
           </p>
           {!hideAnswers && card.learnUrl && (
             <a className="learn-more-link" href={card.learnUrl} target="_blank" rel="noopener noreferrer">
-              📖 Learn more on Microsoft Learn
+              <BookIcon /> Learn more on Microsoft Learn
             </a>
           )}
           {hideAnswers && (
-            <p className="hide-answers-notice">🙈 Answer hidden — toggle off in ⚙️ Settings to see explanations</p>
+            <p className="hide-answers-notice"><EyeOffIcon /> Answer hidden — toggle off in <SettingsIcon /> Settings to see explanations</p>
           )}            <div className="mcq-actions">
-            <button className="btn btn-review" onClick={handleReview}>🔁 Review Again</button>
+            <button className="btn btn-review" onClick={handleReview}><RefreshIcon /> Review Again</button>
             {onSrsRate ? (
               <button className="btn btn-know" onClick={() => onSrsRate(isCorrect ? 3 : 1)}>
-                Continue →
+                Continue <ArrowRightIcon />
               </button>
             ) : (
-              <button className="btn btn-know" onClick={onKnow}><span className="known-check">✓</span> Next Card</button>
+              <button className="btn btn-know" onClick={onKnow}><span className="known-check"><CheckIcon /></span> Next Card</button>
             )}
           </div>
         </div>

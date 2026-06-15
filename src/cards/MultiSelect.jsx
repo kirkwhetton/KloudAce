@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { CheckIcon, CrossIcon, LightbulbIcon, BookIcon, EyeOffIcon, SettingsIcon, RefreshIcon, ArrowRightIcon } from "../components/Icons";
 import "./multichoice.css";
 import "./multiselect.css";
 
@@ -88,7 +89,7 @@ export default function MultiSelect({ card, onKnow, onSrsRate, hideAnswers, exam
             onClick={() => toggle(choice)}
           >
             <span className={`ms-checkbox${selected.has(choice) ? " checked" : ""}${submitted && correctSet.has(choice) ? " correct-box" : ""}`}>
-              {selected.has(choice) ? "✓" : ""}
+              {selected.has(choice) ? <CheckIcon size={12} /> : ""}
             </span>
             {choice}
           </button>
@@ -103,7 +104,7 @@ export default function MultiSelect({ card, onKnow, onSrsRate, hideAnswers, exam
             onClick={handleSubmit}
             disabled={selected.size === 0}
           >
-            Submit →
+            Submit <ArrowRightIcon />
           </button>
         </div>
       )}
@@ -111,31 +112,31 @@ export default function MultiSelect({ card, onKnow, onSrsRate, hideAnswers, exam
       {submitted && !examMode && (
         <div className={`mcq-feedback ${isFullyCorrect ? "feedback-correct" : "feedback-wrong"}`}>
           <p className="feedback-text">
-            {isFullyCorrect ? <><span className="known-check">✓</span> Perfect!</> : "❌ Not quite"}
+            {isFullyCorrect ? <><span className="known-check"><CheckIcon /></span> Perfect!</> : <><CrossIcon /> Not quite</>}
             {!hideAnswers && <> — {card.answer}</>}
           </p>
           {!hideAnswers && card.explanation && (
             <div className="mcq-explanation">
-              <span className="explanation-label">💡 Explanation</span>
+              <span className="explanation-label"><LightbulbIcon /> Explanation</span>
               <p>{card.explanation}</p>
             </div>
           )}
           {!hideAnswers && card.learnUrl && (
             <a className="learn-more-link" href={card.learnUrl} target="_blank" rel="noopener noreferrer">
-              📖 Learn more on Microsoft Learn
+              <BookIcon /> Learn more on Microsoft Learn
             </a>
           )}
           {hideAnswers && (
-            <p className="hide-answers-notice">🙈 Answer hidden — toggle off in ⚙️ Settings to see explanations</p>
+            <p className="hide-answers-notice"><EyeOffIcon /> Answer hidden — toggle off in <SettingsIcon /> Settings to see explanations</p>
           )}
           <div className="mcq-actions">
-            <button className="btn btn-review" onClick={handleReview}>🔁 Review Again</button>
+            <button className="btn btn-review" onClick={handleReview}><RefreshIcon /> Review Again</button>
             {onSrsRate ? (
               <button className="btn btn-know" onClick={() => onSrsRate(isFullyCorrect ? 3 : 1)}>
-                Continue →
+                Continue <ArrowRightIcon />
               </button>
             ) : (
-              <button className="btn btn-know" onClick={onKnow}><span className="known-check">✓</span> Next Card</button>
+              <button className="btn btn-know" onClick={onKnow}><span className="known-check"><CheckIcon /></span> Next Card</button>
             )}
           </div>
         </div>
