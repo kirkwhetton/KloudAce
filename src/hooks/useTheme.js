@@ -6,11 +6,11 @@
 import { useState, useEffect } from "react";
 
 export const THEMES = [
-  { value: "light",        label: "☀️ Light" },
-  { value: "dark",         label: "🌙 Dark" },
-  { value: "protanopia",   label: "👁 Protanopia" },
-  { value: "deuteranopia", label: "👁 Deuteranopia" },
-  { value: "tritanopia",   label: "👁 Tritanopia" },
+  { value: "light",        label: "Light" },
+  { value: "dark",         label: "Dark" },
+  { value: "protanopia",   label: "Protanopia" },
+  { value: "deuteranopia", label: "Deuteranopia" },
+  { value: "tritanopia",   label: "Tritanopia" },
 ];
 
 function getStoredTheme(userId) {

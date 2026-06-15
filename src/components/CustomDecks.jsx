@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { ArrowRightIcon, ArrowLeftIcon, CrossIcon, TrashIcon, PencilIcon, FolderIcon } from "./Icons";
 
 const loadDecks = () => JSON.parse(localStorage.getItem("customDecks") || "[]");
 const saveDecks = (decks) => localStorage.setItem("customDecks", JSON.stringify(decks));
@@ -98,9 +99,9 @@ function CreateTab({ onSave }) {
           {cards.map(card => (
             <div key={card.id} className="cd-preview-item">
               <span className="cd-preview-q">{card.question}</span>
-              <span className="cd-preview-sep">→</span>
+              <span className="cd-preview-sep"><ArrowRightIcon /></span>
               <span className="cd-preview-a">{card.answer}</span>
-              <button type="button" className="cd-preview-remove" onClick={() => removeCard(card.id)} title="Remove">✕</button>
+              <button type="button" className="cd-preview-remove" onClick={() => removeCard(card.id)} title="Remove"><CrossIcon /></button>
             </div>
           ))}
         </div>
@@ -146,7 +147,7 @@ function EditDeckView({ deck, onSave, onBack }) {
 
   return (
     <div className="cd-edit-view">
-      <button type="button" className="cd-edit-back" onClick={onBack}>← Back to decks</button>
+      <button type="button" className="cd-edit-back" onClick={onBack}><ArrowLeftIcon /> Back to decks</button>
       <label className="profile-label" style={{ marginBottom: "0.75rem" }}>
         Deck Name
         <input className="profile-input" type="text" value={name} onChange={e => setName(e.target.value)} />
@@ -171,7 +172,7 @@ function EditDeckView({ deck, onSave, onBack }) {
                 {DIFFICULTIES.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
               </select>
             </div>
-            <button type="button" className="cd-delete-btn" onClick={() => removeCard(i)} title="Remove">🗑</button>
+            <button type="button" className="cd-delete-btn" onClick={() => removeCard(i)} title="Remove"><TrashIcon /></button>
           </div>
         ))}
       </div>
@@ -206,8 +207,8 @@ function DecksTab({ decks, onStudy, onDelete, onEdit }) {
             </div>
             <div className="cd-deck-actions">
               <button className="cd-study-btn" onClick={() => onStudy(deck)}>Study</button>
-              <button className="cd-edit-btn" onClick={() => onEdit(deck)} title="Edit deck">✏️</button>
-              <button className="cd-delete-btn" onClick={() => onDelete(deck.id)} title="Delete">🗑</button>
+              <button className="cd-edit-btn" onClick={() => onEdit(deck)} title="Edit deck"><PencilIcon /></button>
+              <button className="cd-delete-btn" onClick={() => onDelete(deck.id)} title="Delete"><TrashIcon /></button>
             </div>
           </div>
         );
@@ -251,7 +252,7 @@ export default function CustomDecks({ onClose, onStudy, initialEditDeckId }) {
     return (
       <div className="profile-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}>
         <div className="profile-modal cd-modal">
-          <button className="profile-close" onClick={onClose} title="Close">✕</button>
+          <button className="profile-close" onClick={onClose} title="Close"><CrossIcon /></button>
           <EditDeckView
             deck={editingDeck}
             onSave={saveDeckEdits}
@@ -265,10 +266,10 @@ export default function CustomDecks({ onClose, onStudy, initialEditDeckId }) {
   return (
     <div className="profile-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}>
       <div className="profile-modal cd-modal">
-        <button className="profile-close" onClick={onClose} title="Close">✕</button>
+        <button className="profile-close" onClick={onClose} title="Close"><CrossIcon /></button>
 
         <div className="profile-header">
-          <div className="profile-avatar" style={{ fontSize: "1.4rem" }}>🗂️</div>
+          <div className="profile-avatar" style={{ fontSize: "1.4rem" }}><FolderIcon size={20} /></div>
           <div>
             <h2 className="profile-name">My Cards</h2>
             <p className="profile-email">{decks.length} custom deck{decks.length !== 1 ? "s" : ""}</p>

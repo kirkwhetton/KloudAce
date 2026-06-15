@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { supabase } from "../auth/supabase";
+import { CrossIcon, ArrowRightIcon, CheckIcon } from "../components/Icons";
 import "./AdminPanel.css";
 
 const EXAMS       = ["AZ-900", "AZ-104", "AZ-305", "AZ-700"];
@@ -290,7 +291,7 @@ function SingleCardForm() {
             <input className="ap-input ap-zone-num"   value={zone.y}      onChange={e => setZone(i,"y",Number(e.target.value))}       placeholder="Y"  type="number" />
             <input className="ap-input ap-zone-num"   value={zone.width}  onChange={e => setZone(i,"width",Number(e.target.value))}   placeholder="W"  type="number" />
             <input className="ap-input ap-zone-num"   value={zone.height} onChange={e => setZone(i,"height",Number(e.target.value))}  placeholder="H"  type="number" />
-            <button type="button" className="ap-remove-btn" onClick={() => removeZone(i)}>✕</button>
+            <button type="button" className="ap-remove-btn" onClick={() => removeZone(i)}><CrossIcon /></button>
           </div>
         ))}
         <button type="button" className="ap-add-btn" onClick={addZone}>+ Add zone</button>
@@ -313,7 +314,7 @@ function SingleCardForm() {
             <input className="ap-input" value={blank.label}  onChange={e => setBlank(i,"label",e.target.value)}  placeholder="Label (e.g. Resource group)" />
             <input className="ap-input" value={blank.answer} onChange={e => setBlank(i,"answer",e.target.value)} placeholder="Correct answer" />
             <input className="ap-input" value={blank.hint}   onChange={e => setBlank(i,"hint",e.target.value)}   placeholder="Hint (optional)" />
-            <button type="button" className="ap-remove-btn" onClick={() => removeBlank(i)}>✕</button>
+            <button type="button" className="ap-remove-btn" onClick={() => removeBlank(i)}><CrossIcon /></button>
           </div>
         ))}
         <button type="button" className="ap-add-btn" onClick={addBlank}>+ Add blank</button>
@@ -330,7 +331,7 @@ function SingleCardForm() {
           <div key={i} className="ap-list-row">
             <span className="ap-list-num">{i + 1}.</span>
             <input className="ap-input" value={step} onChange={e => setStep(i, e.target.value)} placeholder={`Step ${i+1}`} />
-            <button type="button" className="ap-remove-btn" onClick={() => removeStep(i)} disabled={form.steps.length <= 2}>✕</button>
+            <button type="button" className="ap-remove-btn" onClick={() => removeStep(i)} disabled={form.steps.length <= 2}><CrossIcon /></button>
           </div>
         ))}
         <button type="button" className="ap-add-btn" onClick={addStep}>+ Add step</button>
@@ -346,9 +347,9 @@ function SingleCardForm() {
         {form.pairs.map((pair, i) => (
           <div key={i} className="ap-pair-row">
             <input className="ap-input" value={pair.left}  onChange={e => setPair(i,"left",e.target.value)}  placeholder="Left item" />
-            <span className="ap-pair-arrow">→</span>
+            <span className="ap-pair-arrow"><ArrowRightIcon /></span>
             <input className="ap-input" value={pair.right} onChange={e => setPair(i,"right",e.target.value)} placeholder="Right item" />
-            <button type="button" className="ap-remove-btn" onClick={() => removePair(i)}>✕</button>
+            <button type="button" className="ap-remove-btn" onClick={() => removePair(i)}><CrossIcon /></button>
           </div>
         ))}
         <button type="button" className="ap-add-btn" onClick={addPair}>+ Add pair</button>
@@ -378,7 +379,7 @@ function SingleCardForm() {
         {form.requiredTokens.map((token, i) => (
           <div key={i} className="ap-list-row">
             <input className="ap-input" value={token} onChange={e => setToken(i, e.target.value)} placeholder="e.g. --resource-group" />
-            <button type="button" className="ap-remove-btn" onClick={() => removeToken(i)} disabled={form.requiredTokens.length <= 1}>✕</button>
+            <button type="button" className="ap-remove-btn" onClick={() => removeToken(i)} disabled={form.requiredTokens.length <= 1}><CrossIcon /></button>
           </div>
         ))}
         <button type="button" className="ap-add-btn" onClick={addToken}>+ Add token</button>
@@ -495,7 +496,7 @@ function BulkImport() {
                     <td>{r.category}</td>
                     <td>{r.type}{r.data?.taskType ? ` (${r.data.taskType})` : ""}</td>
                     <td>{r.difficulty}</td>
-                    <td>{r.is_free ? "✓" : ""}</td>
+                    <td>{r.is_free ? <CheckIcon /> : ""}</td>
                   </tr>
                 ))}
               </tbody>
@@ -519,7 +520,7 @@ export default function AdminPanel({ onClose }) {
   return (
     <div className="ap-overlay" onClick={onClose}>
       <div className="ap-modal" onClick={e => e.stopPropagation()}>
-        <button className="ap-close" onClick={onClose} aria-label="Close">✕</button>
+        <button className="ap-close" onClick={onClose} aria-label="Close"><CrossIcon /></button>
         <h2 className="ap-title">Card Manager</h2>
         <div className="ap-tabs">
           <button className={`ap-tab${tab === "single" ? " active" : ""}`} onClick={() => setTab("single")}>New card</button>

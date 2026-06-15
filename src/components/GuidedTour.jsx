@@ -6,12 +6,13 @@
 // Falls back to a centred card if the target element isn't found.
 // ─────────────────────────────────────────────────────────────────────────────
 import { useState, useEffect, useCallback } from "react";
+import { CloudIcon, FlagIcon, StarIcon, PartyIcon, MapIcon, ArrowLeftIcon, ArrowRightIcon, CrossIcon } from "./Icons";
 import "./GuidedTour.css";
 
 export const MAIN_TOUR_STEPS = [
   {
     target: null,
-    title: "Welcome to KloudAce ☁️",
+    title: <>Welcome to KloudAce <CloudIcon /></>,
     body: (
       <>
         <p className="tour-welcome-mission">
@@ -71,19 +72,25 @@ export const MAIN_TOUR_STEPS = [
   {
     target: "flag-btn",
     title: "Flag & Master",
-    body:  "🚩 Flag tricky cards to review later. ⭐ Mark as Mastered to pull them from your active deck. Keyboard shortcuts: F and M.",
+    body: (
+      <><FlagIcon /> Flag tricky cards to review later. <StarIcon /> Mark as Mastered to pull them from your active deck. Keyboard shortcuts: F and M.</>
+    ),
     placement: "top",
   },
   {
     target: "card-nav",
     title: "Navigation",
-    body:  "Use these buttons or ← → arrow keys to move between cards.",
+    body: (
+      <>Use these buttons or <ArrowLeftIcon /> <ArrowRightIcon /> arrow keys to move between cards.</>
+    ),
     placement: "top",
   },
   {
     target: null,
-    title: "You're all set! 🎉",
-    body:  "Good luck with your cloud certification. You can replay this tour anytime using the 🗺️ Tour button in the header.",
+    title: <>You're all set! <PartyIcon /></>,
+    body: (
+      <>Good luck with your cloud certification. You can replay this tour anytime using the <MapIcon /> Tour button in the header.</>
+    ),
     placement: "center",
   },
 ];
@@ -266,16 +273,16 @@ export default function GuidedTour({ onDone, steps = MAIN_TOUR_STEPS }) {
       <div className={`tour-bubble${isCenter ? " tour-bubble--center" : ""}${current.welcome ? " tour-bubble--welcome" : ""}`} style={bubbleStyle()}>
         <div className="tour-bubble-header">
           <span className="tour-step-counter">Step {step + 1} of {steps.length}</span>
-          <button className="tour-skip" onClick={onDone}>✕ Skip</button>
+          <button className="tour-skip" onClick={onDone}><CrossIcon /> Skip</button>
         </div>
         <h3 className="tour-title">{current.title}</h3>
         <div className="tour-body">{current.body}</div>
         <div className="tour-actions">
           {step > 0 && (
-            <button className="tour-btn tour-btn--secondary" onClick={goPrev}>← Back</button>
+            <button className="tour-btn tour-btn--secondary" onClick={goPrev}><ArrowLeftIcon /> Back</button>
           )}
           <button className="tour-btn tour-btn--primary" onClick={goNext} autoFocus>
-            {step + 1 === steps.length ? "Finish" : "Next →"}
+            {step + 1 === steps.length ? "Finish" : <>Next <ArrowRightIcon /></>}
           </button>
         </div>
         <div className="tour-dots">

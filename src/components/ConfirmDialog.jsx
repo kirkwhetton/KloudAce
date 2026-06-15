@@ -1,3 +1,4 @@
+import { WarningIcon } from "./Icons";
 import "./ConfirmDialog.css";
 
 /**
@@ -22,7 +23,7 @@ export default function ConfirmDialog({
   return (
     <div className="cdialog-overlay" onClick={onCancel}>
       <div className="cdialog" role="alertdialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
-        <div className="cdialog-icon">⚠️</div>
+        <div className="cdialog-icon"><WarningIcon size={24} /></div>
         {title && <h3 className="cdialog-title">{title}</h3>}
         {message && <p className="cdialog-message">{message}</p>}
         <div className="cdialog-actions">

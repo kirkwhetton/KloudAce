@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuthContext } from "./AuthProvider";
 import { wakeSupabase } from "../lib/cardLoader";
+import { WarningIcon } from "../components/Icons";
 import "./Login.css";
 
 export default function Login({ onBack }) {
@@ -140,7 +141,7 @@ export default function Login({ onBack }) {
                 />
               ))}
             </div>
-            {error && <p className="login-error">⚠️ {error}</p>}
+            {error && <p className="login-error"><WarningIcon /> {error}</p>}
             <button className="login-submit" onClick={handleVerify} disabled={loading}>
               {loading ? "Verifying…" : "Verify Code"}
             </button>
@@ -228,7 +229,7 @@ export default function Login({ onBack }) {
             </div>
           )}
 
-          {error && <p className="login-error">⚠️ {error}</p>}
+          {error && <p className="login-error"><WarningIcon /> {error}</p>}
 
           <button className="login-submit" type="submit" disabled={loading}>
             {loading ? "Please wait…" : mode === "login" ? "Sign In" : "Create Account"}

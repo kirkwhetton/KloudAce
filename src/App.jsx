@@ -28,6 +28,7 @@ import ExamSelect from "./navigation/ExamSelect";
 import UserProfile from "./auth/UserProfile";
 import AdminPanel from "./admin/AdminPanel";
 import { loadCardStatesRemote, saveCardStatesRemote } from "./lib/cardStates";
+import { FlagIcon, StarIcon, FireIcon, GraduationCapIcon, AlarmClockIcon, PartyIcon, WarningIcon, RefreshIcon, CrossIcon, CheckIcon, ArrowRightIcon, ArrowLeftIcon, SearchIcon, SettingsIcon } from "./components/Icons";
 import { loadExamCardsRemote, loadCardsByCategory, loadConnectionsCards, loadCrosswordCards, loadWordleCards, loadWordSearchCards, loadPortalCards, loadTerraformLabCards, SUPABASE_EXAMS, wakeSupabase } from "./lib/cardLoader";
 import {
   loadSrsData, saveSrsData, loadSrsDataRemote, saveSrsDataRemote,
@@ -391,13 +392,13 @@ function AppContent() {
 
   const isGameMode = !!selectedExam?.startsWith("GAMES:") || !!selectedExam?.startsWith("LAB:") || !!selectedExam?.startsWith("TERRAFORM:");
 
-  // Step 2: filter by selected categories — "🚩 Flagged" and "All" are virtual
+  // Step 2: filter by selected categories — "Flagged" and "All" are virtual
   const filteredDeck = examDeck.filter((c) => {
-    if (categories.has("🚩 Flagged") && categories.size === 1) return flagged.has(c.id);
+    if (categories.has("Flagged") && categories.size === 1) return flagged.has(c.id);
     if (categories.has("All")) return true;
     // Multi-select: card matches if its category is in the selected set
-    // Also include flagged cards if 🚩 Flagged is among selections
-    return categories.has(c.category) || (categories.has("🚩 Flagged") && flagged.has(c.id));
+    // Also include flagged cards if Flagged is among selections
+    return categories.has(c.category) || (categories.has("Flagged") && flagged.has(c.id));
   });
 
   // Step 2b: filter flagged only if sidebar toggle is on
@@ -467,7 +468,7 @@ function AppContent() {
   );
 
   const CATEGORIES = [
-    ...(examDeck.some((c) => flagged.has(c.id)) ? ["🚩 Flagged"] : []),
+    ...(examDeck.some((c) => flagged.has(c.id)) ? ["Flagged"] : []),
     "All",
     ...new Set(examDeck.map((c) => c.category).filter((cat) => cat !== "Games")),
   ];
@@ -1022,7 +1023,7 @@ function AppContent() {
         {labHeader}
         <div className="lab-page-body lab-page-body--loading">
           <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>Lab not found.</p>
-          <button className="lab-back-btn" onClick={goToExams} style={{ marginTop: "0.75rem" }}>← Back to Labs</button>
+          <button className="lab-back-btn" onClick={goToExams} style={{ marginTop: "0.75rem" }}><ArrowLeftIcon /> Back to Labs</button>
         </div>
       </div>
     );
@@ -1094,7 +1095,7 @@ function AppContent() {
         {tfHeader}
         <div className="lab-page-body lab-page-body--loading">
           <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>Lab not found.</p>
-          <button className="lab-back-btn" onClick={goToExams} style={{ marginTop: "0.75rem" }}>← Back to Labs</button>
+          <button className="lab-back-btn" onClick={goToExams} style={{ marginTop: "0.75rem" }}><ArrowLeftIcon /> Back to Labs</button>
         </div>
       </div>
     );
@@ -1189,10 +1190,10 @@ function AppContent() {
       {/* ── Sidebar panel ── */}
       <aside className={`sidebar${sidebarOpen ? " open" : ""}`}>
         <div className="sidebar-header">
-          <span>⚙️ Options</span>
+          <span><SettingsIcon /> Options</span>
           <div className="sidebar-header-actions">
             <button className="sidebar-help" onClick={() => setShowSettingsTour(true)} title="Take a tour of these settings" aria-label="Take a tour of these settings">?</button>
-            <button className="sidebar-close" onClick={() => setSidebarOpen(false)}>✕</button>
+            <button className="sidebar-close" onClick={() => setSidebarOpen(false)}><CrossIcon /></button>
           </div>
         </div>
 
@@ -1536,24 +1537,24 @@ function AppContent() {
         <div className={`exam-timer-banner${examExpired ? " expired" : examReady && examTimer && timeLeft <= 60 ? " warning" : ""}`}>
           {examExpired ? (
             <>
-              <span className="exam-timer-icon">🚨</span>
+              <span className="exam-timer-icon"><AlarmClockIcon /></span>
               <span className="exam-timer-label">Time's up!</span>
               <button className="exam-timer-stop" onClick={() => setExamMode(false)}>Dismiss</button>
             </>
           ) : !examReady ? (
             <>
-              <span className="exam-timer-icon">🎓</span>
+              <span className="exam-timer-icon"><GraduationCapIcon /></span>
               <span className="exam-timer-label">Exam Mode{examTimer ? " — timed" : ""} — ready when you are</span>
-              <button className="exam-timer-stop" onClick={() => setExamMode(false)}>✕ Cancel</button>
+              <button className="exam-timer-stop" onClick={() => setExamMode(false)}><CrossIcon /> Cancel</button>
             </>
           ) : (
             <>
-              <span className="exam-timer-icon">🎓</span>
+              <span className="exam-timer-icon"><GraduationCapIcon /></span>
               <span className="exam-timer-label">Exam Mode</span>
               {examTimer && (
                 <span className={`exam-timer-clock${timeLeft <= 60 ? " tick" : ""}`}>{formatTime(timeLeft)}</span>
               )}
-              <button className="exam-timer-stop" onClick={() => setExamMode(false)}>✕ Stop</button>
+              <button className="exam-timer-stop" onClick={() => setExamMode(false)}><CrossIcon /> Stop</button>
             </>
           )}
         </div>
@@ -1562,15 +1563,15 @@ function AppContent() {
       {/* Category pills — multi-select */}
       <nav className="category-nav" data-tour="category-nav">
         <button className="cat-btn" onClick={goToExams}>
-          {selectedExam?.startsWith("LAB:") || selectedExam?.startsWith("TERRAFORM:") ? "← Labs" : selectedExam?.startsWith("GAMES:") ? "← Games" : "← Exams"}
+          <ArrowLeftIcon /> {selectedExam?.startsWith("LAB:") || selectedExam?.startsWith("TERRAFORM:") ? "Labs" : selectedExam?.startsWith("GAMES:") ? "Games" : "Exams"}
         </button>
         {!isGameMode && CATEGORIES.map((cat) => (
           <button
             key={cat}
-            className={`cat-btn${categories.has(cat) ? " active" : ""}${cat === "🚩 Flagged" ? " flagged-cat" : ""}`}
+            className={`cat-btn${categories.has(cat) ? " active" : ""}${cat === "Flagged" ? " flagged-cat" : ""}`}
             onClick={() => handleCategory(cat)}
           >
-            {cat}
+            {cat === "Flagged" ? <><FlagIcon /> Flagged</> : cat}
           </button>
         ))}
       </nav>
@@ -1583,8 +1584,8 @@ function AppContent() {
               {srsMode
                 ? srsDueCount > 0 && <span className="srs-due-badge"><span className="srs-emoji-dot" style={{background:"var(--srs-dot-new)"}}></span> {srsDueCount} reviewing</span>
                 : <>
-                    {flaggedInDeck > 0 && <span className="flag-stat">🚩 {flaggedInDeck} &nbsp;·&nbsp; </span>}
-                    <span className="known-check" aria-hidden="true">✓</span> <strong>{knownInDeck}</strong> known ({progress}%)
+                    {flaggedInDeck > 0 && <span className="flag-stat"><FlagIcon /> {flaggedInDeck} &nbsp;·&nbsp; </span>}
+                    <span className="known-check" aria-hidden="true"><CheckIcon /></span> <strong>{knownInDeck}</strong> known ({progress}%)
                   </>
               }
             </span>
@@ -1615,16 +1616,16 @@ function AppContent() {
                   />
                 </svg>
                 <span className="daily-goal-label">
-                  {done ? "Goal met! ✓" : `${dailyCount} / ${dailyGoal} today`}
+                  {done ? <>Goal met! <CheckIcon /></> : `${dailyCount} / ${dailyGoal} today`}
                 </span>
               </span>
             );
           })()}
           <span
             className={`streak-pill${streak >= 7 ? " streak-pill--hot" : ""}`}
-            title={`${streak}-day streak 🔥  (best: ${longestStreak})`}
+            title={`${streak}-day streak (best: ${longestStreak})`}
           >
-            🔥 <strong>{streak}</strong>
+            <FireIcon /> <strong>{streak}</strong>
           </span>
         </div>
       )}
@@ -1700,7 +1701,7 @@ function AppContent() {
         ) : examMode && examDone ? (
           <div className="exam-results-screen">
             <div className="exam-results-header">
-              <span className="exam-results-icon">{examExpired ? "⏰" : "🎓"}</span>
+              <span className="exam-results-icon">{examExpired ? <AlarmClockIcon /> : <GraduationCapIcon />}</span>
               <h2>{examExpired ? "Time's Up!" : "Exam Complete!"}</h2>
               <p className="exam-results-sub">
                 {examResults.filter(r => r.correct).length} / {examResults.length} correct
@@ -1750,7 +1751,7 @@ function AppContent() {
                       <div className="exam-result-body">
                         <span className="exam-result-cat-chip">{card.category}</span>
                         <p className="exam-result-q">{card.question}</p>
-                        <p className="exam-result-meta">⏭️ Not reached</p>
+                        <p className="exam-result-meta"><ArrowRightIcon /> Not reached</p>
                       </div>
                     </div>
                   );
@@ -1762,7 +1763,7 @@ function AppContent() {
                       <span className="exam-result-cat-chip">{card.category}</span>
                       <p className="exam-result-q">{card.question}</p>
                     </div>
-                    <span className="exam-result-badge">{result.correct ? <span className="known-check">✓</span> : "❌"}</span>
+                    <span className="exam-result-badge">{result.correct ? <span className="known-check"><CheckIcon /></span> : <CrossIcon />}</span>
                   </div>
                 );
               })}
@@ -1770,7 +1771,7 @@ function AppContent() {
 
             <div className="exam-results-actions">
               <button className="exam-intro-begin" onClick={() => { setExamResults([]); setExamDone(false); setIndex(0); setExamReady(false); }}>
-                🔄 Try Again
+                <RefreshIcon /> Try Again
               </button>
               <button className="exam-intro-cancel" onClick={() => { setExamMode(false); setIndex(0); }}>
                 Exit Exam Mode
@@ -1779,9 +1780,9 @@ function AppContent() {
           </div>
         ) : finished && !examMode ? (
           <div className="results-card">
-            <h2>🎉 Session Complete!</h2>
+            <h2><PartyIcon /> Session Complete!</h2>
             <p>You've worked through all <strong>{deck.length}</strong> cards in this session.</p>
-            <button className="btn-restart" onClick={restart}>🔄 Start Again</button>
+            <button className="btn-restart" onClick={restart}><RefreshIcon /> Start Again</button>
 
             {!isPremium && (
               <div className="unlock-premium-card">
@@ -1805,7 +1806,7 @@ function AppContent() {
           </div>
         ) : deck.length === 0 ? (
           <div className="empty-deck-card">
-            <p className="empty-deck-icon">🔍</p>
+            <p className="empty-deck-icon"><SearchIcon size={32} /></p>
             <h3 className="empty-deck-title">No cards match your filters</h3>
             <p className="empty-deck-desc">
               {showDevRecent
@@ -1861,14 +1862,14 @@ function AppContent() {
                   onClick={() => toggleFlag(current.id)}
                   title={flagged.has(current.id) ? "Remove flag" : "Flag for review"}
                 >
-                  {flagged.has(current.id) ? "🚩 Flagged" : "🏳 Flag"}
+                  <FlagIcon /> {flagged.has(current.id) ? "Flagged" : "Flag"}
                 </button>
                 <button
                   className={`mastered-btn${mastered.has(current.id) ? " mastered" : ""}`}
                   onClick={() => toggleMastered(current.id)}
                   title={mastered.has(current.id) ? "Unmark as mastered" : "Mark as mastered — removes from deck"}
                 >
-                  {mastered.has(current.id) ? "⭐ Mastered" : "☆ Mark mastered"}
+                  <StarIcon filled={mastered.has(current.id)} /> {mastered.has(current.id) ? "Mastered" : "Mark mastered"}
                 </button>
               </div>
             )}
@@ -2016,7 +2017,7 @@ function AppContent() {
             onClick={goPrev}
             disabled={index === 0}
           >
-            ← Previous
+            <ArrowLeftIcon /> Previous
           </button>
           <span className="card-nav-counter">{index + 1} / {deck.length}</span>
           <button
@@ -2024,7 +2025,7 @@ function AppContent() {
             onClick={goNext}
             disabled={index + 1 >= deck.length}
           >
-            Next →
+            Next <ArrowRightIcon />
           </button>
         </div>
       )}

@@ -3,6 +3,7 @@ import { useAuthContext } from "./AuthProvider";
 import ConfirmDialog from "../components/ConfirmDialog";
 import flashcards from "../flashcards";
 import { clearSrsDataForExam, clearSrsDataForCards } from "../lib/spacedRepetition";
+import { FireIcon, TrophyIcon, CrossIcon, ArrowRightIcon, StarIcon, ChevronRightIcon } from "../components/Icons";
 import { useTheme, THEMES } from "../hooks/useTheme";
 import "./UserProfile.css";
 
@@ -33,8 +34,8 @@ function StreakCalendar({ activeDates = [], streak = 0, longestStreak = 0 }) {
   return (
     <div className="streak-calendar">
       <div className="streak-calendar-stats">
-        <span>🔥 <strong>{streak}</strong> day streak</span>
-        <span>🏆 Best: <strong>{longestStreak}</strong></span>
+        <span><FireIcon /> <strong>{streak}</strong> day streak</span>
+        <span><TrophyIcon /> Best: <strong>{longestStreak}</strong></span>
       </div>
       <div className="streak-calendar-grid">
         <div className="streak-calendar-days">
@@ -257,7 +258,7 @@ export default function UserProfile({ onClose, onOpenDashboard, onUpgrade, strea
             onCancel={() => setGranularConfirm(null)}
           />
         )}
-        <button className="profile-close" onClick={onClose} aria-label="Close">✕</button>
+        <button className="profile-close" onClick={onClose} aria-label="Close"><CrossIcon /></button>
 
         <div className="profile-header">
           <div className="profile-avatar">
@@ -409,7 +410,7 @@ export default function UserProfile({ onClose, onOpenDashboard, onUpgrade, strea
             <div className="profile-stats-summary">
               <div className="pstat-card">
                 <span className="pstat-value">{stats.masteredCount}</span>
-                <span className="pstat-label">⭐ Mastered</span>
+                <span className="pstat-label"><StarIcon /> Mastered</span>
               </div>
               <div className="pstat-card">
                 <span className="pstat-value">{stats.exams.reduce((s, e) => s + e.mature, 0)}</span>
@@ -449,7 +450,7 @@ export default function UserProfile({ onClose, onOpenDashboard, onUpgrade, strea
                               onClick={() => setExpandedExam(expandedExam === e.exam ? null : e.exam)}
                               title="Show/hide category breakdown"
                             >
-                              {expandedExam === e.exam ? "▾" : "▸"} {e.exam}
+                              <ChevronRightIcon className={expandedExam === e.exam ? "chevron-open" : undefined} /> {e.exam}
                             </button>
                           </td>
                           <td>{e.tracked}</td>
@@ -471,7 +472,7 @@ export default function UserProfile({ onClose, onOpenDashboard, onUpgrade, strea
                         </tr>
                         {expandedExam === e.exam && getCategoryStats(e.exam).map(([cat, cs]) => (
                           <tr key={`${e.exam}-${cat}`} className="srs-category-row">
-                            <td className="srs-cat-name">↳ {cat}</td>
+                            <td className="srs-cat-name"><ArrowRightIcon /> {cat}</td>
                             <td>{cs.tracked}</td>
                             <td>{cs.mature}</td>
                             <td>{cs.learning}</td>
@@ -613,7 +614,7 @@ export default function UserProfile({ onClose, onOpenDashboard, onUpgrade, strea
                   onClick={() => setTheme(value)}
                 >
                   <span className={`theme-swatch theme-swatch--${value}`} />
-                  <span className="theme-btn-label">{label.replace(/^[^\s]+\s/, "")}</span>
+                  <span className="theme-btn-label">{label}</span>
                 </button>
               ))}
             </div>

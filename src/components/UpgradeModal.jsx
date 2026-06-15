@@ -1,3 +1,4 @@
+import { CrossIcon, ArrowRightIcon } from "./Icons";
 import "./UpgradeModal.css";
 
 // Set VITE_LEMON_SQUEEZY_CHECKOUT_URL in .env.local once your LemonSqueezy
@@ -89,7 +90,7 @@ export default function UpgradeModal({ onClose, userEmail }) {
   return (
     <div className="upgrade-overlay" onClick={onClose}>
       <div className="upgrade-modal" onClick={e => e.stopPropagation()}>
-        <button className="upgrade-close" onClick={onClose} aria-label="Close">✕</button>
+        <button className="upgrade-close" onClick={onClose} aria-label="Close"><CrossIcon /></button>
 
         <div className="upgrade-header">
           <span className="upgrade-crown">
@@ -118,7 +119,7 @@ export default function UpgradeModal({ onClose, userEmail }) {
 
         {checkoutUrl ? (
           <button className="upgrade-cta" onClick={handleUpgrade}>
-            Get Premium →
+            Get Premium <ArrowRightIcon />
           </button>
         ) : (
           <button className="upgrade-cta upgrade-cta--soon" disabled>

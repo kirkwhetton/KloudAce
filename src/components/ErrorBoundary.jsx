@@ -1,4 +1,5 @@
 import { Component } from "react";
+import { WarningIcon } from "./Icons";
 
 export default class ErrorBoundary extends Component {
   constructor(props) {
@@ -22,7 +23,7 @@ export default class ErrorBoundary extends Component {
             background:"var(--bg-card)", borderRadius:"1rem", padding:"2rem",
             maxWidth:"640px", width:"100%", boxShadow:"0 8px 40px rgba(0,0,0,0.35)"
           }}>
-            <h2 style={{color:"var(--wrong)", marginTop:0}}>⚠️ Dashboard Error</h2>
+            <h2 style={{color:"var(--wrong)", marginTop:0}}><WarningIcon /> Dashboard Error</h2>
             <pre style={{
               background:"var(--diff-ext-bg)", border:"1px solid var(--diff-ext-border)", borderRadius:"0.5rem",
               padding:"1rem", fontSize:"0.78rem", overflowX:"auto", color:"var(--diff-ext-text)",

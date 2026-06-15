@@ -300,6 +300,8 @@
   text-align: left;
 }
 .srs-expand-btn:hover { text-decoration: underline; }
+.srs-expand-btn svg { transition: transform 0.15s; }
+.srs-expand-btn svg.chevron-open { transform: rotate(90deg); }
 
 .srs-clear-exam-btn {
   background: none;

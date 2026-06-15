@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ArrowRightIcon, CrownIcon } from "../components/Icons";
 import flashcards, { EXAM_META } from "../flashcards";
 import { loadAllTopics, loadExamCardCounts, loadPortalCards, loadTerraformLabCards, SUPABASE_EXAMS } from "../lib/cardLoader";
 
@@ -291,7 +292,7 @@ const topicMap = flashcards.reduce((acc, c) => {
                 </span>
                 <div className="splash-choice-title">Exam Cards</div>
                 <div className="splash-choice-desc">Study official exam decks (AZ-900, AZ-104, AZ-700…)</div>
-                <div className="splash-choice-cta">Start exam study →</div>
+                <div className="splash-choice-cta">Start exam study <ArrowRightIcon /></div>
               </button>
 
               <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #7c3aed, #4c1d95)" }} onClick={() => isGuest ? setShowGuestLabsModal(true) : navigateTo("labs")}>
@@ -303,7 +304,7 @@ const topicMap = flashcards.reduce((acc, c) => {
                 </span>
                 <div className="splash-choice-title">Labs</div>
                 <div className="splash-choice-desc">Hands-on Azure portal simulations — practice configuring real services</div>
-                <div className="splash-choice-cta">Open Labs →</div>
+                <div className="splash-choice-cta">Open Labs <ArrowRightIcon /></div>
               </button>
 
               <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #d97706, #92400e)" }} onClick={() => navigateTo("topics")}>
@@ -314,7 +315,7 @@ const topicMap = flashcards.reduce((acc, c) => {
                 </span>
                 <div className="splash-choice-title">By Topic</div>
                 <div className="splash-choice-desc">Browse cards by subject across all exams</div>
-                <div className="splash-choice-cta">Browse topics →</div>
+                <div className="splash-choice-cta">Browse topics <ArrowRightIcon /></div>
               </button>
 
               <button className="splash-choice-card" style={{ background: "linear-gradient(135deg, #0f766e, #134e4a)" }} onClick={() => isGuest ? setShowGuestGamesModal(true) : navigateTo("games")}>
@@ -328,7 +329,7 @@ const topicMap = flashcards.reduce((acc, c) => {
                 </span>
                 <div className="splash-choice-title">Games</div>
                 <div className="splash-choice-desc">Connections puzzles and learning games</div>
-                <div className="splash-choice-cta">Play now →</div>
+                <div className="splash-choice-cta">Play now <ArrowRightIcon /></div>
               </button>
             </div>
 
@@ -447,7 +448,7 @@ const topicMap = flashcards.reduce((acc, c) => {
                       ? <span className="splash-exam-count" style={{ color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>Failed to load — tap to retry</span>
                       : <span className="splash-exam-count">{count === null ? "…" : `${count} cards`}</span>
                   }
-                  {meta.premium && <span className="splash-premium-badge">👑 Premium</span>}
+                  {meta.premium && <span className="splash-premium-badge"><CrownIcon /> Premium</span>}
                   <span className="splash-exam-arrow">
                     {loadingExam === meta.exam
                       ? <svg className="splash-loading-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true" width="14" height="14"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
@@ -539,7 +540,7 @@ const topicMap = flashcards.reduce((acc, c) => {
         key: "GAMES:connections",
         title: "Connections",
         desc: "Group 16 items into four hidden categories. Four colour-coded tiers, four mistakes allowed.",
-        cta: "Play Connections →",
+        cta: <>Play Connections <ArrowRightIcon /></>,
         from: "#0f766e", to: "#134e4a", icon: "#5eead4",
         onPlay: () => onSelect(gameKey("GAMES:connections")),
         iconSvg: (
@@ -555,7 +556,7 @@ const topicMap = flashcards.reduce((acc, c) => {
         key: "GAMES:crossword",
         title: "Crossword",
         desc: "Solve Azure-themed crossword puzzles. Click a cell, type your answer, and work through across and down clues.",
-        cta: "Play Crossword →",
+        cta: <>Play Crossword <ArrowRightIcon /></>,
         from: "#1d4ed8", to: "#1e3a8a", icon: "#93c5fd",
         onPlay: () => onSelect(gameKey("GAMES:crossword")),
         iconSvg: (
@@ -576,7 +577,7 @@ const topicMap = flashcards.reduce((acc, c) => {
         key: "GAMES:wordle",
         title: "Azure Wordle",
         desc: "Guess the Azure term from its definition. Six attempts, colour-coded feedback — green means correct position.",
-        cta: "Play Wordle →",
+        cta: <>Play Wordle <ArrowRightIcon /></>,
         from: "#7c3aed", to: "#4c1d95", icon: "#c4b5fd",
         onPlay: () => onSelect(gameKey("GAMES:wordle")),
         iconSvg: (
@@ -601,7 +602,7 @@ const topicMap = flashcards.reduce((acc, c) => {
         key: "GAMES:wordsearch",
         title: "Word Search",
         desc: "Find Azure terms hidden in the grid — words run in any direction. Click the first and last letter to mark a word.",
-        cta: "Play Word Search →",
+        cta: <>Play Word Search <ArrowRightIcon /></>,
         from: "#0369a1", to: "#0c4a6e", icon: "#7dd3fc",
         onPlay: () => onSelect(gameKey("GAMES:wordsearch")),
         iconSvg: (

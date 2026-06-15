@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loadExamCardCounts } from "../lib/cardLoader";
 import UpgradeModal from "../components/UpgradeModal";
+import { ArrowRightIcon } from "../components/Icons";
 import "./LandingPage.css";
 
 const FREE_FEATURES = [
@@ -99,7 +100,7 @@ export default function PricingPage() {
                   </li>
                 ))}
               </ul>
-              <button className="lp-plan-cta lp-plan-cta--premium" onClick={() => setShowUpgrade(true)}>Get Premium →</button>
+              <button className="lp-plan-cta lp-plan-cta--premium" onClick={() => setShowUpgrade(true)}>Get Premium <ArrowRightIcon /></button>
             </div>
 
             <div className="lp-plan lp-plan--business">

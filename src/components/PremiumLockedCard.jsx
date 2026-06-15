@@ -1,3 +1,4 @@
+import { CrownIcon, LockIcon } from "./Icons";
 import "./PremiumLockedCard.css";
 
 export default function PremiumLockedCard({ card, onUpgrade }) {
@@ -8,7 +9,7 @@ export default function PremiumLockedCard({ card, onUpgrade }) {
           <span className="premium-card-category">{card.category}</span>
           {card.exam && <span className="premium-card-exam">{card.exam}</span>}
         </div>
-        <span className="premium-pill">👑 Premium</span>
+        <span className="premium-pill"><CrownIcon /> Premium</span>
       </div>
 
       <div className="premium-card-preview" aria-hidden="true">
@@ -16,11 +17,11 @@ export default function PremiumLockedCard({ card, onUpgrade }) {
       </div>
 
       <div className="premium-card-overlay">
-        <span className="premium-lock-icon">🔒</span>
+        <span className="premium-lock-icon"><LockIcon size={32} /></span>
         <p className="premium-lock-title">Premium Content</p>
         <p className="premium-lock-desc">Upgrade to unlock all premium cards and exams.</p>
         <button className="premium-upgrade-btn" onClick={onUpgrade}>
-          👑 Upgrade to Premium
+          <CrownIcon /> Upgrade to Premium
         </button>
       </div>
     </div>

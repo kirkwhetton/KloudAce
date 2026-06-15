@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { CrossIcon } from "./Icons";
 import "./DevTools.css";
 
 export default function DevTools({ onClose, showDevRecent, onToggleDevRecent, onOpenCardManager, selectedExam, deckSize, onSimulateSrs }) {
@@ -31,7 +32,7 @@ export default function DevTools({ onClose, showDevRecent, onToggleDevRecent, on
             </svg>
             Developer Tools
           </span>
-          <button className="devtools-close" onClick={onClose} aria-label="Close">✕</button>
+          <button className="devtools-close" onClick={onClose} aria-label="Close"><CrossIcon /></button>
         </div>
 
         <div className="devtools-section">

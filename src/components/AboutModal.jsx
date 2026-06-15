@@ -1,3 +1,4 @@
+import { ArrowRightIcon } from "./Icons";
 import "./AboutModal.css";
 
 export default function AboutModal({ onClose }) {
@@ -85,7 +86,7 @@ export default function AboutModal({ onClose }) {
           </p>
         </div>
 
-        <button className="about-cta" onClick={onClose}>Start studying →</button>
+        <button className="about-cta" onClick={onClose}>Start studying <ArrowRightIcon /></button>
       </div>
     </div>
   );
