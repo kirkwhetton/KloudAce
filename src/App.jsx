@@ -35,7 +35,7 @@ import {
 } from "./lib/spacedRepetition";
 import ConfirmDialog from "./components/ConfirmDialog";
 import ReadinessDashboard from "./components/ReadinessDashboard";
-import GuidedTour from "./components/GuidedTour";
+import GuidedTour, { SETTINGS_TOUR_STEPS } from "./components/GuidedTour";
 import PlatformSelect, { PLATFORMS } from "./navigation/PlatformSelect";
 import { useStreak } from "./hooks/useStreak";
 import { useSounds } from "./hooks/useSounds";
@@ -86,6 +86,10 @@ function AppContent() {
     try { return JSON.parse(localStorage.getItem(user ? `azfc_settings_${user.id}` : "azfc_settings_guest") || "{}").randomised ?? false; }
     catch { return false; }
   });
+  const [sessionSize, setSessionSize] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(user ? `azfc_settings_${user.id}` : "azfc_settings_guest") || "{}").sessionSize ?? 25; }
+    catch { return 25; }
+  });
   const [flagged, setFlagged] = useState(() => {
     try { return new Set(JSON.parse(localStorage.getItem(flagKey) || "[]")); }
     catch { return new Set(); }
@@ -129,6 +133,7 @@ function AppContent() {
   const tourSeenKey = user ? `azfc_tour_seen_${user.id}` : null;
   const [showTour, setShowTour] = useState(false);
   const [tourFired, setTourFired] = useState(false);
+  const [showSettingsTour, setShowSettingsTour] = useState(false);
 
   // ── Streak tracker ─────────────────────────────────────────────
   const { streak, longestStreak, recordActivity, activeDates } = useStreak(user?.id);
@@ -281,6 +286,7 @@ function AppContent() {
       setSoundEnabled(s.soundEnabled ?? false);
       setShowDevRecent(s.showDevRecent ?? false);
       setRandomised(s.randomised ?? false);
+      setSessionSize(s.sessionSize ?? 25);
       const ddt = new Set(s.defaultDisabledTypes ?? []);
       setDefaultDisabledTypes(ddt);
       setDisabledTypes(new Set(ddt));
@@ -451,11 +457,13 @@ function AppContent() {
         );
         return shuffle(filtered).slice(0, EXAM_CARD_LIMIT);
       }
-      if (srsMode) return sortBySrs(preShuffle, srsData);
-      return randomised ? shuffle(preShuffle) : preShuffle;
+      const ordered = srsMode
+        ? sortBySrs(preShuffle, srsData)
+        : (randomised ? shuffle(preShuffle) : preShuffle);
+      return sessionSize > 0 ? ordered.slice(0, sessionSize) : ordered;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [randomised, selectedExam, categories, showFlaggedOnly, flagged, disabledTypes, mastered, showMastered, srsMode, srsData, difficultyFilter, shuffleKey, showDueOnly, showDevRecent, customDeckCards, examMode, remoteCards]
+    [randomised, selectedExam, categories, showFlaggedOnly, flagged, disabledTypes, mastered, showMastered, srsMode, srsData, difficultyFilter, shuffleKey, showDueOnly, showDevRecent, customDeckCards, examMode, remoteCards, sessionSize]
   );
 
   const CATEGORIES = [
@@ -724,6 +732,7 @@ function AppContent() {
             setSoundEnabled(s.soundEnabled ?? true);
             setShowDevRecent(s.showDevRecent ?? false);
             setRandomised(s.randomised ?? false);
+            setSessionSize(s.sessionSize ?? 25);
             const ddt = new Set(s.defaultDisabledTypes ?? []);
             setDefaultDisabledTypes(ddt);
             setDisabledTypes(new Set(ddt));
@@ -783,6 +792,7 @@ function AppContent() {
             setSoundEnabled(s.soundEnabled ?? true);
             setShowDevRecent(s.showDevRecent ?? false);
             setRandomised(s.randomised ?? false);
+            setSessionSize(s.sessionSize ?? 25);
             const ddt = new Set(s.defaultDisabledTypes ?? []);
             setDefaultDisabledTypes(ddt);
             setDisabledTypes(new Set(ddt));
@@ -892,6 +902,12 @@ function AppContent() {
       try { const s = JSON.parse(localStorage.getItem(settingsKey) || "{}"); localStorage.setItem(settingsKey, JSON.stringify({ ...s, randomised: next })); } catch {}
       return next;
     });
+    setIndex(0); setKnown(new Set()); setFinished(false);
+  };
+
+  const handleSessionSizeChange = (next) => {
+    setSessionSize(next);
+    try { const s = JSON.parse(localStorage.getItem(settingsKey) || "{}"); localStorage.setItem(settingsKey, JSON.stringify({ ...s, sessionSize: next })); } catch {}
     setIndex(0); setKnown(new Set()); setFinished(false);
   };
 
@@ -1096,6 +1112,10 @@ function AppContent() {
 
       {showTour && <GuidedTour onDone={handleTourDone} />}
 
+      {showSettingsTour && (
+        <GuidedTour steps={SETTINGS_TOUR_STEPS} onDone={() => setShowSettingsTour(false)} />
+      )}
+
       {showUpgrade && (
         <UpgradeModal
           userEmail={user?.email}
@@ -1112,6 +1132,7 @@ function AppContent() {
           setSoundEnabled(s.soundEnabled ?? true);
           setShowDevRecent(s.showDevRecent ?? false);
           setRandomised(s.randomised ?? false);
+          setSessionSize(s.sessionSize ?? 25);
           const ddt = new Set(s.defaultDisabledTypes ?? []);
           setDefaultDisabledTypes(ddt);
           setDisabledTypes(new Set(ddt));
@@ -1169,10 +1190,13 @@ function AppContent() {
       <aside className={`sidebar${sidebarOpen ? " open" : ""}`}>
         <div className="sidebar-header">
           <span>⚙️ Options</span>
-          <button className="sidebar-close" onClick={() => setSidebarOpen(false)}>✕</button>
+          <div className="sidebar-header-actions">
+            <button className="sidebar-help" onClick={() => setShowSettingsTour(true)} title="Take a tour of these settings" aria-label="Take a tour of these settings">?</button>
+            <button className="sidebar-close" onClick={() => setSidebarOpen(false)}>✕</button>
+          </div>
         </div>
 
-        <div className="sidebar-section">
+        <div className="sidebar-section" data-tour="sidebar-card-type">
           <h3>Card Type</h3>
           {guestLock(<div className="sidebar-type-filter">
             {[
@@ -1217,7 +1241,7 @@ function AppContent() {
           </div>)}
         </div>
 
-        <div className="sidebar-section">
+        <div className="sidebar-section" data-tour="sidebar-card-order">
           <h3>Card Order</h3>
           {premiumLock(<>
             <label className="toggle-row">
@@ -1254,15 +1278,32 @@ function AppContent() {
           </>)}
         </div>
 
-        <div className="sidebar-section">
+        <div className="sidebar-section" data-tour="sidebar-session">
           <h3>Session</h3>
+          <label className="toggle-row">
+            <span className="toggle-row-label">
+              <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+              Cards per session
+            </span>
+            <select
+              className="sidebar-select"
+              value={sessionSize}
+              onChange={(e) => handleSessionSizeChange(Number(e.target.value))}
+            >
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+              <option value={0}>All</option>
+            </select>
+          </label>
           <button className="sidebar-action-btn" onClick={() => { restart(); setSidebarOpen(false); }}>
             <svg className="sidebar-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
             Restart session
           </button>
         </div>
 
-        <div className="sidebar-section">
+        <div className="sidebar-section" data-tour="sidebar-progress">
           <h3>Progress</h3>
           {guestLock(
             <button className="sidebar-action-btn" onClick={() => { setShowDashboard(true); setSidebarOpen(false); }}>
@@ -1272,7 +1313,7 @@ function AppContent() {
           )}
         </div>
 
-        <div className="sidebar-section">
+        <div className="sidebar-section" data-tour="sidebar-exam-mode">
           <h3>Exam Mode</h3>
           {premiumLock(<>
             <label className="toggle-row">
@@ -1298,7 +1339,7 @@ function AppContent() {
           </>)}
         </div>
 
-        <div className="sidebar-section">
+        <div className="sidebar-section" data-tour="sidebar-review-filter">
           <h3>Review Filter</h3>
           {premiumLock(
             <label className="toggle-row">
@@ -1313,7 +1354,7 @@ function AppContent() {
           )}
         </div>
 
-        <div className="sidebar-section">
+        <div className="sidebar-section" data-tour="sidebar-flagged">
           <h3>Flagged Cards</h3>
           {premiumLock(<>
             <label className="toggle-row">
@@ -1334,7 +1375,7 @@ function AppContent() {
           </>)}
         </div>
 
-        <div className="sidebar-section">
+        <div className="sidebar-section" data-tour="sidebar-mastered">
           <h3>Mastered Cards</h3>
           {premiumLock(<>
             <label className="toggle-row">
@@ -1355,7 +1396,7 @@ function AppContent() {
           </>)}
         </div>
 
-        <div className="sidebar-section">
+        <div className="sidebar-section" data-tour="sidebar-difficulty">
           <h3>Difficulty</h3>
           {premiumLock(
             <div className="sidebar-type-filter">
@@ -1474,7 +1515,7 @@ function AppContent() {
                 </span>
                 <span className="header-btn-label">Dashboard</span>
               </button>
-              <button className="header-btn header-btn--decks" onClick={() => setShowCustomDecks(true)} title="My custom flashcard decks">
+              <button className="header-btn header-btn--decks" onClick={() => setShowCustomDecks(true)} title="My custom flashcard decks" data-tour="my-cards-btn">
                 <span className="header-btn-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <rect x="2" y="6" width="20" height="14" rx="2"/>

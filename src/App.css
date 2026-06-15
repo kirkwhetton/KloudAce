@@ -552,6 +552,17 @@
   gap: 0.5rem;
 }
 
+.sidebar-select {
+  background: var(--bg-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
 .sidebar-action-btn.danger .sidebar-svg-icon {
   color: var(--wrong);
 }
@@ -744,10 +755,12 @@
   margin-bottom: 0.4rem;
 }
 
-/* CSS-styled checkmark — replaces fixed-colour ✅ emoji */
+/* SVG checkmark icon — replaces fixed-colour ✅ emoji */
 /* Standalone (progress stats, feedback text): uses --correct colour */
 .known-check {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: -2px;
   color: var(--correct);
   font-weight: 700;
   margin-right: 2px;
@@ -1254,10 +1267,18 @@ button .known-check {
 
 /* Hide-answers notice shown in feedback area */
 .hide-answers-notice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
   font-size: 0.8rem;
   color: var(--text-muted);
   font-style: italic;
   margin: 0.25rem 0 0;
+}
+
+.hide-answers-notice svg {
+  flex-shrink: 0;
 }
 
 /* ── Learn More link — shown in feedback across all card types ── */
@@ -1598,6 +1619,12 @@ button .known-check {
   background: var(--sidebar-header-bg);
 }
 
+.sidebar-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 .sidebar-close {
   background: none;
   border: none;
@@ -1609,6 +1636,35 @@ button .known-check {
   transition: background 0.15s;
 }
 .sidebar-close:hover { background: var(--bg-card-hover); }
+
+.sidebar-help {
+  background: var(--brand);
+  border: 1.5px solid var(--brand);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--text-on-brand);
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  animation: sidebar-help-pulse 2.2s ease-in-out infinite;
+}
+.sidebar-help:hover {
+  background: #f97316;
+  color: var(--text-on-brand);
+  border-color: #f97316;
+  animation: none;
+}
+
+@keyframes sidebar-help-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand) 55%, transparent); transform: scale(1); }
+  50%       { box-shadow: 0 0 0 10px color-mix(in srgb, var(--brand) 0%, transparent); transform: scale(1.08); }
+}
 
 .sidebar-section {
   padding: 1.25rem;

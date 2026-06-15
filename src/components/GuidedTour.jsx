@@ -8,7 +8,7 @@
 import { useState, useEffect, useCallback } from "react";
 import "./GuidedTour.css";
 
-const STEPS = [
+export const MAIN_TOUR_STEPS = [
   {
     target: null,
     title: "Welcome to KloudAce ☁️",
@@ -42,6 +42,12 @@ const STEPS = [
     target: "dashboard-btn",
     title: "Readiness Dashboard",
     body:  "Track progress across all exams — SRS maturity, mastered counts, and an overall readiness score.",
+    placement: "bottom",
+  },
+  {
+    target: "my-cards-btn",
+    title: "My Cards",
+    body:  "Create your own custom flashcard decks, add cards from any exam, and study them just like the official decks.",
     placement: "bottom",
   },
   {
@@ -82,21 +88,80 @@ const STEPS = [
   },
 ];
 
+export const SETTINGS_TOUR_STEPS = [
+  {
+    target: "sidebar-card-type",
+    title: "Card Type",
+    body:  "Show or hide specific card types — flip cards, MCQ, multi-select, True/False, diagrams, hotspots, scripts, and more. Tap 'All' to reset.",
+    placement: "left",
+  },
+  {
+    target: "sidebar-card-order",
+    title: "Card Order",
+    body:  "Switch on Spaced Repetition to study cards in priority order based on your review history, or randomise the deck for variety. Re-shuffle anytime.",
+    placement: "left",
+  },
+  {
+    target: "sidebar-session",
+    title: "Session",
+    body:  "Choose how many cards make up a study session — smaller sessions are easier to complete in one sitting. Restart resets your progress for the current deck.",
+    placement: "left",
+  },
+  {
+    target: "sidebar-progress",
+    title: "Progress",
+    body:  "Jump to the Readiness Dashboard to see your overall progress across exams.",
+    placement: "left",
+  },
+  {
+    target: "sidebar-exam-mode",
+    title: "Exam Mode",
+    body:  "Simulate the real exam with a focused, randomised set of harder questions — optionally under a 60-minute timer.",
+    placement: "left",
+  },
+  {
+    target: "sidebar-review-filter",
+    title: "Review Filter",
+    body:  "Show only the cards that are due for review according to your Spaced Repetition schedule.",
+    placement: "left",
+  },
+  {
+    target: "sidebar-flagged",
+    title: "Flagged Cards",
+    body:  "Filter to just the cards you've flagged for extra practice, or clear all your flags at once.",
+    placement: "left",
+  },
+  {
+    target: "sidebar-mastered",
+    title: "Mastered Cards",
+    body:  "Cards you've marked as mastered are hidden from your deck by default. Toggle this to bring them back, or clear your mastered list.",
+    placement: "left",
+  },
+  {
+    target: "sidebar-difficulty",
+    title: "Difficulty",
+    body:  "Focus your session on a specific difficulty level — Easy, Medium, Hard, or Extreme.",
+    placement: "left",
+  },
+];
+
 function getTargetRect(id) {
   if (!id) return null;
   const el = document.querySelector(`[data-tour="${id}"]`);
   if (!el) return null;
   const r = el.getBoundingClientRect();
-  return { top: r.top, left: r.left, width: r.width, height: r.height };
+  const container = el.closest(".sidebar");
+  const bounds = container ? container.getBoundingClientRect() : null;
+  return { top: r.top, left: r.left, width: r.width, height: r.height, bounds };
 }
 
 const PAD = 10; // spotlight padding
 
-export default function GuidedTour({ onDone }) {
+export default function GuidedTour({ onDone, steps = MAIN_TOUR_STEPS }) {
   const [step, setStep] = useState(0);
   const [rect, setRect] = useState(null);
 
-  const current = STEPS[step];
+  const current = steps[step];
 
   // Measure target on each step change + on scroll/resize
   const measure = useCallback(() => {
@@ -120,16 +185,26 @@ export default function GuidedTour({ onDone }) {
   }, [current.target]);
 
   const goNext = () => {
-    if (step + 1 >= STEPS.length) { onDone(); return; }
+    if (step + 1 >= steps.length) { onDone(); return; }
     setStep(s => s + 1);
   };
   const goPrev = () => { if (step > 0) setStep(s => s - 1); };  // ── Spotlight geometry ──────────────────────────────────────
   const vw = window.innerWidth;
 
-  const spotTop  = rect ? Math.max(0, rect.top  - PAD) : 0;
-  const spotLeft = rect ? Math.max(0, rect.left - PAD) : 0;
-  const spotW    = rect ? rect.width  + PAD * 2 : 0;
-  const spotH    = rect ? rect.height + PAD * 2 : 0;
+  const EDGE = 4; // keep the spotlight at least this far from the viewport edge
+  const vh = window.innerHeight;
+
+  // When the target sits inside a fixed container (e.g. the sidebar), keep
+  // the spotlight from bleeding past that container's own edges.
+  const minLeft = rect?.bounds ? Math.max(EDGE, rect.bounds.left + EDGE) : EDGE;
+  const maxRight = rect?.bounds ? Math.min(vw - EDGE, rect.bounds.right - EDGE) : vw - EDGE;
+
+  const spotTop  = rect ? Math.max(EDGE, rect.top  - PAD) : 0;
+  const spotLeft = rect ? Math.max(minLeft, rect.left - PAD) : 0;
+  const rawW     = rect ? rect.width  + PAD * 2 : 0;
+  const rawH     = rect ? rect.height + PAD * 2 : 0;
+  const spotW    = rect ? Math.min(rawW, maxRight - spotLeft) : 0;
+  const spotH    = rect ? Math.min(rawH, vh - spotTop - EDGE) : 0;
 
   // ── Bubble placement ─────────────────────────────────────────
   function bubbleStyle() {
@@ -190,7 +265,7 @@ export default function GuidedTour({ onDone }) {
       {/* Step bubble */}
       <div className={`tour-bubble${isCenter ? " tour-bubble--center" : ""}${current.welcome ? " tour-bubble--welcome" : ""}`} style={bubbleStyle()}>
         <div className="tour-bubble-header">
-          <span className="tour-step-counter">Step {step + 1} of {STEPS.length}</span>
+          <span className="tour-step-counter">Step {step + 1} of {steps.length}</span>
           <button className="tour-skip" onClick={onDone}>✕ Skip</button>
         </div>
         <h3 className="tour-title">{current.title}</h3>
@@ -200,11 +275,11 @@ export default function GuidedTour({ onDone }) {
             <button className="tour-btn tour-btn--secondary" onClick={goPrev}>← Back</button>
           )}
           <button className="tour-btn tour-btn--primary" onClick={goNext} autoFocus>
-            {step + 1 === STEPS.length ? "Finish 🎉" : "Next →"}
+            {step + 1 === steps.length ? "Finish" : "Next →"}
           </button>
         </div>
         <div className="tour-dots">
-          {STEPS.map((_, i) => (
+          {steps.map((_, i) => (
             <span
               key={i}
               className={`tour-dot${i === step ? " active" : ""}`}
