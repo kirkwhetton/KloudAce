@@ -25,7 +25,7 @@ import "./tasksimulator.css";
             <ul className="token-check-list">
               {finalTokenResults.map(({ label, ok }) => (
                 <li key={label} className={ok ? "token-ok" : "token-missing"}>
-                  {ok ? "✓" : "✕"} <code>{label}</code>
+                  {ok ? <CheckIcon /> : <CrossIcon />} <code>{label}</code>
                 </li>
               ))}
             </ul>

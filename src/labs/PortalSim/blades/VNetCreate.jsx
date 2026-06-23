@@ -21,6 +21,31 @@ const TABS    = ['Basics', 'Security', 'Address space', 'Tags', 'Review + create
 const TAB_IDS = ['basics', 'security', 'ip', 'tags', 'review'];
 
 // ── Icons ──────────────────────────────────────────────────────
+const ChevronLeftIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true">
+    <polyline points="15 18 9 12 15 6"/>
+  </svg>
+);
+const ChevronRightIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true">
+    <polyline points="9 6 15 12 9 18"/>
+  </svg>
+);
+const ExternalLinkIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="12" height="12" aria-hidden="true">
+    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+  </svg>
+);
+const CheckIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+);
+const XIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </svg>
+);
 const TrashIcon = () => (
   <svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13" aria-hidden="true">
     <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd"/>
@@ -154,13 +179,13 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
       onClose={onClose}
       footer={
         <div className="psb-footer-actions">
-          <button className="psb-btn" onClick={handlePrev} disabled={tab === 'basics'}>← Previous</button>
+          <button className="psb-btn" onClick={handlePrev} disabled={tab === 'basics'}><ChevronLeftIcon /> Previous</button>
           <button
             className="psb-btn psb-btn--primary"
             onClick={handleNext}
             disabled={completed || (tab === 'review' && !canCreate)}
           >
-            {tab === 'review' ? 'Create' : 'Next →'}
+            {tab === 'review' ? 'Create' : <span style={{display:'flex',alignItems:'center',gap:4}}>Next <ChevronRightIcon /></span>}
           </button>
           <button className="psb-btn psb-btn--ghost" onClick={onClose}>Cancel</button>
         </div>
@@ -175,7 +200,7 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
             className={`psb-wizard-tab${i === tabIndex ? ' active' : ''}${i < tabIndex ? ' done' : ''}`}
             onClick={() => i < tabIndex && setTab(TAB_IDS[i])}
           >
-            <span className="psb-wizard-tab-num">{i < tabIndex ? '✓' : i + 1}</span>
+            <span className="psb-wizard-tab-num">{i < tabIndex ? <CheckIcon /> : i + 1}</span>
             <span className="psb-wizard-tab-label">{label}</span>
             {i < TABS.length - 1 && <span className="psb-wizard-tab-sep">›</span>}
           </div>
@@ -253,7 +278,7 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
         <div className="psb-form">
           <p className="psb-section-desc">
             Enhance the security of your virtual network with these additional paid security services.{' '}
-            <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more ↗</button>
+            <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more <ExternalLinkIcon /></button>
           </p>
 
           <div className="psb-security-section">
@@ -324,14 +349,14 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
             Create subnets to segment the virtual network address space into smaller ranges for use by
             your applications. When you deploy resources into a subnet, Azure assigns the resource an
             IP address from the subnet.{' '}
-            <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more ↗</button>
+            <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more <ExternalLinkIcon /></button>
           </p>
 
           {/* IP address pools checkbox */}
           <label className="psb-checkbox-label" style={{ marginBottom: '1.25rem' }}>
             <input type="checkbox" className="psb-checkbox" />
             Allocate using IP address pools.{' '}
-            <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more ↗</button>
+            <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more <ExternalLinkIcon /></button>
           </label>
 
           {/* IPv4 address space label + block */}
@@ -492,12 +517,12 @@ export default function VNetCreate({ onOpen, onClose, onSubmit, completed }) {
         <div className="psb-form">
           {canCreate ? (
             <div className="psb-validation-banner psb-validation-banner--ok">
-              <span className="psb-validation-icon">✓</span>
+              <span className="psb-validation-icon"><CheckIcon /></span>
               Validation passed
             </div>
           ) : (
             <div className="psb-validation-banner" style={{ background: 'var(--wrong-bg)', color: 'var(--wrong)', border: '1px solid var(--wrong)' }}>
-              <span className="psb-validation-icon">✗</span>
+              <span className="psb-validation-icon"><XIcon /></span>
               Validation failed — complete all required fields before creating.
             </div>
           )}

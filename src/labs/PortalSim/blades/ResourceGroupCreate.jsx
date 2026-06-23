@@ -1,6 +1,16 @@
 import { useState } from 'react';
 import BladeShell from '../BladeShell';
 
+const ChevronLeftIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+);
+const ChevronRightIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+);
+const CheckIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+);
+
 const SUBSCRIPTIONS = ['Pay-As-You-Go', 'Dev / Test', 'Production'];
 
 const REGIONS = [
@@ -68,14 +78,14 @@ export default function ResourceGroupCreate({ onClose, onSubmit, completed }) {
       footer={
         <div className="psb-footer-actions">
           <button className="psb-btn" onClick={handlePrev} disabled={tab === 'basics'}>
-            ← Previous
+            <ChevronLeftIcon /> Previous
           </button>
           <button
             className="psb-btn psb-btn--primary"
             onClick={handleNext}
             disabled={completed}
           >
-            {tab === 'review' ? 'Create' : 'Next →'}
+            {tab === 'review' ? 'Create' : <span style={{display:'flex',alignItems:'center',gap:4}}>Next <ChevronRightIcon /></span>}
           </button>
           <button className="psb-btn psb-btn--ghost" onClick={onClose}>Cancel</button>
         </div>
@@ -89,7 +99,7 @@ export default function ResourceGroupCreate({ onClose, onSubmit, completed }) {
             className={`psb-wizard-tab${i === tabIndex ? ' active' : ''}${i < tabIndex ? ' done' : ''}`}
             onClick={() => i < tabIndex && setTab(TAB_IDS[i])}
           >
-            <span className="psb-wizard-tab-num">{i < tabIndex ? '✓' : i + 1}</span>
+            <span className="psb-wizard-tab-num">{i < tabIndex ? <CheckIcon /> : i + 1}</span>
             <span className="psb-wizard-tab-label">{label}</span>
             {i < TABS.length - 1 && <span className="psb-wizard-tab-sep">›</span>}
           </div>
@@ -186,7 +196,7 @@ export default function ResourceGroupCreate({ onClose, onSubmit, completed }) {
       {tab === 'review' && (
         <div className="psb-form">
           <div className="psb-validation-banner psb-validation-banner--ok">
-            <span className="psb-validation-icon">✓</span>
+            <span className="psb-validation-icon"><CheckIcon /></span>
             Validation passed
           </div>
 

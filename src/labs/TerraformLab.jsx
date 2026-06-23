@@ -1,6 +1,28 @@
 import { useState, useRef, useEffect } from "react";
 import "./terraformlab.css";
 
+const CheckIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+);
+const XIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+);
+const AlertIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+);
+const LightbulbIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0018 8 6 6 0 006 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 018.91 14"/></svg>
+);
+const BookIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+);
+const RefreshIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+);
+const ChevronRightIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+);
+
 export default function TerraformLab({ card, onKnow, onSrsRate, hideAnswers, examMode, onExamAnswer, onAnswer }) {
   const [value, setValue]           = useState("");
   const [submitted, setSubmitted]   = useState(false);
@@ -239,48 +261,48 @@ export default function TerraformLab({ card, onKnow, onSrsRate, hideAnswers, exa
           <div className={`task-feedback ${allCorrect && !hasLintErrors ? "feedback-correct" : "feedback-wrong"}`}>
             <p className="task-feedback-text">
               {hasLintErrors
-                ? "❌ Fix the syntax errors above before applying"
+                ? <><AlertIcon /> Fix the syntax errors above before applying</>
                 : allCorrect
-                  ? <><span className="known-check">✓</span> Configuration valid — apply succeeded!</>
-                  : `❌ ${tokenResults.filter((t) => t.ok).length} / ${tokenResults.length} required blocks/attributes found`}
+                  ? <><span className="known-check"><CheckIcon /></span> Configuration valid — apply succeeded!</>
+                  : <><AlertIcon /> {tokenResults.filter((t) => t.ok).length} / {tokenResults.length} required blocks/attributes found</>}
             </p>
             {!hideAnswers && (
               <ul className="token-check-list">
                 {tokenResults.map(({ label, ok }) => (
                   <li key={label} className={ok ? "token-ok" : "token-missing"}>
-                    {ok ? "✓" : "✕"} <code>{label}</code>
+                    {ok ? <CheckIcon /> : <XIcon />} <code>{label}</code>
                   </li>
                 ))}
               </ul>
             )}
             {!hideAnswers && !allCorrect && card.modelAnswer && (
               <div className="tf-model-answer">
-                <span className="explanation-label">✅ Model answer</span>
+                <span className="explanation-label"><CheckIcon /> Model answer</span>
                 <pre><code>{card.modelAnswer}</code></pre>
               </div>
             )}
             {!hideAnswers && card.explanation && !revealed && (
-              <button className="task-reveal-btn" onClick={() => setRevealed(true)}>💡 Show explanation</button>
+              <button className="task-reveal-btn" onClick={() => setRevealed(true)}><LightbulbIcon /> Show explanation</button>
             )}
             {!hideAnswers && revealed && card.explanation && (
               <div className="task-explanation">
-                <span className="explanation-label">💡 Explanation</span>
+                <span className="explanation-label"><LightbulbIcon /> Explanation</span>
                 <p>{card.explanation}</p>
               </div>
             )}
             {!hideAnswers && card.learnUrl && (
               <a className="learn-more-link" href={card.learnUrl} target="_blank" rel="noopener noreferrer">
-                📖 Learn more
+                <BookIcon /> Learn more
               </a>
             )}
             {hideAnswers && (
-              <p className="hide-answers-notice">🙈 Answer hidden — toggle off in ⚙️ Settings to see explanations</p>
+              <p className="hide-answers-notice">Answer hidden — toggle off in Settings to see explanations</p>
             )}
             {!examMode && (
               <div className="task-actions">
-                <button className="btn btn-review" onClick={handleRetry}>🔁 Try Again</button>
+                <button className="btn btn-review" onClick={handleRetry}><RefreshIcon /> Try Again</button>
                 <button className="btn btn-know" onClick={handleNext}>
-                  {onSrsRate ? "Continue →" : <><span className="known-check">✓</span> Next Card</>}
+                  {onSrsRate ? <span style={{display:'flex',alignItems:'center',gap:4}}>Continue <ChevronRightIcon /></span> : <><span className="known-check"><CheckIcon /></span> Next Card</>}
                 </button>
               </div>
             )}

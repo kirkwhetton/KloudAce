@@ -119,6 +119,7 @@ function AppContent() {
   const [showDashboard, setShowDashboard] = useState(false);
   const [showCustomDecks, setShowCustomDecks] = useState(false);
   const [difficultyFilter, setDifficultyFilter] = useState(new Set()); // empty = all
+  const [subcategoryFilter, setSubcategoryFilter] = useState(null); // null = all
   const [showDevRecent, setShowDevRecent] = useState(() => {
     try { return JSON.parse(localStorage.getItem(user ? `azfc_settings_${user.id}` : "azfc_settings_guest") || "{}").showDevRecent ?? false; }
     catch { return false; }
@@ -401,17 +402,22 @@ function AppContent() {
     return categories.has(c.category) || (categories.has("Flagged") && flagged.has(c.id));
   });
 
-  // Step 2b: filter flagged only if sidebar toggle is on
-  const afterFlagFilter = showFlaggedOnly
-    ? filteredDeck.filter((c) => flagged.has(c.id))
+  // Step 2b: filter by subcategory (null = all)
+  const afterSubcategoryFilter = subcategoryFilter
+    ? filteredDeck.filter((c) => c.subcategory === subcategoryFilter)
     : filteredDeck;
 
-  // Step 2c: hide mastered cards unless the user wants to see them
+  // Step 2c: filter flagged only if sidebar toggle is on
+  const afterFlagFilter = showFlaggedOnly
+    ? afterSubcategoryFilter.filter((c) => flagged.has(c.id))
+    : afterSubcategoryFilter;
+
+  // Step 2d: hide mastered cards unless the user wants to see them
   const afterMasteredFilter = showMastered
     ? afterFlagFilter
     : afterFlagFilter.filter((c) => !mastered.has(c.id));
 
-  // Step 2d: exclude disabled card types
+  // Step 2e: exclude disabled card types
   const getCardTypeKey = (c) => {
     if (!!c.scenario && c.type !== "task")  return "case-study";
     if (c.type === "task" && c.taskType === "fault")  return "fault";
@@ -430,17 +436,17 @@ function AppContent() {
     ? afterMasteredFilter
     : afterMasteredFilter.filter(c => !disabledTypes.has(getCardTypeKey(c)));
 
-  // Step 2e: filter by difficulty
+  // Step 2f: filter by difficulty
   const afterDifficultyFilter = difficultyFilter.size === 0
     ? afterTypeFilter
     : afterTypeFilter.filter((c) => difficultyFilter.has(c.difficulty ?? "easy"));
 
-  // Step 2f: filter to due-for-review cards only
+  // Step 2g: filter to due-for-review cards only
   const afterDueFilter = showDueOnly
     ? afterDifficultyFilter.filter((c) => isDue(srsData[c.id]))
     : afterDifficultyFilter;
 
-  // Step 2g: dev — show only cards added in the last 25 hours
+  // Step 2h: dev — show only cards added in the last 25 hours
   const DEV_WINDOW_MS = 25 * 60 * 60 * 1000;
   const preShuffle = showDevRecent
     ? afterDueFilter.filter((c) => { const ts = c.devAdded || c.created_at; return ts && Date.now() - new Date(ts).getTime() < DEV_WINDOW_MS; })
@@ -464,7 +470,7 @@ function AppContent() {
       return sessionSize > 0 ? ordered.slice(0, sessionSize) : ordered;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [randomised, selectedExam, categories, showFlaggedOnly, flagged, disabledTypes, mastered, showMastered, srsMode, srsData, difficultyFilter, shuffleKey, showDueOnly, showDevRecent, customDeckCards, examMode, remoteCards, sessionSize]
+    [randomised, selectedExam, categories, subcategoryFilter, showFlaggedOnly, flagged, disabledTypes, mastered, showMastered, srsMode, srsData, difficultyFilter, shuffleKey, showDueOnly, showDevRecent, customDeckCards, examMode, remoteCards, sessionSize]
   );
 
   const CATEGORIES = [
@@ -472,6 +478,14 @@ function AppContent() {
     "All",
     ...new Set(examDeck.map((c) => c.category).filter((cat) => cat !== "Games")),
   ];
+
+  // Subcategory pills — only shown when exactly one real category is active and cards have subcategories
+  const singleCategoryActive = !categories.has("All") && !categories.has("Flagged") && categories.size === 1;
+  const SUBCATEGORIES = singleCategoryActive
+    ? [...new Set(filteredDeck.map((c) => c.subcategory).filter(Boolean))].sort()
+    : [];
+  const showSubcategoryFilter = SUBCATEGORIES.length > 1;
+
   const current = deck[index];
 
   // Keep refs in sync — must be after deck/current are derived
@@ -550,6 +564,7 @@ function AppContent() {
   const handleExam = async (exam) => {
     setCategories(new Set(["All"])); setIndex(0); setKnown(new Set()); setFinished(false); setDisabledTypes(new Set(defaultDisabledTypes));
     setDifficultyFilter(new Set());
+    setSubcategoryFilter(null);
     setCustomDeckCards([]);
     setCardLoadError(null);
 
@@ -894,6 +909,7 @@ function AppContent() {
       next.add(cat);
       return next;
     });
+    setSubcategoryFilter(null);
     setIndex(0); setKnown(new Set()); setFinished(false);
   };
 
@@ -1575,6 +1591,27 @@ function AppContent() {
           </button>
         ))}
       </nav>
+
+      {/* Subcategory filter pills */}
+      {!isGameMode && showSubcategoryFilter && (
+        <nav className="subcategory-nav">
+          <button
+            className={`subcat-btn${subcategoryFilter === null ? " active" : ""}`}
+            onClick={() => { setSubcategoryFilter(null); setIndex(0); setKnown(new Set()); setFinished(false); }}
+          >
+            All topics
+          </button>
+          {SUBCATEGORIES.map((sub) => (
+            <button
+              key={sub}
+              className={`subcat-btn${subcategoryFilter === sub ? " active" : ""}`}
+              onClick={() => { setSubcategoryFilter(sub === subcategoryFilter ? null : sub); setIndex(0); setKnown(new Set()); setFinished(false); }}
+            >
+              {sub}
+            </button>
+          ))}
+        </nav>
+      )}
 
       {!isGameMode && (
         <div className="progress-area">

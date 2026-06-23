@@ -2,6 +2,25 @@ import { useState } from 'react';
 import BladeShell from '../BladeShell';
 import { VirtualNetworkIcon } from '../AzureIcons';
 
+const ChevronLeftIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+);
+const ChevronRightIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+);
+const ExternalLinkIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="12" height="12" aria-hidden="true"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+);
+const CheckIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+);
+const XIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+);
+const ArrowRightIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="12" height="12" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+);
+
 const SUBSCRIPTIONS   = ['Pay-As-You-Go', 'Dev / Test', 'Production'];
 const RESOURCE_GROUPS = ['rg-networking', 'rg-workloads-dev', 'rg-workloads-prod', 'rg-management'];
 const REGIONS = [
@@ -240,13 +259,13 @@ export default function LbCreate({ onOpen, onClose, onSubmit, completed }) {
       onClose={onClose}
       footer={
         <div className="psb-footer-actions">
-          <button className="psb-btn" onClick={handlePrev} disabled={tab === 'basics'}>← Previous</button>
+          <button className="psb-btn" onClick={handlePrev} disabled={tab === 'basics'}><ChevronLeftIcon /> Previous</button>
           <button
             className="psb-btn psb-btn--primary"
             onClick={handleNext}
             disabled={completed || (tab === 'review' && !canCreate)}
           >
-            {tab === 'review' ? 'Create' : 'Next →'}
+            {tab === 'review' ? 'Create' : <span style={{display:'flex',alignItems:'center',gap:4}}>Next <ChevronRightIcon /></span>}
           </button>
           <button className="psb-btn psb-btn--ghost" onClick={onClose}>Cancel</button>
         </div>
@@ -261,7 +280,7 @@ export default function LbCreate({ onOpen, onClose, onSubmit, completed }) {
             className={`psb-wizard-tab${i === tabIndex ? ' active' : ''}${i < tabIndex ? ' done' : ''}`}
             onClick={() => i < tabIndex && setTab(TAB_IDS[i])}
           >
-            <span className="psb-wizard-tab-num">{i < tabIndex ? '✓' : i + 1}</span>
+            <span className="psb-wizard-tab-num">{i < tabIndex ? <CheckIcon /> : i + 1}</span>
             <span className="psb-wizard-tab-label">{label}</span>
             {i < TABS.length - 1 && <span className="psb-wizard-tab-sep">›</span>}
           </div>
@@ -382,7 +401,7 @@ export default function LbCreate({ onOpen, onClose, onSubmit, completed }) {
             A frontend IP configuration is the IP address that clients use to reach the load balancer.
             For a public load balancer this is a public IP address; for an internal load balancer it is
             a private IP address from the virtual network.{' '}
-            <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more ↗</button>
+            <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more <ExternalLinkIcon /></button>
           </p>
 
           <table className="psb-table">
@@ -546,7 +565,7 @@ export default function LbCreate({ onOpen, onClose, onSubmit, completed }) {
           <p className="psb-section-desc">
             A backend pool contains the IP addresses of the virtual machines or instances that will receive
             network traffic from the load balancer.{' '}
-            <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more ↗</button>
+            <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more <ExternalLinkIcon /></button>
           </p>
 
           <table className="psb-table">
@@ -680,7 +699,7 @@ export default function LbCreate({ onOpen, onClose, onSubmit, completed }) {
           <p className="psb-section-desc">
             A load balancing rule maps a frontend IP and port to a backend pool and port, and uses a health
             probe to determine which backend instances can receive new connections.{' '}
-            <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more ↗</button>
+            <button className="psb-link" style={{ fontSize: 'inherit' }}>Learn more <ExternalLinkIcon /></button>
           </p>
 
           {/* Health probes */}
@@ -951,12 +970,12 @@ export default function LbCreate({ onOpen, onClose, onSubmit, completed }) {
         <div className="psb-form">
           {canCreate ? (
             <div className="psb-validation-banner psb-validation-banner--ok">
-              <span className="psb-validation-icon">✓</span>
+              <span className="psb-validation-icon"><CheckIcon /></span>
               Validation passed
             </div>
           ) : (
             <div className="psb-validation-banner" style={{ background: 'var(--wrong-bg)', color: 'var(--wrong)', border: '1px solid var(--wrong)' }}>
-              <span className="psb-validation-icon">✗</span>
+              <span className="psb-validation-icon"><XIcon /></span>
               Validation failed — add a frontend IP, a backend pool, and a load balancing rule before creating.
             </div>
           )}
@@ -1026,7 +1045,7 @@ export default function LbCreate({ onOpen, onClose, onSubmit, completed }) {
                 {rules.length === 0 ? (
                   <tr><td colSpan={2}><em style={{ color: 'var(--text-muted)' }}>None added</em></td></tr>
                 ) : rules.map((r, i) => (
-                  <tr key={i}><td>{r.name}</td><td>{r.protocol} {r.frontendPort} → {r.backendPort} (probe: {r.probeName})</td></tr>
+                  <tr key={i}><td>{r.name}</td><td>{r.protocol} {r.frontendPort} <ArrowRightIcon /> {r.backendPort} (probe: {r.probeName})</td></tr>
                 ))}
               </tbody>
             </table>

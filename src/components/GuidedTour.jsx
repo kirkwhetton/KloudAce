@@ -81,7 +81,7 @@ export const MAIN_TOUR_STEPS = [
     target: "card-nav",
     title: "Navigation",
     body: (
-      <>Use these buttons or <ArrowLeftIcon /> <ArrowRightIcon /> arrow keys to move between cards.</>
+      <>Use these buttons or <ArrowLeftIcon /> <ArrowRightIcon /> arrow keys to move between cards. The counter shows your position in the current session — by default sessions are capped at 25 cards. You can change this in the Options sidebar under Session.</>
     ),
     placement: "top",
   },

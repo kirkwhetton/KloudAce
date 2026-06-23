@@ -322,22 +322,22 @@ const AppGatewayRoutingDiagram = () => (
     {/* Rule 1: /images/* */}
     <rect x="157" y="64" width="248" height="48" rx="4" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1"/>
     <text x="167" y="82" fontSize="9" fill="#334155" fontWeight="600" fontFamily="monospace">/images/*</text>
-    <text x="236" y="82" fontSize="9" fill="#94a3b8">→</text>
-    <text x="249" y="82" fontSize="9" fill="#64748b">pool-images</text>
+    <g transform="translate(233,75)"><polyline points="0,3.5 5,3.5 3,1 5,3.5 3,6" fill="none" stroke="#94a3b8" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/></g>
+    <text x="241" y="82" fontSize="9" fill="#64748b">pool-images</text>
     <text x="167" y="103" fontSize="7.5" fill="#94a3b8">Priority 1 — image assets</text>
 
     {/* Rule 2: /api/* */}
     <rect x="157" y="120" width="248" height="48" rx="4" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1"/>
     <text x="167" y="138" fontSize="9" fill="#334155" fontWeight="600" fontFamily="monospace">/api/*</text>
-    <text x="205" y="138" fontSize="9" fill="#94a3b8">→</text>
-    <text x="218" y="138" fontSize="9" fill="#64748b">pool-api</text>
+    <g transform="translate(202,131)"><polyline points="0,3.5 5,3.5 3,1 5,3.5 3,6" fill="none" stroke="#94a3b8" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/></g>
+    <text x="210" y="138" fontSize="9" fill="#64748b">pool-api</text>
     <text x="167" y="159" fontSize="7.5" fill="#94a3b8">Priority 2 — REST API endpoints</text>
 
     {/* Rule 3: /* default */}
     <rect x="157" y="176" width="248" height="48" rx="4" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1"/>
     <text x="167" y="194" fontSize="9" fill="#334155" fontWeight="600" fontFamily="monospace">/* (default)</text>
-    <text x="248" y="194" fontSize="9" fill="#94a3b8">→</text>
-    <text x="261" y="194" fontSize="9" fill="#64748b">pool-web</text>
+    <g transform="translate(245,187)"><polyline points="0,3.5 5,3.5 3,1 5,3.5 3,6" fill="none" stroke="#94a3b8" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/></g>
+    <text x="253" y="194" fontSize="9" fill="#64748b">pool-web</text>
     <text x="167" y="215" fontSize="7.5" fill="#94a3b8">Default rule — matches all remaining paths</text>
 
     <text x="280" y="243" textAnchor="middle" fontSize="7.5" fill="#818cf8" fontStyle="italic">Layer 7 — inspects URL path before forwarding</text>
@@ -454,22 +454,22 @@ const AppGatewayVersionedRoutingDiagram = () => (
     {/* Rule 1: /api/v2/* */}
     <rect x="157" y="64" width="248" height="48" rx="4" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1"/>
     <text x="167" y="82" fontSize="9" fill="#334155" fontWeight="600" fontFamily="monospace">/api/v2/*</text>
-    <text x="240" y="82" fontSize="9" fill="#94a3b8">→</text>
-    <text x="253" y="82" fontSize="9" fill="#64748b">pool-api-v2</text>
+    <g transform="translate(237,75)"><polyline points="0,3.5 5,3.5 3,1 5,3.5 3,6" fill="none" stroke="#94a3b8" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/></g>
+    <text x="245" y="82" fontSize="9" fill="#64748b">pool-api-v2</text>
     <text x="167" y="103" fontSize="7.5" fill="#94a3b8">Priority 1 — versioned API endpoints</text>
 
     {/* Rule 2: /api/* */}
     <rect x="157" y="120" width="248" height="48" rx="4" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1"/>
     <text x="167" y="138" fontSize="9" fill="#334155" fontWeight="600" fontFamily="monospace">/api/*</text>
-    <text x="205" y="138" fontSize="9" fill="#94a3b8">→</text>
-    <text x="218" y="138" fontSize="9" fill="#64748b">pool-api</text>
+    <g transform="translate(202,131)"><polyline points="0,3.5 5,3.5 3,1 5,3.5 3,6" fill="none" stroke="#94a3b8" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/></g>
+    <text x="210" y="138" fontSize="9" fill="#64748b">pool-api</text>
     <text x="167" y="159" fontSize="7.5" fill="#94a3b8">Priority 2 — all API endpoints</text>
 
     {/* Rule 3: /* default */}
     <rect x="157" y="176" width="248" height="48" rx="4" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1"/>
     <text x="167" y="194" fontSize="9" fill="#334155" fontWeight="600" fontFamily="monospace">/* (default)</text>
-    <text x="248" y="194" fontSize="9" fill="#94a3b8">→</text>
-    <text x="261" y="194" fontSize="9" fill="#64748b">pool-web</text>
+    <g transform="translate(245,187)"><polyline points="0,3.5 5,3.5 3,1 5,3.5 3,6" fill="none" stroke="#94a3b8" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/></g>
+    <text x="253" y="194" fontSize="9" fill="#64748b">pool-web</text>
     <text x="167" y="215" fontSize="7.5" fill="#94a3b8">Default rule — matches all remaining paths</text>
 
     <text x="280" y="243" textAnchor="middle" fontSize="7.5" fill="#818cf8" fontStyle="italic">Rules evaluated in priority order — first match wins</text>

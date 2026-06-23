@@ -440,6 +440,54 @@
   color: white;
 }
 
+/* Subcategory topic filter row */
+.subcategory-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  justify-content: center;
+  padding: 0.35rem 1rem 0.6rem;
+  max-width: 874px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.subcat-btn {
+  padding: 0.22rem 0.75rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+
+.subcat-btn:hover {
+  border-color: var(--brand);
+  color: var(--brand);
+  background: var(--brand-light);
+}
+
+.subcat-btn.active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: white;
+}
+
+[data-theme="dark"] .subcat-btn:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #fff;
+}
+
+[data-theme="dark"] .subcat-btn.active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: white;
+}
+
 /* Card type segmented control — inside sidebar */
 .sidebar-type-filter {
   display: grid;

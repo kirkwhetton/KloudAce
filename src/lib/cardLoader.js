@@ -2,8 +2,8 @@ import { supabase } from "../auth/supabase.js";
 
 const SUPABASE_EXAMS = new Set(["AZ-900", "AZ-305", "AZ-700", "AZ-104"]);
 
-const reconstruct = ({ id, exam, category, type, difficulty, is_free, created_at, data: rest }) => ({
-  id, exam, category, type, difficulty, is_free, created_at, ...rest,
+const reconstruct = ({ id, exam, category, subcategory, type, difficulty, is_free, created_at, data: rest }) => ({
+  id, exam, category, subcategory, type, difficulty, is_free, created_at, ...rest,
 });
 
 // ─── In-memory cache (fast, cleared on page reload) ─────────────
@@ -67,7 +67,7 @@ export async function loadExamCardsRemote(exam) {
   if (cached) return cached;
   const { data, error } = await supabase
     .from("cards")
-    .select("id, exam, category, type, difficulty, is_free, created_at, data")
+    .select("id, exam, category, subcategory, type, difficulty, is_free, created_at, data")
     .eq("exam", exam)
     .range(ALL_ROWS.from, ALL_ROWS.to);
   if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
@@ -82,7 +82,7 @@ export async function loadCardsByCategory(category) {
   if (cached) return cached;
   const { data, error } = await supabase
     .from("cards")
-    .select("id, exam, category, type, difficulty, is_free, created_at, data")
+    .select("id, exam, category, subcategory, type, difficulty, is_free, created_at, data")
     .eq("category", category)
     .range(ALL_ROWS.from, ALL_ROWS.to);
   if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
@@ -114,7 +114,7 @@ export async function loadConnectionsCards() {
   if (cached) return cached;
   const { data, error } = await supabase
     .from("cards")
-    .select("id, exam, category, type, difficulty, is_free, created_at, data")
+    .select("id, exam, category, subcategory, type, difficulty, is_free, created_at, data")
     .eq("type", "connections");
   if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
   const cards = data.map(reconstruct);
@@ -128,7 +128,7 @@ export async function loadCrosswordCards() {
   if (cached) return cached;
   const { data, error } = await supabase
     .from("cards")
-    .select("id, exam, category, type, difficulty, is_free, created_at, data")
+    .select("id, exam, category, subcategory, type, difficulty, is_free, created_at, data")
     .eq("type", "crossword");
   if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
   const cards = data.map(reconstruct);
@@ -142,7 +142,7 @@ export async function loadWordSearchCards() {
   if (cached) return cached;
   const { data, error } = await supabase
     .from("cards")
-    .select("id, exam, category, type, difficulty, is_free, created_at, data")
+    .select("id, exam, category, subcategory, type, difficulty, is_free, created_at, data")
     .eq("type", "wordsearch");
   if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
   const cards = data.map(reconstruct);
@@ -156,7 +156,7 @@ export async function loadWordleCards() {
   if (cached) return cached;
   const { data, error } = await supabase
     .from("cards")
-    .select("id, exam, category, type, difficulty, is_free, created_at, data")
+    .select("id, exam, category, subcategory, type, difficulty, is_free, created_at, data")
     .eq("type", "wordle");
   if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
   const cards = data.map(reconstruct);
@@ -170,7 +170,7 @@ export async function loadTerraformLabCards() {
   if (cached) return cached;
   const { data, error } = await supabase
     .from("cards")
-    .select("id, exam, category, type, difficulty, is_free, created_at, data")
+    .select("id, exam, category, subcategory, type, difficulty, is_free, created_at, data")
     .eq("type", "terraform-lab")
     .order("id");
   if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }
@@ -185,7 +185,7 @@ export async function loadPortalCards() {
   if (cached) return cached;
   const { data, error } = await supabase
     .from("cards")
-    .select("id, exam, category, type, difficulty, is_free, created_at, data")
+    .select("id, exam, category, subcategory, type, difficulty, is_free, created_at, data")
     .eq("type", "portal")
     .order("id");
   if (error || !data) { console.error("[cardLoader]", error?.message ?? "no data"); return null; }

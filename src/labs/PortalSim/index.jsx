@@ -15,6 +15,16 @@ import {
   TrafficManagerIcon, CostManagementIcon, MonitorIcon, SettingsIcon,
 } from './AzureIcons';
 
+const RefreshIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="13" height="13" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+);
+const CheckIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+);
+const XIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+);
+
 const BLADE_REGISTRY = {
   'rg-list':         ResourceGroupList,
   'rg-create':       ResourceGroupCreate,
@@ -204,7 +214,7 @@ export default function PortalSim({ card, onKnow, onSrsRate }) {
             </span>
             <div className="psim-notification-actions">
               {result === 'incorrect' && (
-                <button className="psim-notification-btn" onClick={handleRetry}>↺ Retry</button>
+                <button className="psim-notification-btn" onClick={handleRetry}><RefreshIcon /> Retry</button>
               )}
               <button className="psim-notification-btn psim-notification-btn--primary" onClick={handleNext}>
                 Next
@@ -270,7 +280,7 @@ export default function PortalSim({ card, onKnow, onSrsRate }) {
           Lab Guide
           {completed && (
             <span className={`psim-instructions-status psim-instructions-status--${result}`}>
-              {result === 'correct' ? '✓' : '✗'}
+              {result === 'correct' ? <CheckIcon /> : <XIcon />}
             </span>
           )}
           <label className="psim-guide-toggle" title={showGuide ? "Hide help" : "Show help"}>

@@ -144,7 +144,7 @@ export const LBHaPortsDiagram = () => (
     <text x="667" y="132" textAnchor="middle" fontSize="18" fill="#333" fontWeight="bold">NVA-1</text>
     <text x="667" y="150" textAnchor="middle" fontSize="12" fill="#888">10.0.1.10</text>
     <rect x="582" y="160" width="170" height="40" rx="5" fill="#fff3e0" stroke="#ef6c00" strokeWidth="1" />
-    <text x="667" y="185" textAnchor="middle" fontSize="14" fill="#e65100" fontWeight="bold">IP Forwarding: ✓</text>
+    <text x="667" y="185" textAnchor="middle" fontSize="14" fill="#e65100" fontWeight="bold">IP Forwarding: On</text>
 
     {/* NVA-2 */}
     <rect x="572" y="230" width="190" height="148" rx="8" fill="white" stroke="#ef6c00" strokeWidth="1.5" />
@@ -152,7 +152,7 @@ export const LBHaPortsDiagram = () => (
     <text x="667" y="296" textAnchor="middle" fontSize="18" fill="#333" fontWeight="bold">NVA-2</text>
     <text x="667" y="314" textAnchor="middle" fontSize="12" fill="#888">10.0.1.11</text>
     <rect x="582" y="324" width="170" height="40" rx="5" fill="#fff3e0" stroke="#ef6c00" strokeWidth="1" />
-    <text x="667" y="349" textAnchor="middle" fontSize="14" fill="#e65100" fontWeight="bold">IP Forwarding: ✓</text>
+    <text x="667" y="349" textAnchor="middle" fontSize="14" fill="#e65100" fontWeight="bold">IP Forwarding: On</text>
   </svg>
 );
 

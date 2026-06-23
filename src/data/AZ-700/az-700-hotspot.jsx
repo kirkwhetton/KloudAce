@@ -35,7 +35,10 @@ const TrafficManagerDiagram = () => (
     <line x1="279" y1="206" x2="409" y2="206" stroke="#c7d2fe" strokeWidth="1"/>
     <text x="313" y="219" textAnchor="middle" fontSize="11" fill="#818cf8">East US: 12 ms</text>
     <text x="378" y="219" textAnchor="middle" fontSize="11" fill="#818cf8">W.Eu: 85 ms</text>
-    <text x="344" y="231" textAnchor="middle" fontSize="11" fill="#a5b4fc">↑ latency table</text>
+    <g transform="translate(322, 222)">
+      <polyline points="4,8 4,2 7,5 4,2 1,5" fill="none" stroke="#a5b4fc" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+    </g>
+    <text x="350" y="231" textAnchor="start" fontSize="11" fill="#a5b4fc">latency table</text>
 
     {/* ── East US endpoint box ── */}
     <rect x="505" y="55" width="152" height="70" rx="8" fill="#f0fdf4" stroke="#22c55e" strokeWidth="1.5"/>
@@ -124,7 +127,10 @@ const AzureFirewallDiagram = () => (
     <text x="435" y="198" textAnchor="middle" fontSize="11" fill="#16a34a">URL categories</text>
     <text x="435" y="212" textAnchor="middle" fontSize="11" fill="#22c55e">TLS inspection</text>
     <text x="435" y="226" textAnchor="middle" fontSize="11" fill="#22c55e">*.microsoft.com</text>
-    <text x="435" y="287" textAnchor="middle" fontSize="11" fill="#86efac" fontStyle="italic">✓ FQDN support</text>
+    <g transform="translate(411, 279)">
+      <polyline points="1,5 4,8 9,2" fill="none" stroke="#86efac" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+    </g>
+    <text x="424" y="287" textAnchor="start" fontSize="11" fill="#86efac" fontStyle="italic">FQDN support</text>
 
     {/* ── Source VM (decorative) ── */}
     <rect x="18" y="180" width="118" height="68" rx="8" fill="#f0f9ff" stroke="#0ea5e9" strokeWidth="1.5"/>

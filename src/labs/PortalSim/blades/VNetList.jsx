@@ -85,7 +85,7 @@ export default function VNetList({ onOpen, onClose, completed }) {
         <thead>
           <tr>
             <th style={{ width: 24 }}><input type="checkbox" /></th>
-            <th>Name ↑</th>
+            <th>Name <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="11" height="11" style={{verticalAlign:'middle'}} aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></th>
             <th>Resource group</th>
             <th>Location</th>
             <th>Address space</th>
