@@ -80,6 +80,11 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
   const [error,   setError]   = useState(null);
   const [isGuest, setIsGuest] = useState(false);
+  // True from the moment a recovery code is verified (which signs the user
+  // in) until they actually set a new password. The app gate uses this to
+  // keep showing the "choose a new password" screen instead of jumping
+  // straight into the signed-in app on the strength of that session alone.
+  const [pendingPasswordReset, setPendingPasswordReset] = useState(false);
 
   useEffect(() => {
     let settled = false;
@@ -140,11 +145,20 @@ export function useAuth() {
     }
   }, []);
 
-  const verifyOtp = useCallback(async ({ email, token }) => {
+  const verifyOtp = useCallback(async ({ email, token, type = "signup" }) => {
     setError(null);
-    const { error: err } = await supabase.auth.verifyOtp({ email, token, type: "signup" });
-    if (err) { setError("Invalid or expired code. Please check and try again."); return false; }
-    return true;
+    try {
+      const { error: err } = await withAuthRetry(
+        () => supabase.auth.verifyOtp({ email, token, type }),
+        { attempts: 3, timeoutMs: 15_000 }
+      );
+      if (err) { setError("Invalid or expired code. Please check and try again."); return false; }
+      if (type === "recovery") setPendingPasswordReset(true);
+      return true;
+    } catch {
+      setError("Couldn't reach the server — please check your connection and try again.");
+      return false;
+    }
   }, []);
 
   const login = useCallback(async ({ email, password }) => {
@@ -200,10 +214,49 @@ export function useAuth() {
     return true;
   }, [user]);
 
+  // Sends a 6-digit recovery code by email — no old password or link needed.
+  // We send a code rather than a link because Supabase's link-based reset
+  // relies on a PKCE verifier stored in the browser that requested it; email
+  // links are almost always opened in a different browser/app, so the link
+  // flow silently fails there. A code works in any browser.
+  const requestPasswordReset = useCallback(async ({ email }) => {
+    setError(null);
+    try {
+      const { error: err } = await withAuthRetry(
+        () => supabase.auth.resetPasswordForEmail(email),
+        { attempts: 3, timeoutMs: 15_000 }
+      );
+      if (err) { setError(friendlyError(err)); return false; }
+      return true;
+    } catch {
+      setError("Couldn't reach the server — please check your connection and try again.");
+      return false;
+    }
+  }, []);
+
+  // Verifying the recovery code signs the user in, so this just updates
+  // the password on that session — no old password required.
+  const resetPassword = useCallback(async ({ newPassword }) => {
+    setError(null);
+    try {
+      const { error: err } = await withAuthRetry(
+        () => supabase.auth.updateUser({ password: newPassword }),
+        { attempts: 3, timeoutMs: 15_000 }
+      );
+      if (err) { setError(friendlyError(err)); return false; }
+      setPendingPasswordReset(false);
+      return true;
+    } catch {
+      setError("Couldn't reach the server — please check your connection and try again.");
+      return false;
+    }
+  }, []);
+
   return {
     user, isAuthenticated, loading,
     isGuest, loginAsGuest,
     login, register, logout, updateProfile, changePassword, verifyOtp,
+    requestPasswordReset, resetPassword, pendingPasswordReset,
     error, setError,
   };
 }

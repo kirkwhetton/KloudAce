@@ -58,7 +58,7 @@ function shuffle(arr) {
 }
 
 function AppContent() {
-  const { isAuthenticated, user, logout, loading, isGuest } = useAuthContext();
+  const { isAuthenticated, user, logout, loading, isGuest, pendingPasswordReset } = useAuthContext();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -726,6 +726,7 @@ function AppContent() {
       </svg>
     </div>
   );
+  if (pendingPasswordReset) return <Login onBack={() => setShowLogin(false)} />;
   if (!isAuthenticated && !showLogin) return <LandingPage onGetStarted={() => setShowLogin(true)} />;
   if (!isAuthenticated) return <Login onBack={() => setShowLogin(false)} />;
 

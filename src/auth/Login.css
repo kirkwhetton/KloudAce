@@ -300,6 +300,11 @@
   color: var(--brand);
 }
 
+.login-forgot-link {
+  align-self: flex-end;
+  padding: 0.15rem 0;
+}
+
 /* ─── Responsive ────────────────────────────────────────────────── */
 @media (max-width: 480px) {
   .login-card {

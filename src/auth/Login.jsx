@@ -5,13 +5,17 @@ import { WarningIcon } from "../components/Icons";
 import "./Login.css";
 
 export default function Login({ onBack }) {
-  const { login, register, verifyOtp, loginAsGuest, error, setError } = useAuthContext();
-  const [mode, setMode] = useState("login"); // "login" | "register"
+  const { login, register, verifyOtp, loginAsGuest, requestPasswordReset, resetPassword, error, setError } = useAuthContext();
+  const [mode, setMode] = useState("login"); // "login" | "register" | "forgot"
   const [loading, setLoading] = useState(false);
   const [slowWarning, setSlowWarning] = useState(false);
   const slowTimer = useRef(null);
-  const [confirming, setConfirming] = useState(false); // awaiting OTP confirmation
+  const [confirming, setConfirming] = useState(false); // awaiting OTP confirmation (signup)
+  // forgot-password sub-steps: "request" -> "code" -> "newPassword" -> "done"
+  const [forgotStep, setForgotStep] = useState("request");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [newPw, setNewPw] = useState("");
+  const [confirmPw, setConfirmPw] = useState("");
 
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
 
@@ -27,7 +31,10 @@ export default function Login({ onBack }) {
   const switchMode = (m) => {
     setMode(m);
     setConfirming(false);
+    setForgotStep("request");
     setOtp(["", "", "", "", "", ""]);
+    setNewPw("");
+    setConfirmPw("");
     setForm({ name: "", email: "", password: "", confirm: "" });
     setError(null);
   };
@@ -58,9 +65,38 @@ export default function Login({ onBack }) {
     if (token.length < 6) { setError("Please enter the full 6-digit code."); return; }
     setLoading(true);
     setError(null);
-    const ok = await verifyOtp({ email: form.email, token });
+    const ok = await verifyOtp({ email: form.email, token, type: "signup" });
     if (!ok) setLoading(false);
     // if ok, onAuthStateChange handles navigation automatically
+  };
+
+  const handleForgotSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const ok = await requestPasswordReset({ email: form.email });
+    setLoading(false);
+    if (ok) setForgotStep("code");
+  };
+
+  const handleVerifyRecoveryCode = async () => {
+    const token = otp.join("");
+    if (token.length < 6) { setError("Please enter the full 6-digit code."); return; }
+    setLoading(true);
+    setError(null);
+    const ok = await verifyOtp({ email: form.email, token, type: "recovery" });
+    setLoading(false);
+    if (ok) setForgotStep("newPassword");
+  };
+
+  const handleSetNewPassword = async (e) => {
+    e.preventDefault();
+    setError(null);
+    if (newPw.length < 10) { setError("Password must be at least 10 characters."); return; }
+    if (newPw !== confirmPw) { setError("Passwords do not match."); return; }
+    setLoading(true);
+    const ok = await resetPassword({ newPassword: newPw });
+    setLoading(false);
+    if (ok) setForgotStep("done");
   };
 
   const handleSubmit = async (e) => {
@@ -151,8 +187,126 @@ export default function Login({ onBack }) {
           </div>
         )}
 
-        {/* Tabs + form — hidden while awaiting email confirmation */}
-        {!confirming && <><div className="login-tabs">
+        {/* Forgot-password flow */}
+        {mode === "forgot" && (
+          <div className="login-confirm-screen">
+            {forgotStep === "request" && (
+              <>
+                <h2>Reset your password</h2>
+                <p>Enter your email and we'll send you a 6-digit code to reset your password.</p>
+                <form className="login-form" onSubmit={handleForgotSubmit} noValidate>
+                  <div className="form-group">
+                    <label htmlFor="forgot-email">Email</label>
+                    <input
+                      id="forgot-email"
+                      name="email"
+                      type="email"
+                      value={form.email}
+                      onChange={update}
+                      placeholder="you@example.com"
+                      required
+                      autoComplete="email"
+                    />
+                  </div>
+                  {error && <p className="login-error"><WarningIcon /> {error}</p>}
+                  <button className="login-submit" type="submit" disabled={loading}>
+                    {loading ? "Sending…" : "Send Reset Code"}
+                  </button>
+                </form>
+                <button className="login-text-btn" onClick={() => switchMode("login")}>
+                  Back to Sign In
+                </button>
+              </>
+            )}
+
+            {forgotStep === "code" && (
+              <>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="login-confirm-icon">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+                <h2>Check your email</h2>
+                <p>We sent a 6-digit code to <strong>{form.email}</strong>. Enter it below to continue.</p>
+                <div className="otp-inputs" onPaste={handleOtpPaste}>
+                  {otp.map((digit, i) => (
+                    <input
+                      key={i}
+                      id={`otp-${i}`}
+                      className="otp-box"
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      value={digit}
+                      onChange={(e) => handleOtpChange(i, e.target.value)}
+                      onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                      autoFocus={i === 0}
+                    />
+                  ))}
+                </div>
+                {error && <p className="login-error"><WarningIcon /> {error}</p>}
+                <button className="login-submit" onClick={handleVerifyRecoveryCode} disabled={loading}>
+                  {loading ? "Verifying…" : "Verify Code"}
+                </button>
+                <button className="login-text-btn" onClick={() => switchMode("login")}>
+                  Back to Sign In
+                </button>
+              </>
+            )}
+
+            {forgotStep === "newPassword" && (
+              <>
+                <h2>Choose a new password</h2>
+                <p>Your code is verified — set a new password below.</p>
+                <form className="login-form" onSubmit={handleSetNewPassword} noValidate>
+                  <div className="form-group">
+                    <label htmlFor="new-password">New password</label>
+                    <input
+                      id="new-password"
+                      type="password"
+                      value={newPw}
+                      onChange={(e) => setNewPw(e.target.value)}
+                      placeholder="Choose a password"
+                      required
+                      autoComplete="new-password"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="confirm-new-password">Confirm new password</label>
+                    <input
+                      id="confirm-new-password"
+                      type="password"
+                      value={confirmPw}
+                      onChange={(e) => setConfirmPw(e.target.value)}
+                      placeholder="Repeat your password"
+                      required
+                      autoComplete="new-password"
+                    />
+                  </div>
+                  {error && <p className="login-error"><WarningIcon /> {error}</p>}
+                  <button className="login-submit" type="submit" disabled={loading}>
+                    {loading ? "Saving…" : "Save New Password"}
+                  </button>
+                </form>
+              </>
+            )}
+
+            {forgotStep === "done" && (
+              <>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="login-confirm-icon">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <h2>Password updated</h2>
+                <p>Your password has been changed. You're now signed in.</p>
+                <button className="login-text-btn" onClick={() => switchMode("login")}>
+                  Continue
+                </button>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Tabs + form — hidden while awaiting email confirmation or password reset */}
+        {!confirming && mode !== "forgot" && <><div className="login-tabs">
           <button
             className={`login-tab${mode === "login" ? " active" : ""}`}
             onClick={() => switchMode("login")}
@@ -211,6 +365,11 @@ export default function Login({ onBack }) {
               required
               autoComplete={mode === "register" ? "new-password" : "current-password"}
             />
+            {mode === "login" && (
+              <button type="button" className="login-text-btn login-forgot-link" onClick={() => switchMode("forgot")}>
+                Forgot password?
+              </button>
+            )}
           </div>
 
           {mode === "register" && (
